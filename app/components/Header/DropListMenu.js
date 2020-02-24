@@ -16,12 +16,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import styles from './header-jss';
 
-const LinkBtn = React.forwardRef(function LinkBtn(props, ref) {
-  return <NavLink to={props.to} {...props} innerRef={ref} />;
-});
+const LinkBtn = React.forwardRef((props, ref) => <NavLink to={props.to} {...props} innerRef={ref} />); // eslint-disable-line
 
 // eslint-disable-next-line
-class MainMenu extends React.Component {
+class DropListMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -88,7 +86,7 @@ class MainMenu extends React.Component {
                 )
               }
               onClick={(event) => this.handleOpenMenu(event, item.key, item.keyParent)}
-              style={{ color: "white" }}
+              style={{ color: 'white' }}
             >
               {item.name}
               <ExpandMore className={classes.rightIcon} />
@@ -107,7 +105,7 @@ class MainMenu extends React.Component {
                 >
                   <Paper className={classes.dropDownMenu}>
                     <ClickAwayListener onClickAway={this.handleClose}>
-                      <List role="menu" component="nav" style={{ 'overflow': 'hidden' }} className={classes.paperMenu}>
+                      <List role="menu" component="nav" style={{ overflow: 'hidden' }} className={classes.paperMenu}>
                         {getMenus(item.key, item.child)}
                       </List>
                     </ClickAwayListener>
@@ -122,23 +120,21 @@ class MainMenu extends React.Component {
         return false;
       }
       return (
-        <div>
-          <ListItem
-            key={index.toString()}
-            exact
-            component={LinkBtn}
-            to={item.link}
-            onClick={() => this.handleActiveParent(parent)}
-            className={classes.menuItem, classes.headMenu}
-          >
-            <ListItemText className={classes.menuitemColor} primary={item.name} />
-          </ListItem>
-        </div>
+        <ListItem
+          key={index.toString()}
+          exact
+          component={LinkBtn}
+          to={item.link}
+          onClick={() => this.handleActiveParent(parent)}
+          className={(classes.menuItem, classes.headMenu)}
+        >
+          <ListItemText className={classes.menuitemColor} primary={item.name} />
+        </ListItem>
       );
     });
     return (
-      <nav className={classes.mainMenu}>
-        <div >
+      <nav className={classes.DropListMenu}>
+        <div>
           {getMenus(null, dataMenu)}
         </div>
       </nav>
@@ -146,11 +142,11 @@ class MainMenu extends React.Component {
   }
 }
 
-MainMenu.propTypes = {
+DropListMenu.propTypes = {
   classes: PropTypes.object.isRequired,
   open: PropTypes.object.isRequired,
   openSubMenu: PropTypes.func.isRequired,
-  dataMenu: PropTypes.array.isRequired,
+  dataMenu: PropTypes.array.isRequired
 };
 
 const openAction = (key, keyParent) => ({ type: 'OPEN_SUBMENU', key, keyParent });
@@ -165,9 +161,9 @@ const mapDispatchToProps = dispatch => ({
   openSubMenu: bindActionCreators(openAction, dispatch)
 });
 
-const MainMenuMapped = connect(
+const DropListMenuMapped = connect(
   mapStateToProps,
   mapDispatchToProps
-)(MainMenu);
+)(DropListMenu);
 
-export default withStyles(styles)(MainMenuMapped);
+export default withStyles(styles)(DropListMenuMapped);
