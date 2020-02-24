@@ -63,24 +63,24 @@ class Step2 extends React.Component {
         }
         <Divider />
         {open == false
-        && (
-          <Button
-            color="secondary"
-            onClick={(e) => addRole(e)}
-          >
-          Create New Role
-          </Button>
-        )
+          && (
+            <Button
+              color="secondary"
+              onClick={(e) => addRole(e)}
+            >
+              Create New Role
+            </Button>
+          )
         }
         {open
-        && (
-          <AddRole
-            open={open}
-            submit={this.submitRole}
-            handleClose={closeRoleForm}
-            submitRole={submitRole}
-          />
-        )
+          && (
+            <AddRole
+              open={open}
+              submit={this.submitRole}
+              handleClose={closeRoleForm}
+              submitRole={submitRole}
+            />
+          )
         }
       </Fragment>
     );

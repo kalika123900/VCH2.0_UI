@@ -29,22 +29,46 @@ class Step3 extends React.Component {
     customKeyword: '',
     customUniversity: '',
     keyword: [
-      { id: 15, status: false, value: 'job', label: 'Job' },
-      { id: 16, status: false, value: 'fresher', label: 'Fresher' },
-      { id: 18, status: false, value: 'entry_level', label: 'Entry Level' },
-      { id: 19, status: false, value: 'experienced', label: 'Experienced' }
+      {
+        id: 15, status: false, value: 'job', label: 'Job'
+      },
+      {
+        id: 16, status: false, value: 'fresher', label: 'Fresher'
+      },
+      {
+        id: 18, status: false, value: 'entry_level', label: 'Entry Level'
+      },
+      {
+        id: 19, status: false, value: 'experienced', label: 'Experienced'
+      }
     ],
     university: [
-      { id: 15, status: false, value: 'oxford', label: 'Oxford' },
-      { id: 16, status: false, value: 'rgpv', label: 'RGPV' },
-      { id: 17, status: false, value: 'iist-university', label: 'IIST University' },
-      { id: 18, status: false, value: 'oriental-university', label: 'Oriental University' },
+      {
+        id: 15, status: false, value: 'oxford', label: 'Oxford'
+      },
+      {
+        id: 16, status: false, value: 'rgpv', label: 'RGPV'
+      },
+      {
+        id: 17, status: false, value: 'iist-university', label: 'IIST University'
+      },
+      {
+        id: 18, status: false, value: 'oriental-university', label: 'Oriental University'
+      },
     ],
     demographic: [
-      { id: -1, status: false, value: 'no-preference', label: 'No preference' },
-      { id: 0, status: false, value: 'women', label: 'Women' },
-      { id: 1, status: false, value: 'men', label: 'Men' },
-      { id: 2, status: false, value: 'bame', label: 'BAME' },
+      {
+        id: -1, status: false, value: 'no-preference', label: 'No preference'
+      },
+      {
+        id: 0, status: false, value: 'women', label: 'Women'
+      },
+      {
+        id: 1, status: false, value: 'men', label: 'Men'
+      },
+      {
+        id: 2, status: false, value: 'bame', label: 'BAME'
+      },
     ]
   };
 
@@ -149,7 +173,7 @@ class Step3 extends React.Component {
       if (item.id === id) {
         return {
           id,
-          status: true,
+          status: !item.status,
           value: item.value,
           label: item.label
         };
@@ -185,7 +209,7 @@ class Step3 extends React.Component {
         control={(
           <Checkbox
             name="demographic"
-            checked={!!gender.includes(item.id)}
+            checked={gender.includes(item.id)}
             value={item.value}
             onChange={(e) => { this.handleCheckbox(e, item.id); }}
           />
@@ -200,7 +224,7 @@ class Step3 extends React.Component {
         control={(
           <Checkbox
             name="university"
-            checked={!!university.includes(item.id)}
+            checked={university.includes(item.id)}
             value={item.value}
             onChange={(e) => { this.handleCheckbox(e, item.id); }}
           />
@@ -210,25 +234,35 @@ class Step3 extends React.Component {
       />
     ));
 
-    const suggestedKeywords = this.state.keyword.map((item, index) => (
-      <Fragment key={index}>
-        <Button
-          variant="outlined"
-          color="secondary"
-          className={classes.button}
-          onClick={(e) => this.handleSuggestedKeyword(e, item.id)}
-        >
-          +
-          {' '}
-          {item.label}
-        </Button>
-      </Fragment>
-    ));
+    const suggestedKeywords = this.state.keyword.map((item, index) => {
+      if (item.status === false && !keywords.includes(item.id)) {
+        return (
+          <Fragment key={index}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              className={classes.button}
+              onClick={(e) => this.handleSuggestedKeyword(e, item.id)}
+            >
+              +
+              {' '}
+              {item.label}
+            </Button>
+          </Fragment>
+        );
+      }
+    });
+
 
     const keywordList = keyword.map((item, index) => {
       if (item.status === true || keywords.includes(item.id)) {
         return (
-          <Typography variant="subtitle1" className={classes.choosenTerms} key={index}>
+          <Typography
+            variant="subtitle1"
+            className={classes.choosenTerms}
+            key={index}
+            onClick={e => this.handleSuggestedKeyword(e, item.id)}
+          >
             {item.label}
           </Typography>
         );
