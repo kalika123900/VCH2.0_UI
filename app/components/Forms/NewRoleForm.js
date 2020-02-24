@@ -24,19 +24,6 @@ import { TextFieldRedux } from './ReduxFormMUI';
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
 
-const courseList = [
-  'B.E',
-  'BSc',
-  'MBA',
-  'MA',
-];
-
-const skillList = [
-  'React',
-  'Angular',
-  'JavaScript'
-];
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 
@@ -49,30 +36,66 @@ const MenuProps = {
   },
 };
 
-class AddRoleForm extends React.Component {
-  saveRef = ref => {
-    this.ref = ref;
-    return this.ref;
-  };
+const DateHelper = {
+  addDays(aDate, numberOfDays) {
+    aDate.setDate(aDate.getDate() + numberOfDays);
+    return aDate;
+  },
+  format: function format(date) {
+    return [
+      ('0' + date.getDate()).slice(-2),
+      ('0' + (date.getMonth() + 1)).slice(-2),
+      date.getFullYear()
+    ].join('/');
+  }
+};
 
+class NewRoleForm extends React.Component {
   state = {
     rolename: '',
     courses: [],
     skills: [],
-    deadline: '01/02/2000',
+    deadline: DateHelper.format(DateHelper.addDays(new Date(), 5)),
     link: '',
     customDescriptor: '',
+    skillList: [
+      {
+        id: 1, status: false, value: 'React.js', label: 'React.js'
+      },
+      {
+        id: 2, status: false, value: 'Angular', label: 'Angular'
+      },
+      {
+        id: 3, status: false, value: 'Node.js', label: 'Node.js'
+      },
+    ],
+    courseList: [
+      {
+        id: 1, status: false, value: 'B.E', label: 'B.E'
+      },
+      {
+        id: 2, status: false, value: 'B.Sc', label: 'B.Sc'
+      },
+      {
+        id: 3, status: false, value: 'MBA', label: 'MBA'
+      },
+    ],
     roleDescriptor: [
       {
-        id: 1, status: false, value: '#', label: 'Lorem Ipsum'
+        id: 1, status: false, value: 'Microsoft Excel', label: 'Microsoft Excel'
       },
       {
-        id: 2, status: false, value: '#', label: 'Lorem Ipsum '
+        id: 2, status: false, value: 'Work Culture', label: 'Work Culture'
       },
       {
-        id: 3, status: false, value: '#', label: 'Lorem Ipsum'
+        id: 3, status: false, value: 'Team Work', label: 'Team Work'
       },
     ]
+  };
+
+  saveRef = ref => {
+    this.ref = ref;
+    return this.ref;
   };
 
   handleDateChange = date => {
@@ -118,11 +141,11 @@ class AddRoleForm extends React.Component {
     } = this.props;
 
     const {
-      courses, skills, rolename,
+      courses, skills, rolename, courseList, skillList,
       deadline, link, roleDescriptor, customDescriptor
     } = this.state;
 
-    const roleDescriptors = this.state.roleDescriptor.map((item, index) => (
+    const roleDescriptors = roleDescriptor.map((item, index) => (
       <FormControlLabel
         control={(
           <Checkbox
@@ -175,9 +198,14 @@ class AddRoleForm extends React.Component {
                 component={Select}
               >
                 {courseList.map((item, index) => (
-                  <MenuItem key={index} value={item}>
-                    <Field component="checkbox" checked={courseList.indexOf(item) > -1} />
-                    <ListItemText primary={item} />
+                  <MenuItem key={index} value={item.label}>
+                    <Field
+                      name="courseList"
+                      component={Checkbox}
+                      checked={item.status}
+                      onChange={(e) => { this.handleCheckbox(e, item.id); }}
+                    />
+                    <ListItemText primary={item.label} />
                   </MenuItem>
                 ))}
               </Select>
@@ -202,7 +230,7 @@ class AddRoleForm extends React.Component {
               >
                 {skillList.map((item, index) => (
                   <MenuItem key={index} value={item}>
-                    <Field component="checkbox" checked={skillList.indexOf(item) > -1} />
+                    <Field name="skill-checkbox" component={Checkbox} checked={skillList.indexOf(item) > -1} />
                     <ListItemText primary={item} />
                   </MenuItem>
                 ))}
@@ -214,7 +242,7 @@ class AddRoleForm extends React.Component {
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                   margin="normal"
-                  placeholder="Deadline"
+                  placeholder="Deadline for role"
                   format="dd/MM/yyyy"
                   value={deadline}
                   name="deadline"
@@ -284,20 +312,20 @@ class AddRoleForm extends React.Component {
   }
 }
 
-AddRoleForm.propTypes = {
+NewRoleForm.propTypes = {
   classes: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 };
 
-const AddRoleFormRedux = reduxForm({
+const NewRoleFormRedux = reduxForm({
   form: 'immutableAddRole',
   enableReinitialize: true,
-})(AddRoleForm);
+})(NewRoleForm);
 
-const AddRoleInit = connect(
+const NewRoleInit = connect(
   state => ({
     initialValues: state.getIn(['role', 'formValues'])
   })
-)(AddRoleFormRedux);
+)(NewRoleFormRedux);
 
-export default withStyles(styles)(AddRoleInit);
+export default withStyles(styles)(NewRoleInit);
