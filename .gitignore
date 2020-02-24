@@ -1,0 +1,11 @@
+# dependencies
+node_modules/
+
+# build
+build/
+
+# configuration
+.vscode/
+
+# env file
+.env

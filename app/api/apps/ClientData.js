@@ -1,0 +1,88 @@
+import imgApi from '../images/photos';
+import avatarApi from '../images/avatars';
+const connectionData = [
+  {
+    id: 0,
+    cover: imgApi[0],
+    avatar: avatarApi[0],
+    name: 'Dandelion',
+    role: 'Software Engineer',
+    roleDesc: 'Lorem Ipsum dolar sit Qui tempor culpa enim daren kepto sohe cslmo ketos swito',
+    verified: false,
+
+  },
+  {
+    id: 1,
+    cover: imgApi[0],
+    avatar: avatarApi[0],
+    name: 'Benidict',
+    role: 'Business Analyst',
+    roleDesc: 'Lorem Ipsum dolar sit Qui tempor culpa enim daren kepto sohe cslmo ketos swito',
+    verified: true,
+  },
+  {
+    id: 2,
+    cover: imgApi[0],
+    avatar: avatarApi[0],
+    name: 'Google',
+    role: 'AI Engineer',
+    roleDesc: 'Lorem Ipsum dolar sit Qui tempor culpa enim daren kepto sohe cslmo ketos swito',
+    verified: false,
+  },
+  {
+    id: 3,
+    cover: imgApi[0],
+    avatar: avatarApi[0],
+    name: 'Facebook',
+    role: 'Software Engineer',
+    roleDesc: 'Lorem Ipsum dolar sit Qui tempor culpa enim daren kepto sohe cslmo ketos swito',
+    verified: true,
+  },
+  {
+    id: 4,
+    cover: imgApi[0],
+    avatar: avatarApi[0],
+    name: 'Codes For Tomorrow',
+    role: 'UI Designer',
+    roleDesc: 'Lorem Ipsum dolar sit Qui tempor culpa enim daren kepto sohe cslmo ketos swito',
+    verified: false,
+  },
+  {
+    id: 5,
+    cover: imgApi[0],
+    avatar: avatarApi[0],
+    name: 'Rapid Hire',
+    role: 'Designer',
+    roleDesc: 'Lorem Ipsum dolar sit Qui tempor culpa enim daren kepto sohe cslmo ketos swito',
+    verified: true,
+  },
+  {
+    id: 6,
+    cover: imgApi[0],
+    avatar: avatarApi[0],
+    name: 'Task Us',
+    role: 'Data Scientist',
+    roleDesc: 'Lorem Ipsum dolar sit Qui tempor culpa enim daren kepto sohe cslmo ketos swito',
+    verified: true,
+  },
+  {
+    id: 7,
+    cover: imgApi[0],
+    avatar: avatarApi[0],
+    name: 'Arxxus',
+    role: 'Interior Designer',
+    roleDesc: 'Lorem Ipsum dolar sit Qui tempor culpa enim daren kepto sohe cslmo ketos swito',
+    verified: false,
+  },
+  {
+    id: 8,
+    cover: imgApi[0],
+    avatar: avatarApi[0],
+    name: 'Web Masters',
+    role: 'Manager',
+    roleDesc: 'Lorem Ipsum dolar sit Qui tempor culpa enim daren kepto sohe cslmo ketos swito',
+    verified: false,
+  },
+];
+
+export default connectionData;
