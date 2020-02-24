@@ -16,7 +16,9 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import styles from './header-jss';
 
-const LinkBtn = React.forwardRef((props, ref) => <NavLink to={props.to} {...props} innerRef={ref} />); // eslint-disable-line
+const LinkBtn = React.forwardRef(function LinkBtn(props, ref) { // eslint-disable-line
+  return <NavLink to={props.to} {...props} innerRef={ref} />; // eslint-disable-line
+});
 
 // eslint-disable-next-line
 class DropListMenu extends React.Component {
@@ -133,7 +135,7 @@ class DropListMenu extends React.Component {
       );
     });
     return (
-      <nav className={classes.DropListMenu}>
+      <nav className={classes.mainMenu}>
         <div>
           {getMenus(null, dataMenu)}
         </div>
@@ -146,7 +148,7 @@ DropListMenu.propTypes = {
   classes: PropTypes.object.isRequired,
   open: PropTypes.object.isRequired,
   openSubMenu: PropTypes.func.isRequired,
-  dataMenu: PropTypes.array.isRequired
+  dataMenu: PropTypes.array.isRequired,
 };
 
 const openAction = (key, keyParent) => ({ type: 'OPEN_SUBMENU', key, keyParent });
