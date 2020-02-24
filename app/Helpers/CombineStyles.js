@@ -1,5 +1,5 @@
-const CombineStyles = (...styles) => {
-  return CombineStyles = (theme) => {
+function CombineStyles(...styles) {
+  return function combine(theme) {
     const outStyles = styles.map((arg) => {
       // Apply the "theme" object for style functions.
       if (typeof arg === 'function') {

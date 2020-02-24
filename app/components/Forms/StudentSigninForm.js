@@ -18,14 +18,12 @@ import Paper from '@material-ui/core/Paper';
 import Icon from '@material-ui/core/Icon';
 import brand from 'dan-api/dummy/brand';
 import logo from 'dan-images/logo.png';
-import { TextFieldRedux, CheckboxRedux } from './ReduxFormMUI';
-import styles from './user-jss';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import { Grid } from '@material-ui/core';
 import FlashMessage from 'react-flash-message';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
-import { LinkedIn } from 'react-linkedin-login-oauth2';
+import styles from './user-jss';
+import { TextFieldRedux, CheckboxRedux } from './ReduxFormMUI';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -40,16 +38,18 @@ class StudentSigninForm extends React.Component {
   }
 
   Message = () => {
+    const { handleFlash } = this.props;
+    const { errorMessage } = this.props;
     setTimeout(() => {
-      this.props.handleFlash();
-    }, 4000)
+      handleFlash();
+    }, 4000);
     return (
       <FlashMessage duration={4000}>
         <Typography variant="subtitle1" color="error">
-          {this.props.errorMessage}
+          {errorMessage}
         </Typography>
       </FlashMessage>
-    )
+    );
   }
 
   handleClickShowPassword = () => {
@@ -68,13 +68,14 @@ class StudentSigninForm extends React.Component {
       pristine,
       submitting,
       deco,
+      flash
     } = this.props;
     const { showPassword } = this.state;
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
         <div className={classes.topBar}>
           <NavLink to="/" className={classes.brand}>
-            <img style={{ width: "70px" }} src={logo} alt={brand.name} />
+            <img style={{ width: '70px' }} src={logo} alt={brand.name} />
           </NavLink>
           <Button size="small" className={classes.buttonLink} component={LinkBtn} to="/student-signup">
             <Icon className={classes.icon}>arrow_forward</Icon>
@@ -85,7 +86,7 @@ class StudentSigninForm extends React.Component {
           Sign In
         </Typography>
         <section className={classes.pageFormWrap}>
-          {this.props.flash && this.Message()}
+          {flash && this.Message()}
           <form onSubmit={handleSubmit}>
             <div>
               <FormControl className={classes.formControl}>
@@ -130,7 +131,7 @@ class StudentSigninForm extends React.Component {
               <FormControlLabel className={classes.label} control={<Field name="checkbox" component={CheckboxRedux} />} label="Remember" />
               <Button size="small" component={LinkBtn} to="/reset-password" className={classes.buttonLink}>Forgot Password</Button>
             </div>
-            <div className={classes.btnArea, classes.customMargin}>
+            <div className={(classes.btnArea, classes.customMargin)}>
               <Button variant="contained" fullWidth color="primary" size="large" type="submit">
                 Continue
                 <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
@@ -141,24 +142,34 @@ class StudentSigninForm extends React.Component {
         <div className={classes.lineCont}>
           <span className={classes.circleArea}> OR </span>
         </div>
-        <Grid >
+        <Grid>
           <div className={classes.btnArea}>
-            <Button variant="contained" fullWidth size="small" style={{
-              background: "#2d72b0",
-              color: " white",
-            }}>
-              <LinkedInIcon style={{ marginRight: "10px" }} />
+            <Button
+              variant="contained"
+              fullWidth
+              size="small"
+              style={{
+                background: '#2d72b0',
+                color: ' white',
+              }}
+            >
+              <LinkedInIcon style={{ marginRight: '10px' }} />
               Continue with LinkedIn
-              </Button>
+            </Button>
           </div>
           <div className={classes.btnArea}>
-            <Button variant="contained" fullWidth size="small" style={{
-              background: "#4267b2",
-              color: " white"
-            }}>
-              <FacebookIcon style={{ marginRight: "10px" }} />
+            <Button
+              variant="contained"
+              fullWidth
+              size="small"
+              style={{
+                background: '#4267b2',
+                color: ' white'
+              }}
+            >
+              <FacebookIcon style={{ marginRight: '10px' }} />
               Continue with Facebook
-              </Button>
+            </Button>
           </div>
         </Grid>
       </Paper>
@@ -172,6 +183,9 @@ StudentSigninForm.propTypes = {
   pristine: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   deco: PropTypes.bool.isRequired,
+  flash: PropTypes.bool.isRequired,
+  handleFlash: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string.isRequired,
 };
 
 const StudentSigninFormReduxed = reduxForm({
