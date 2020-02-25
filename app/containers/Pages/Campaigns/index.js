@@ -47,7 +47,7 @@ class Campaigns extends React.Component {
       return await response.json();
     }
 
-    postJSON(`${API_URL}/client/create-campaign`, data)
+    postJSON(`${API_URL}/campaign/create-campaign`, data)
       .then((res) => {
         if (res.status === 1) {
           removeInfo();

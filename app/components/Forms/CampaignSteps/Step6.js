@@ -20,7 +20,12 @@ class Step6 extends React.Component {
   };
 
   render() {
-    const { classes, name } = this.props;
+    const { classes, name, deadline, heading, body } = this.props;
+    const goal = this.props.goal.toJS();
+    const university = this.props.university.toJS();
+    const gender = this.props.gender.toJS();
+    const keywords = this.props.keywords.toJS();
+
     const title = brand.name + ' - Review Campaign Settings';
     const description = brand.desc;
     return (
@@ -73,23 +78,23 @@ class Step6 extends React.Component {
               <Typography variant="h6"  >
                 Campaign goal
               </Typography>
-              <Typography variant="subtitle1" >
-                Get More Applications to a role
+              <Typography variant="subtitle1" color="textSecondary" >
+                {goal.value}
               </Typography>
             </Grid>
             <Grid className={classes.sec_3_grid2}>
               <Typography variant="h6" >
                 Campaign Deadline
                 </Typography>
-              <Typography variant="body1" >
-                60 days
+              <Typography variant="body1" color="textSecondary" >
+                {deadline}
               </Typography>
             </Grid>
             <Grid className={classes.sec_3_grid3}>
               <Typography variant="h6" >
                 Promoting Role
               </Typography>
-              <Typography variant="body1" >
+              <Typography variant="body1" color="textSecondary" >
                 AI Engineer
               </Typography>
             </Grid>
@@ -99,7 +104,7 @@ class Step6 extends React.Component {
               <Typography variant="h6"  >
                 Precise Demographics
               </Typography>
-              <Typography variant="body1" >
+              <Typography variant="body1" color="textSecondary" >
                 Men, WOMEN
               </Typography>
             </Grid>
@@ -107,7 +112,7 @@ class Step6 extends React.Component {
               <Typography variant="h6" >
                 Specified Universities
               </Typography>
-              <Typography variant="body1" >
+              <Typography variant="body1" color="textSecondary" >
                 Oxford, RGPV
               </Typography>
             </Grid>
@@ -115,7 +120,7 @@ class Step6 extends React.Component {
               <Typography variant="h6" >
                 Keywords to promote
                 </Typography>
-              <Typography variant="body1" >
+              <Typography variant="body1" color="textSecondary" >
                 New Job, Entry Level
               </Typography>
             </Grid>
@@ -128,13 +133,29 @@ class Step6 extends React.Component {
           </Typography>
           <Grid>
             <Typography variant="h5" className={classes.textCapitalize} style={{ color: "#3889de" }} >
-              United Kingdom Job Agencies | Our Job Is Helping You | Varsity Careers Hub
+              {heading.length <= 0
+                ?
+                <Typography
+                  color="error" variant="body1"
+                >
+                  Oops! Campaign heading is empty
+                </Typography>
+                : heading
+              }
             </Typography>
             <Typography variant="body2" style={{ lineHeight: '2.3rem', color: "#38ae00" }} >
               Ad www.varsitycareershub.co.uk
             </Typography>
             <Typography variant="subtitle2" >
-              Get Experienced Support and Guidance from a Professional Staffing Service. Our Friendly and Knowledgeable Team....
+              {body.length <= 0
+                ?
+                <Typography
+                  color="error" variant="body1"
+                >
+                  Oops! Campaign body is empty
+                </Typography>
+                : body
+              }
             </Typography>
           </Grid>
         </Grid>
@@ -146,6 +167,14 @@ class Step6 extends React.Component {
 Step6.propTypes = {
   classes: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,
+  goal: PropTypes.object.isRequired,
+  gender: PropTypes.object.isRequired,
+  deadline: PropTypes.string.isRequired,
+  university: PropTypes.object.isRequired,
+  role: PropTypes.number.isRequired,
+  keywords: PropTypes.object.isRequired,
+  heading: PropTypes.string.isRequired,
+  body: PropTypes.string.isRequired,
   addInfo: PropTypes.func.isRequired
 };
 
@@ -153,6 +182,14 @@ const reducerCampaign = 'campaign';
 
 const mapStateToProps = state => ({
   name: state.getIn([reducerCampaign, 'name']),
+  goal: state.getIn([reducerCampaign, 'goal']),
+  gender: state.getIn([reducerCampaign, 'gender']),
+  deadline: state.getIn([reducerCampaign, 'deadline']),
+  university: state.getIn([reducerCampaign, 'university']),
+  role: state.getIn([reducerCampaign, 'role']),
+  keywords: state.getIn([reducerCampaign, 'keywords']),
+  heading: state.getIn([reducerCampaign, 'heading']),
+  body: state.getIn([reducerCampaign, 'body'])
 });
 
 const mapDispatchToProps = dispatch => ({

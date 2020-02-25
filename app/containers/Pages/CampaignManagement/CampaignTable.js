@@ -15,6 +15,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import AddIcon from '@material-ui/icons/Add';
 import styles from 'dan-components/Tables/tableStyle-jss';
+import { makeSecureDecrypt } from '../../../Helpers/security';
+import qs from 'qs';
 
 let id = 0;
 function createData(campaigns, start_date, end_date, views, status) {
@@ -29,23 +31,67 @@ function createData(campaigns, start_date, end_date, views, status) {
   };
 }
 
-const data = [
-  createData('Campaign 1', '01-January-2020', '01-March-2020', '14k', 'Active'),
-  createData('Campaign 2', '02-January-2020', '01-February-2020', '18k', 'Inactive'),
-  createData('Campaign 3', '04-January-2020', '01-April-2020', '13k', 'Active'),
-  createData('Campaign 4', '05-January-2020', '01-September-2020', '35k', 'Inactive'),
-  createData('Campaign 5', '01-February-2020', '01-October-2020', '24k', 'Active'),
-  createData('Campaign 6', '05-February-2020', '08-October-2020', '45k', 'Inactive'),
-  createData('Campaign 7', '14-February-2020', '12-October-2020', '68k', 'Active'),
+const campaignData = [
+  // createData('Campaign 1', '01-January-2020', '01-March-2020', '14k', 'Active'),
+  // createData('Campaign 2', '02-January-2020', '01-February-2020', '18k', 'Inactive'),
+  // createData('Campaign 3', '04-January-2020', '01-April-2020', '13k', 'Active'),
+  // createData('Campaign 4', '05-January-2020', '01-September-2020', '35k', 'Inactive'),
+  // createData('Campaign 5', '01-February-2020', '01-October-2020', '24k', 'Active'),
+  // createData('Campaign 6', '05-February-2020', '08-October-2020', '45k', 'Inactive'),
+  // createData('Campaign 7', '14-February-2020', '12-October-2020', '68k', 'Active'),
 ];
-
-
 
 class CampaignTable extends React.Component {
   state = {
     redirect: false,
-    addNewCampaign: false
+    addNewCampaign: false,
+    isCampaigns: false
   }
+
+  componentDidMount() {
+    async function getData(url, data) {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: qs.stringify(data)
+      });
+
+      return await response.json();
+    }
+
+    let user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    let data = {
+      client_id: user.id
+    }
+
+    getData(`${API_URL}/campaign/client/pending-campaigns`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          if (res.data.length > 0) {
+            let campaignResData = res.data.map(item => {
+              item.views = "21k"
+              if (item.status == 0) {
+                item.status = "Pending"
+              }
+              return (
+                createData(item.campaign_name, item.created_at, item.deadline, item.views, item.status)
+              )
+            })
+            campaignData = campaignResData;
+            this.setState({ isCampaigns: true });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   setRedirect = () => {
     this.setState({
       redirect: true,
@@ -68,6 +114,7 @@ class CampaignTable extends React.Component {
   }
   render() {
     const { classes } = this.props;
+    const { isCampaigns } = this.state;
 
     return (
       <Fragment>
@@ -88,28 +135,37 @@ class CampaignTable extends React.Component {
               </Tooltip>
             </div>
           </Toolbar>
-          <Table className={classNames(classes.table, classes.hover)}>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="default">Campaign Name</TableCell>
-                <TableCell align="left">Start Date</TableCell>
-                <TableCell align="left">End Date</TableCell>
-                <TableCell align="left">Views</TableCell>
-                <TableCell align="left">Status</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map(n => ([
-                <TableRow key={n.id} onClick={this.setRedirect}>
-                  <TableCell padding="default">{n.campaigns}</TableCell>
-                  <TableCell align="left">{n.start_date}</TableCell>
-                  <TableCell align="left">{n.end_date}</TableCell>
-                  <TableCell align="left">{n.views}</TableCell>
-                  <TableCell align="left">{n.status}</TableCell>
+          {isCampaigns
+            ?
+            <Table className={classNames(classes.table, classes.hover)}>
+              <TableHead>
+                <TableRow>
+                  <TableCell padding="default">Campaign Name</TableCell>
+                  <TableCell align="left">Start Date</TableCell>
+                  <TableCell align="left">End Date</TableCell>
+                  <TableCell align="left">Views</TableCell>
+                  <TableCell align="left">Status</TableCell>
                 </TableRow>
-              ]))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {campaignData.map(n => ([
+                  <TableRow key={n.id} onClick={this.setRedirect}>
+                    <TableCell padding="default">{n.campaigns}</TableCell>
+                    <TableCell align="left">{n.start_date}</TableCell>
+                    <TableCell align="left">{n.end_date}</TableCell>
+                    <TableCell align="left">{n.views}</TableCell>
+                    <TableCell align="left">{n.status}</TableCell>
+                  </TableRow>
+                ]))}
+              </TableBody>
+            </Table>
+            :
+            <Typography color="textSecondary" variant="body1"
+              className={classes.warnMsg}
+            >
+              No Ongoing campaigns !
+            </Typography>
+          }
         </div >
       </Fragment>
     );

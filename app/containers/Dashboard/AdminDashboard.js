@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import AwaitingCampaigns from '../Pages/CampaignManagement/AwaitingCampaigns';
 import AwaitingBulkEmails from '../Pages/BulkEmailManagement/AwaitingBulkEmails';
 import Grid from '@material-ui/core/Grid';
-import StudentSignupFeed from '../Widgets/StudentSignupFeed';
 import { TimelineWidget } from 'dan-components';
 import StudentSignupChart from '../Charts/StudentSignupChart';
 

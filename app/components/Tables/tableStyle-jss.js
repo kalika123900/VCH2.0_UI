@@ -193,6 +193,10 @@ const styles = theme => ({
   greenAvatar: {
     backgroundColor: green[500],
   },
+  warnMsg: {
+    textAlign: "center",
+    padding: 10
+  }
 
 });
 

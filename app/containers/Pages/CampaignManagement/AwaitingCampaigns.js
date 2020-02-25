@@ -25,21 +25,20 @@ function createData(client, campaign, create_date) {
   };
 }
 
-const data = [
-  createData('Jhone Doe', 'Campaign 1', '01-January-2020'),
-  createData('Jhone Doe', 'Campaign 2', '02-January-2020'),
-  createData('Jhone Doe', 'Campaign 3', '04-January-2020'),
-  createData('Jhone Doe', 'Campaign 4', '05-January-2020'),
-  createData('Jhone Doe', 'Campaign 5', '01-February-2020'),
-  createData('Jhone Doe', 'Campaign 6', '05-February-2020'),
-  createData('Jhone Doe', 'Campaign 7', '14-February-2020'),
+const campaignData = [
+  // createData('Jhone Doe', 'Campaign 1', '01-January-2020'),
+  // createData('Jhone Doe', 'Campaign 2', '02-January-2020'),
+  // createData('Jhone Doe', 'Campaign 3', '04-January-2020'),
+  // createData('Jhone Doe', 'Campaign 4', '05-January-2020'),
+  // createData('Jhone Doe', 'Campaign 5', '01-February-2020'),
+  // createData('Jhone Doe', 'Campaign 6', '05-February-2020'),
+  // createData('Jhone Doe', 'Campaign 7', '14-February-2020'),
 ];
-
-
 
 class AwaitingCampaigns extends React.Component {
   state = {
     redirect: false,
+    isCampaigns: false
   }
 
   setRedirect = () => {
@@ -53,8 +52,42 @@ class AwaitingCampaigns extends React.Component {
       return <Redirect to='/client/edit-campaign/id-a5z2f4wc' />
     }
   }
+
+  componentDidMount() {
+    async function getData(url) {
+      const response = await fetch(url, {
+        method: 'GET',
+      });
+
+      return await response.json();
+    }
+
+    getData(`${API_URL}/campaign/client/pending-campaigns`)
+      .then((res) => {
+        if (res.status === 1) {
+          if (res.data.length > 0) {
+            let campaignResData = res.data.map(item => {
+              item.views = "21k"
+              if (item.status == 0) {
+                item.status = "Pending"
+              }
+              return (
+                createData(item.client_name, item.campaign_name, item.created_at)
+              )
+            })
+            campaignData = campaignResData;
+            this.setState({ isCampaigns: true });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   render() {
     const { classes } = this.props;
+    const { isCampaigns } = this.state;
 
     return (
       <Fragment>
@@ -66,30 +99,39 @@ class AwaitingCampaigns extends React.Component {
             </div>
             <div className={classes.spacer} />
           </Toolbar>
-          <Table className={classNames(classes.table, classes.hover)}>
-            <TableHead>
-              <TableRow >
-                <TableCell padding="default">Client Name</TableCell>
-                <TableCell padding="default">Campaign Name</TableCell>
-                <TableCell align="left">Create Date</TableCell>
-                <TableCell align="left">Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map(n => ([
-                <TableRow key={n.id} onClick={this.setRedirect}>
-                  <TableCell padding="default">{n.client}</TableCell>
-                  <TableCell padding="default">{n.campaign}</TableCell>
-                  <TableCell align="left">{n.create_date}</TableCell>
-                  <TableCell align="left">
-                    <Button >
-                      <DeleteIcon />
-                    </Button>
-                  </TableCell>
+          {isCampaigns
+            ?
+            <Table className={classNames(classes.table, classes.hover)}>
+              <TableHead>
+                <TableRow >
+                  <TableCell padding="default">Client Name</TableCell>
+                  <TableCell padding="default">Campaign Name</TableCell>
+                  <TableCell align="left">Create Date</TableCell>
+                  <TableCell align="left">Action</TableCell>
                 </TableRow>
-              ]))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {campaignData.map(n => ([
+                  <TableRow key={n.id} onClick={this.setRedirect}>
+                    <TableCell padding="default">{n.client}</TableCell>
+                    <TableCell padding="default">{n.campaign}</TableCell>
+                    <TableCell align="left">{n.create_date}</TableCell>
+                    <TableCell align="left">
+                      <Button >
+                        <DeleteIcon />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ]))}
+              </TableBody>
+            </Table>
+            :
+            <Typography color="textSecondary" variant="body1"
+              className={classes.warnMsg}
+            >
+              No Awaiting campaigns !
+            </Typography>
+          }
         </div >
       </Fragment>
     );
