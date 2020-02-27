@@ -1,20 +1,19 @@
 const formatDate = (date) => {
-
-  let dateObject = new Date(date);
-  let month = dateObject.getMonth();
+  const dateObject = new Date(date);
+  const month = dateObject.getMonth();
   let day = dateObject.getDate();
-  let year = dateObject.getFullYear();
+  const year = dateObject.getFullYear();
 
   const monthString = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
   if (day < 10) {
-    day = `0${day}`
+    day = `0${day}`;
   }
 
-  return (`${day}-${monthString[month]}-${year}`)
-}
+  return (`${day}-${monthString[month]}-${year}`);
+};
 
-module.exports = formatDate
+module.exports = formatDate;

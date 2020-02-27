@@ -37,12 +37,12 @@ class AwaitingCampaigns extends React.Component {
   setRedirect = () => {
     this.setState({
       redirect: true,
-    })
+    });
   }
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to='/client/edit-campaign/id-a5z2f4wc' />
+      return <Redirect to="/client/edit-campaign/id-a5z2f4wc" />;
     }
   }
 
@@ -60,14 +60,14 @@ class AwaitingCampaigns extends React.Component {
         if (res.status === 1) {
           if (res.data.length > 0) {
             res.data.map(item => {
-              let client_name = item.firstname + " " + item.lastname;
+              const client_name = item.firstname + ' ' + item.lastname;
               item.campaign_masters.map(campaign => {
-                let date = formatDate(campaign.created_at)
+                const date = formatDate(campaign.created_at);
                 campaignData.push(
                   createData(client_name, campaign.campaign_name, date)
-                )
-              })
-            })
+                );
+              });
+            });
             this.setState({ isCampaigns: true });
           }
         }
@@ -84,7 +84,7 @@ class AwaitingCampaigns extends React.Component {
     return (
       <Fragment>
         {this.renderRedirect()}
-        <div className={classes.rootTable} >
+        <div className={classes.rootTable}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
               <Typography variant="h6">Recent Awaiting Campaigns</Typography>
@@ -92,39 +92,43 @@ class AwaitingCampaigns extends React.Component {
             <div className={classes.spacer} />
           </Toolbar>
           {isCampaigns
-            ?
-            <Table className={classNames(classes.table, classes.hover)}>
-              <TableHead>
-                <TableRow >
-                  <TableCell padding="default">Client Name</TableCell>
-                  <TableCell padding="default">Campaign Name</TableCell>
-                  <TableCell align="left">Create Date</TableCell>
-                  <TableCell align="left">Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {campaignData.map(n => ([
-                  <TableRow key={n.id} onClick={this.setRedirect}>
-                    <TableCell padding="default">{n.client}</TableCell>
-                    <TableCell padding="default">{n.campaign}</TableCell>
-                    <TableCell align="left">{n.create_date}</TableCell>
-                    <TableCell align="left">
-                      <Button >
-                        <DeleteIcon />
-                      </Button>
-                    </TableCell>
+            ? (
+              <Table className={classNames(classes.table, classes.hover)}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="default">Client Name</TableCell>
+                    <TableCell padding="default">Campaign Name</TableCell>
+                    <TableCell align="left">Create Date</TableCell>
+                    <TableCell align="left">Action</TableCell>
                   </TableRow>
-                ]))}
-              </TableBody>
-            </Table>
-            :
-            <Typography color="textSecondary" variant="body1"
-              className={classes.warnMsg}
-            >
+                </TableHead>
+                <TableBody>
+                  {campaignData.map(n => ([
+                    <TableRow key={n.id} onClick={this.setRedirect}>
+                      <TableCell padding="default">{n.client}</TableCell>
+                      <TableCell padding="default">{n.campaign}</TableCell>
+                      <TableCell align="left">{n.create_date}</TableCell>
+                      <TableCell align="left">
+                        <Button>
+                          <DeleteIcon />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ]))}
+                </TableBody>
+              </Table>
+            )
+            : (
+              <Typography
+                color="textSecondary"
+                variant="body1"
+                className={classes.warnMsg}
+              >
               No Awaiting campaigns !
-            </Typography>
+              </Typography>
+            )
           }
-        </div >
+        </div>
       </Fragment>
     );
   }

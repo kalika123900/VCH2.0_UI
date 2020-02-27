@@ -15,9 +15,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import AddIcon from '@material-ui/icons/Add';
 import styles from 'dan-components/Tables/tableStyle-jss';
+import qs from 'qs';
 import { makeSecureDecrypt } from '../../../Helpers/security';
 import formatDate from '../../../Helpers/formatDate';
-import qs from 'qs';
 
 let id = 0;
 function createData(campaigns, start_date, end_date, views, status) {
@@ -54,27 +54,27 @@ class CampaignTable extends React.Component {
       return await response.json();
     }
 
-    let user = JSON.parse(
+    const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))
     );
 
-    let data = {
+    const data = {
       client_id: user.id
-    }
+    };
 
     getData(`${API_URL}/campaign/client/campaigns`, data)
       .then((res) => {
         if (res.status === 1) {
           if (res.data.length > 0) {
             res.data.map(item => {
-              item.views = "0k"
+              item.views = '0k';
               if (item.status == 0) {
-                item.status = "Pending"
+                item.status = 'Pending';
               }
-              let createDate = formatDate(item.created_at)
-              let deadline = formatDate(item.deadline)
-              campaignData.push(createData(item.campaign_name, createDate, deadline, item.views, item.status))
-            })
+              const createDate = formatDate(item.created_at);
+              const deadline = formatDate(item.deadline);
+              campaignData.push(createData(item.campaign_name, createDate, deadline, item.views, item.status));
+            });
             this.setState({ isCampaigns: true });
           }
         }
@@ -87,23 +87,27 @@ class CampaignTable extends React.Component {
   setRedirect = () => {
     this.setState({
       redirect: true,
-    })
+    });
   }
+
   setNewCampaign = () => {
     this.setState({
       addNewCampaign: true,
-    })
+    });
   }
+
   addNewCampaign = () => {
     if (this.state.addNewCampaign) {
-      return <Redirect to='/client/campaigns' />
+      return <Redirect to="/client/campaigns" />;
     }
   }
+
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to='/client/campaign-details' />
+      return <Redirect to="/client/campaign-details" />;
     }
   }
+
   render() {
     const { classes } = this.props;
     const { isCampaigns } = this.state;
@@ -112,7 +116,7 @@ class CampaignTable extends React.Component {
       <Fragment>
         {this.renderRedirect()}
         {this.addNewCampaign()}
-        <div className={classes.rootTable} >
+        <div className={classes.rootTable}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
               <Typography variant="h6">Ongoing Campaigns</Typography>
@@ -128,37 +132,41 @@ class CampaignTable extends React.Component {
             </div>
           </Toolbar>
           {isCampaigns
-            ?
-            <Table className={classNames(classes.table, classes.hover)}>
-              <TableHead>
-                <TableRow>
-                  <TableCell padding="default">Campaign Name</TableCell>
-                  <TableCell align="left">Start Date</TableCell>
-                  <TableCell align="left">End Date</TableCell>
-                  <TableCell align="left">Views</TableCell>
-                  <TableCell align="left">Status</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {campaignData.map(n => ([
-                  <TableRow key={n.id} onClick={this.setRedirect}>
-                    <TableCell padding="default">{n.campaigns}</TableCell>
-                    <TableCell align="left">{n.start_date}</TableCell>
-                    <TableCell align="left">{n.end_date}</TableCell>
-                    <TableCell align="left">{n.views}</TableCell>
-                    <TableCell align="left">{n.status}</TableCell>
+            ? (
+              <Table className={classNames(classes.table, classes.hover)}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="default">Campaign Name</TableCell>
+                    <TableCell align="left">Start Date</TableCell>
+                    <TableCell align="left">End Date</TableCell>
+                    <TableCell align="left">Views</TableCell>
+                    <TableCell align="left">Status</TableCell>
                   </TableRow>
-                ]))}
-              </TableBody>
-            </Table>
-            :
-            <Typography color="textSecondary" variant="body1"
-              className={classes.warnMsg}
-            >
+                </TableHead>
+                <TableBody>
+                  {campaignData.map(n => ([
+                    <TableRow key={n.id} onClick={this.setRedirect}>
+                      <TableCell padding="default">{n.campaigns}</TableCell>
+                      <TableCell align="left">{n.start_date}</TableCell>
+                      <TableCell align="left">{n.end_date}</TableCell>
+                      <TableCell align="left">{n.views}</TableCell>
+                      <TableCell align="left">{n.status}</TableCell>
+                    </TableRow>
+                  ]))}
+                </TableBody>
+              </Table>
+            )
+            : (
+              <Typography
+                color="textSecondary"
+                variant="body1"
+                className={classes.warnMsg}
+              >
               No Ongoing campaigns !
-            </Typography>
+              </Typography>
+            )
           }
-        </div >
+        </div>
       </Fragment>
     );
   }
