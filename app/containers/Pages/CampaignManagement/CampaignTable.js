@@ -16,6 +16,7 @@ import TableRow from '@material-ui/core/TableRow';
 import AddIcon from '@material-ui/icons/Add';
 import styles from 'dan-components/Tables/tableStyle-jss';
 import { makeSecureDecrypt } from '../../../Helpers/security';
+import formatDate from '../../../Helpers/formatDate';
 import qs from 'qs';
 
 let id = 0;
@@ -31,15 +32,7 @@ function createData(campaigns, start_date, end_date, views, status) {
   };
 }
 
-const campaignData = [
-  // createData('Campaign 1', '01-January-2020', '01-March-2020', '14k', 'Active'),
-  // createData('Campaign 2', '02-January-2020', '01-February-2020', '18k', 'Inactive'),
-  // createData('Campaign 3', '04-January-2020', '01-April-2020', '13k', 'Active'),
-  // createData('Campaign 4', '05-January-2020', '01-September-2020', '35k', 'Inactive'),
-  // createData('Campaign 5', '01-February-2020', '01-October-2020', '24k', 'Active'),
-  // createData('Campaign 6', '05-February-2020', '08-October-2020', '45k', 'Inactive'),
-  // createData('Campaign 7', '14-February-2020', '12-October-2020', '68k', 'Active'),
-];
+const campaignData = [];
 
 class CampaignTable extends React.Component {
   state = {
@@ -69,20 +62,19 @@ class CampaignTable extends React.Component {
       client_id: user.id
     }
 
-    getData(`${API_URL}/campaign/client/pending-campaigns`, data)
+    getData(`${API_URL}/campaign/client/campaigns`, data)
       .then((res) => {
         if (res.status === 1) {
           if (res.data.length > 0) {
-            let campaignResData = res.data.map(item => {
-              item.views = "21k"
+            res.data.map(item => {
+              item.views = "0k"
               if (item.status == 0) {
                 item.status = "Pending"
               }
-              return (
-                createData(item.campaign_name, item.created_at, item.deadline, item.views, item.status)
-              )
+              let createDate = formatDate(item.created_at)
+              let deadline = formatDate(item.deadline)
+              campaignData.push(createData(item.campaign_name, createDate, deadline, item.views, item.status))
             })
-            campaignData = campaignResData;
             this.setState({ isCampaigns: true });
           }
         }

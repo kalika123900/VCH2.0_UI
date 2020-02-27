@@ -13,6 +13,7 @@ import TableRow from '@material-ui/core/TableRow';
 import styles from 'dan-components/Tables/tableStyle-jss';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Button from '@material-ui/core/Button';
+import formatDate from '../../../Helpers/formatDate';
 
 let id = 0;
 function createData(client, campaign, create_date) {
@@ -25,15 +26,7 @@ function createData(client, campaign, create_date) {
   };
 }
 
-const campaignData = [
-  // createData('Jhone Doe', 'Campaign 1', '01-January-2020'),
-  // createData('Jhone Doe', 'Campaign 2', '02-January-2020'),
-  // createData('Jhone Doe', 'Campaign 3', '04-January-2020'),
-  // createData('Jhone Doe', 'Campaign 4', '05-January-2020'),
-  // createData('Jhone Doe', 'Campaign 5', '01-February-2020'),
-  // createData('Jhone Doe', 'Campaign 6', '05-February-2020'),
-  // createData('Jhone Doe', 'Campaign 7', '14-February-2020'),
-];
+const campaignData = [];
 
 class AwaitingCampaigns extends React.Component {
   state = {
@@ -62,20 +55,19 @@ class AwaitingCampaigns extends React.Component {
       return await response.json();
     }
 
-    getData(`${API_URL}/campaign/client/pending-campaigns`)
+    getData(`${API_URL}/campaign/pending-campaigns`)
       .then((res) => {
         if (res.status === 1) {
           if (res.data.length > 0) {
-            let campaignResData = res.data.map(item => {
-              item.views = "21k"
-              if (item.status == 0) {
-                item.status = "Pending"
-              }
-              return (
-                createData(item.client_name, item.campaign_name, item.created_at)
-              )
+            res.data.map(item => {
+              let client_name = item.firstname + " " + item.lastname;
+              item.campaign_masters.map(campaign => {
+                let date = formatDate(campaign.created_at)
+                campaignData.push(
+                  createData(client_name, campaign.campaign_name, date)
+                )
+              })
             })
-            campaignData = campaignResData;
             this.setState({ isCampaigns: true });
           }
         }
