@@ -1,25 +1,24 @@
 import React, { Fragment, PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
-import { convertFromRaw, EditorState, convertToRaw } from 'draft-js';
+import { bindActionCreators } from 'redux';
 import { Editor } from 'react-draft-wysiwyg';
 import draftToMarkdown from 'draftjs-to-markdown';
+import { convertFromRaw, EditorState, convertToRaw } from 'draft-js';
+import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import 'dan-styles/vendors/react-draft-wysiwyg/react-draft-wysiwyg.css';
-import styles from 'dan-components/Email/email-jss';
 import TextField from '@material-ui/core/TextField';
 import CardHeader from '@material-ui/core/CardHeader';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import IconButton from '@material-ui/core/IconButton';
 import Avatar from '@material-ui/core/Avatar';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Reply from '@material-ui/icons/Reply';
 import ReplyAll from '@material-ui/icons/ReplyAll';
 import ArrowForward from '@material-ui/icons/ArrowForward';
-import { bindActionCreators } from 'redux';
-import { Map as iMap } from 'immutable';
 import { storeStep4Info } from 'dan-actions/CampaignActions';
+import 'dan-styles/vendors/react-draft-wysiwyg/react-draft-wysiwyg.css';
+import styles from 'dan-components/Email/email-jss';
 import cmStyles from './step-jss';
 
 const content = {
@@ -38,34 +37,39 @@ const content = {
 class Step4 extends PureComponent {
   constructor(props) {
     super(props);
-    content.blocks[0].text = this.props.body;
+    const { body, heading } = this.props;
+    content.blocks[0].text = body;
     const contentBlock = convertFromRaw(content);
     if (contentBlock) {
       const editorState = EditorState.createWithContent(contentBlock);
       this.state = {
         editorState,
-        headingEditor: this.props.heading
+        headingEditor: heading
       };
     }
   }
 
   onEditorStateChange = editorState => {
+    const { addInfo } = this.props;
+    const { headingEditor } = this.state;
     this.setState({
       editorState,
     });
-    this.props.addInfo({ body: draftToMarkdown(convertToRaw(editorState.getCurrentContent())), heading: this.state.headingEditor });
+    addInfo({ body: draftToMarkdown(convertToRaw(editorState.getCurrentContent())), heading: headingEditor });
   };
 
   onHeadingChange = (headingEditor) => {
+    const { addInfo } = this.props;
+    const { editorState } = this.state;
     this.setState({
       headingEditor,
     });
-    this.props.addInfo({ body: this.state.editorState, heading: headingEditor });
+    addInfo({ body: editorState, heading: headingEditor });
   };
 
   render() {
-    const { editorState } = this.state;
-    const { classes } = this.props;
+    const { editorState, headingEditor } = this.state;
+    const { classes, heading } = this.props;
     return (
       <Fragment>
         <Typography variant="subtitle2">
@@ -82,7 +86,7 @@ class Step4 extends PureComponent {
                 placeholder="Heading"
                 margin="normal"
                 variant="filled"
-                value={this.props.heading}
+                value={heading}
                 onChange={(e) => this.onHeadingChange(e.target.value)}
                 style={{ width: '100%', marginTop: '0' }}
               />
@@ -104,7 +108,7 @@ class Step4 extends PureComponent {
               <Grid>
                 <textarea
                   disabled
-                  value={this.state.headingEditor}
+                  value={headingEditor}
                   style={{
                     width: '100%',
                     marginTop: '0',
