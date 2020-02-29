@@ -12,18 +12,14 @@ class Campaigns extends React.Component {
     const {
       name,
       role,
-      budget,
-      language,
       removeInfo,
       deadline,
-      goal,
       university,
       keywords,
       gender,
       history
     } = this.props;
 
-    const MapGoal = goal.toJS();
     const MapUniversity = university.toJS();
     const MapKeywords = keywords.toJS();
     const dateArr = deadline.split('/');
@@ -43,14 +39,11 @@ class Campaigns extends React.Component {
 
     const data = {
       name,
-      goal: MapGoal.value,
       locality: 'Lorem Ipsum',
       skills: [19, 20, 21],
-      gender: gender[0],
+      gender,
       role,
-      budget,
       formatedDeadline,
-      language,
       universitie: MapUniversity,
       keywords: MapKeywords
     };
@@ -91,13 +84,10 @@ class Campaigns extends React.Component {
 Campaigns.propTypes = {
   history: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,
-  goal: PropTypes.object.isRequired,
   role: PropTypes.number.isRequired,
-  language: PropTypes.string.isRequired,
-  gender: PropTypes.object.isRequired,
+  gender: PropTypes.number.isRequired,
   university: PropTypes.object.isRequired,
   keywords: PropTypes.object.isRequired,
-  budget: PropTypes.number.isRequired,
   deadline: PropTypes.string.isRequired,
   removeInfo: PropTypes.func.isRequired
 };
@@ -106,13 +96,10 @@ const reducerCampaign = 'campaign';
 
 const mapStateToProps = state => ({
   name: state.getIn([reducerCampaign, 'name']),
-  goal: state.getIn([reducerCampaign, 'goal']),
   role: state.getIn([reducerCampaign, 'role']),
-  language: state.getIn([reducerCampaign, 'language']),
   gender: state.getIn([reducerCampaign, 'gender']),
   university: state.getIn([reducerCampaign, 'university']),
   keywords: state.getIn([reducerCampaign, 'keywords']),
-  budget: state.getIn([reducerCampaign, 'budget']),
   deadline: state.getIn([reducerCampaign, 'deadline']),
 });
 

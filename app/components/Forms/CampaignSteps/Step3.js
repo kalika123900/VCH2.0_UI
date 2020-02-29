@@ -240,7 +240,7 @@ class Step3 extends React.Component {
     const {
       labelWidth,
       customUniversity,
-      customDemographic,
+      // customDemographic,
       keyword,
       customKeyword,
       demographic
@@ -318,69 +318,12 @@ class Step3 extends React.Component {
         {/* section 1 */}
         <Grid container spacing={3} className={classes.divider}>
           <Grid item md={12} xs={12}>
-            <Typography variant="h6" style={{ textAlign: 'left' }}>
-              Which language do you want to advertise in?
-            </Typography>
-            <FormControl variant="outlined" style={{ minWidth: 120, float: 'left' }}>
-              <InputLabel
-                ref={ref => {
-                  this.InputLabelRef = ref;
-                }}
-                htmlFor="outlined-language-simple"
-              >
-                Language
-              </InputLabel>
-              <Select
-                value={language}
-                onChange={this.handleChange}
-                input={(
-                  <OutlinedInput
-                    labelWidth={labelWidth}
-                    name="language"
-                    id="outlined-language-simple"
-                  />
-                )}
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value="english">English</MenuItem>
-                <MenuItem value="french">French</MenuItem>
-                <MenuItem value="hindi">Hindi</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-        </Grid>
-
-        {/* section 2 */}
-        <Grid container spacing={3} className={classes.divider}>
-          <Grid item md={12} xs={12}>
             <Grid style={{ textAlign: 'left' }}>
               <FormControl component="fieldset" required className={classes.formControl}>
                 <Typography variant="h6">Specify precise demographic for the algorithm to give preference to</Typography>
                 <FormGroup>
                   {checkboxButtons}
                 </FormGroup>
-                <TextField
-                  name="customDemographic"
-                  className={classes.textField}
-                  placeholder="For example : Plumber"
-                  value={customDemographic}
-                  margin="normal"
-                  variant="filled"
-                  onChange={(e) => this.handleChange(e)}
-                />
-                <Tooltip title="Add Another">
-                  <Button
-                    name="customDemographic"
-                    variant="text"
-                    color="secondary"
-                    onClick={(e) => this.addCustomItem(e, 'demographic')}
-                  >
-                    <AddIcon />
-                    Add New
-                  </Button>
-                </Tooltip>
               </FormControl>
             </Grid>
           </Grid>
@@ -476,7 +419,6 @@ Step3.propTypes = {
 const reducerCampaign = 'campaign';
 
 const mapStateToProps = state => ({
-  language: state.getIn([reducerCampaign, 'language']),
   gender: state.getIn([reducerCampaign, 'gender']),
   university: state.getIn([reducerCampaign, 'university']),
   keywords: state.getIn([reducerCampaign, 'keywords']),

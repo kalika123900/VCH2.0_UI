@@ -26,14 +26,11 @@ class Step6 extends React.Component {
       deadline,
       heading,
       body,
-      goal,
       // university,
       // gender,
       // keywords
     } = this.props;
-    const MapGoal = goal.toJS();
     // const MapUniversity = university.toJS();
-    // const MapGender = gender.toJS();
     // const MapKeywords = keywords.toJS();
 
     const title = brand.name + ' - Review Campaign Settings';
@@ -84,14 +81,6 @@ class Step6 extends React.Component {
         {/* section 3 */}
         <Grid container spacing={3} className={classes.root}>
           <Grid item md={6} xs={12}>
-            <Grid className={classes.sec_3_grid1}>
-              <Typography variant="h6">
-                Campaign goal
-              </Typography>
-              <Typography variant="subtitle1" color="textSecondary">
-                {MapGoal.value}
-              </Typography>
-            </Grid>
             <Grid className={classes.sec_3_grid2}>
               <Typography variant="h6">
                 Campaign Deadline
@@ -181,11 +170,10 @@ class Step6 extends React.Component {
 Step6.propTypes = {
   classes: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,
-  goal: PropTypes.object.isRequired,
   deadline: PropTypes.string.isRequired,
-  // gender: PropTypes.object.isRequired,
-  // university: PropTypes.object.isRequired,
+  // gender: PropTypes.number.isRequired,
   // role: PropTypes.number.isRequired,
+  // university: PropTypes.object.isRequired,
   // keywords: PropTypes.object.isRequired,
   heading: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
@@ -196,7 +184,6 @@ const reducerCampaign = 'campaign';
 
 const mapStateToProps = state => ({
   name: state.getIn([reducerCampaign, 'name']),
-  goal: state.getIn([reducerCampaign, 'goal']),
   gender: state.getIn([reducerCampaign, 'gender']),
   deadline: state.getIn([reducerCampaign, 'deadline']),
   university: state.getIn([reducerCampaign, 'university']),

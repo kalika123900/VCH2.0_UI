@@ -1,6 +1,5 @@
 import { fromJS, List } from 'immutable';
 import {
-  STORE_STEP1_INFO,
   STORE_STEP2_INFO,
   STORE_STEP3_INFO,
   STORE_STEP4_INFO,
@@ -24,15 +23,13 @@ const DateHelper = {
 };
 
 const initialState = {
-  goal: { id: 1, value: 'Get more people to an event' },
   role: 1,
   language: '',
-  gender: List([]),
+  gender: -1,
   university: List([]),
   keywords: List([]),
   heading: '',
   body: '',
-  budget: 20,
   deadline: DateHelper.format(DateHelper.addDays(new Date(), 5)),
   name: ''
 };
@@ -41,12 +38,6 @@ const initialImmutableState = fromJS(initialState);
 
 export default function reducer(state = initialImmutableState, action = {}) {
   switch (action.type) {
-    case STORE_STEP1_INFO:
-      return state.withMutations((mutableState) => {
-        const goal = fromJS(action.data);
-        mutableState
-          .set('goal', goal);
-      });
     case STORE_STEP2_INFO:
       return state.withMutations((mutableState) => {
         mutableState
@@ -54,12 +45,10 @@ export default function reducer(state = initialImmutableState, action = {}) {
       });
     case STORE_STEP3_INFO:
       return state.withMutations((mutableState) => {
-        const gender = fromJS(action.data.gender);
         const university = fromJS(action.data.university);
         const keywords = fromJS(action.data.keywords);
         mutableState
-          .set('language', action.data.language)
-          .set('gender', gender)
+          .set('gender', action.data.gender)
           .set('university', university)
           .set('keywords', keywords);
       });
@@ -72,7 +61,6 @@ export default function reducer(state = initialImmutableState, action = {}) {
     case STORE_STEP5_INFO:
       return state.withMutations((mutableState) => {
         mutableState
-          .set('budget', action.data.budget)
           .set('deadline', action.data.deadline);
       });
     case STORE_STEP6_INFO:
@@ -84,15 +72,12 @@ export default function reducer(state = initialImmutableState, action = {}) {
     case REMOVE_CAMPAIGN_INFO:
       return state.withMutations((mutableState) => {
         mutableState
-          .set('goal', fromJS({ id: 1, value: 'Get more people to an event' }))
           .set('role', 1)
-          .set('language', '')
-          .set('gender', List([]))
+          .set('gender', -1)
           .set('university', List([]))
           .set('keywords', List([]))
           .set('heading', '')
           .set('body', '')
-          .set('budget', 20)
           .set('deadline', '')
           .set('name', '');
       });

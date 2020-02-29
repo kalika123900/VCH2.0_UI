@@ -119,7 +119,6 @@ export const ADMIN_LOGGED_IN = 'ADMIN_LOGGED_IN';
 export const ADMIN_LOGGED_OUT = 'ADMIN_LOGGED_OUT';
 
 // Campaign Creation
-export const STORE_STEP1_INFO = 'STORE_STEP1_INFO';
 export const STORE_STEP2_INFO = 'STORE_STEP2_INFO';
 export const STORE_STEP3_INFO = 'STORE_STEP3_INFO';
 export const STORE_STEP4_INFO = 'STORE_STEP4_INFO';

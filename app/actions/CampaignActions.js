@@ -1,10 +1,5 @@
 import * as types from './actionConstants';
 
-export const storeStep1Info = (data) => ({
-  type: types.STORE_STEP1_INFO,
-  data
-});
-
 export const storeStep2Info = (data) => ({
   type: types.STORE_STEP2_INFO,
   data
