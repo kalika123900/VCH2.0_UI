@@ -1,21 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles'
+import { Editor } from 'react-draft-wysiwyg';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
-import styles from './user-jss';
-import { Editor } from 'react-draft-wysiwyg';
 import Paper from '@material-ui/core/Paper';
+import styles from './user-jss';
 
 class MessageDialog extends React.Component {
   state = {
-    editorState: ""
+    editorState: ''
   }
 
   sendMessageByEnter = (event, message) => {
@@ -31,6 +30,7 @@ class MessageDialog extends React.Component {
       editorState,
     });
   };
+
   render() {
     const { classes, open, handleClose } = this.props;
     const { editorState } = this.state;
@@ -51,20 +51,20 @@ class MessageDialog extends React.Component {
       emoji: {
         popupClassName: classes.emojiPopup,
       }
-    }
+    };
     return (
       <div>
-        <Grid container justify="center" direction="column" >
+        <Grid container justify="center" direction="column">
           <Dialog
             open={open}
             onClose={handleClose}
             aria-labelledby="form-dialog-title"
-            fullWidth={true}
-            style={{ position: "absolute" }}
+            fullWidth
+            style={{ position: 'absolute' }}
           >
-            <DialogTitle id="form-dialog-title" >Message</DialogTitle>
-            <DialogContent style={{ 'width': '100%' }}  >
-              <FormControl style={{ 'width': '100%' }} >
+            <DialogTitle id="form-dialog-title">Message</DialogTitle>
+            <DialogContent style={{ width: '100%' }}>
+              <FormControl style={{ width: '100%' }}>
 
                 <Paper className={classes.messageBlock}>
                   <Editor
@@ -95,6 +95,9 @@ class MessageDialog extends React.Component {
 }
 MessageDialog.propTypes = {
   classes: PropTypes.object.isRequired,
+  sendMessage: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired
 
 };
 export default withStyles(styles)(MessageDialog);

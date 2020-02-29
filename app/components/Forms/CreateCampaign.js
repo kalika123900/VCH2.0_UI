@@ -14,7 +14,6 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Grid from '@material-ui/core/Grid';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import ArrowForward from '@material-ui/icons/ArrowForward';
-
 import styles from './user-jss';
 import Step2 from './CampaignSteps/Step2';
 import Step3 from './CampaignSteps/Step3';

@@ -45,7 +45,7 @@ function BulkEmailGraph(props) {
           </LineChart>
         </ResponsiveContainer>
       </div>
-    </PapperBlock >
+    </PapperBlock>
   );
 }
 
