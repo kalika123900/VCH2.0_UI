@@ -1,15 +1,15 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form/immutable';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import ArrowForward from '@material-ui/icons/ArrowForward';
 import Grid from '@material-ui/core/Grid';
+import ArrowForward from '@material-ui/icons/ArrowForward';
 import BulkEmailForm from './BulkEmailForm';
 import styles from './user-jss';
 
@@ -18,7 +18,7 @@ class CreateBulkEmail extends React.Component {
     tab: 0,
   };
 
-  handleChangeTab = (e, value) => {
+  handleChangeTab = (value) => {
     this.setState({ tab: value });
   };
 
@@ -50,7 +50,7 @@ class CreateBulkEmail extends React.Component {
                   </FormControl>
                 </Grid>
                 <Grid className={classes.btnArea}>
-                  <Button variant="contained" fullWidth color="primary" onClick={(e) => this.handleChangeTab(e, 1)}>
+                  <Button variant="contained" fullWidth color="primary" onClick={() => this.handleChangeTab(1)}>
                     Next
                     <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
                   </Button>
@@ -77,7 +77,7 @@ CreateBulkEmail.propTypes = {
 };
 
 const CreateBulkEmailReduxed = reduxForm({
-  form: 'immutableExample',
+  form: 'createBulkEmailForm',
   enableReinitialize: true,
 })(CreateBulkEmail);
 
