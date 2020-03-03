@@ -7,27 +7,21 @@ import {
   STORE_STEP6_INFO,
   REMOVE_CAMPAIGN_INFO
 } from 'dan-actions/actionConstants';
-
-const DateHelper = {
-  addDays(aDate, numberOfDays) {
-    aDate.setDate(aDate.getDate() + numberOfDays);
-    return aDate;
-  },
-  format: function format(date) {
-    return [
-      ('0' + date.getDate()).slice(-2),
-      ('0' + (date.getMonth() + 1)).slice(-2),
-      date.getFullYear()
-    ].join('/');
-  }
-};
+import { DateHelper } from '../helpers/dateTimeHelper';
 
 const initialState = {
   role: 1,
-  language: '',
-  gender: -1,
   university: List([]),
+  subjects: List([]),
+  skills: List([]),
   keywords: List([]),
+  gender: List([]),
+  selectedYear: '',
+  ethnicity: 'Prefer not to say',
+  interestedSectors: '',
+  workLocation: '',
+  experience: 'no',
+  minGrade: 1,
   heading: '',
   body: '',
   deadline: DateHelper.format(DateHelper.addDays(new Date(), 5)),
@@ -47,10 +41,21 @@ export default function reducer(state = initialImmutableState, action = {}) {
       return state.withMutations((mutableState) => {
         const university = fromJS(action.data.university);
         const keywords = fromJS(action.data.keywords);
+        const subjects = fromJS(action.data.subjects);
+        const skills = fromJS(action.data.skills);
+        const gender = fromJS(action.data.gender);
         mutableState
-          .set('gender', action.data.gender)
           .set('university', university)
-          .set('keywords', keywords);
+          .set('subjects', subjects)
+          .set('skills', skills)
+          .set('keywords', keywords)
+          .set('gender', gender)
+          .set('selectedYear', action.data.selectedYear)
+          .set('ethnicity', action.data.ethnicity)
+          .set('interestedSectors', action.data.interestedSectors)
+          .set('workLocation', action.data.workLocation)
+          .set('experience', action.data.experience)
+          .set('minGrade', action.data.minGrade);
       });
     case STORE_STEP4_INFO:
       return state.withMutations((mutableState) => {
@@ -73,12 +78,20 @@ export default function reducer(state = initialImmutableState, action = {}) {
       return state.withMutations((mutableState) => {
         mutableState
           .set('role', 1)
-          .set('gender', -1)
           .set('university', List([]))
+          .set('subjects', List([]))
+          .set('skills', List([]))
           .set('keywords', List([]))
+          .set('gender', List([]))
+          .set('selectedYear', '')
+          .set('ethnicity', 'No-preference')
+          .set('interestedSectors', '')
+          .set('workLocation', '')
+          .set('experience', 'no')
+          .set('minGrade', 0)
           .set('heading', '')
           .set('body', '')
-          .set('deadline', '')
+          .set('deadline', DateHelper.format(DateHelper.addDays(new Date(), 5)))
           .set('name', '');
       });
     default:

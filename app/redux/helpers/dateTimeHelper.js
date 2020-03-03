@@ -15,7 +15,7 @@ export function getDate() {
   today = mm + ', ' + dd + ' ' + yyyy;
 
   return today;
-}
+};
 
 export function getTime() {
   let now = new Date();
@@ -32,4 +32,18 @@ export function getTime() {
 
   now = h + ':' + m;
   return now;
-}
+};
+
+export const DateHelper = {
+  addDays(aDate, numberOfDays) {
+    aDate.setDate(aDate.getDate() + numberOfDays);
+    return aDate;
+  },
+  format: function format(date) {
+    return [
+      ('0' + date.getDate()).slice(-2),
+      ('0' + (date.getMonth() + 1)).slice(-2),
+      date.getFullYear()
+    ].join('/');
+  }
+};

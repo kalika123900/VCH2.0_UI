@@ -202,8 +202,7 @@ class NewRoleForm extends React.Component {
                     <Field
                       name="courseList"
                       component={Checkbox}
-                      checked={item.status}
-                      onChange={(e) => { this.handleCheckbox(e, item.id); }}
+                      checked={courses.includes(item.label)}
                     />
                     <ListItemText primary={item.label} />
                   </MenuItem>

@@ -10,18 +10,29 @@ import { removeCampaignInfo } from 'dan-actions/CampaignActions';
 class Campaigns extends React.Component {
   submitForm = () => {
     const {
-      name,
       role,
-      removeInfo,
-      deadline,
       university,
+      subjects,
+      skills,
       keywords,
       gender,
-      history
+      selectedYear,
+      ethnicity,
+      interestedSectors,
+      workLocation,
+      experience,
+      minGrade,
+      heading,
+      body,
+      deadline,
+      name
     } = this.props;
 
     const MapUniversity = university.toJS();
+    const MapSubjects = subjects.toJS();
     const MapKeywords = keywords.toJS();
+    const MapSkills = skills.toJS();
+    const MapGender = gender.toJS();
     const dateArr = deadline.split('/');
     const formatedDeadline = `${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`;
 
@@ -39,14 +50,23 @@ class Campaigns extends React.Component {
 
     const data = {
       name,
-      locality: 'Lorem Ipsum',
-      skills: [19, 20, 21],
-      gender,
       role,
       formatedDeadline,
+      selectedYear,
+      ethnicity,
+      experience,
+      minGrade,
+      heading,
+      body,
+      interestedSectors,
+      workLocation,
+      subjects: MapSubjects,
       universitie: MapUniversity,
-      keywords: MapKeywords
+      keywords: MapKeywords,
+      skills: MapSkills,
+      gender: MapGender,
     };
+    console.log(data)
 
     postJSON(`${API_URL}/campaign/create-campaign`, data) // eslint-disable-line
       .then((res) => {
@@ -85,10 +105,20 @@ Campaigns.propTypes = {
   history: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,
   role: PropTypes.number.isRequired,
-  gender: PropTypes.number.isRequired,
+  gender: PropTypes.object.isRequired,
   university: PropTypes.object.isRequired,
   keywords: PropTypes.object.isRequired,
   deadline: PropTypes.string.isRequired,
+  selectedYear: PropTypes.string.isRequired,
+  ethnicity: PropTypes.string.isRequired,
+  interestedSectors: PropTypes.string.isRequired,
+  workLocation: PropTypes.string.isRequired,
+  experience: PropTypes.string.isRequired,
+  minGrade: PropTypes.number.isRequired,
+  subjects: PropTypes.object.isRequired,
+  skills: PropTypes.object.isRequired,
+  heading: PropTypes.string.isRequired,
+  body: PropTypes.string.isRequired,
   removeInfo: PropTypes.func.isRequired
 };
 
@@ -101,6 +131,16 @@ const mapStateToProps = state => ({
   university: state.getIn([reducerCampaign, 'university']),
   keywords: state.getIn([reducerCampaign, 'keywords']),
   deadline: state.getIn([reducerCampaign, 'deadline']),
+  selectedYear: state.getIn([reducerCampaign, 'selectedYear']),
+  ethnicity: state.getIn([reducerCampaign, 'ethnicity']),
+  interestedSectors: state.getIn([reducerCampaign, 'interestedSectors']),
+  workLocation: state.getIn([reducerCampaign, 'workLocation']),
+  experience: state.getIn([reducerCampaign, 'experience']),
+  minGrade: state.getIn([reducerCampaign, 'minGrade']),
+  subjects: state.getIn([reducerCampaign, 'subjects']),
+  skills: state.getIn([reducerCampaign, 'skills']),
+  heading: state.getIn([reducerCampaign, 'heading']),
+  body: state.getIn([reducerCampaign, 'body']),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
@@ -16,244 +14,309 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
+import ListItemText from '@material-ui/core/ListItemText';
+import Input from '@material-ui/core/Input';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 import AddIcon from '@material-ui/icons/Add';
 import { storeStep3Info } from 'dan-actions/CampaignActions';
+import { subjectMenu, years, grade, skillMenu, location } from './constantData';
 import styles from './step-jss';
+
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 class Step3 extends React.Component {
   state = {
-    labelWidth: 0,
-    category: '',
-    customDemographic: '',
     customKeyword: '',
-    customUniversity: '',
-    keyword: [
-      {
-        id: 15, status: false, value: 'job', label: 'Job'
-      },
-      {
-        id: 16, status: false, value: 'fresher', label: 'Fresher'
-      },
-      {
-        id: 18, status: false, value: 'entry_level', label: 'Entry Level'
-      },
-      {
-        id: 19, status: false, value: 'experienced', label: 'Experienced'
-      }
+    sector: '',
+    suggestedKeywords: [
+      { id: 15, status: false, value: 'Job' },
+      { id: 16, status: false, value: 'Fresher' },
+      { id: 18, status: false, value: 'Entry Level' },
+      { id: 19, status: false, value: 'Experienced' }
     ],
-    university: [
-      {
-        id: 15, status: false, value: 'oxford', label: 'Oxford'
-      },
-      {
-        id: 16, status: false, value: 'rgpv', label: 'RGPV'
-      },
-      {
-        id: 17, status: false, value: 'iist-university', label: 'IIST University'
-      },
-      {
-        id: 18, status: false, value: 'oriental-university', label: 'Oriental University'
-      },
+    universityMenu: [
+      { id: 15, status: false, value: 'Oxford' },
+      { id: 16, status: false, value: 'RGPV' },
+      { id: 17, status: false, value: 'IIST University' },
+      { id: 18, status: false, value: 'Oriental University' },
     ],
-    demographic: [
-      {
-        id: -1, status: false, value: 'no-preference', label: 'No preference'
-      },
-      {
-        id: 0, status: false, value: 'women', label: 'Women'
-      },
-      {
-        id: 1, status: false, value: 'men', label: 'Men'
-      },
-      {
-        id: 2, status: false, value: 'bame', label: 'BAME'
-      },
+    genderMenu: [
+      { status: false, value: 0, label: 'Prefer not to say' },
+      { status: false, value: 1, label: 'Men' },
+      { status: false, value: 2, label: 'Women' },
+      { status: false, value: 3, label: 'Non-binary' },
     ]
   };
 
   handleChange = event => {
-    const {
-      addInfo,
-      gender,
-      keywords,
-      university
-    } = this.props;
-
     this.setState({ [event.target.name]: event.target.value });
-
-    if (event.target.name === 'language') {
-      addInfo({
-        language: event.target.value,
-        gender,
-        keywords,
-        university
-      });
-    }
   };
 
-  handleCheckbox = (e, id) => {
+  handleReduxChange = event => {
     const {
-      addInfo,
-      gender,
-      language,
-      keywords,
-      university
-    } = this.props;
-
-    const arr = this.state[e.target.name]; // eslint-disable-line
-    arr.forEach(item => {
-      if (item.id === id) {
-        item.status = !item.status; // eslint-disable-line
-      }
-    });
-
-    this.setState({ [e.target.name]: arr });
-
-    if (e.target.name === 'demographic') {
-      let MapGender = gender.toJS();
-      if (MapGender.indexOf(id) === -1) {
-        MapGender.push(id);
-      } else if (!e.target.checked) {
-        MapGender = MapGender.filter(item => item !== id);
-      }
-      addInfo({
-        language,
-        gender: MapGender,
-        keywords,
-        university
-      });
-    }
-    if (e.target.name === 'university') {
-      let MapUniversity = university.toJS();
-      if (MapUniversity.indexOf(id) === -1) {
-        MapUniversity.push(id);
-      } else if (!e.target.checked) {
-        MapUniversity = MapUniversity.filter(item => item !== id);
-      }
-      addInfo({
-        language,
-        gender,
-        keywords,
-        university: MapUniversity
-      });
-    }
-  };
-
-  addCustomItem = (e, stateItem) => {
-    if (this.state[e.target.offsetParent.name].length > 0) { //eslint-disable-line
-      const customItem = this.state[e.target.offsetParent.name]; //eslint-disable-line
-      const { length } = this.state[e.target.offsetParent.name]; //eslint-disable-line
-      const newItemObj = {
-        id: (length + 1), status: false, value: customItem, label: customItem
-      };
-      const newItemArr = [...this.state[stateItem], newItemObj]; //eslint-disable-line
-      this.setState({ [stateItem]: newItemArr, [e.target.offsetParent.name]: '' });
-    }
-  }
-
-  addKeyword = () => {
-    const {
-      customKeyword,
-      keyword
-    } = this.state;
-
-    const {
-      addInfo,
-      keywords,
-      language,
-      gender,
-      university
-    } = this.props;
-
-    if (customKeyword.length > 0) {
-      const id = keyword.length + 1;
-      const newKeywordObj = {
-        id,
-        status: true,
-        value: customKeyword,
-        label: customKeyword
-      };
-      const newKeywordArr = [...keyword, newKeywordObj];
-      this.setState({ keyword: newKeywordArr, customKeyword: '' });
-
-      const Mapkeywords = keywords.toJS();
-      if (Mapkeywords.indexOf(id) === -1) {
-        Mapkeywords.push(id);
-      }
-
-      addInfo({
-        language,
-        gender,
-        university,
-        keywords: Mapkeywords
-      });
-    }
-  }
-
-  handleSuggestedKeyword = (e, id) => {
-    const {
-      keyword
-    } = this.state;
-    const {
-      keywords,
-      language,
-      gender,
       university,
+      subjects,
+      skills,
+      keywords,
+      gender,
+      selectedYear,
+      ethnicity,
+      interestedSectors,
+      workLocation,
+      experience,
+      minGrade,
       addInfo
     } = this.props;
 
-    const newKeywordArr = keyword.map((item) => {
+    if (event.target.name === "selectedYear") {
+      addInfo({
+        university,
+        subjects,
+        skills,
+        keywords,
+        gender,
+        selectedYear: event.target.value,
+        ethnicity,
+        interestedSectors,
+        workLocation,
+        experience,
+        minGrade
+      });
+    }
+    if (event.target.name === "minGrade") {
+      addInfo({
+        university,
+        subjects,
+        skills,
+        keywords,
+        gender,
+        selectedYear,
+        ethnicity,
+        interestedSectors,
+        workLocation,
+        experience,
+        minGrade: event.target.value
+      });
+    }
+    if (event.target.name === "experience") {
+      addInfo({
+        university,
+        subjects,
+        skills,
+        keywords,
+        gender,
+        selectedYear,
+        ethnicity,
+        interestedSectors,
+        workLocation,
+        experience: event.target.value,
+        minGrade
+      });
+    }
+    if (event.target.name === "ethnicity") {
+      addInfo({
+        university,
+        subjects,
+        skills,
+        keywords,
+        gender,
+        selectedYear,
+        ethnicity: event.target.value,
+        interestedSectors,
+        workLocation,
+        experience,
+        minGrade
+      });
+    }
+  };
+
+  handleMultiSelect = (event) => {
+    let value = event.target.value;
+
+    const {
+      university,
+      subjects,
+      skills,
+      keywords,
+      gender,
+      selectedYear,
+      ethnicity,
+      interestedSectors,
+      workLocation,
+      experience,
+      minGrade,
+      addInfo
+    } = this.props;
+    if (event.target.name == "university") {
+      addInfo({
+        university: value,
+        subjects,
+        skills,
+        keywords,
+        gender,
+        selectedYear,
+        ethnicity,
+        interestedSectors,
+        workLocation,
+        experience,
+        minGrade
+      });
+    }
+    if (event.target.name == "subjects") {
+      addInfo({
+        university,
+        subjects: value,
+        skills,
+        keywords,
+        gender,
+        selectedYear,
+        ethnicity,
+        interestedSectors,
+        workLocation,
+        experience,
+        minGrade
+      });
+    }
+  };
+
+  handleGender = (value) => {
+    const {
+      university,
+      subjects,
+      skills,
+      keywords,
+      gender,
+      selectedYear,
+      ethnicity,
+      interestedSectors,
+      workLocation,
+      experience,
+      minGrade,
+      addInfo
+    } = this.props;
+
+    const MapGender = gender.toJS();
+    if (MapGender.indexOf(value) === -1) {
+      MapGender.push(value);
+    }
+    else {
+      const index = MapGender.indexOf(value);
+      if (index > -1) {
+        MapGender.splice(index, 1);
+      }
+    }
+
+    addInfo({
+      university,
+      subjects,
+      skills,
+      keywords,
+      gender: MapGender,
+      selectedYear,
+      ethnicity,
+      interestedSectors,
+      workLocation,
+      experience,
+      minGrade
+    })
+  };
+
+  handleCustomKeyword = () => {
+
+  };
+
+  handleSuggestedKeyword = (id) => {
+    const { suggestedKeywords } = this.state;
+    const {
+      university,
+      subjects,
+      skills,
+      keywords,
+      gender,
+      selectedYear,
+      ethnicity,
+      interestedSectors,
+      workLocation,
+      experience,
+      minGrade,
+      addInfo
+    } = this.props;
+
+    const newSuggestedKeywords = suggestedKeywords.map((item) => {
       if (item.id === id) {
         return {
           id,
           status: !item.status,
-          value: item.value,
-          label: item.label
+          value: item.value
         };
       }
       return item;
     });
-    this.setState({ keyword: newKeywordArr });
 
-    const Mapkeywords = keywords.toJS();
+    this.setState({ suggestedKeywords: newSuggestedKeywords });
+
+    const MapKeywords = keywords.toJS();
     if (Mapkeywords.indexOf(id) === -1) {
       Mapkeywords.push(id);
     }
 
     addInfo({
-      language,
-      gender,
       university,
-      keywords: Mapkeywords
+      subjects,
+      skills,
+      keywords: MapKeywords,
+      gender,
+      selectedYear,
+      ethnicity,
+      interestedSectors,
+      workLocation,
+      experience,
+      minGrade
     });
   }
 
   render() {
     const {
       classes,
-      language,
+      keywords,
       gender,
       university,
-      keywords
+      subjects,
+      skills,
+      selectedYear,
+      ethnicity,
+      experience,
+      minGrade,
+      workLocation
     } = this.props;
 
     const {
-      labelWidth,
-      customUniversity,
-      // customDemographic,
-      keyword,
       customKeyword,
-      demographic
+      suggestedKeywords,
+      genderMenu,
+      universityMenu,
+      sector
     } = this.state;
 
-    const checkboxButtons = demographic.map((item, index) => (
+    const genderCheckboxes = genderMenu.map((item, index) => (
       <FormControlLabel
         control={(
           <Checkbox
-            name="demographic"
-            checked={gender.includes(item.id)}
+            name="genderMenu"
+            checked={gender.includes(item.value)}
             value={item.value}
-            onChange={(e) => { this.handleCheckbox(e, item.id); }}
+            onChange={() => this.handleGender(item.value)}
           />
         )}
         label={item.label}
@@ -261,22 +324,24 @@ class Step3 extends React.Component {
       />
     ));
 
-    const universities = this.state.university.map((item, index) => ( //eslint-disable-line
-      <FormControlLabel
-        control={(
-          <Checkbox
-            name="university"
-            checked={university.includes(item.id)}
-            value={item.value}
-            onChange={(e) => { this.handleCheckbox(e, item.id); }}
-          />
-        )}
-        label={item.label}
-        key={index.toString()}
-      />
-    ));
+    const selectedKeywords = suggestedKeywords.map((item, index) => {
+      if (item.status === true || keywords.includes(item.id)) {
+        return (
+          <Typography
+            variant="subtitle1"
+            className={classes.choosenTerms}
+            key={index.toString()}
+          >
+            {item.value}
+          </Typography>
+        );
+      }
+      return false;
+    });
 
-    const suggestedKeywords = keyword.map((item, index) => {
+    const selectedSectors = null;
+
+    const keywordList = suggestedKeywords.map((item, index) => {
       if (item.status === false && !keywords.includes(item.id)) {
         return (
           <Fragment key={index.toString()}>
@@ -284,11 +349,11 @@ class Step3 extends React.Component {
               variant="outlined"
               color="secondary"
               className={classes.button}
-              onClick={(e) => this.handleSuggestedKeyword(e, item.id)}
+              onClick={() => this.handleSuggestedKeyword(item.id)}
             >
               +
               {' '}
-              {item.label}
+              {item.value}
             </Button>
           </Fragment>
         );
@@ -296,33 +361,56 @@ class Step3 extends React.Component {
       return false;
     });
 
-
-    const keywordList = keyword.map((item, index) => {
-      if (item.status === true || keywords.includes(item.id)) {
-        return (
-          <Typography
-            variant="subtitle1"
-            className={classes.choosenTerms}
-            key={index.toString()}
-            onClick={e => this.handleSuggestedKeyword(e, item.id)}
-          >
-            {item.label}
-          </Typography>
-        );
-      }
-      return false;
-    });
-
     return (
       <div className={(classes.root, classes.step3Root)}>
-        {/* section 1 */}
+        <Grid container spacing={3} className={classes.divider}>
+          <Grid item md={12} xs={12}>
+            <Grid style={{ textAlign: 'left' }}>
+              <FormControl component="fieldset" required className={(classes.customWidth, classes.formControl)}>
+                <Typography variant="h6">
+                  Specify Universities for algorithm to prefer
+                </Typography>
+                <Select
+                  multiple
+                  value={university.toJS()}
+                  name="university"
+                  input={<Input />}
+                  renderValue={selected => {
+                    let universityName = [];
+                    universityMenu.map((value, index) => {
+                      if (selected.includes(value.id)) {
+                        universityName.push(value.value);
+                      }
+                    });
+                    return universityName.join(', ');
+                  }
+                  }
+                  MenuProps={MenuProps}
+                  component={Select}
+                  onChange={e => this.handleMultiSelect(e)}
+                >
+                  {universityMenu.map((item, index) => (
+                    <MenuItem key={index.toString()} value={item.id}>
+                      <TextField
+                        name="university-checkbox"
+                        component={Checkbox}
+                        checked={university.indexOf(item.id) > -1}
+                      />
+                      <ListItemText primary={item.value} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </Grid>
         <Grid container spacing={3} className={classes.divider}>
           <Grid item md={12} xs={12}>
             <Grid style={{ textAlign: 'left' }}>
               <FormControl component="fieldset" required className={classes.formControl}>
-                <Typography variant="h6">Specify precise demographic for the algorithm to give preference to</Typography>
+                <Typography variant="h6">Specify precise gender for the algorithm to give preference to</Typography>
                 <FormGroup>
-                  {checkboxButtons}
+                  {genderCheckboxes}
                 </FormGroup>
               </FormControl>
             </Grid>
@@ -332,35 +420,217 @@ class Step3 extends React.Component {
           <Grid item md={12} xs={12}>
             <Grid style={{ textAlign: 'left' }}>
               <FormControl component="fieldset" required className={(classes.customWidth, classes.formControl)}>
-                <Typography variant="h6">Specify Universities for algorithm to prefer</Typography>
-                <FormGroup>
-                  {universities}
-                </FormGroup>
-                <TextField
-                  name="customUniversity"
-                  className={classes.textField}
-                  placeholder="For example : RGPV"
-                  value={customUniversity}
-                  margin="normal"
-                  variant="filled"
-                  onChange={(e) => this.handleChange(e)}
-                />
-                <Tooltip title="Add Another">
-                  <Button
-                    name="customUniversity"
-                    variant="text"
-                    color="secondary"
-                    onClick={(e) => this.addCustomItem(e, 'university')}
-                  >
-                    <AddIcon />
-                    Add New
-                  </Button>
-                </Tooltip>
+                <Typography variant="h6">
+                  Specify subjects for algorithm to prefer
+                </Typography>
+                <Select
+                  multiple
+                  value={subjects.toJS()}
+                  name="subjects"
+                  input={<Input />}
+                  MenuProps={MenuProps}
+                  component={Select}
+                  renderValue={selected => {
+                    let subjectName = [];
+                    subjectMenu.map((value, index) => {
+                      if (selected.includes(value.id)) {
+                        subjectName.push(value.value);
+                      }
+                    });
+                    return subjectName.join(', ');
+                  }
+                  }
+                  onChange={e => this.handleMultiSelect(e)}
+                >
+                  {subjectMenu.map((item, index) => (
+                    <MenuItem key={index.toString()} value={item.id}>
+                      <TextField
+                        name="subject-checkbox"
+                        component={Checkbox}
+                        checked={subjects.indexOf(item.id) > -1}
+                      />
+                      <ListItemText primary={item.value} />
+                    </MenuItem>
+                  ))}
+                </Select>
               </FormControl>
             </Grid>
           </Grid>
         </Grid>
-        {/* section 3 */}
+        <Grid container spacing={3} className={classes.divider}>
+          <Grid item md={12} xs={12}>
+            <Grid style={{ textAlign: 'left' }}>
+              <FormControl component="fieldset" required className={(classes.customWidth, classes.formControl)}>
+                <Typography variant="h6">
+                  Specify Skills for algorithm to prefer
+                </Typography>
+                <Select
+                  multiple
+                  value={skills.toJS()}
+                  input={<Input />}
+                  renderValue={selected => selected.join(', ')}
+                  MenuProps={MenuProps}
+                  component={Select}
+                >
+                  {skillMenu.map((item, index) => (
+                    <MenuItem key={index.toString()} value={item.value}>
+                      <TextField
+                        name="skill-checkbox"
+                        component={Checkbox}
+                        checked={skills.indexOf(item.id) > -1}
+                      />
+                      <ListItemText primary={item.value} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} className={classes.divider}>
+          <Grid item md={12} xs={12}>
+            <Grid style={{ textAlign: 'left' }}>
+              <FormControl className={classes.formControl}>
+                <Typography variant="h6">
+                  Specify Years for algorithm to prefer
+                </Typography>
+                <Select
+                  placeholder="Select Year"
+                  value={selectedYear}
+                  name="selectedYear"
+                  onChange={(e) => this.handleReduxChange(e)}
+                  MenuProps={MenuProps}
+                >
+                  {years.map((item, index) => (
+                    <MenuItem key={index} value={item}>
+                      <ListItemText primary={item} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} className={classes.divider}>
+          <Grid item md={12} xs={12}>
+            <Grid style={{ textAlign: 'left' }}>
+              <FormControl className={classes.formControl}>
+                <Typography variant="h6">
+                  Specify Minimum Grade required for algorithm to prefer
+                </Typography>
+                <Select
+                  placeholder="Select Minimum Grade"
+                  value={minGrade}
+                  name="minGrade"
+                  onChange={e => this.handleReduxChange(e)}
+                  MenuProps={MenuProps}
+                >
+                  {grade.map((item, index) => (
+                    <MenuItem key={index} value={item.id}>
+                      <ListItemText primary={item.value} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} className={classes.divider}>
+          <Grid item md={12} xs={12}>
+            <Grid style={{ textAlign: 'left' }}>
+              <FormControl component="fieldset" required className={classes.formControl}>
+                <Typography variant="h6">Select Ethnicity</Typography>
+                <RadioGroup
+                  aria-label="ethnicity"
+                  name="ethnicity"
+                  className={classes.group}
+                  value={ethnicity}
+                  onChange={(e) => this.handleReduxChange(e)}
+                >
+                  <FormControlLabel value="Asian or Asian British" control={<Radio />} label="Asian or Asian British" />
+                  <FormControlLabel value="Black or Black British" control={<Radio />} label="Black or Black British" />
+                  <FormControlLabel value="Mixed" control={<Radio />} label="Mixed" />
+                  <FormControlLabel value="Other Ethnic Groups" control={<Radio />} label="Other Ethnic Groups" />
+                  <FormControlLabel value="White" control={<Radio />} label="White" />
+                  <FormControlLabel value="Prefer not to say" control={<Radio />} label="Prefer not to say" />
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} className={classes.divider}>
+          <Grid item md={12} xs={12}>
+            <Grid style={{ textAlign: 'left' }}>
+              <FormControl component="fieldset" required className={classes.formControl}>
+                <Typography variant="h6">Experience Required</Typography>
+                <RadioGroup
+                  aria-label="experience"
+                  name="experience"
+                  className={classes.group}
+                  value={experience}
+                  onChange={(e) => this.handleReduxChange(e)}
+                >
+                  <FormControlLabel value='yes' control={<Radio />} label="Yes" />
+                  <FormControlLabel value='no' control={<Radio />} label="No" />
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} className={classes.divider}>
+          <Grid item md={12} xs={12}>
+            <Grid style={{ textAlign: 'left' }}>
+              <Typography variant="h6" style={{ textAlign: 'left' }}>
+                Locations they are willing to work
+              </Typography>
+              <FormControl className={classes.formControl}>
+                <TextField
+                  label="Work Location"
+                  className={classes.textField}
+                  type="text"
+                  variant="outlined"
+                  value={workLocation}
+                  name="workLocation"
+                  margin="normal"
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} className={classes.divider}>
+          <Grid>
+            <Typography variant="h6" style={{ textAlign: 'left' }}>
+              Interested Sectors to specify
+            </Typography>
+          </Grid>
+          <Grid className={classes.customGrid}>
+            {selectedSectors !== null && selectedSectors}
+          </Grid>
+          <Grid style={{ width: '100%' }}>
+            <TextField
+              name="sector"
+              placeholder="For example : IT"
+              value={sector}
+              className={classes.textField}
+              margin="normal"
+              variant="filled"
+              onChange={(e) => this.handleChange(e)}
+              style={{ width: '100%' }}
+            />
+            <Grid>
+              <Tooltip title="Add New">
+                <Button
+                  variant="text"
+                  color="secondary"
+                  style={{ textAlign: 'left' }}
+                >
+                  <AddIcon />
+                  Add New
+                </Button>
+              </Tooltip>
+            </Grid>
+          </Grid>
+        </Grid>
         <Grid container spacing={3} className={classes.divider}>
           <Grid>
             <Typography variant="h6" style={{ textAlign: 'left' }}>
@@ -368,7 +638,7 @@ class Step3 extends React.Component {
             </Typography>
           </Grid>
           <Grid className={classes.customGrid}>
-            {keywordList !== null && keywordList}
+            {selectedKeywords !== null && selectedKeywords}
           </Grid>
           <Grid style={{ width: '100%' }}>
             <TextField
@@ -383,7 +653,11 @@ class Step3 extends React.Component {
             />
             <Grid>
               <Tooltip title="Add New">
-                <Button variant="text" color="secondary" style={{ textAlign: 'left' }} onClick={() => this.addKeyword()}>
+                <Button
+                  variant="text"
+                  color="secondary"
+                  style={{ textAlign: 'left' }}
+                >
                   <AddIcon />
                   Add New
                 </Button>
@@ -391,37 +665,51 @@ class Step3 extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        {/* section 4 */}
         <Grid container spacing={3} className={classes.divider}>
           <Grid>
             <Typography variant="h6" style={{ textAlign: 'left', marginBottom: '5px' }}>
               Suggested Keywords for you
             </Typography>
             <Grid container>
-              {suggestedKeywords}
+              {keywordList}
             </Grid>
           </Grid>
         </Grid>
-      </div>
+      </div >
     );
   }
 }
 
 Step3.propTypes = {
   classes: PropTypes.object.isRequired,
-  language: PropTypes.string.isRequired,
-  gender: PropTypes.object.isRequired,
   university: PropTypes.object.isRequired,
+  subjects: PropTypes.object.isRequired,
+  skills: PropTypes.object.isRequired,
   keywords: PropTypes.object.isRequired,
+  gender: PropTypes.object.isRequired,
+  selectedYear: PropTypes.string.isRequired,
+  ethnicity: PropTypes.string.isRequired,
+  interestedSectors: PropTypes.string.isRequired,
+  workLocation: PropTypes.string.isRequired,
+  experience: PropTypes.string.isRequired,
+  minGrade: PropTypes.number.isRequired,
   addInfo: PropTypes.func.isRequired
 };
 
 const reducerCampaign = 'campaign';
 
 const mapStateToProps = state => ({
-  gender: state.getIn([reducerCampaign, 'gender']),
   university: state.getIn([reducerCampaign, 'university']),
+  subjects: state.getIn([reducerCampaign, 'subjects']),
+  skills: state.getIn([reducerCampaign, 'skills']),
   keywords: state.getIn([reducerCampaign, 'keywords']),
+  gender: state.getIn([reducerCampaign, 'gender']),
+  selectedYear: state.getIn([reducerCampaign, 'selectedYear']),
+  ethnicity: state.getIn([reducerCampaign, 'ethnicity']),
+  interestedSectors: state.getIn([reducerCampaign, 'interestedSectors']),
+  workLocation: state.getIn([reducerCampaign, 'workLocation']),
+  experience: state.getIn([reducerCampaign, 'experience']),
+  minGrade: state.getIn([reducerCampaign, 'minGrade']),
 });
 
 const mapDispatchToProps = dispatch => ({
