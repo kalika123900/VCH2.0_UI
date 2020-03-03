@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import brand from 'dan-api/dummy/brand';
 import { CreateCampaign } from 'dan-components';
 import { removeCampaignInfo } from 'dan-actions/CampaignActions';
+import { makeSecureDecrypt } from 'dan-helpers/security';
 
 class Campaigns extends React.Component {
   submitForm = () => {
@@ -48,10 +49,14 @@ class Campaigns extends React.Component {
       await response.json();
     }
 
+    let user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
     const data = {
       name,
       role,
-      formatedDeadline,
+      deadline: formatedDeadline,
       selectedYear,
       ethnicity,
       experience,
@@ -61,10 +66,11 @@ class Campaigns extends React.Component {
       interestedSectors,
       workLocation,
       subjects: MapSubjects,
-      universitie: MapUniversity,
+      university: MapUniversity,
       keywords: MapKeywords,
       skills: MapSkills,
       gender: MapGender,
+      clientId: user.id
     };
     console.log(data)
 

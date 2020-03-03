@@ -5,10 +5,11 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -18,11 +19,11 @@ import brand from 'dan-api/dummy/brand';
 import { storeStep5Info } from 'dan-actions/CampaignActions';
 import PapperBlock from '../../PapperBlock/PapperBlock';
 import styles from '../../../containers/Pages/HelpSupport/helpSupport-jss';
+import { DateHelper } from '../../../redux/helpers/dateTimeHelper';
 
 class Step5 extends React.Component {
   state = {
-    expanded: null,
-    roleDeadline: false
+    expanded: null
   };
 
   handleQA = panel => (expanded) => {
@@ -31,12 +32,14 @@ class Step5 extends React.Component {
     });
   };
 
-  handleCheckbox = event => {
-    this.setState({ [event.target.name]: event.target.checked });
+  handleReduxChange = (value) => {
+    const { addInfo } = this.props;
+    const deadline = DateHelper.format(DateHelper.addDays(new Date(), value));
+    addInfo({ deadline, choosedDeadline: value });
   };
 
   handleDateChange = currentDate => {
-    const { addInfo } = this.props;
+    const { addInfo, choosedDeadline } = this.props;
     const year = currentDate.getFullYear();
     let date = currentDate.getDate();
     let month = currentDate.getMonth();
@@ -50,13 +53,13 @@ class Step5 extends React.Component {
       month += 1;
     }
 
-    const dateMonthYear = date + '/' + (month) + '/' + year;
-    addInfo({ deadline: dateMonthYear });
+    const dateMonthYear = year + '-' + (month) + '-' + date;
+    addInfo({ deadline: dateMonthYear, choosedDeadline });
   };
 
   render() {
-    const { classes, deadline } = this.props;
-    const { expanded, roleDeadline } = this.state;
+    const { classes, deadline, choosedDeadline } = this.props;
+    const { expanded } = this.state;
     const title = brand.name + ' - Deadline';
     const description = brand.desc;
 
@@ -74,34 +77,38 @@ class Step5 extends React.Component {
           <Grid item md={6} xs={12}>
             <PapperBlock title="Set Your Own Deadline" icon="ios-time-outline" whiteBg desc="You can choose your suitable timeline">
               <div style={{ textAlign: 'left' }}>
-                <FormControlLabel
-                  control={(
-                    <Checkbox
-                      name="roleDeadline"
-                      checked={roleDeadline}
-                      onChange={e => this.handleCheckbox(e)}
-                    />
-                  )}
-                  label="Set role deadline as campaign deadline"
-                />
+                <RadioGroup
+                  name="deadline"
+                  className={classes.group}
+                  value={choosedDeadline}
+                  onChange={(e) => this.handleReduxChange(e.target.value)}
+                >
+                  <FormControlLabel value={"28"} control={<Radio />} label="1 Month" />
+                  <FormControlLabel value={"56"} control={<Radio />} label="2 Month" />
+                  <FormControlLabel value={"84"} control={<Radio />} label="3 Month" />
+                  <FormControlLabel value={"5"} control={<Radio />} label="Role deadline as campaign deadline" />
+                  <FormControlLabel value={"0"} control={<Radio />} label="Custom Deadline" />
+                </RadioGroup>
               </div>
               <br />
-              <div style={{ textAlign: 'left' }}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <Grid container justify="space-around">
-                    <KeyboardDatePicker
-                      margin="normal"
-                      format="dd/MM/yyyy"
-                      placeholder="Choose Date"
-                      value={deadline}
-                      onChange={this.handleDateChange}
-                      KeyboardButtonProps={{
-                        'aria-label': 'change date',
-                      }}
-                    />
-                  </Grid>
-                </MuiPickersUtilsProvider>
-              </div>
+              {choosedDeadline === "0" &&
+                <div style={{ textAlign: 'left' }}>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Grid container justify="space-around">
+                      <KeyboardDatePicker
+                        margin="normal"
+                        format="dd/MM/yyyy"
+                        placeholder="Choose Date"
+                        value={new Date(deadline)}
+                        onChange={this.handleDateChange}
+                        KeyboardButtonProps={{
+                          'aria-label': 'change date',
+                        }}
+                      />
+                    </Grid>
+                  </MuiPickersUtilsProvider>
+                </div>
+              }
             </PapperBlock>
           </Grid>
           <Grid item md={6} sm={12} xs={12}>
@@ -181,13 +188,15 @@ class Step5 extends React.Component {
 Step5.propTypes = {
   classes: PropTypes.object.isRequired,
   deadline: PropTypes.string.isRequired,
+  choosedDeadline: PropTypes.string.isRequired,
   addInfo: PropTypes.func.isRequired
 };
 
 const reducerCampaign = 'campaign';
 
 const mapStateToProps = state => ({
-  deadline: state.getIn([reducerCampaign, 'deadline'])
+  deadline: state.getIn([reducerCampaign, 'deadline']),
+  choosedDeadline: state.getIn([reducerCampaign, 'choosedDeadline'])
 });
 
 const mapDispatchToProps = dispatch => ({

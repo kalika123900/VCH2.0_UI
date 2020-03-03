@@ -14,11 +14,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
+
 import ListItemText from '@material-ui/core/ListItemText';
 import Input from '@material-ui/core/Input';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import AddIcon from '@material-ui/icons/Add';
+import SelectAdd from '../../SelectAdd/SelectAdd';
 import { storeStep3Info } from 'dan-actions/CampaignActions';
 import { subjectMenu, years, grade, skillMenu, location } from './constantData';
 import styles from './step-jss';
@@ -34,9 +36,19 @@ const MenuProps = {
     },
   },
 };
+const top100Films = [
+  { value: 'The Shawshank Redemption', id: 1994 },
+  { title: 'The Godfather', id: 1972 },
+  { title: 'The Godfather: Part II', id: 1974 },
+  { title: 'The Dark Knight', id: 2008 },
+]
+
 
 class Step3 extends React.Component {
   state = {
+    dataValue: null,
+    open: false,
+    dialogValue: { id: '', value: '' },
     customKeyword: '',
     sector: '',
     suggestedKeywords: [
@@ -58,6 +70,25 @@ class Step3 extends React.Component {
       { status: false, value: 3, label: 'Non-binary' },
     ]
   };
+
+  handleClose = () => {
+    let value = { id: -1, value: '' }
+    this.setState({ dialogValue: value, open: false })
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    const { dialogValue } = this.state;
+    this.setState({
+      dataValue: {
+        id: dialogValue.id,
+        value: dialogValue.value
+      }
+    })
+
+    this.handleClose();
+  };
+
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
@@ -188,6 +219,21 @@ class Step3 extends React.Component {
         minGrade
       });
     }
+    if (event.target.name == "skills") {
+      addInfo({
+        university,
+        subjects,
+        skills: value,
+        keywords,
+        gender,
+        selectedYear,
+        ethnicity,
+        interestedSectors,
+        workLocation,
+        experience,
+        minGrade
+      });
+    }
   };
 
   handleGender = (value) => {
@@ -266,9 +312,9 @@ class Step3 extends React.Component {
 
     this.setState({ suggestedKeywords: newSuggestedKeywords });
 
-    const MapKeywords = keywords.toJS();
-    if (Mapkeywords.indexOf(id) === -1) {
-      Mapkeywords.push(id);
+    let MapKeywords = keywords.toJS();
+    if (MapKeywords.indexOf(id) === -1) {
+      MapKeywords.push(id);
     }
 
     addInfo({
@@ -285,6 +331,9 @@ class Step3 extends React.Component {
       minGrade
     });
   }
+
+
+
 
   render() {
     const {
@@ -468,12 +517,23 @@ class Step3 extends React.Component {
                   multiple
                   value={skills.toJS()}
                   input={<Input />}
-                  renderValue={selected => selected.join(', ')}
+                  name="skills"
                   MenuProps={MenuProps}
                   component={Select}
+                  renderValue={selected => {
+                    let skillName = [];
+                    skillMenu.map((value, index) => {
+                      if (selected.includes(value.id)) {
+                        skillName.push(value.value);
+                      }
+                    });
+                    return skillName.join(', ');
+                  }
+                  }
+                  onChange={e => this.handleMultiSelect(e)}
                 >
                   {skillMenu.map((item, index) => (
-                    <MenuItem key={index.toString()} value={item.value}>
+                    <MenuItem key={index.toString()} value={item.id}>
                       <TextField
                         name="skill-checkbox"
                         component={Checkbox}
@@ -583,7 +643,7 @@ class Step3 extends React.Component {
               <Typography variant="h6" style={{ textAlign: 'left' }}>
                 Locations they are willing to work
               </Typography>
-              <FormControl className={classes.formControl}>
+              {/* <FormControl className={classes.formControl}>
                 <TextField
                   label="Work Location"
                   className={classes.textField}
@@ -593,7 +653,8 @@ class Step3 extends React.Component {
                   name="workLocation"
                   margin="normal"
                 />
-              </FormControl>
+              </FormControl> */}
+              <SelectAdd classes={this.props.classes} dataList={top100Films} />
             </Grid>
           </Grid>
         </Grid>

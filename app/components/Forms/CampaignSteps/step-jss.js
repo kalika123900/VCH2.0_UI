@@ -3,6 +3,15 @@ const styles = theme => ({
     display: 'flex',
     flexWrap: 'wrap'
   },
+  autoComplete: {
+    width: '100% !important',
+    '& autoCompleteInner': {
+      width: '100%'
+    }
+  },
+  autoCompleteInner: {
+    width: '100% !Important'
+  },
   formControl: {
     minWidth: 120,
     width: '100%'
@@ -115,8 +124,8 @@ const styles = theme => ({
   },
   step3Root: {
     padding: 20,
-    paddingRight: '15%',
-    paddingLeft: '15%',
+    maxWidth: '100%',
+    width: '100%'
   },
   activeBoarder: {
     border: '2px solid green',

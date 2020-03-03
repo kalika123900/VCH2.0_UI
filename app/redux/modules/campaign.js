@@ -25,6 +25,7 @@ const initialState = {
   heading: '',
   body: '',
   deadline: DateHelper.format(DateHelper.addDays(new Date(), 5)),
+  choosedDeadline: "0",
   name: ''
 };
 
@@ -66,7 +67,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
     case STORE_STEP5_INFO:
       return state.withMutations((mutableState) => {
         mutableState
-          .set('deadline', action.data.deadline);
+          .set('deadline', action.data.deadline)
+          .set('choosedDeadline', action.data.choosedDeadline);
       });
     case STORE_STEP6_INFO:
       return state.withMutations((mutableState) => {
@@ -92,6 +94,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('heading', '')
           .set('body', '')
           .set('deadline', DateHelper.format(DateHelper.addDays(new Date(), 5)))
+          .set('choosedDeadline', "0")
           .set('name', '');
       });
     default:

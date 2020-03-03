@@ -41,9 +41,9 @@ export const DateHelper = {
   },
   format: function format(date) {
     return [
-      ('0' + date.getDate()).slice(-2),
+      date.getFullYear(),
       ('0' + (date.getMonth() + 1)).slice(-2),
-      date.getFullYear()
-    ].join('/');
+      ('0' + date.getDate()).slice(-2)
+    ].join('-');
   }
 };

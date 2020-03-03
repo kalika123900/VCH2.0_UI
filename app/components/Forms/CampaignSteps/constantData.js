@@ -126,10 +126,10 @@ export const subjectMenu = [
 ];
 
 export const skillMenu = [
-  { id: 1, value: 'Python' },
-  { id: 2, value: 'Node.js' },
-  { id: 3, value: 'React' },
-  { id: 4, value: 'Angular' },
+  { id: 19, value: 'React.js' },
+  { id: 20, value: 'Angular.js' },
+  { id: 21, value: 'Node' },
+  { id: 25, value: 'Express.js' },
 ]
 
 export const years = [
