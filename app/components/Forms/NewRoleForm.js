@@ -104,6 +104,7 @@ class NewRoleForm extends React.Component {
 
   saveData = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     return { name: this.state.rolename, };
   }
 

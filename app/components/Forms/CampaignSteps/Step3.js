@@ -14,15 +14,21 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
-
 import ListItemText from '@material-ui/core/ListItemText';
 import Input from '@material-ui/core/Input';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import AddIcon from '@material-ui/icons/Add';
-import SelectAdd from '../../SelectAdd/SelectAdd';
 import { storeStep3Info } from 'dan-actions/CampaignActions';
-import { subjectMenu, years, grade, skillMenu, location } from './constantData';
+import SelectAdd from '../../SelectAdd/SelectAdd';
+import {
+  subjectMenu,
+  years,
+  grade,
+  skillMenu,
+  locationData,
+  sectorsData
+} from './constantData';
 import styles from './step-jss';
 
 
@@ -36,13 +42,6 @@ const MenuProps = {
     },
   },
 };
-const top100Films = [
-  { value: 'The Shawshank Redemption', id: 1994 },
-  { title: 'The Godfather', id: 1972 },
-  { title: 'The Godfather: Part II', id: 1974 },
-  { title: 'The Dark Knight', id: 2008 },
-]
-
 
 class Step3 extends React.Component {
   state = {
@@ -71,25 +70,6 @@ class Step3 extends React.Component {
     ]
   };
 
-  handleClose = () => {
-    let value = { id: -1, value: '' }
-    this.setState({ dialogValue: value, open: false })
-  };
-
-  handleSubmit = event => {
-    event.preventDefault();
-    const { dialogValue } = this.state;
-    this.setState({
-      dataValue: {
-        id: dialogValue.id,
-        value: dialogValue.value
-      }
-    })
-
-    this.handleClose();
-  };
-
-
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
@@ -110,7 +90,7 @@ class Step3 extends React.Component {
       addInfo
     } = this.props;
 
-    if (event.target.name === "selectedYear") {
+    if (event.target.name === 'selectedYear') {
       addInfo({
         university,
         subjects,
@@ -125,7 +105,7 @@ class Step3 extends React.Component {
         minGrade
       });
     }
-    if (event.target.name === "minGrade") {
+    if (event.target.name === 'minGrade') {
       addInfo({
         university,
         subjects,
@@ -140,7 +120,7 @@ class Step3 extends React.Component {
         minGrade: event.target.value
       });
     }
-    if (event.target.name === "experience") {
+    if (event.target.name === 'experience') {
       addInfo({
         university,
         subjects,
@@ -155,7 +135,7 @@ class Step3 extends React.Component {
         minGrade
       });
     }
-    if (event.target.name === "ethnicity") {
+    if (event.target.name === 'ethnicity') {
       addInfo({
         university,
         subjects,
@@ -173,7 +153,7 @@ class Step3 extends React.Component {
   };
 
   handleMultiSelect = (event) => {
-    let value = event.target.value;
+    const { value } = event.target;
 
     const {
       university,
@@ -189,7 +169,7 @@ class Step3 extends React.Component {
       minGrade,
       addInfo
     } = this.props;
-    if (event.target.name == "university") {
+    if (event.target.name == 'university') {
       addInfo({
         university: value,
         subjects,
@@ -204,7 +184,7 @@ class Step3 extends React.Component {
         minGrade
       });
     }
-    if (event.target.name == "subjects") {
+    if (event.target.name == 'subjects') {
       addInfo({
         university,
         subjects: value,
@@ -219,7 +199,7 @@ class Step3 extends React.Component {
         minGrade
       });
     }
-    if (event.target.name == "skills") {
+    if (event.target.name == 'skills') {
       addInfo({
         university,
         subjects,
@@ -255,8 +235,7 @@ class Step3 extends React.Component {
     const MapGender = gender.toJS();
     if (MapGender.indexOf(value) === -1) {
       MapGender.push(value);
-    }
-    else {
+    } else {
       const index = MapGender.indexOf(value);
       if (index > -1) {
         MapGender.splice(index, 1);
@@ -275,7 +254,7 @@ class Step3 extends React.Component {
       workLocation,
       experience,
       minGrade
-    })
+    });
   };
 
   handleCustomKeyword = () => {
@@ -312,7 +291,7 @@ class Step3 extends React.Component {
 
     this.setState({ suggestedKeywords: newSuggestedKeywords });
 
-    let MapKeywords = keywords.toJS();
+    const MapKeywords = keywords.toJS();
     if (MapKeywords.indexOf(id) === -1) {
       MapKeywords.push(id);
     }
@@ -331,9 +310,6 @@ class Step3 extends React.Component {
       minGrade
     });
   }
-
-
-
 
   render() {
     const {
@@ -425,7 +401,7 @@ class Step3 extends React.Component {
                   name="university"
                   input={<Input />}
                   renderValue={selected => {
-                    let universityName = [];
+                    const universityName = [];
                     universityMenu.map((value, index) => {
                       if (selected.includes(value.id)) {
                         universityName.push(value.value);
@@ -480,7 +456,7 @@ class Step3 extends React.Component {
                   MenuProps={MenuProps}
                   component={Select}
                   renderValue={selected => {
-                    let subjectName = [];
+                    const subjectName = [];
                     subjectMenu.map((value, index) => {
                       if (selected.includes(value.id)) {
                         subjectName.push(value.value);
@@ -521,7 +497,7 @@ class Step3 extends React.Component {
                   MenuProps={MenuProps}
                   component={Select}
                   renderValue={selected => {
-                    let skillName = [];
+                    const skillName = [];
                     skillMenu.map((value, index) => {
                       if (selected.includes(value.id)) {
                         skillName.push(value.value);
@@ -630,8 +606,8 @@ class Step3 extends React.Component {
                   value={experience}
                   onChange={(e) => this.handleReduxChange(e)}
                 >
-                  <FormControlLabel value='yes' control={<Radio />} label="Yes" />
-                  <FormControlLabel value='no' control={<Radio />} label="No" />
+                  <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                  <FormControlLabel value="no" control={<Radio />} label="No" />
                 </RadioGroup>
               </FormControl>
             </Grid>
@@ -643,28 +619,18 @@ class Step3 extends React.Component {
               <Typography variant="h6" style={{ textAlign: 'left' }}>
                 Locations they are willing to work
               </Typography>
-              {/* <FormControl className={classes.formControl}>
-                <TextField
-                  label="Work Location"
-                  className={classes.textField}
-                  type="text"
-                  variant="outlined"
-                  value={workLocation}
-                  name="workLocation"
-                  margin="normal"
-                />
-              </FormControl> */}
-              <SelectAdd classes={this.props.classes} dataList={top100Films} />
+              <SelectAdd classes={this.props.classes} dataList={locationData} />
             </Grid>
           </Grid>
         </Grid>
         <Grid container spacing={3} className={classes.divider}>
-          <Grid>
+          <Grid item md={12} xs={12}>
             <Typography variant="h6" style={{ textAlign: 'left' }}>
               Interested Sectors to specify
             </Typography>
+            <SelectAdd classes={this.props.classes} dataList={sectorsData} />
           </Grid>
-          <Grid className={classes.customGrid}>
+          {/* <Grid className={classes.customGrid}>
             {selectedSectors !== null && selectedSectors}
           </Grid>
           <Grid style={{ width: '100%' }}>
@@ -690,7 +656,7 @@ class Step3 extends React.Component {
                 </Button>
               </Tooltip>
             </Grid>
-          </Grid>
+          </Grid> */}
         </Grid>
         <Grid container spacing={3} className={classes.divider}>
           <Grid>
@@ -736,7 +702,7 @@ class Step3 extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-      </div >
+      </div>
     );
   }
 }

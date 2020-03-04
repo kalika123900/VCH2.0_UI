@@ -80,7 +80,7 @@ class Step6 extends React.Component {
         </Grid>
         {/* section 3 */}
         <Grid container spacing={3} className={classes.root}>
-          <Grid item md={6} xs={12}>
+          <Grid item md={12} xs={12}>
             <Grid className={classes.sec_3_grid2}>
               <Typography variant="h6">
                 Campaign Deadline
@@ -98,7 +98,7 @@ class Step6 extends React.Component {
               </Typography>
             </Grid>
           </Grid>
-          <Grid item md={6} sm={12} xs={12}>
+          <Grid item md={12} xs={12}>
             <Grid className={classes.sec_3_grid4} style={{ marginTop: 0 }}>
               <Typography variant="h6">
                 Precise Demographics
@@ -113,14 +113,6 @@ class Step6 extends React.Component {
               </Typography>
               <Typography variant="body1" color="textSecondary">
                 Oxford, RGPV
-              </Typography>
-            </Grid>
-            <Grid className={classes.sec_3_grid4}>
-              <Typography variant="h6">
-                Keywords to promote
-              </Typography>
-              <Typography variant="body1" color="textSecondary">
-                New Job, Entry Level
               </Typography>
             </Grid>
           </Grid>

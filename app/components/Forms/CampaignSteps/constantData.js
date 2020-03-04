@@ -130,7 +130,7 @@ export const skillMenu = [
   { id: 20, value: 'Angular.js' },
   { id: 21, value: 'Node' },
   { id: 25, value: 'Express.js' },
-]
+];
 
 export const years = [
   '2015',
@@ -160,11 +160,17 @@ export const grade = [
   { id: 6, value: 'E' }
 ];
 
-export const location = [
+export const locationData = [
   { id: 1, value: 'New York' },
   { id: 2, value: 'London' },
   { id: 3, value: 'Indore' },
   { id: 4, value: 'Florida' },
   { id: 5, value: 'Washington' },
   { id: 6, value: 'Banglore' }
+];
+
+export const sectorsData = [
+  { id: 1, status: false, value: 'Information Technology' },
+  { id: 2, status: false, value: 'Automobile' },
+  { id: 3, status: false, value: 'Robotics' }
 ];

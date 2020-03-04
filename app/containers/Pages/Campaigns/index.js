@@ -26,7 +26,9 @@ class Campaigns extends React.Component {
       heading,
       body,
       deadline,
-      name
+      name,
+      history,
+      removeInfo
     } = this.props;
 
     const MapUniversity = university.toJS();
@@ -34,8 +36,7 @@ class Campaigns extends React.Component {
     const MapKeywords = keywords.toJS();
     const MapSkills = skills.toJS();
     const MapGender = gender.toJS();
-    const dateArr = deadline.split('/');
-    const formatedDeadline = `${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`;
+
 
     async function postJSON(url, data) {
       const response = await fetch(url, {
@@ -46,17 +47,17 @@ class Campaigns extends React.Component {
         body: JSON.stringify(data)
       });
 
-      await response.json();
+      return await response.json();
     }
 
-    let user = JSON.parse(
+    const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))
     );
 
     const data = {
       name,
       role,
-      deadline: formatedDeadline,
+      deadline,
       selectedYear,
       ethnicity,
       experience,
@@ -72,7 +73,7 @@ class Campaigns extends React.Component {
       gender: MapGender,
       clientId: user.id
     };
-    console.log(data)
+    console.log(data);
 
     postJSON(`${API_URL}/campaign/create-campaign`, data) // eslint-disable-line
       .then((res) => {

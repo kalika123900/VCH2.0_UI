@@ -16,12 +16,56 @@ class SelectAdd extends Component {
     this.state = {
       dataList: this.props.dataList,
       open: false,
-      dialogValue: { id: '', value: '' },
+      dialogValue: { id: -1, value: '' },
       dataValue: ''
+    };
+  }
+
+  handleClose = () => {
+    const value = { id: -1, value: '' };
+    this.setState({ dialogValue: value, open: false });
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    event.stopPropagation();
+    const { dialogValue } = this.state;
+    if (this.state.dataValue instanceof Array) {
+      const temp = this.state.dataValue;
+      temp.push(dialogValue);
+      this.setState({ dataValue: temp });
+    } else {
+      const temp = [];
+      temp.push(dialogValue);
+      this.setState({ dataValue: temp });
+    }
+
+    this.handleClose();
+  };
+
+  handleChange = (event, newValue) => {
+    const latest = newValue[newValue.length - 1];
+    if (latest !== undefined) {
+      if (newValue && (typeof latest === 'string' || latest.hasOwnProperty('inputValue'))) {
+        this.setState({ open: true });
+        this.setState({
+          dialogValue: {
+            id: null,
+            value: latest.inputValue,
+          }
+        });
+      } else {
+        this.setState({ dataValue: newValue });
+      }
+    } else {
+      this.setState({ dataValue: '' });
     }
   }
+
   render() {
-    const { dataList, open, dialogValue, dataValue } = this.state;
+    const {
+      dataList, open, dialogValue, dataValue
+    } = this.state;
 
     return (
       <Fragment>
@@ -30,19 +74,7 @@ class SelectAdd extends Component {
           multiple
           className={this.props.classes.autoComplete}
           value={dataValue}
-          onChange={(event, newValue) => {
-            let latest = newValue[newValue.length - 1];
-            if (newValue && latest.hasOwnProperty('inputValue')) {
-              this.setState({ open: true });
-              this.setState({
-                dialogValue: {
-                  id: null,
-                  value: latest.inputValue,
-                }
-              })
-            }
-            this.setState({ dataValue: newValue })
-          }}
+          onChange={(e, newValue) => this.handleChange(e, newValue)}
           filterOptions={(options, params) => {
             const filtered = filter(options, params);
 
@@ -73,48 +105,40 @@ class SelectAdd extends Component {
             <TextField
               className={this.props.classes.autoCompleteInner}
               {...params}
-              label="Free solo dialog"
+              label="Work Location"
               variant="outlined"
             />
           )}
         />
         <Dialog open={open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
           <form onSubmit={this.handleSubmit}>
-            <DialogTitle id="form-dialog-title">Add a new film</DialogTitle>
+            <DialogTitle id="form-dialog-title">Add a new location</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                Did you miss any film in our list? Please, add it!
-            </DialogContentText>
+                Did you miss any location in our list? Please, add it!
+              </DialogContentText>
               <TextField
                 autoFocus
                 margin="dense"
                 id="name"
-                value={dialogValue.id}
-                onChange={event => this.setState({ ...dialogValue, id: event.target.value })}
-                label="title"
-                type="text"
-              />
-              <TextField
-                margin="dense"
-                id="name"
                 value={dialogValue.value}
-                onChange={event => this.setState({ ...dialogValue, value: event.target.value })}
-                label="year"
-                type="number"
+                onChange={event => this.setState({ ...dialogValue, id: event.target.value })}
+                label="Location"
+                type="text"
               />
             </DialogContent>
             <DialogActions>
               <Button onClick={this.handleClose} color="primary">
                 Cancel
-            </Button>
+              </Button>
               <Button type="submit" color="primary">
                 Add
-            </Button>
+              </Button>
             </DialogActions>
           </form>
         </Dialog>
       </Fragment>
-    )
+    );
   }
 }
 

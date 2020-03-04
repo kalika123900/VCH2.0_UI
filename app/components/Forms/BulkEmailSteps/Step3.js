@@ -28,16 +28,32 @@ class Step3 extends React.Component {
     customKeyword: '',
     customUniversity: '',
     university: [
-      { id: 1, status: false, value: 'oxford', label: 'Oxford' },
-      { id: 2, status: false, value: 'rgpv', label: 'RGPV ' },
-      { id: 3, status: false, value: 'ips', label: 'IPS' },
-      { id: 4, status: false, value: 'iiit', label: 'IIIT University' },
+      {
+        id: 1, status: false, value: 'oxford', label: 'Oxford'
+      },
+      {
+        id: 2, status: false, value: 'rgpv', label: 'RGPV '
+      },
+      {
+        id: 3, status: false, value: 'ips', label: 'IPS'
+      },
+      {
+        id: 4, status: false, value: 'iiit', label: 'IIIT University'
+      },
     ],
     demographic: [
-      { id: 1, status: false, value: 'no-preference', label: 'No preference' },
-      { id: 2, status: false, value: 'women', label: 'Women ' },
-      { id: 3, status: false, value: 'men', label: 'Men' },
-      { id: 4, status: false, value: 'bame', label: 'BAME' },
+      {
+        id: 1, status: false, value: 'no-preference', label: 'No preference'
+      },
+      {
+        id: 2, status: false, value: 'women', label: 'Women '
+      },
+      {
+        id: 3, status: false, value: 'men', label: 'Men'
+      },
+      {
+        id: 4, status: false, value: 'bame', label: 'BAME'
+      },
     ]
   };
 
@@ -45,103 +61,99 @@ class Step3 extends React.Component {
     this.setState({
       labelWidth: ReactDOM.findDOMNode(this.InputLabelRef).offsetWidth,
     });
-  };
+  }
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
   handleCheckbox = (e, id) => {
-    let arr = this.state[e.target.name]
+    const arr = this.state[e.target.name];
     arr.forEach(item => {
       if (item.id === id) {
-        item.status = item.status ? false : true
+        item.status = !item.status;
       }
     });
-    this.setState({ [e.target.name]: arr })
+    this.setState({ [e.target.name]: arr });
   };
 
   addCustomItem = (e, stateItem) => {
     if (this.state[e.target.offsetParent.name].length > 0) {
-      let customItem = this.state[e.target.offsetParent.name]
-      let length = this.state[e.target.offsetParent.name].length
-      let newItemObj = {
+      const customItem = this.state[e.target.offsetParent.name];
+      const { length } = this.state[e.target.offsetParent.name];
+      const newItemObj = {
         id: (length + 1), status: false, value: customItem, label: customItem
-      }
-      let newItemArr = [...this.state[stateItem], newItemObj]
-      this.setState({ [stateItem]: newItemArr, [e.target.offsetParent.name]: '' })
+      };
+      const newItemArr = [...this.state[stateItem], newItemObj];
+      this.setState({ [stateItem]: newItemArr, [e.target.offsetParent.name]: '' });
     }
   }
 
   addKeyword = () => {
     if (this.state.customKeyword.length > 0) {
-      let customKeyword = '+ ' + this.state.customKeyword
-      let newKeywordObj = { value: customKeyword, label: customKeyword }
-      let newKeywordArr = [...this.state.keyword, newKeywordObj]
-      this.setState({ keyword: newKeywordArr, customKeyword: '' })
+      const customKeyword = '+ ' + this.state.customKeyword;
+      const newKeywordObj = { value: customKeyword, label: customKeyword };
+      const newKeywordArr = [...this.state.keyword, newKeywordObj];
+      this.setState({ keyword: newKeywordArr, customKeyword: '' });
     }
   }
 
   handleSuggestedKeyword = (e) => {
-    let customKeyword = e.target.outerText
-    let newKeywordObj = { value: customKeyword, label: customKeyword }
-    let newKeywordArr = [...this.state.keyword, newKeywordObj]
-    this.setState({ keyword: newKeywordArr, customKeyword: '' })
+    const customKeyword = e.target.outerText;
+    const newKeywordObj = { value: customKeyword, label: customKeyword };
+    const newKeywordArr = [...this.state.keyword, newKeywordObj];
+    this.setState({ keyword: newKeywordArr, customKeyword: '' });
   }
 
   render() {
     const { classes } = this.props;
 
-    const { language, labelWidth, customUniversity, customDemographic, keyword, customKeyword } = this.state;
+    const {
+      language, labelWidth, customUniversity, customDemographic, keyword, customKeyword
+    } = this.state;
 
-    const checkboxButtons = this.state.demographic.map((item, index) => {
-      return (
-        <FormControlLabel
-          control={
-            <Checkbox
-              name="demographic"
-              checked={item.status}
-              value={item.value}
-              onChange={(e) => { this.handleCheckbox(e, item.id) }}
-            />
-          }
-          label={item.label}
-          key={index}
-        />
-      )
-    })
+    const checkboxButtons = this.state.demographic.map((item, index) => (
+      <FormControlLabel
+        control={(
+          <Checkbox
+            name="demographic"
+            checked={item.status}
+            value={item.value}
+            onChange={(e) => { this.handleCheckbox(e, item.id); }}
+          />
+        )}
+        label={item.label}
+        key={index}
+      />
+    ));
 
-    const universities = this.state.university.map((item, index) => {
-      return (
-        <FormControlLabel
-          control={
-            <Checkbox
-              name="university"
-              checked={item.status}
-              value={item.value}
-              onChange={(e) => { this.handleCheckbox(e, item.id) }}
-            />
-          }
-          label={item.label}
-          key={index}
-        />
-      )
-    })
+    const universities = this.state.university.map((item, index) => (
+      <FormControlLabel
+        control={(
+          <Checkbox
+            name="university"
+            checked={item.status}
+            value={item.value}
+            onChange={(e) => { this.handleCheckbox(e, item.id); }}
+          />
+        )}
+        label={item.label}
+        key={index}
+      />
+    ));
 
-    const keywordList = keyword.length > 0 ? keyword.map((item, index) => {
-      return (
-        <Typography variant="subtitle1" className={classes.choosenTerms} key={index}>
-          {item.label}
-        </Typography>
-      )
-    }) : null
+    const keywordList = keyword.length > 0 ? keyword.map((item, index) => (
+      <Typography variant="subtitle1" className={classes.choosenTerms} key={index}>
+        {item.label}
+      </Typography>
+    )) : null;
 
     return (
       <div className={classes.root, classes.step3Root}>
         {/* section 1 */}
         <Grid container spacing={3} className={classes.divider}>
           <Grid item md={12} xs={12}>
-            <Typography variant="h6" style={{ textAlign: "left" }} >
+            <Typography variant="h6" style={{ textAlign: 'left' }}>
               Which language do you want to Email?
             </Typography>
             <FormControl variant="outlined" style={{ minWidth: 120, float: 'left' }}>
@@ -152,7 +164,7 @@ class Step3 extends React.Component {
                 htmlFor="outlined-language-simple"
               >
                 Language
-          </InputLabel>
+              </InputLabel>
               <Select
                 value={language}
                 onChange={this.handleChange}
@@ -178,9 +190,9 @@ class Step3 extends React.Component {
         {/* section 2 */}
         <Grid container spacing={3} className={classes.divider}>
           <Grid item md={6} xs={12}>
-            <Grid style={{ textAlign: "left" }}>
-              <FormControl component="fieldset" required={true} className={classes.formControl}>
-                <Typography variant="h6" >Specify precise demographic for the algorithm to give preference to</Typography>
+            <Grid style={{ textAlign: 'left' }}>
+              <FormControl component="fieldset" required className={classes.formControl}>
+                <Typography variant="h6">Specify precise demographic for the algorithm to give preference to</Typography>
                 <FormGroup>
                   {checkboxButtons}
                 </FormGroup>
@@ -198,7 +210,7 @@ class Step3 extends React.Component {
                     name="customDemographic"
                     variant="text"
                     color="secondary"
-                    onClick={(e) => this.addCustomItem(e, "demographic")}
+                    onClick={(e) => this.addCustomItem(e, 'demographic')}
                   >
                     <AddIcon />
                     Add New
@@ -207,27 +219,12 @@ class Step3 extends React.Component {
               </FormControl>
             </Grid>
           </Grid>
-          {/* <Grid item md={6} xs={12} style={{ padding: "5%" }}>
-            <Typography variant="h6">
-              Potential audience size
-          </Typography>
-            <Typography variant="h6">
-              65,714
-          </Typography>
-            <Typography variant="body1" >
-              people per month
-          </Typography>
-            <Typography variant="body2" style={{ marginTop: "8px" }}>
-              This is an estimate of how many people search for businesses like yours in your
-              selected locations. Audience size doesn't affect your cost.
-          </Typography>
-          </Grid> */}
         </Grid>
         <Grid container spacing={3} className={classes.divider}>
           <Grid item md={6} xs={12}>
-            <Grid style={{ textAlign: "left" }}>
-              <FormControl component="fieldset" required={true} className={classes.customWidth, classes.formControl}>
-                <Typography variant="h6" >Specify Universities for algorithm to prefer</Typography>
+            <Grid style={{ textAlign: 'left' }}>
+              <FormControl component="fieldset" required className={classes.customWidth, classes.formControl}>
+                <Typography variant="h6">Specify Universities for algorithm to prefer</Typography>
                 <FormGroup>
                   {universities}
                 </FormGroup>
@@ -245,11 +242,11 @@ class Step3 extends React.Component {
                     name="customUniversity"
                     variant="text"
                     color="secondary"
-                    onClick={(e) => this.addCustomItem(e, "university")}
+                    onClick={(e) => this.addCustomItem(e, 'university')}
                   >
                     <AddIcon />
                     Add New
-                </Button>
+                  </Button>
                 </Tooltip>
               </FormControl>
             </Grid>
@@ -258,14 +255,14 @@ class Step3 extends React.Component {
         {/* section 3 */}
         <Grid container spacing={3} className={classes.divider}>
           <Grid>
-            <Typography variant="h6" style={{ textAlign: "left" }}>
+            <Typography variant="h6" style={{ textAlign: 'left' }}>
               Specify key words for the algorithm to prefer
             </Typography>
           </Grid>
           <Grid className={classes.customGrid}>
             {keywordList !== null && keywordList}
           </Grid>
-          <Grid style={{ width: "100%" }}>
+          <Grid style={{ width: '100%' }}>
             <TextField
               name="customKeyword"
               placeholder="For example : Something"
@@ -274,11 +271,11 @@ class Step3 extends React.Component {
               margin="normal"
               variant="filled"
               onChange={(e) => this.handleChange(e)}
-              style={{ width: "100%" }}
+              style={{ width: '100%' }}
             />
             <Grid>
               <Tooltip title="Add New">
-                <Button variant="text" color="secondary" style={{ textAlign: "left" }} onClick={(e) => this.addKeyword()} >
+                <Button variant="text" color="secondary" style={{ textAlign: 'left' }} onClick={(e) => this.addKeyword()}>
                   <AddIcon />
                   Add New
                 </Button>
@@ -289,62 +286,86 @@ class Step3 extends React.Component {
         {/* section 4 */}
         <Grid container spacing={3} className={classes.divider}>
           <Grid>
-            <Typography variant="h6" style={{ textAlign: "left", marginBottom: "5px" }}>
+            <Typography variant="h6" style={{ textAlign: 'left', marginBottom: '5px' }}>
               Suggested Keywords for you
-          </Typography>
+            </Typography>
             <Grid container>
-              <Button variant="outlined" color="secondary"
+              <Button
+                variant="outlined"
+                color="secondary"
                 className={classes.button}
                 onClick={(e) => this.handleSuggestedKeyword(e)}
               >
                 + new job
-            </Button>&nbsp;&nbsp;
-            <Button variant="outlined" color="secondary"
+              </Button>
+&nbsp;&nbsp;
+              <Button
+                variant="outlined"
+                color="secondary"
                 className={classes.button}
                 onClick={(e) => this.handleSuggestedKeyword(e)}
               >
                 + entry level government jobs
-            </Button>&nbsp;
-            <Button variant="outlined" color="secondary"
+              </Button>
+&nbsp;
+              <Button
+                variant="outlined"
+                color="secondary"
                 className={classes.button}
                 onClick={(e) => this.handleSuggestedKeyword(e)}
               >
                 + high paying entry level jobs
-            </Button>&nbsp;
-            <Button variant="outlined" color="secondary"
+              </Button>
+&nbsp;
+              <Button
+                variant="outlined"
+                color="secondary"
                 className={classes.button}
                 onClick={(e) => this.handleSuggestedKeyword(e)}
               >
                 + entry level sales jpobs
-            </Button>&nbsp;
-            <Button variant="outlined" color="secondary"
+              </Button>
+&nbsp;
+              <Button
+                variant="outlined"
+                color="secondary"
                 className={classes.button}
                 onClick={(e) => this.handleSuggestedKeyword(e)}
               >
                 + entry level business jobs
-            </Button>&nbsp;
-            <Button variant="outlined" color="secondary"
+              </Button>
+&nbsp;
+              <Button
+                variant="outlined"
+                color="secondary"
                 className={classes.button}
                 onClick={(e) => this.handleSuggestedKeyword(e)}
               >
                 + entry level computer jobs
-            </Button>&nbsp;
-            <Button variant="outlined" color="secondary"
+              </Button>
+&nbsp;
+              <Button
+                variant="outlined"
+                color="secondary"
                 className={classes.button}
                 onClick={(e) => this.handleSuggestedKeyword(e)}
               >
                 + part time job openings
-            </Button>&nbsp;
-            <Button variant="outlined" color="secondary"
+              </Button>
+&nbsp;
+              <Button
+                variant="outlined"
+                color="secondary"
                 className={classes.button}
                 onClick={(e) => this.handleSuggestedKeyword(e)}
               >
                 + job now
-            </Button>&nbsp;
-          </Grid>
+              </Button>
+&nbsp;
+            </Grid>
           </Grid>
         </Grid>
-      </div >
+      </div>
     );
   }
 }
