@@ -25,7 +25,7 @@ const initialState = {
   heading: '',
   body: '',
   deadline: DateHelper.format(DateHelper.addDays(new Date(), 5)),
-  choosedDeadline: "0",
+  choosedDeadline: '0',
   name: ''
 };
 
@@ -96,7 +96,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('heading', '')
           .set('body', '')
           .set('deadline', DateHelper.format(DateHelper.addDays(new Date(), 5)))
-          .set('choosedDeadline', "0")
+          .set('choosedDeadline', '0')
           .set('name', '');
       });
     default:

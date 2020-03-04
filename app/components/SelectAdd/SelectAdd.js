@@ -39,17 +39,16 @@ class SelectAdd extends Component {
   }
 
   handleFetchData = (urlString, key) => {
-    const url = `${API_URL}/utils/${urlString}`
-    const data = { key }
+    const url = `${API_URL}/utils/${urlString}`;
+    const data = { key };
 
-    let responnseData = []
+    let responnseData = [];
     postData(url, data)
       .then((res) => {
         if (res.status === 1) {
           responnseData = res.data;
-        }
-        else {
-          let emptyArray = []
+        } else {
+          const emptyArray = [];
           responnseData = emptyArray;
         }
       })
@@ -98,32 +97,34 @@ class SelectAdd extends Component {
       } else {
         this.setState({ dataValue: newValue });
         if (this.props.type === 'location') {
-          addInfo({ ...this.props, workLocation: newValue })
+          addInfo({ ...this.props, workLocation: newValue });
         }
         if (this.props.type === 'sectors') {
-          addInfo({ ...this.props, interestedSectors: newValue })
+          addInfo({ ...this.props, interestedSectors: newValue });
         }
         if (this.props.type === 'keywords') {
-          addInfo({ ...this.props, keywords: newValue })
+          addInfo({ ...this.props, keywords: newValue });
         }
       }
     } else {
       this.setState({ dataValue: '' });
       if (this.props.type === 'location') {
-        addInfo({ ...this.props, workLocation: newValue })
+        addInfo({ ...this.props, workLocation: newValue });
       }
       if (this.props.type === 'sectors') {
-        addInfo({ ...this.props, interestedSectors: newValue })
+        addInfo({ ...this.props, interestedSectors: newValue });
       }
       if (this.props.type === 'keywords') {
-        addInfo({ ...this.props, keywords: newValue })
+        addInfo({ ...this.props, keywords: newValue });
       }
     }
   }
 
   render() {
     const { dataList, open, dialogValue } = this.state;
-    const { type, workLocation, interestedSectors, keywords } = this.props;
+    const {
+      type, workLocation, interestedSectors, keywords
+    } = this.props;
     const MapworkLocation = workLocation.toJS();
     const MapinterestedSectors = interestedSectors.toJS();
     const Mapkeywords = keywords.toJS();
@@ -179,10 +180,17 @@ class SelectAdd extends Component {
         />
         <Dialog open={open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
           <form onSubmit={(e) => this.handleSubmit(e, this.props.type)}>
-            <DialogTitle id="form-dialog-title">Add a new {this.props.label}</DialogTitle>
+            <DialogTitle id="form-dialog-title">
+Add a new
+              {this.props.label}
+            </DialogTitle>
             <DialogContent>
               <DialogContentText>
-                Did you miss any {this.props.label} in our list? Please, add it!
+                Did you miss any
+                {' '}
+                {this.props.label}
+                {' '}
+in our list? Please, add it!
               </DialogContentText>
               <TextField
                 autoFocus
