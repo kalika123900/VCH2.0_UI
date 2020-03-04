@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -12,13 +12,10 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
 import ListItemText from '@material-ui/core/ListItemText';
 import Input from '@material-ui/core/Input';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import AddIcon from '@material-ui/icons/Add';
 import { storeStep3Info } from 'dan-actions/CampaignActions';
 import SelectAdd from '../../SelectAdd/SelectAdd';
 import {
@@ -27,10 +24,10 @@ import {
   grade,
   skillMenu,
   locationData,
-  sectorsData
+  sectorsData,
+  keywordsData
 } from './constantData';
 import styles from './step-jss';
-
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -45,17 +42,6 @@ const MenuProps = {
 
 class Step3 extends React.Component {
   state = {
-    dataValue: null,
-    open: false,
-    dialogValue: { id: '', value: '' },
-    customKeyword: '',
-    sector: '',
-    suggestedKeywords: [
-      { id: 15, status: false, value: 'Job' },
-      { id: 16, status: false, value: 'Fresher' },
-      { id: 18, status: false, value: 'Entry Level' },
-      { id: 19, status: false, value: 'Experienced' }
-    ],
     universityMenu: [
       { id: 15, status: false, value: 'Oxford' },
       { id: 16, status: false, value: 'RGPV' },
@@ -70,167 +56,40 @@ class Step3 extends React.Component {
     ]
   };
 
-  handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-
   handleReduxChange = event => {
-    const {
-      university,
-      subjects,
-      skills,
-      keywords,
-      gender,
-      selectedYear,
-      ethnicity,
-      interestedSectors,
-      workLocation,
-      experience,
-      minGrade,
-      addInfo
-    } = this.props;
+    const { addInfo } = this.props;
 
     if (event.target.name === 'selectedYear') {
-      addInfo({
-        university,
-        subjects,
-        skills,
-        keywords,
-        gender,
-        selectedYear: event.target.value,
-        ethnicity,
-        interestedSectors,
-        workLocation,
-        experience,
-        minGrade
-      });
+      addInfo({ ...this.props, selectedYear: event.target.value });
     }
     if (event.target.name === 'minGrade') {
-      addInfo({
-        university,
-        subjects,
-        skills,
-        keywords,
-        gender,
-        selectedYear,
-        ethnicity,
-        interestedSectors,
-        workLocation,
-        experience,
-        minGrade: event.target.value
-      });
+      addInfo({ ...this.props, minGrade: event.target.value });
     }
     if (event.target.name === 'experience') {
-      addInfo({
-        university,
-        subjects,
-        skills,
-        keywords,
-        gender,
-        selectedYear,
-        ethnicity,
-        interestedSectors,
-        workLocation,
-        experience: event.target.value,
-        minGrade
-      });
+      addInfo({ ...this.props, experience: event.target.value });
     }
     if (event.target.name === 'ethnicity') {
-      addInfo({
-        university,
-        subjects,
-        skills,
-        keywords,
-        gender,
-        selectedYear,
-        ethnicity: event.target.value,
-        interestedSectors,
-        workLocation,
-        experience,
-        minGrade
-      });
+      addInfo({ ...this.props, ethnicity: event.target.value });
     }
   };
 
   handleMultiSelect = (event) => {
     const { value } = event.target;
 
-    const {
-      university,
-      subjects,
-      skills,
-      keywords,
-      gender,
-      selectedYear,
-      ethnicity,
-      interestedSectors,
-      workLocation,
-      experience,
-      minGrade,
-      addInfo
-    } = this.props;
+    const { addInfo } = this.props;
     if (event.target.name == 'university') {
-      addInfo({
-        university: value,
-        subjects,
-        skills,
-        keywords,
-        gender,
-        selectedYear,
-        ethnicity,
-        interestedSectors,
-        workLocation,
-        experience,
-        minGrade
-      });
+      addInfo({ ...this.props, university: value });
     }
     if (event.target.name == 'subjects') {
-      addInfo({
-        university,
-        subjects: value,
-        skills,
-        keywords,
-        gender,
-        selectedYear,
-        ethnicity,
-        interestedSectors,
-        workLocation,
-        experience,
-        minGrade
-      });
+      addInfo({ ...this.props, subjects: value });
     }
     if (event.target.name == 'skills') {
-      addInfo({
-        university,
-        subjects,
-        skills: value,
-        keywords,
-        gender,
-        selectedYear,
-        ethnicity,
-        interestedSectors,
-        workLocation,
-        experience,
-        minGrade
-      });
+      addInfo({ ...this.props, skills: value });
     }
   };
 
   handleGender = (value) => {
-    const {
-      university,
-      subjects,
-      skills,
-      keywords,
-      gender,
-      selectedYear,
-      ethnicity,
-      interestedSectors,
-      workLocation,
-      experience,
-      minGrade,
-      addInfo
-    } = this.props;
+    const { gender, addInfo } = this.props;
 
     const MapGender = gender.toJS();
     if (MapGender.indexOf(value) === -1) {
@@ -242,79 +101,12 @@ class Step3 extends React.Component {
       }
     }
 
-    addInfo({
-      university,
-      subjects,
-      skills,
-      keywords,
-      gender: MapGender,
-      selectedYear,
-      ethnicity,
-      interestedSectors,
-      workLocation,
-      experience,
-      minGrade
-    });
+    addInfo({ ...this.props, gender: MapGender });
   };
-
-  handleCustomKeyword = () => {
-
-  };
-
-  handleSuggestedKeyword = (id) => {
-    const { suggestedKeywords } = this.state;
-    const {
-      university,
-      subjects,
-      skills,
-      keywords,
-      gender,
-      selectedYear,
-      ethnicity,
-      interestedSectors,
-      workLocation,
-      experience,
-      minGrade,
-      addInfo
-    } = this.props;
-
-    const newSuggestedKeywords = suggestedKeywords.map((item) => {
-      if (item.id === id) {
-        return {
-          id,
-          status: !item.status,
-          value: item.value
-        };
-      }
-      return item;
-    });
-
-    this.setState({ suggestedKeywords: newSuggestedKeywords });
-
-    const MapKeywords = keywords.toJS();
-    if (MapKeywords.indexOf(id) === -1) {
-      MapKeywords.push(id);
-    }
-
-    addInfo({
-      university,
-      subjects,
-      skills,
-      keywords: MapKeywords,
-      gender,
-      selectedYear,
-      ethnicity,
-      interestedSectors,
-      workLocation,
-      experience,
-      minGrade
-    });
-  }
 
   render() {
     const {
       classes,
-      keywords,
       gender,
       university,
       subjects,
@@ -322,16 +114,12 @@ class Step3 extends React.Component {
       selectedYear,
       ethnicity,
       experience,
-      minGrade,
-      workLocation
+      minGrade
     } = this.props;
 
     const {
-      customKeyword,
-      suggestedKeywords,
       genderMenu,
-      universityMenu,
-      sector
+      universityMenu
     } = this.state;
 
     const genderCheckboxes = genderMenu.map((item, index) => (
@@ -348,43 +136,6 @@ class Step3 extends React.Component {
         key={index.toString()}
       />
     ));
-
-    const selectedKeywords = suggestedKeywords.map((item, index) => {
-      if (item.status === true || keywords.includes(item.id)) {
-        return (
-          <Typography
-            variant="subtitle1"
-            className={classes.choosenTerms}
-            key={index.toString()}
-          >
-            {item.value}
-          </Typography>
-        );
-      }
-      return false;
-    });
-
-    const selectedSectors = null;
-
-    const keywordList = suggestedKeywords.map((item, index) => {
-      if (item.status === false && !keywords.includes(item.id)) {
-        return (
-          <Fragment key={index.toString()}>
-            <Button
-              variant="outlined"
-              color="secondary"
-              className={classes.button}
-              onClick={() => this.handleSuggestedKeyword(item.id)}
-            >
-              +
-              {' '}
-              {item.value}
-            </Button>
-          </Fragment>
-        );
-      }
-      return false;
-    });
 
     return (
       <div className={(classes.root, classes.step3Root)}>
@@ -619,7 +370,12 @@ class Step3 extends React.Component {
               <Typography variant="h6" style={{ textAlign: 'left' }}>
                 Locations they are willing to work
               </Typography>
-              <SelectAdd classes={this.props.classes} dataList={locationData} />
+              <SelectAdd
+                classes={this.props.classes}
+                dataList={locationData}
+                label="Work Location"
+                type="location"
+              />
             </Grid>
           </Grid>
         </Grid>
@@ -628,78 +384,25 @@ class Step3 extends React.Component {
             <Typography variant="h6" style={{ textAlign: 'left' }}>
               Interested Sectors to specify
             </Typography>
-            <SelectAdd classes={this.props.classes} dataList={sectorsData} />
-          </Grid>
-          {/* <Grid className={classes.customGrid}>
-            {selectedSectors !== null && selectedSectors}
-          </Grid>
-          <Grid style={{ width: '100%' }}>
-            <TextField
-              name="sector"
-              placeholder="For example : IT"
-              value={sector}
-              className={classes.textField}
-              margin="normal"
-              variant="filled"
-              onChange={(e) => this.handleChange(e)}
-              style={{ width: '100%' }}
+            <SelectAdd
+              classes={this.props.classes}
+              dataList={sectorsData}
+              label="Interested Sector"
+              type="sectors"
             />
-            <Grid>
-              <Tooltip title="Add New">
-                <Button
-                  variant="text"
-                  color="secondary"
-                  style={{ textAlign: 'left' }}
-                >
-                  <AddIcon />
-                  Add New
-                </Button>
-              </Tooltip>
-            </Grid>
-          </Grid> */}
+          </Grid>
         </Grid>
         <Grid container spacing={3} className={classes.divider}>
-          <Grid>
+          <Grid item md={12} xs={12}>
             <Typography variant="h6" style={{ textAlign: 'left' }}>
               Specify key words for the algorithm to prefer
             </Typography>
-          </Grid>
-          <Grid className={classes.customGrid}>
-            {selectedKeywords !== null && selectedKeywords}
-          </Grid>
-          <Grid style={{ width: '100%' }}>
-            <TextField
-              name="customKeyword"
-              placeholder="For example : Something"
-              value={customKeyword}
-              className={classes.textField}
-              margin="normal"
-              variant="filled"
-              onChange={(e) => this.handleChange(e)}
-              style={{ width: '100%' }}
+            <SelectAdd
+              classes={this.props.classes}
+              dataList={keywordsData}
+              label="Keywords"
+              type="keywords"
             />
-            <Grid>
-              <Tooltip title="Add New">
-                <Button
-                  variant="text"
-                  color="secondary"
-                  style={{ textAlign: 'left' }}
-                >
-                  <AddIcon />
-                  Add New
-                </Button>
-              </Tooltip>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} className={classes.divider}>
-          <Grid>
-            <Typography variant="h6" style={{ textAlign: 'left', marginBottom: '5px' }}>
-              Suggested Keywords for you
-            </Typography>
-            <Grid container>
-              {keywordList}
-            </Grid>
           </Grid>
         </Grid>
       </div>
@@ -716,8 +419,8 @@ Step3.propTypes = {
   gender: PropTypes.object.isRequired,
   selectedYear: PropTypes.string.isRequired,
   ethnicity: PropTypes.string.isRequired,
-  interestedSectors: PropTypes.string.isRequired,
-  workLocation: PropTypes.string.isRequired,
+  interestedSectors: PropTypes.object.isRequired,
+  workLocation: PropTypes.object.isRequired,
   experience: PropTypes.string.isRequired,
   minGrade: PropTypes.number.isRequired,
   addInfo: PropTypes.func.isRequired

@@ -1,4 +1,8 @@
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
+import qs from 'qs';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -7,8 +11,21 @@ import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import { storeStep3Info } from 'dan-actions/CampaignActions';
 
 const filter = createFilterOptions();
+
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+
+  return await response.json();
+}
 
 class SelectAdd extends Component {
   constructor(props) {
@@ -21,14 +38,37 @@ class SelectAdd extends Component {
     };
   }
 
+  handleFetchData = (urlString, key) => {
+    const url = `${API_URL}/utils/${urlString}`
+    const data = { key }
+
+    let responnseData = []
+    postData(url, data)
+      .then((res) => {
+        if (res.status === 1) {
+          responnseData = res.data;
+        }
+        else {
+          let emptyArray = []
+          responnseData = emptyArray;
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+    this.setState({ dataList: responnseData });
+  }
+
   handleClose = () => {
     const value = { id: -1, value: '' };
     this.setState({ dialogValue: value, open: false });
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event, type) => {
     event.preventDefault();
     event.stopPropagation();
+
     const { dialogValue } = this.state;
     if (this.state.dataValue instanceof Array) {
       const temp = this.state.dataValue;
@@ -39,11 +79,12 @@ class SelectAdd extends Component {
       temp.push(dialogValue);
       this.setState({ dataValue: temp });
     }
-
     this.handleClose();
   };
 
   handleChange = (event, newValue) => {
+    const { addInfo } = this.props;
+
     const latest = newValue[newValue.length - 1];
     if (latest !== undefined) {
       if (newValue && (typeof latest === 'string' || latest.hasOwnProperty('inputValue'))) {
@@ -51,21 +92,41 @@ class SelectAdd extends Component {
         this.setState({
           dialogValue: {
             id: null,
-            value: latest.inputValue,
+            value: latest.inputValue
           }
         });
       } else {
         this.setState({ dataValue: newValue });
+        if (this.props.type === 'location') {
+          addInfo({ ...this.props, workLocation: newValue })
+        }
+        if (this.props.type === 'sectors') {
+          addInfo({ ...this.props, interestedSectors: newValue })
+        }
+        if (this.props.type === 'keywords') {
+          addInfo({ ...this.props, keywords: newValue })
+        }
       }
     } else {
       this.setState({ dataValue: '' });
+      if (this.props.type === 'location') {
+        addInfo({ ...this.props, workLocation: newValue })
+      }
+      if (this.props.type === 'sectors') {
+        addInfo({ ...this.props, interestedSectors: newValue })
+      }
+      if (this.props.type === 'keywords') {
+        addInfo({ ...this.props, keywords: newValue })
+      }
     }
   }
 
   render() {
-    const {
-      dataList, open, dialogValue, dataValue
-    } = this.state;
+    const { dataList, open, dialogValue } = this.state;
+    const { type, workLocation, interestedSectors, keywords } = this.props;
+    const MapworkLocation = workLocation.toJS();
+    const MapinterestedSectors = interestedSectors.toJS();
+    const Mapkeywords = keywords.toJS();
 
     return (
       <Fragment>
@@ -73,7 +134,13 @@ class SelectAdd extends Component {
           style={{ width: '100%' }}
           multiple
           className={this.props.classes.autoComplete}
-          value={dataValue}
+          value={
+            type === 'location'
+              ? MapworkLocation
+              : type === 'keywords'
+                ? Mapkeywords
+                : MapinterestedSectors
+          }
           onChange={(e, newValue) => this.handleChange(e, newValue)}
           filterOptions={(options, params) => {
             const filtered = filter(options, params);
@@ -87,7 +154,7 @@ class SelectAdd extends Component {
 
             return filtered;
           }}
-          id="tags-standard"
+          id={this.props.type}
           options={dataList}
           getOptionLabel={option => {
             if (typeof option === 'string') {
@@ -105,17 +172,17 @@ class SelectAdd extends Component {
             <TextField
               className={this.props.classes.autoCompleteInner}
               {...params}
-              label="Work Location"
+              label={this.props.label}
               variant="outlined"
             />
           )}
         />
         <Dialog open={open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
-          <form onSubmit={this.handleSubmit}>
-            <DialogTitle id="form-dialog-title">Add a new location</DialogTitle>
+          <form onSubmit={(e) => this.handleSubmit(e, this.props.type)}>
+            <DialogTitle id="form-dialog-title">Add a new {this.props.label}</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                Did you miss any location in our list? Please, add it!
+                Did you miss any {this.props.label} in our list? Please, add it!
               </DialogContentText>
               <TextField
                 autoFocus
@@ -123,7 +190,7 @@ class SelectAdd extends Component {
                 id="name"
                 value={dialogValue.value}
                 onChange={event => this.setState({ ...dialogValue, id: event.target.value })}
-                label="Location"
+                label={this.props.label}
                 type="text"
               />
             </DialogContent>
@@ -142,4 +209,45 @@ class SelectAdd extends Component {
   }
 }
 
-export default SelectAdd;
+SelectAdd.propTypes = {
+  classes: PropTypes.object.isRequired,
+  university: PropTypes.object.isRequired,
+  subjects: PropTypes.object.isRequired,
+  skills: PropTypes.object.isRequired,
+  keywords: PropTypes.object.isRequired,
+  gender: PropTypes.object.isRequired,
+  selectedYear: PropTypes.string.isRequired,
+  ethnicity: PropTypes.string.isRequired,
+  interestedSectors: PropTypes.object.isRequired,
+  workLocation: PropTypes.object.isRequired,
+  experience: PropTypes.string.isRequired,
+  minGrade: PropTypes.number.isRequired,
+  addInfo: PropTypes.func.isRequired
+};
+
+const reducerCampaign = 'campaign';
+
+const mapStateToProps = state => ({
+  university: state.getIn([reducerCampaign, 'university']),
+  subjects: state.getIn([reducerCampaign, 'subjects']),
+  skills: state.getIn([reducerCampaign, 'skills']),
+  keywords: state.getIn([reducerCampaign, 'keywords']),
+  gender: state.getIn([reducerCampaign, 'gender']),
+  selectedYear: state.getIn([reducerCampaign, 'selectedYear']),
+  ethnicity: state.getIn([reducerCampaign, 'ethnicity']),
+  interestedSectors: state.getIn([reducerCampaign, 'interestedSectors']),
+  workLocation: state.getIn([reducerCampaign, 'workLocation']),
+  experience: state.getIn([reducerCampaign, 'experience']),
+  minGrade: state.getIn([reducerCampaign, 'minGrade']),
+});
+
+const mapDispatchToProps = dispatch => ({
+  addInfo: bindActionCreators(storeStep3Info, dispatch)
+});
+
+const SelectAddMapped = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SelectAdd);
+
+export default SelectAddMapped;

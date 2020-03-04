@@ -11,32 +11,24 @@ import { makeSecureDecrypt } from 'dan-helpers/security';
 class Campaigns extends React.Component {
   submitForm = () => {
     const {
-      role,
+      workLocation,
+      interestedSectors,
       university,
       subjects,
       skills,
       keywords,
       gender,
-      selectedYear,
-      ethnicity,
-      interestedSectors,
-      workLocation,
-      experience,
-      minGrade,
-      heading,
-      body,
-      deadline,
-      name,
       history,
       removeInfo
     } = this.props;
 
+    const MapWorkLocation = workLocation.toJS();
+    const MapInterestedSectors = interestedSectors.toJS();
     const MapUniversity = university.toJS();
     const MapSubjects = subjects.toJS();
     const MapKeywords = keywords.toJS();
     const MapSkills = skills.toJS();
     const MapGender = gender.toJS();
-
 
     async function postJSON(url, data) {
       const response = await fetch(url, {
@@ -55,17 +47,9 @@ class Campaigns extends React.Component {
     );
 
     const data = {
-      name,
-      role,
-      deadline,
-      selectedYear,
-      ethnicity,
-      experience,
-      minGrade,
-      heading,
-      body,
-      interestedSectors,
-      workLocation,
+      ...this.props,
+      workLocation: MapWorkLocation,
+      interestedSectors: MapInterestedSectors,
       subjects: MapSubjects,
       university: MapUniversity,
       keywords: MapKeywords,
@@ -73,6 +57,7 @@ class Campaigns extends React.Component {
       gender: MapGender,
       clientId: user.id
     };
+
     console.log(data);
 
     postJSON(`${API_URL}/campaign/create-campaign`, data) // eslint-disable-line
@@ -118,8 +103,8 @@ Campaigns.propTypes = {
   deadline: PropTypes.string.isRequired,
   selectedYear: PropTypes.string.isRequired,
   ethnicity: PropTypes.string.isRequired,
-  interestedSectors: PropTypes.string.isRequired,
-  workLocation: PropTypes.string.isRequired,
+  interestedSectors: PropTypes.object.isRequired,
+  workLocation: PropTypes.object.isRequired,
   experience: PropTypes.string.isRequired,
   minGrade: PropTypes.number.isRequired,
   subjects: PropTypes.object.isRequired,

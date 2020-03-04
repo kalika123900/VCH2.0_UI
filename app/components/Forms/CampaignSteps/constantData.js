@@ -1,3 +1,60 @@
+export const skillMenu = [
+  { id: 19, value: 'React.js' },
+  { id: 20, value: 'Angular.js' },
+  { id: 21, value: 'Node' },
+  { id: 25, value: 'Express.js' },
+];
+
+export const years = [
+  '2015',
+  '2016',
+  '2017',
+  '2018',
+  '2019',
+  '2020',
+  '2021',
+  '2022',
+  '2023',
+  '2024',
+  '2025',
+  '2026',
+  '2027',
+  '2028',
+  '2029',
+  '2030'
+];
+
+export const grade = [
+  { id: 1, value: 'A+' },
+  { id: 2, value: 'A' },
+  { id: 3, value: 'B' },
+  { id: 4, value: 'C' },
+  { id: 5, value: 'D' },
+  { id: 6, value: 'E' }
+];
+
+export const locationData = [
+  { id: 1, value: 'New York' },
+  { id: 2, value: 'London' },
+  { id: 3, value: 'Indore' },
+  { id: 4, value: 'Florida' },
+  { id: 5, value: 'Washington' },
+  { id: 6, value: 'Banglore' }
+];
+
+export const sectorsData = [
+  { id: 1, value: 'Information Technology' },
+  { id: 2, value: 'Automobile' },
+  { id: 3, value: 'Robotics' }
+];
+
+export const keywordsData = [
+  { id: 15, value: 'Job' },
+  { id: 16, value: 'Fresher' },
+  { id: 18, value: 'Entry Level' },
+  { id: 19, value: 'Experienced' }
+];
+
 export const subjectMenu = [
   { id: 1, value: 'Accounting' },
   { id: 2, value: 'Afrikaans' },
@@ -123,54 +180,4 @@ export const subjectMenu = [
   { id: 122, value: 'Urdu' },
   { id: 123, value: 'Welsh' },
   { id: 124, value: 'World Development' }
-];
-
-export const skillMenu = [
-  { id: 19, value: 'React.js' },
-  { id: 20, value: 'Angular.js' },
-  { id: 21, value: 'Node' },
-  { id: 25, value: 'Express.js' },
-];
-
-export const years = [
-  '2015',
-  '2016',
-  '2017',
-  '2018',
-  '2019',
-  '2020',
-  '2021',
-  '2022',
-  '2023',
-  '2024',
-  '2025',
-  '2026',
-  '2027',
-  '2028',
-  '2029',
-  '2030'
-];
-
-export const grade = [
-  { id: 1, value: 'A+' },
-  { id: 2, value: 'A' },
-  { id: 3, value: 'B' },
-  { id: 4, value: 'C' },
-  { id: 5, value: 'D' },
-  { id: 6, value: 'E' }
-];
-
-export const locationData = [
-  { id: 1, value: 'New York' },
-  { id: 2, value: 'London' },
-  { id: 3, value: 'Indore' },
-  { id: 4, value: 'Florida' },
-  { id: 5, value: 'Washington' },
-  { id: 6, value: 'Banglore' }
-];
-
-export const sectorsData = [
-  { id: 1, status: false, value: 'Information Technology' },
-  { id: 2, status: false, value: 'Automobile' },
-  { id: 3, status: false, value: 'Robotics' }
 ];

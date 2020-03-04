@@ -32,7 +32,6 @@ class EditStudentDetails extends Component {
     this.setState({ exField: value })
   }
 
-
   render() {
     const { classes } = this.props;
 
@@ -89,7 +88,6 @@ class EditStudentDetails extends Component {
                 </div>
               </Fragment>
             )}
-
             <div className={classes.btnArea} style={{ marginTop: "35px" }}>
               <Button variant="contained" fullWidth color="primary">
                 Save Changes
