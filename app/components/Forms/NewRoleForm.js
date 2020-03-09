@@ -163,7 +163,7 @@ class NewRoleForm extends React.Component {
 
     return (
       <section className={classes.pageFormWrap}>
-        <form onSubmit={handleSubmit}>
+        <form>
           <div>
             <FormControl className={classes.formControl}>
               <Field
@@ -186,7 +186,7 @@ class NewRoleForm extends React.Component {
               <InputLabel
                 htmlFor="select-course"
               >
-                Course Prefered
+                Which courses are relevant?
               </InputLabel>
               <Select
                 multiple
@@ -216,7 +216,7 @@ class NewRoleForm extends React.Component {
               <InputLabel
                 htmlFor="select-skill"
               >
-                Skills Required
+                Which skills are relevant?
               </InputLabel>
               <Select
                 multiple
@@ -229,9 +229,9 @@ class NewRoleForm extends React.Component {
                 component={Select}
               >
                 {skillList.map((item, index) => (
-                  <MenuItem key={index} value={item}>
-                    <Field name="skill-checkbox" component={Checkbox} checked={skillList.indexOf(item) > -1} />
-                    <ListItemText primary={item} />
+                  <MenuItem key={index} value={item.label}>
+                    <Field name="skill-checkbox" component={Checkbox} checked={skills.includes(item.label)} />
+                    <ListItemText primary={item.label} />
                   </MenuItem>
                 ))}
               </Select>
@@ -239,10 +239,11 @@ class NewRoleForm extends React.Component {
           </div>
           <div>
             <FormControl className={classes.formControl}>
+              <Typography variant="h6">What is the role’s application deadline?</Typography>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                   margin="normal"
-                  placeholder="Deadline for role"
+                  placeholder="What is the role’s application deadline?"
                   format="dd/MM/yyyy"
                   value={deadline}
                   name="deadline"
@@ -256,7 +257,8 @@ class NewRoleForm extends React.Component {
           </div>
           <div>
             <FormControl component="fieldset" required className={classes.formControl}>
-              <Typography variant="h6">Select Role Descriptors</Typography>
+              <Typography variant="h6">Tell us some role descriptors to help:</Typography>
+              <Typography variant="caption">(a member of the team will manually check your role description against the target audience)</Typography>
               <FormGroup>
                 {roleDescriptors}
               </FormGroup>
@@ -285,8 +287,9 @@ class NewRoleForm extends React.Component {
           </div>
           <div>
             <FormControl className={classes.formControl}>
+              <Typography variant="h6">What is the role page link?</Typography>
               <Field
-                label="Link to Portal"
+                label="https://xyz.com/jobs/123"
                 className={classes.textField}
                 type="text"
                 component={TextFieldRedux}
@@ -297,12 +300,13 @@ class NewRoleForm extends React.Component {
                 validate={[required]}
                 onChange={e => this.handleChange(e)}
               />
+              <Typography variant="caption">(Make sure it is the link to the actual page so that we can scan the page for key information)</Typography>
             </FormControl>
           </div>
           <Button onClick={(e) => handleClose(e)} color="primary">
             Cancel
           </Button>
-          <Button type="submit" color="primary">
+          <Button type="button" color="primary" onClick={handleSubmit}>
             Add Role
           </Button>
         </form>

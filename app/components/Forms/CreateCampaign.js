@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
@@ -50,7 +50,8 @@ class CreateCampaign extends React.Component {
       pristine,
       handleSubmit,
       submitting,
-      deco
+      deco,
+      userType
     } = this.props;
     const { activeStep } = this.state;
     const steps = getSteps();
@@ -69,7 +70,7 @@ class CreateCampaign extends React.Component {
             <Grid>
               <Grid>
                 <Typography variant="h4" className={classes.title} gutterBottom>
-                  Select which role you are trying to promote
+                  Select the role you would like to promote in this campaign
                 </Typography>
               </Grid>
               <section className={classes.pageFormWrap}>
@@ -114,7 +115,7 @@ class CreateCampaign extends React.Component {
           {activeStep === 2 && (
             <section>
               <Typography variant="h4" className={classes.title} gutterBottom>
-                Let&apos;s write your ad
+                Let’s write your first email communication
               </Typography>
               <Grid>
                 <FormControl className={(classes.formControl, classes.wrapInput)}>
@@ -176,10 +177,33 @@ class CreateCampaign extends React.Component {
                 </Button>
               </Grid>
               <Grid className={(classes.btnArea, classes.pageFormWrap)}>
-                <Button variant="contained" fullWidth color="primary" type="submit">
-                  Create Campaign
-                  <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
-                </Button>
+                {
+                  userType == 'ADMIN' && (
+                    <Fragment>
+                      <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
+                        <Button variant="contained" fullWidth color="primary" type="submit">
+                        Approve Campaign
+                          <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                        </Button>
+                      </Grid>
+                      <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
+                        <Button variant="contained" fullWidth color="secondary" type="submit">
+                        Reject Campaign
+                          <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                        </Button>
+                      </Grid>
+                    </Fragment>
+                  )
+
+                }
+                {
+                  userType == 'CLIENT' && (
+                    <Button variant="contained" fullWidth color="primary" type="submit">
+                    Create Campaign
+                      <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                    </Button>
+                  )
+                }
               </Grid>
             </section>
           )}
@@ -203,9 +227,12 @@ const CreateCampaignReduxed = reduxForm({
 })(CreateCampaign);
 
 const reducer = 'ui';
+const reducerA = 'Auth';
 const CreateCampaignMapped = connect(
   state => ({
-    deco: state.getIn([reducer, 'decoration'])
+    deco: state.getIn([reducer, 'decoration']),
+    userType: state.getIn([reducerA, 'userType']),
+
   }),
 )(CreateCampaignReduxed);
 

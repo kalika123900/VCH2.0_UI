@@ -5,6 +5,7 @@ import {
   STORE_STEP4_INFO,
   STORE_STEP5_INFO,
   STORE_STEP6_INFO,
+  CAMPAIGN_INFO_INIT,
   REMOVE_CAMPAIGN_INFO
 } from 'dan-actions/actionConstants';
 import { DateHelper } from '../helpers/dateTimeHelper';
@@ -26,7 +27,8 @@ const initialState = {
   body: '',
   deadline: DateHelper.format(DateHelper.addDays(new Date(), 5)),
   choosedDeadline: '0',
-  name: ''
+  name: '',
+  action: 'create'
 };
 
 const initialImmutableState = fromJS(initialState);
@@ -36,7 +38,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
     case STORE_STEP2_INFO:
       return state.withMutations((mutableState) => {
         mutableState
-          .set('role', action.data);
+          .set('role', action.data.role);
       });
     case STORE_STEP3_INFO:
       return state.withMutations((mutableState) => {
@@ -76,6 +78,35 @@ export default function reducer(state = initialImmutableState, action = {}) {
       return state.withMutations((mutableState) => {
         mutableState
           .set('name', action.data);
+      });
+
+    case CAMPAIGN_INFO_INIT:
+      return state.withMutations((mutableState) => {
+        const university = fromJS(action.data.university);
+        const keywords = fromJS(action.data.keywords);
+        const subjects = fromJS(action.data.subjects);
+        const skills = fromJS(action.data.skills);
+        const gender = fromJS(action.data.gender);
+        const interestedSectors = fromJS(action.data.interestedSectors);
+        const workLocation = fromJS(action.data.workLocation);
+        mutableState
+          .set('role', action.data.role)
+          .set('university', university)
+          .set('subjects', subjects)
+          .set('skills', skills)
+          .set('keywords', keywords)
+          .set('gender', gender)
+          .set('selectedYear', action.data.selectedYear)
+          .set('ethnicity', action.data.ethnicity)
+          .set('interestedSectors', interestedSectors)
+          .set('workLocation', workLocation)
+          .set('experience', action.data.experience)
+          .set('minGrade', action.data.minGrade)
+          .set('heading', action.data.heading)
+          .set('body', action.data.body)
+          .set('deadline', action.data.deadline)
+          .set('choosedDeadline', action.data.choosedDeadline)
+          .set('name', action.data.name);
       });
 
     case REMOVE_CAMPAIGN_INFO:

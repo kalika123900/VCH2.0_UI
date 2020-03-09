@@ -7,7 +7,6 @@ const drawerWidth = 240;
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    minHeight: 500,
     zIndex: 1,
     position: 'relative',
     backgroundColor: theme.palette.type === 'dark' ? fade(theme.palette.grey[800], 0.75) : fade(theme.palette.background.paper, 0.95),
@@ -274,7 +273,19 @@ const styles = theme => ({
     resize: 'none',
     height: 305,
     border: `1px solid ${theme.palette.divider}`,
-    padding: theme.spacing(0.5)
+    padding: theme.spacing(0.5),
+    ' & p': {
+      textAlign: 'left'
+    },
+    ' & ul': {
+      listStyle: 'circle',
+      textAlign: 'left',
+      paddingLeft: '20px'
+    },
+    ' & ul li': {
+      textAlign: 'left',
+    }
+
   },
   buttonUpload: {
     marginRight: theme.spacing()

@@ -83,15 +83,15 @@ class Step5 extends React.Component {
                   value={choosedDeadline}
                   onChange={(e) => this.handleReduxChange(e.target.value)}
                 >
-                  <FormControlLabel value={"28"} control={<Radio />} label="1 Month" />
-                  <FormControlLabel value={"56"} control={<Radio />} label="2 Month" />
-                  <FormControlLabel value={"84"} control={<Radio />} label="3 Month" />
-                  <FormControlLabel value={"5"} control={<Radio />} label="Role deadline as campaign deadline" />
-                  <FormControlLabel value={"0"} control={<Radio />} label="Custom Deadline" />
+                  <FormControlLabel value="28" control={<Radio />} label="1 Month" />
+                  <FormControlLabel value="56" control={<Radio />} label="2 Month" />
+                  <FormControlLabel value="84" control={<Radio />} label="3 Month" />
+                  <FormControlLabel value="5" control={<Radio />} label="Role deadline as campaign deadline" />
+                  <FormControlLabel value="0" control={<Radio />} label="Custom Deadline" />
                 </RadioGroup>
               </div>
               <br />
-              {choosedDeadline === "0" &&
+              {choosedDeadline === '0' && (
                 <div style={{ textAlign: 'left' }}>
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <Grid container justify="space-around">
@@ -108,72 +108,58 @@ class Step5 extends React.Component {
                     </Grid>
                   </MuiPickersUtilsProvider>
                 </div>
-              }
+              )}
             </PapperBlock>
           </Grid>
           <Grid item md={6} sm={12} xs={12}>
-            <PapperBlock title="Question and Answer" icon="ios-help-circle-outline" whiteBg desc="Sed imperdiet enim ligula, vitae viverra justo porta vel.">
+            <PapperBlock title="FAQs about campaigns" icon="ios-help-circle-outline" whiteBg desc="Have a look at some typical issues.">
               <ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handleQA('panel1')}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography className={classes.heading}>Pellentesque ac bibendum tortor?</Typography>
+                  <Typography align="left" className={classes.heading}>How many emails will be sent about my campaign?</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                  <Typography>
-                    Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat. Aliquam eget
-                    maximus est, id dignissim quam.
+                  <Typography align="left">
+                    The number of emails that are sent depends on the length of the campaign but we strictly regulate emails to ensure students are not sent too many!
                   </Typography>
                 </ExpansionPanelDetails>
               </ExpansionPanel>
               <ExpansionPanel expanded={expanded === 'panel2'} onChange={this.handleQA('panel2')}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography className={classes.heading}>Vivamus sit amet interdum elit?</Typography>
+                  <Typography align="left" className={classes.heading}>How else do we get your message to future hires?</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                  <Typography>
-                    Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar
-                    diam eros in elit. Pellentesque convallis laoreet laoreet.
+                  <Typography align="left">
+                    Your company profile is also boosted on the VCH campaign, as well as promoted through all of our social media campaigns.
                   </Typography>
                 </ExpansionPanelDetails>
               </ExpansionPanel>
               <ExpansionPanel expanded={expanded === 'panel3'} onChange={this.handleQA('panel3')}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography className={classes.heading}>Vestibulum nec mi suscipit?</Typography>
+                  <Typography align="left" className={classes.heading}>What happens when I submit my campaign?</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                  <Typography>
-                    Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas
-                    eros, vitae egestas augue. Duis vel est augue.
+                  <Typography align="left">
+                    A member of the VCH team will review it and create all the relevant communication necessary to ensure it all runs smoothly and effectively.
                   </Typography>
                 </ExpansionPanelDetails>
               </ExpansionPanel>
               <ExpansionPanel expanded={expanded === 'panel4'} onChange={this.handleQA('panel4')}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography className={classes.heading}>Cras convallis lacus orci?</Typography>
+                  <Typography align="left" className={classes.heading}>Can I create more than one campaign for the same role?</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                  <Typography>
-                    Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas
-                    eros, vitae egestas augue. Duis vel est augue.
+                  <Typography align="left">
+                    You can’t run more than one campaign for the same role concurrently however, if you have other roles you are hiring for then you can run campaigns for them.
                   </Typography>
                 </ExpansionPanelDetails>
               </ExpansionPanel>
               <ExpansionPanel expanded={expanded === 'panel5'} onChange={this.handleQA('panel5')}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography className={classes.heading}>Quisque ut metus sit amet?</Typography>
+                  <Typography align="left" className={classes.heading}>How many students will be targeted by this campaign?</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                  <Typography>
-                    enean sit amet magna vel magna fringilla fermentum. Donec sit amet nulla sed arcu pulvinar ultricies commodo id ligula.
-                  </Typography>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
-              <ExpansionPanel expanded={expanded === 'panel6'} onChange={this.handleQA('panel6')}>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography className={classes.heading}>Nulla vehicula leo ut augue tincidunt?</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                  <Typography>
-                    Curabitur egestas consequat lorem, vel fermentum augue porta id. Aliquam lobortis magna neque, gravida consequat velit venenatis at.
+                  <Typography align="left">
+                    Click next below to see how many students are being targeted initially, this number will usually grow by around 15% per month for any given campaign.
                   </Typography>
                 </ExpansionPanelDetails>
               </ExpansionPanel>

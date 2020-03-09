@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Editor } from 'react-draft-wysiwyg';
-import draftToMarkdown from 'draftjs-to-markdown';
-import { convertFromRaw, EditorState, convertToRaw } from 'draft-js';
+import { markdownToDraft, draftToMarkdown } from 'markdown-draft-js';
+import {
+  EditorState, convertToRaw, ContentState, convertFromHTML, convertFromRaw
+} from 'draft-js';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -19,18 +21,15 @@ import ArrowForward from '@material-ui/icons/ArrowForward';
 import { storeStep4Info } from 'dan-actions/CampaignActions';
 import 'dan-styles/vendors/react-draft-wysiwyg/react-draft-wysiwyg.css';
 import styles from 'dan-components/Email/email-jss';
+import draftToHtml from 'draftjs-to-html';
+import { Element } from 'react-showdown';
 import cmStyles from './step-jss';
+const showdown = require('showdown');
+const converter = new showdown.Converter();
+
 
 const content = {
-  blocks: [{
-    key: '637gr',
-    text: '',
-    type: 'unstyled',
-    depth: 0,
-    inlineStyleRanges: [],
-    entityRanges: [],
-    data: {}
-  }],
+  blocks: [],
   entityMap: {}
 };
 
@@ -38,10 +37,16 @@ class Step4 extends PureComponent {
   constructor(props) {
     super(props);
     const { body, heading } = this.props;
-    content.blocks[0].text = body;
-    const contentBlock = convertFromRaw(content);
-    if (contentBlock) {
-      const editorState = EditorState.createWithContent(contentBlock);
+    const bHTML = converter.makeHtml(body);
+    const blocksFromHTML = convertFromHTML(bHTML);
+    const iState = ContentState.createFromBlockArray(
+      blocksFromHTML.contentBlocks,
+      blocksFromHTML.entityMap,
+    );
+
+
+    if (content) {
+      const editorState = EditorState.createWithContent(iState);
       this.state = {
         editorState,
         headingEditor: heading
@@ -73,12 +78,12 @@ class Step4 extends PureComponent {
     return (
       <Fragment>
         <Typography variant="subtitle2">
-          Highlight the products and services you offer, and what makes your bussiness unique
+          We will use this email to help create the rest of our emails for our campaign. Try to make your email unique and attractive to your future hires.
         </Typography>
         <Grid container spacing={3} style={{ marginBottom: '30px', marginTop: '20px' }}>
           <Grid item md={6} xs={12} style={{ background: 'whitesmoke' }}>
             <Typography variant="body1" style={{ float: 'left' }}>
-              Write Your Ad
+              Write Your Email
             </Typography>
             <Grid item xs={12}>
               <TextField
@@ -147,17 +152,7 @@ class Step4 extends PureComponent {
                   }}
                 />
               </Grid>
-              <Grid>
-                <textarea
-                  className={classes.textPreview}
-                  disabled
-                  value={editorState && draftToMarkdown(convertToRaw(editorState.getCurrentContent()))}
-                  style={{
-                    border: 'none',
-                    background: 'white'
-                  }}
-                />
-              </Grid>
+              <Grid className={classes.textPreview} dangerouslySetInnerHTML={{ __html: draftToHtml(convertToRaw(editorState.getCurrentContent())), }} />
               <Grid>
                 <Typography variant="caption">
                   @ 2020 Varsity Careers Hub

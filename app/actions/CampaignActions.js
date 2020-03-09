@@ -25,6 +25,11 @@ export const storeStep6Info = (data) => ({
   data
 });
 
+export const campaignInfoInit = (data) => ({
+  type: types.CAMPAIGN_INFO_INIT,
+  data
+});
+
 export const removeCampaignInfo = () => ({
   type: types.REMOVE_CAMPAIGN_INFO
 });

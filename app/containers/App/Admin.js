@@ -2,19 +2,19 @@ import React, { Fragment } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
-import Dashboard from '../Templates/AdminDashboard';
 import { Footer } from 'dan-components';
 import NotFound from 'containers/Pages/Standalone/NotFoundDedicated';
+import Dashboard from '../Templates/AdminDashboard';
 import {
   AdminDashboard, AdminSeatManagement, AdminCampaignManagement, CampaignEdit,
-  ClientAccounts, ClientProfiles, StudentReview
+  ClientAccounts, ClientProfiles, StudentReview, Campaigns
 }
   from '../pageListAsync';
 
 class Admin extends React.Component {
   constructor(props) {
     super(props);
-    let { isLoggedIn } = props;
+    const { isLoggedIn } = props;
     isLoggedIn ? true : props.history.push('/admin-signin');
   }
 
@@ -27,7 +27,7 @@ class Admin extends React.Component {
             <Route exact path="/admin" component={AdminDashboard} />
             <Route exact path="/admin/seat-management" component={AdminSeatManagement} />
             <Route exact path="/admin/campaign-management" component={AdminCampaignManagement} />
-            <Route exact path="/admin/campaign-review" component={CampaignEdit} />
+            <Route exact path="/admin/campaign-review/:campaignId" component={CampaignEdit} />
             <Route exact path="/admin/client-accounts" component={ClientAccounts} />
             <Route exact path="/admin/client-profiles" component={ClientProfiles} />
             <Route exact path="/admin/student-review" component={StudentReview} />

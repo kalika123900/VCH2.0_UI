@@ -158,10 +158,13 @@ class SelectAdd extends Component {
           id={this.props.type}
           options={dataList}
           getOptionLabel={option => {
+            if (typeof option === 'undefined') {
+              return;
+            }
             if (typeof option === 'string') {
               return option;
             }
-            if (option.inputValue) {
+            if (option.hasOwnProperty('inputValue')) {
               return option.inputValue;
             }
             return option.value;
@@ -181,7 +184,7 @@ class SelectAdd extends Component {
         <Dialog open={open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
           <form onSubmit={(e) => this.handleSubmit(e, this.props.type)}>
             <DialogTitle id="form-dialog-title">
-Add a new
+              Add a new
               {this.props.label}
             </DialogTitle>
             <DialogContent>
@@ -190,7 +193,7 @@ Add a new
                 {' '}
                 {this.props.label}
                 {' '}
-in our list? Please, add it!
+                in our list? Please, add it!
               </DialogContentText>
               <TextField
                 autoFocus

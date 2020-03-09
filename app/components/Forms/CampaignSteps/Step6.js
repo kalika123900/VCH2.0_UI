@@ -11,7 +11,13 @@ import RemoveRedEye from '@material-ui/icons/RemoveRedEye';
 import Reply from '@material-ui/icons/Reply';
 import brand from 'dan-api/dummy/brand';
 import { storeStep6Info } from 'dan-actions/CampaignActions';
+import estyles from 'dan-components/Email/email-jss';
+import { CombineStyles } from 'dan-helpers';
 import styles from './step-jss';
+const showdown = require('showdown');
+const converter = new showdown.Converter();
+
+const combinedStyles = CombineStyles(styles, estyles);
 
 class Step6 extends React.Component {
   handleChange = (e) => {
@@ -49,7 +55,7 @@ class Step6 extends React.Component {
         <Grid container spacing={3} className={classes.root}>
           <Grid item md={12} xs={12}>
             <Typography variant="h6" className={classes.sec_1_heading}>
-              Campaign name
+              Give this campaign a name
             </Typography>
             <TextField
               className={(classes.textField, classes.sec_1_textField)}
@@ -60,21 +66,24 @@ class Step6 extends React.Component {
               variant="filled"
               onChange={(e) => this.handleChange(e)}
             />
+            <Typography variant="caption" className={classes.sec_1_heading}>
+              (This is just for you and won’t be displayed to candidates)
+            </Typography>
           </Grid>
         </Grid>
         {/* section 2 */}
         <Grid container spacing={3} style={{ marginBottom: '10px' }} className={(classes.root, classes.sec_2_root)}>
           <Grid item md={12} xs={12}>
             <Typography variant="h6">
-              Estimated performance ?
+              Estimated performance
             </Typography>
             <Typography variant="subtitle1">
               <RemoveRedEye />
-              43,544 - 72,640 impressions per month
+              43,544 - 72,640 candidates targeted initially
             </Typography>
             <Typography variant="subtitle1">
               <Reply />
-              1,115 - 1,860 clicks per month
+              1,115 - 1,860 expected total click-throughs
             </Typography>
           </Grid>
         </Grid>
@@ -139,7 +148,7 @@ class Step6 extends React.Component {
             <Typography variant="body2" style={{ lineHeight: '2.3rem', color: '#38ae00' }}>
               Ad www.varsitycareershub.co.uk
             </Typography>
-            <Typography variant="subtitle2">
+            <Grid>
               {body.length <= 0
                 ? (
                   <Typography
@@ -149,9 +158,16 @@ class Step6 extends React.Component {
                     Oops! Campaign body is empty
                   </Typography>
                 )
-                : body
+                : (
+                  <Grid
+                    className={classes.textPreview}
+                    dangerouslySetInnerHTML={{
+                      __html: converter.makeHtml(body)
+                    }}
+                  />
+                )
               }
-            </Typography>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
@@ -174,6 +190,7 @@ Step6.propTypes = {
 
 const reducerCampaign = 'campaign';
 
+
 const mapStateToProps = state => ({
   name: state.getIn([reducerCampaign, 'name']),
   gender: state.getIn([reducerCampaign, 'gender']),
@@ -182,7 +199,7 @@ const mapStateToProps = state => ({
   role: state.getIn([reducerCampaign, 'role']),
   keywords: state.getIn([reducerCampaign, 'keywords']),
   heading: state.getIn([reducerCampaign, 'heading']),
-  body: state.getIn([reducerCampaign, 'body'])
+  body: state.getIn([reducerCampaign, 'body']),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -194,4 +211,4 @@ const StepMapped = connect(
   mapDispatchToProps
 )(Step6);
 
-export default withStyles(styles)(StepMapped);
+export default withStyles(combinedStyles)(StepMapped);

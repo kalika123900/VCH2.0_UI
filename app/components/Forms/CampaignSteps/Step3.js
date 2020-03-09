@@ -144,7 +144,7 @@ class Step3 extends React.Component {
             <Grid style={{ textAlign: 'left' }}>
               <FormControl component="fieldset" required className={(classes.customWidth, classes.formControl)}>
                 <Typography variant="h6">
-                  Specify Universities for algorithm to prefer
+                  Which universities would you like to target?
                 </Typography>
                 <Select
                   multiple
@@ -184,7 +184,7 @@ class Step3 extends React.Component {
           <Grid item md={12} xs={12}>
             <Grid style={{ textAlign: 'left' }}>
               <FormControl component="fieldset" required className={classes.formControl}>
-                <Typography variant="h6">Specify precise gender for the algorithm to give preference to</Typography>
+                <Typography variant="h6">Which genders would you like to target?</Typography>
                 <FormGroup>
                   {genderCheckboxes}
                 </FormGroup>
@@ -197,7 +197,7 @@ class Step3 extends React.Component {
             <Grid style={{ textAlign: 'left' }}>
               <FormControl component="fieldset" required className={(classes.customWidth, classes.formControl)}>
                 <Typography variant="h6">
-                  Specify subjects for algorithm to prefer
+                  Student reading these courses will be particularly targeted:
                 </Typography>
                 <Select
                   multiple
@@ -238,7 +238,7 @@ class Step3 extends React.Component {
             <Grid style={{ textAlign: 'left' }}>
               <FormControl component="fieldset" required className={(classes.customWidth, classes.formControl)}>
                 <Typography variant="h6">
-                  Specify Skills for algorithm to prefer
+                  Students with these skills will be particularly targeted:
                 </Typography>
                 <Select
                   multiple
@@ -279,7 +279,7 @@ class Step3 extends React.Component {
             <Grid style={{ textAlign: 'left' }}>
               <FormControl className={classes.formControl}>
                 <Typography variant="h6">
-                  Specify Years for algorithm to prefer
+                  This campaign will only target students graduating in these years:
                 </Typography>
                 <Select
                   placeholder="Select Year"
@@ -303,7 +303,7 @@ class Step3 extends React.Component {
             <Grid style={{ textAlign: 'left' }}>
               <FormControl className={classes.formControl}>
                 <Typography variant="h6">
-                  Specify Minimum Grade required for algorithm to prefer
+                  Student that achieve these grades will be particularly targeted:
                 </Typography>
                 <Select
                   placeholder="Select Minimum Grade"
@@ -326,7 +326,7 @@ class Step3 extends React.Component {
           <Grid item md={12} xs={12}>
             <Grid style={{ textAlign: 'left' }}>
               <FormControl component="fieldset" required className={classes.formControl}>
-                <Typography variant="h6">Select Ethnicity</Typography>
+                <Typography variant="h6">Would you like to target any ethnic groups?</Typography>
                 <RadioGroup
                   aria-label="ethnicity"
                   name="ethnicity"
@@ -349,7 +349,7 @@ class Step3 extends React.Component {
           <Grid item md={12} xs={12}>
             <Grid style={{ textAlign: 'left' }}>
               <FormControl component="fieldset" required className={classes.formControl}>
-                <Typography variant="h6">Experience Required</Typography>
+                <Typography variant="h6">Do your future hires require experience to succeed in this role?</Typography>
                 <RadioGroup
                   aria-label="experience"
                   name="experience"
@@ -368,7 +368,7 @@ class Step3 extends React.Component {
           <Grid item md={12} xs={12}>
             <Grid style={{ textAlign: 'left' }}>
               <Typography variant="h6" style={{ textAlign: 'left' }}>
-                Locations they are willing to work
+                This campaign will only target candidates who are willing to work in:
               </Typography>
               <SelectAdd
                 classes={this.props.classes}
@@ -382,7 +382,7 @@ class Step3 extends React.Component {
         <Grid container spacing={3} className={classes.divider}>
           <Grid item md={12} xs={12}>
             <Typography variant="h6" style={{ textAlign: 'left' }}>
-              Interested Sectors to specify
+              Only students that are specifically interested in these sectors will be targeted:
             </Typography>
             <SelectAdd
               classes={this.props.classes}
@@ -395,7 +395,7 @@ class Step3 extends React.Component {
         <Grid container spacing={3} className={classes.divider}>
           <Grid item md={12} xs={12}>
             <Typography variant="h6" style={{ textAlign: 'left' }}>
-              Specify key words for the algorithm to prefer
+              Students that contain these words will be ranked hire in the campaign:
             </Typography>
             <SelectAdd
               classes={this.props.classes}

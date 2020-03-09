@@ -15,9 +15,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Button from '@material-ui/core/Button';
 import formatDate from '../../../Helpers/formatDate';
 
-let id = 0;
-function createData(client, campaign, create_date) {
-  id += 1;
+function createData(id, client, campaign, create_date) {
   return {
     id,
     client,
@@ -26,27 +24,30 @@ function createData(client, campaign, create_date) {
   };
 }
 
-const campaignData = [];
 
 class AwaitingCampaigns extends React.Component {
   state = {
     redirect: false,
-    isCampaigns: false
+    isCampaigns: false,
+    campaignId: null,
+    campaignData: []
   }
 
-  setRedirect = () => {
+  setRedirect = (id) => {
     this.setState({
       redirect: true,
+      campaignId: id
     });
   }
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to="/client/edit-campaign/id-a5z2f4wc" />;
+      return <Redirect to={`/admin/campaign-review/${this.state.campaignId}`} />;
     }
   }
 
   componentDidMount() {
+    const _that = this;
     async function getData(url) {
       const response = await fetch(url, {
         method: 'GET',
@@ -59,14 +60,16 @@ class AwaitingCampaigns extends React.Component {
       .then((res) => {
         if (res.status === 1) {
           if (res.data.length > 0) {
+            const campaignData = [];
             res.data.map(item => {
               const client_name = item.firstname + ' ' + item.lastname;
               item.campaign_masters.map(campaign => {
                 const date = formatDate(campaign.created_at);
                 campaignData.push(
-                  createData(client_name, campaign.campaign_name, date)
+                  createData(campaign.id, client_name, campaign.campaign_name, date)
                 );
               });
+              _that.setState({ campaignData });
             });
             this.setState({ isCampaigns: true });
           }
@@ -80,7 +83,8 @@ class AwaitingCampaigns extends React.Component {
   render() {
     const { classes } = this.props;
     const { isCampaigns } = this.state;
-
+    const { campaignData } = this.state;
+    if (campaignData.length == 0) return null;
     return (
       <Fragment>
         {this.renderRedirect()}
@@ -104,7 +108,7 @@ class AwaitingCampaigns extends React.Component {
                 </TableHead>
                 <TableBody>
                   {campaignData.map(n => ([
-                    <TableRow key={n.id} onClick={this.setRedirect}>
+                    <TableRow key={n.id} onClick={() => this.setRedirect(n.id)}>
                       <TableCell padding="default">{n.client}</TableCell>
                       <TableCell padding="default">{n.campaign}</TableCell>
                       <TableCell align="left">{n.create_date}</TableCell>
@@ -124,7 +128,7 @@ class AwaitingCampaigns extends React.Component {
                 variant="body1"
                 className={classes.warnMsg}
               >
-              No Awaiting campaigns !
+                No Awaiting campaigns !
               </Typography>
             )
           }
