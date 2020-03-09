@@ -6,10 +6,10 @@ import { bindActionCreators } from 'redux';
 import brand from 'dan-api/dummy/brand';
 import { CreateCampaign } from 'dan-components';
 import { removeCampaignInfo, campaignInfoInit } from 'dan-actions/CampaignActions';
+import { DateHelper } from '../../../redux/helpers/dateTimeHelper';
 import {
   keywordsData
 } from '../../../components/Forms/CampaignSteps/constantData';
-import { DateHelper } from '../../../redux/helpers/dateTimeHelper';
 
 async function postJSON(url, data) {
   const response = await fetch(url, {
@@ -163,7 +163,6 @@ class CampaignEdit extends React.Component {
       skills,
       keywords,
       gender,
-      deadline,
       history,
       removeInfo
     } = this.props;
