@@ -19,7 +19,7 @@ import brand from 'dan-api/dummy/brand';
 import { storeStep5Info } from 'dan-actions/CampaignActions';
 import PapperBlock from '../../PapperBlock/PapperBlock';
 import styles from '../../../containers/Pages/HelpSupport/helpSupport-jss';
-import { DateHelper } from '../../../redux/helpers/dateTimeHelper';
+import { parseDateHelper } from '../../../redux/helpers/dateTimeHelper';
 
 class Step5 extends React.Component {
   state = {
@@ -34,7 +34,7 @@ class Step5 extends React.Component {
 
   handleReduxChange = (value) => {
     const { addInfo } = this.props;
-    const deadline = DateHelper.format(DateHelper.addDays(new Date(), value));
+    const deadline = parseDateHelper.format(parseDateHelper.addDays(new Date(), value));
     addInfo({ deadline, choosedDeadline: value });
   };
 
