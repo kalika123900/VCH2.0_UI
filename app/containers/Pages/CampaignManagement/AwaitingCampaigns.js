@@ -73,6 +73,9 @@ class AwaitingCampaigns extends React.Component {
             });
             this.setState({ isCampaigns: true });
           }
+          else {
+            this.setState({ isCampaigns: true });
+          }
         }
       })
       .catch((err) => {
@@ -84,7 +87,7 @@ class AwaitingCampaigns extends React.Component {
     const { classes } = this.props;
     const { isCampaigns } = this.state;
     const { campaignData } = this.state;
-    if (campaignData.length == 0) return null;
+    if (isCampaigns == false) return null;
     return (
       <Fragment>
         {this.renderRedirect()}
@@ -95,7 +98,7 @@ class AwaitingCampaigns extends React.Component {
             </div>
             <div className={classes.spacer} />
           </Toolbar>
-          {isCampaigns
+          {campaignData.length > 0
             ? (
               <Table className={classNames(classes.table, classes.hover)}>
                 <TableHead>

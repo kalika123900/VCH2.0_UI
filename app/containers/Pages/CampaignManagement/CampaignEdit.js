@@ -9,6 +9,7 @@ import { removeCampaignInfo, campaignInfoInit } from 'dan-actions/CampaignAction
 import {
   keywordsData
 } from '../../../components/Forms/CampaignSteps/constantData';
+import { DateHelper } from '../../../redux/helpers/dateTimeHelper';
 
 async function postJSON(url, data) {
   const response = await fetch(url, {
@@ -95,6 +96,16 @@ function formatDeadline(dateStr) {
   return (year + '-' + month + '-' + date);
 }
 
+function alterDeadline(campaignTime) {
+  let timestamp1 = new Date(campaignTime);
+  let timestamp2 = new Date()
+  let diff_in_days = parseInt((timestamp2 - timestamp1) / (1000 * 3600 * 24));
+
+  return DateHelper.format(DateHelper.addDays(new Date(campaignTime), diff_in_days));
+}
+
+var createdAt = null;
+
 class CampaignEdit extends React.Component {
   componentDidMount() {
     const _that = this;
@@ -111,6 +122,8 @@ class CampaignEdit extends React.Component {
           const experience = boolNumberToString(res.data.info.experience);
           const gender = stringToArray(res.data.info.gender);
           const deadline = formatDeadline(res.data.info.deadline);
+
+          createdAt = res.data.info.created_at;
 
           const campaignData = {
             name: res.data.info.campaign_name,
@@ -150,6 +163,7 @@ class CampaignEdit extends React.Component {
       skills,
       keywords,
       gender,
+      deadline,
       history,
       removeInfo
     } = this.props;
@@ -161,9 +175,11 @@ class CampaignEdit extends React.Component {
     const MapKeywords = keywords.toJS();
     const MapSkills = skills.toJS();
     const MapGender = gender.toJS();
+    const MapDeadline = alterDeadline(createdAt);
 
     const data = {
       ...this.props,
+      deadline: MapDeadline,
       workLocation: MapWorkLocation,
       interestedSectors: MapInterestedSectors,
       subjects: MapSubjects,
@@ -217,7 +233,7 @@ CampaignEdit.propTypes = {
   university: PropTypes.object.isRequired,
   keywords: PropTypes.object.isRequired,
   deadline: PropTypes.string.isRequired,
-  deadline_choice: PropTypes.string.isRequired,
+  choosedDeadline: PropTypes.string.isRequired,
   selectedYear: PropTypes.string.isRequired,
   ethnicity: PropTypes.string.isRequired,
   interestedSectors: PropTypes.object.isRequired,
@@ -241,7 +257,7 @@ const mapStateToProps = state => ({
   university: state.getIn([reducerCampaign, 'university']),
   keywords: state.getIn([reducerCampaign, 'keywords']),
   deadline: state.getIn([reducerCampaign, 'deadline']),
-  deadline_choice: state.getIn([reducerCampaign, 'deadline']),
+  choosedDeadline: state.getIn([reducerCampaign, 'choosedDeadline']),
   selectedYear: state.getIn([reducerCampaign, 'selectedYear']),
   ethnicity: state.getIn([reducerCampaign, 'ethnicity']),
   interestedSectors: state.getIn([reducerCampaign, 'interestedSectors']),

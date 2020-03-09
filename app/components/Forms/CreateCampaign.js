@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form/immutable';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -14,7 +15,9 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Grid from '@material-ui/core/Grid';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import ArrowForward from '@material-ui/icons/ArrowForward';
+import { removeCampaignInfo } from 'dan-actions/CampaignActions';
 import styles from './user-jss';
+import { withRouter } from 'react-router'
 import Step2 from './CampaignSteps/Step2';
 import Step3 from './CampaignSteps/Step3';
 import Step4 from './CampaignSteps/Step4';
@@ -31,6 +34,18 @@ function getSteps() {
   ];
 }
 
+async function postJSON(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  });
+
+  return await response.json();
+}
+
 class CreateCampaign extends React.Component {
   state = {
     activeStep: 0,
@@ -42,6 +57,27 @@ class CreateCampaign extends React.Component {
 
   handleNext = () => {
     this.setState((prevState) => ({ activeStep: prevState.activeStep + 1 }));
+  }
+
+  handleReject = () => {
+    console.log(this.props);
+    const { removeInfo } = this.props;
+    const data = {
+      campaignId: this.props.match.params.campaignId
+    };
+
+    postJSON(`${API_URL}/campaign/reject-campaign`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          removeInfo();
+          this.props.history.push('/admin');
+        } else {
+          console.log('something not good ');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   render() {
@@ -182,13 +218,13 @@ class CreateCampaign extends React.Component {
                     <Fragment>
                       <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
                         <Button variant="contained" fullWidth color="primary" type="submit">
-                        Approve Campaign
+                          Approve Campaign
                           <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
                         </Button>
                       </Grid>
                       <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
-                        <Button variant="contained" fullWidth color="secondary" type="submit">
-                        Reject Campaign
+                        <Button variant="contained" fullWidth color="secondary" onClick={() => this.handleReject()}>
+                          Reject Campaign
                           <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
                         </Button>
                       </Grid>
@@ -199,7 +235,7 @@ class CreateCampaign extends React.Component {
                 {
                   userType == 'CLIENT' && (
                     <Button variant="contained" fullWidth color="primary" type="submit">
-                    Create Campaign
+                      Create Campaign
                       <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
                     </Button>
                   )
@@ -217,6 +253,7 @@ CreateCampaign.propTypes = {
   classes: PropTypes.object.isRequired,
   pristine: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  removeInfo: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
   deco: PropTypes.bool.isRequired,
 };
@@ -228,12 +265,17 @@ const CreateCampaignReduxed = reduxForm({
 
 const reducer = 'ui';
 const reducerA = 'Auth';
+
+const mapDispatchToProps = dispatch => ({
+  removeInfo: bindActionCreators(removeCampaignInfo, dispatch)
+});
+
 const CreateCampaignMapped = connect(
   state => ({
     deco: state.getIn([reducer, 'decoration']),
     userType: state.getIn([reducerA, 'userType']),
-
   }),
+  mapDispatchToProps
 )(CreateCampaignReduxed);
 
-export default withStyles(styles)(CreateCampaignMapped);
+export default withRouter(withStyles(styles)(CreateCampaignMapped));
