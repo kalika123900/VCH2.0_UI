@@ -37,7 +37,6 @@ function stringToArray(string) {
 
 function stringToArrayObj(string) {
   const splitArray = string.split(',');
-
   const data = [];
   splitArray.map(item => {
     if (item !== '') {
@@ -82,6 +81,20 @@ function arrayToObject(arr) {
   return data;
 }
 
+function formatDeadline(dateStr) {
+  const d = new Date(dateStr)
+  const year = d.getFullYear()
+  let month = d.getMonth() + 1;
+  let date = d.getDate();
+  if (month < 10) {
+    month = `0` + month;
+  }
+  if (date < 10) {
+    date = `0` + date;
+  }
+  return (year + '-' + month + '-' + date);
+}
+
 class CampaignEdit extends React.Component {
   componentDidMount() {
     const _that = this;
@@ -97,6 +110,7 @@ class CampaignEdit extends React.Component {
           const workLocation = stringToArrayObj(res.data.info.work_location);
           const experience = boolNumberToString(res.data.info.experience);
           const gender = stringToArray(res.data.info.gender);
+          const deadline = formatDeadline(res.data.info.deadline);
 
           const campaignData = {
             name: res.data.info.campaign_name,
@@ -104,7 +118,7 @@ class CampaignEdit extends React.Component {
             gender,
             university: res.data.university,
             keywords,
-            deadline: '2020-03-02',
+            deadline,
             selectedYear: res.data.info.selected_year,
             ethnicity: res.data.info.ethnicity,
             interestedSectors,
@@ -117,8 +131,6 @@ class CampaignEdit extends React.Component {
             body: res.data.info.body,
             choosedDeadline: res.data.info.deadline_choice,
           };
-
-          console.log(campaignData);
           _that.props.campaignInit(campaignData);
         } else {
           console.log('something not good ');
@@ -205,6 +217,7 @@ CampaignEdit.propTypes = {
   university: PropTypes.object.isRequired,
   keywords: PropTypes.object.isRequired,
   deadline: PropTypes.string.isRequired,
+  deadline_choice: PropTypes.string.isRequired,
   selectedYear: PropTypes.string.isRequired,
   ethnicity: PropTypes.string.isRequired,
   interestedSectors: PropTypes.object.isRequired,
@@ -228,6 +241,7 @@ const mapStateToProps = state => ({
   university: state.getIn([reducerCampaign, 'university']),
   keywords: state.getIn([reducerCampaign, 'keywords']),
   deadline: state.getIn([reducerCampaign, 'deadline']),
+  deadline_choice: state.getIn([reducerCampaign, 'deadline']),
   selectedYear: state.getIn([reducerCampaign, 'selectedYear']),
   ethnicity: state.getIn([reducerCampaign, 'ethnicity']),
   interestedSectors: state.getIn([reducerCampaign, 'interestedSectors']),

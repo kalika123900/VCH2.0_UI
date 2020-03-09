@@ -47,3 +47,17 @@ export const DateHelper = {
     ].join('-');
   }
 };
+
+export const parseDateHelper = {
+  addDays(aDate, numberOfDays) {
+    aDate.setDate(aDate.getDate() + parseInt(numberOfDays));
+    return aDate;
+  },
+  format: function format(date) {
+    return [
+      date.getFullYear(),
+      ('0' + (date.getMonth() + 1)).slice(-2),
+      ('0' + date.getDate()).slice(-2)
+    ].join('-');
+  }
+};
