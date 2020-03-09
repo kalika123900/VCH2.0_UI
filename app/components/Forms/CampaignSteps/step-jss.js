@@ -3,6 +3,12 @@ const styles = theme => ({
     display: 'flex',
     flexWrap: 'wrap'
   },
+  placeholderUiOff: {
+    display: 'none'
+  },
+  placeholderUiOn: {
+    display: 'block'
+  },
   autoComplete: {
     width: '100% !important',
     '& autoCompleteInner': {

@@ -16,6 +16,12 @@ const styles = theme => ({
     borderRadius: theme.rounded.medium,
     boxShadow: theme.shade.light
   },
+  placeholderUiOff: {
+    display: 'none'
+  },
+  placeholderUiOn: {
+    display: 'block'
+  },
   iconRed: {
     color: red[500]
   },
@@ -287,6 +293,7 @@ const styles = theme => ({
     }
 
   },
+
   buttonUpload: {
     marginRight: theme.spacing()
   }

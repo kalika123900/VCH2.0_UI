@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { Editor } from 'react-draft-wysiwyg';
 import { markdownToDraft, draftToMarkdown } from 'markdown-draft-js';
 import {
-  EditorState, convertToRaw, ContentState, convertFromHTML, convertFromRaw
+  EditorState, convertToRaw, ContentState, convertFromHTML, Modifier
 } from 'draft-js';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -32,6 +32,69 @@ const content = {
   blocks: [],
   entityMap: {}
 };
+class CustomOption extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false
+    };
+    this.placeholderOptions = [
+      { key: 'firstName', value: '{{firstName}}', text: 'First Name' },
+      { key: 'lastName', value: '{{lastName}}', text: 'Last name' },
+      { key: 'email', value: '{{email}}', text: 'Email' },];
+  }
+
+  static propTypes = {
+    onChange: PropTypes.func,
+    editorState: PropTypes.object,
+  }
+
+  componentDidMount() {
+    const listItem = this.placeholderOptions.map(item => (
+      <li
+        onClick={this.addStar.bind(this, item.value)}
+        key={item.key}
+
+        className="rdw-dropdownoption-default"
+      >
+        {item.text}
+      </li>
+    ));
+
+    this.setState({ listItem });
+  }
+
+  addStar = (placeholder) => {
+    const { editorState, onChange } = this.props;
+    const contentState = Modifier.replaceText(
+      editorState.getCurrentContent(),
+      editorState.getSelection(),
+      placeholder,
+      editorState.getCurrentInlineStyle(),
+    );
+    onChange(EditorState.push(editorState, contentState, 'insert-characters'));
+  };
+
+  openPlaceholderDropdown = () => this.setState({ open: !this.state.open })
+
+
+  render() {
+    return (
+      <div onClick={this.openPlaceholderDropdown} className="rdw-block-wrapper" aria-label="rdw-block-control">
+        <div className="rdw-dropdown-wrapper rdw-block-dropdown" aria-label="rdw-dropdown">
+          <div className="rdw-dropdown-selectedtext" title="Placeholders">
+            <span>First Name</span>
+            <div className={`rdw-dropdown-caretto${this.state.open ? 'close' : 'open'}`} />
+          </div>
+          <ul className="rdw-dropdown-optionwrapper " style={{ display: `${this.state.open ? 'block' : 'none'}` }}>
+            {this.state.listItem}
+          </ul>
+        </div>
+      </div>
+    );
+  }
+}
+
 
 class Step4 extends PureComponent {
   constructor(props) {
@@ -102,6 +165,7 @@ class Step4 extends PureComponent {
                 editorClassName={classes.textEditor}
                 toolbarClassName={classes.toolbarEditor}
                 onEditorStateChange={this.onEditorStateChange}
+                toolbarCustomButtons={[<CustomOption />]}
               />
             </Grid>
           </Grid>
