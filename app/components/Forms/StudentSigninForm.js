@@ -18,13 +18,13 @@ import Paper from '@material-ui/core/Paper';
 import Icon from '@material-ui/core/Icon';
 import brand from 'dan-api/dummy/brand';
 import logo from 'dan-images/logo.png';
-import FacebookIcon from '@material-ui/icons/Facebook';
+
 import { Grid } from '@material-ui/core';
 import FlashMessage from 'react-flash-message';
-import LinkedInIcon from '@material-ui/icons/LinkedIn';
+
 import styles from './user-jss';
 import { TextFieldRedux, CheckboxRedux } from './ReduxFormMUI';
-
+import OpenAuth from './Openauth';
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
 const LinkBtn = React.forwardRef(function LinkBtn(props, ref) { // eslint-disable-line
@@ -33,8 +33,14 @@ const LinkBtn = React.forwardRef(function LinkBtn(props, ref) { // eslint-disabl
 
 // eslint-disable-next-line
 class StudentSigninForm extends React.Component {
+  constructor(props) {
+    super(props);
+
+  }
   state = {
-    showPassword: false
+    showPassword: false,
+    code: '',
+    errorMessage: '',
   }
 
   Message = () => {
@@ -60,38 +66,11 @@ class StudentSigninForm extends React.Component {
   handleMouseDownPassword = event => {
     event.preventDefault();
   };
-  componentDidMount() {
-    (function () {
-      var e = document.createElement("script");
-      e.type = "text/javascript";
-      e.async = true;
-      e.src = "http://platform.linkedin.com/in.js?async=true";
-      var t = document.getElementsByTagName("script")[0];
-      t.parentNode.insertBefore(e, t)
-    })();
+  handleSuccess = (data) => {
+    console.log(data);
   }
-  linkedinLogin = () => {
-    window.IN.init({
-      api_key: "81rgkufnb8jcm8"
-    })
-    setTimeout(function () {
-      this.getUserDetails();
-    }.bind(this), 1000);
-    console.log("Loaded")
-  }
-
-  getUserDetails = () => {
-    window.IN.User.authorize(function () {
-      window.IN.API.Profile("me")
-        .fields(["id", "firstName", "lastName", "pictureUrl", "publicProfileUrl"])
-        .result(function (result) {
-          console.log(result);
-          alert("Successfull login from linkedin : " + result.values[0].firstName + " " + result.values[0].lastName);
-        })
-        .error(function (err) {
-          console.log('Import error - Error occured while importing data')
-        });
-    });
+  handleFailure = (data) => {
+    console.log(data);
   }
 
   render() {
@@ -101,9 +80,9 @@ class StudentSigninForm extends React.Component {
       pristine,
       submitting,
       deco,
-      flash
+      flash,
     } = this.props;
-    const { showPassword } = this.state;
+    const { showPassword, code, errorMessage } = this.state;
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
         <div className={classes.topBar}>
@@ -177,33 +156,10 @@ class StudentSigninForm extends React.Component {
         </div>
         <Grid>
           <div className={classes.btnArea}>
-            <Button
-              variant="contained"
-              fullWidth
-              size="small"
-              style={{
-                background: '#2d72b0',
-                color: ' white',
-              }}
-              onClick={this.linkedinLogin}
-            >
-              <LinkedInIcon style={{ marginRight: '10px' }} />
-              Continue with LinkedIn
-            </Button>
+            <OpenAuth receiveProviderToken={this.handleSuccess} failToReceiveProviderToken={this.handleFailure} type="linkedin" />
           </div>
           <div className={classes.btnArea}>
-            <Button
-              variant="contained"
-              fullWidth
-              size="small"
-              style={{
-                background: '#4267b2',
-                color: ' white'
-              }}
-            >
-              <FacebookIcon style={{ marginRight: '10px' }} />
-              Continue with Facebook
-            </Button>
+            <OpenAuth type="facebook" />
           </div>
         </Grid>
       </Paper>

@@ -71,6 +71,9 @@ class CampaignTable extends React.Component {
               if (item.status == 0) {
                 item.status = 'Pending';
               }
+              else if (item.status == 1) {
+                item.status = 'Active';
+              }
               const createDate = formatDate(item.created_at);
               const deadline = formatDate(item.deadline);
               campaignData.push(createData(item.campaign_name, createDate, deadline, item.views, item.status));
@@ -162,7 +165,7 @@ class CampaignTable extends React.Component {
                 variant="body1"
                 className={classes.warnMsg}
               >
-              No Ongoing campaigns !
+                No Ongoing campaigns !
               </Typography>
             )
           }

@@ -7,7 +7,7 @@ import NotFound from 'containers/Pages/Standalone/NotFoundDedicated';
 import Dashboard from '../Templates/AdminDashboard';
 import {
   AdminDashboard, AdminSeatManagement, AdminCampaignManagement, CampaignEdit,
-  ClientAccounts, ClientProfiles, StudentReview, Campaigns
+  ClientAccounts, ClientProfiles, StudentReview, Campaigns, Signout
 }
   from '../pageListAsync';
 
@@ -31,6 +31,7 @@ class Admin extends React.Component {
             <Route exact path="/admin/client-accounts" component={ClientAccounts} />
             <Route exact path="/admin/client-profiles" component={ClientProfiles} />
             <Route exact path="/admin/student-review" component={StudentReview} />
+            <Route exact path="/admin/signout" component={Signout} />
             <Route component={NotFound} />
           </Switch>
         </Dashboard>

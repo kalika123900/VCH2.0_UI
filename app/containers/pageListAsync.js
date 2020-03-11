@@ -576,3 +576,7 @@ export const JobProfile = loadable(() =>
   import('./Pages/CompanyProfiles/JobProfile'), {
   fallback: <Loading />,
 });
+export const Signout = loadable(() =>
+  import('./Pages/Signout'), {
+  fallback: <Loading />,
+});

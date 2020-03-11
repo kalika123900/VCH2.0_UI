@@ -1,6 +1,7 @@
 import { fromJS } from 'immutable';
 import {
   SET_AUTH,
+  REMOVE_AUTH
 } from 'dan-actions/actionConstants';
 const initialState = {
   userType: false,
@@ -15,6 +16,12 @@ export default function reducer(state = initialImmutableState, action = {}) {
         mutableState
           .set('userType', action.data.userType)
           .set('userDetails', action.data.userDetail);
+      });
+    case REMOVE_AUTH:
+      return state.withMutations((mutableState) => {
+        mutableState
+          .set('userType', false)
+          .set('userDetails', {});
       });
     default:
       return state;
