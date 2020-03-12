@@ -36,7 +36,7 @@ class Client extends React.Component {
             <Route exact path="/client/email-management" component={BulkEmailManagement} />
             <Route exact path="/client/email-details" component={BulkEmailDetails} />
             <Route exact path="/client/seat-management" component={SeatManagement} />
-            <Route exact path="/client/edit-campaign/:campaignId" component={CampaignEdit} />
+            <Route exact path="/client/edit-campaign/:campaignId" component={Campaigns} />
             <Route exact path="/client/settings" component={ClientSettings} />
             <Route component={NotFound} />
           </Switch>
