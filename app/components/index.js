@@ -189,3 +189,5 @@ export AddBoard from './TaskBoard/AddBoard';
 export ErrorWrap from './Error/ErrorWrap';
 // Theme an Layout Settings
 export TemplateSettings from './TemplateSettings';
+// DialogBox
+export ConfirmationDialog from './DialogBox/ConfirmationDialog';

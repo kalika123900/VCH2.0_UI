@@ -16,29 +16,20 @@ import FeaturedPlayListIcon from '@material-ui/icons/FeaturedPlayList';
 import { Avatar, Button, Grid } from '@material-ui/core';
 
 class CampaignInfo extends React.Component {
-  state = {
-    redirect: false,
-  }
-  setRedirect = () => {
-    this.setState({
-      redirect: true,
-    })
-  }
-
-  renderRedirect = () => {
-    if (this.state.redirect) {
-      return <Redirect to='/client/edit-campaign/id-a5z2f4wc' />
-    }
-  }
   render() {
     const { classes } = this.props;
     return (
       <Fragment>
-        {this.renderRedirect()}
         <PapperBlock title="Campaign Info" icon="ios-information-circle-outline" whiteBg desc="">
-          <Grid style={{ textAlign: "right" }}>
-            <Button variant="contained" color="primary" onClick={this.setRedirect}>Edit</Button>
-          </Grid>
+          {/* <Grid style={{ textAlign: "right" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => this.setRedirect()}
+            >
+              Edit
+            </Button>
+          </Grid> */}
           <List dense className={classes.profileList}>
             <ListItem>
               <ListItemAvatar>
