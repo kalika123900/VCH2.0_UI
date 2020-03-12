@@ -3,6 +3,8 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
 import FacebookIcon from '@material-ui/icons/Facebook';
+import Facebook from './Facebook';
+import FacebookLogin from "react-facebook-login";
 
 const PROVIDER = { LINKEDIN: 'linkedin', FACEBOOK: 'facebook' };
 
@@ -45,7 +47,16 @@ class openAuth extends PureComponent {
         window.opener.postMessage(params)
       }
     }
+    // this.state = {
+    //   isLoggedIn: false,
+    //   userID: '',
+    //   name: '',
+    //   email: '',
+    //   picture: ''
+    // };
+
   }
+
   signInWithLinkedin = () => {
     this.popup = window.open(LINKEDIN_URL, '_blank', 'width=600,height=600')
     window.addEventListener('message', this.receiveLinkedInMessage)
@@ -88,7 +99,116 @@ class openAuth extends PureComponent {
     window.removeEventListener('message', this.receiveLinkedInMessage)
     this.popup && this.popup.close()
   }
+
+  // responseFacebook = response => {
+  //   console.log(response);
+
+  //   this.setState({
+  //     isLoggedIn: true,
+  //     userID: response.userID,
+  //     name: response.name,
+  //     email: response.email,
+
+  //   });
+  // };
+
+  // responseFacebook = response => {
+  //   console.log(response);
+
+  //   this.setState({
+  //     isLoggedIn: true,
+  //     userID: response.userID,
+  //     name: response.name,
+  //     email: response.email,
+  //     picture: response.picture.data.url
+  //   });
+  // };
+
+  componentDidMount() {
+    // Load the required SDK asynchronously for facebook, google and linkedin
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    window.fbAsyncInit = function () {
+      window.FB.init({
+        appId: '1587076038083305',
+        cookie: true,  // enable cookies to allow the server to access the session
+        xfbml: true,  // parse social plugins on this page
+        version: 'v2.1' // use version 2.1
+      });
+    };
+  }
+  facebookLogin = () => {
+    window.FB.login(
+      function (resp) {
+        this.statusChangeCallback(resp);
+      }.bind(this), { scope: 'email,public_profile' });
+
+  }
+
+  checkLoginState() {
+    alert("Checking Login Status")
+    console.log("Checking login status...........");
+
+    window.FB.getLoginStatus(function (response) {
+      alert("FB Callback")
+      console.log("----------->")
+      console.log(response)
+      this.statusChangeCallback(response);
+    }.bind(this));
+  }
+
+  statusChangeCallback(response) {
+    console.log('statusChangeCallback');
+    console.log(response);
+    if (response.status === 'connected') {
+      alert("Connected to facebook. Retriving user from fb");
+      // Logged into your app and Facebook.
+      this.fetchDataFacebook();
+    } else if (response.status === 'not_authorized') {
+      console.log('Import error', 'Authorize app to import data', 'error')
+    } else {
+      console.log('Import error', 'Error occured while importing data', 'error')
+    }
+  }
+  fetchDataFacebook = () => {
+    console.log('Welcome!  Fetching your information.... ');
+
+    window.FB.api('/me', function (user) {
+      console.log(user);
+      console.log('Successful login from facebook : ' + user.name);
+      alert('Successful login for: ' + user.name);
+    });
+  }
+
+
+
   render() {
+
+    // let fbContent;
+
+    // if (this.state.isLoggedIn) {
+    //   fbContent = null;
+
+
+    // } else {
+    //   fbContent = (
+    //     <FacebookLogin
+    //       appId="1587076038083305"
+    //       autoLoad={true}
+    //       fields="name,email,picture"
+    //       onClick={this.componentClicked}
+    //       callback={this.responseFacebook}
+    //     />
+    //   );
+    // }
+
+
     if (this.props.type == 'linkedin') {
       return <Button
         variant="contained"
@@ -114,6 +234,7 @@ class openAuth extends PureComponent {
           background: '#4267b2',
           color: ' white'
         }}
+        onClick={this.facebookLogin}
       >
         <FacebookIcon style={{ marginRight: '10px' }} />
         Continue with Facebook
