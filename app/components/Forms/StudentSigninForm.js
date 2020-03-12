@@ -18,10 +18,8 @@ import Paper from '@material-ui/core/Paper';
 import Icon from '@material-ui/core/Icon';
 import brand from 'dan-api/dummy/brand';
 import logo from 'dan-images/logo.png';
-
 import { Grid } from '@material-ui/core';
 import FlashMessage from 'react-flash-message';
-
 import styles from './user-jss';
 import { TextFieldRedux, CheckboxRedux } from './ReduxFormMUI';
 import OpenAuth from './Openauth';
@@ -82,7 +80,7 @@ class StudentSigninForm extends React.Component {
       deco,
       flash,
     } = this.props;
-    const { showPassword, code, errorMessage } = this.state;
+    const { showPassword } = this.state;
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
         <div className={classes.topBar}>

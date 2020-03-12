@@ -50,6 +50,7 @@ class openAuth extends PureComponent {
     this.popup = window.open(LINKEDIN_URL, '_blank', 'width=600,height=600')
     window.addEventListener('message', this.receiveLinkedInMessage)
   }
+
   receiveLinkedInMessage = ({ origin, data: { state, code, error, ...rest } }) => {
     if (origin !== window.location.origin || state !== LINKEDIN_STATE) return
 
@@ -88,6 +89,7 @@ class openAuth extends PureComponent {
     window.removeEventListener('message', this.receiveLinkedInMessage)
     this.popup && this.popup.close()
   }
+
   render() {
     if (this.props.type == 'linkedin') {
       return <Button
@@ -102,7 +104,7 @@ class openAuth extends PureComponent {
       >
         <LinkedInIcon style={{ marginRight: '10px' }} />
         Continue with LinkedIn
-                </Button>
+      </Button>
 
     }
     else if (this.props.type == 'facebook') {
@@ -117,7 +119,7 @@ class openAuth extends PureComponent {
       >
         <FacebookIcon style={{ marginRight: '10px' }} />
         Continue with Facebook
-            </Button>
+      </Button>
     }
     else {
       return null;
