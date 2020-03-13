@@ -3,7 +3,6 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
 import FacebookIcon from '@material-ui/icons/Facebook';
-import Facebook from './Facebook';
 import FacebookLogin from "react-facebook-login";
 
 const PROVIDER = { LINKEDIN: 'linkedin', FACEBOOK: 'facebook' };
@@ -61,6 +60,7 @@ class openAuth extends PureComponent {
     this.popup = window.open(LINKEDIN_URL, '_blank', 'width=600,height=600')
     window.addEventListener('message', this.receiveLinkedInMessage)
   }
+
   receiveLinkedInMessage = ({ origin, data: { state, code, error, ...rest } }) => {
     if (origin !== window.location.origin || state !== LINKEDIN_STATE) return
 
@@ -100,30 +100,6 @@ class openAuth extends PureComponent {
     this.popup && this.popup.close()
   }
 
-  // responseFacebook = response => {
-  //   console.log(response);
-
-  //   this.setState({
-  //     isLoggedIn: true,
-  //     userID: response.userID,
-  //     name: response.name,
-  //     email: response.email,
-
-  //   });
-  // };
-
-  // responseFacebook = response => {
-  //   console.log(response);
-
-  //   this.setState({
-  //     isLoggedIn: true,
-  //     userID: response.userID,
-  //     name: response.name,
-  //     email: response.email,
-  //     picture: response.picture.data.url
-  //   });
-  // };
-
   componentDidMount() {
     // Load the required SDK asynchronously for facebook, google and linkedin
     (function (d, s, id) {
@@ -137,9 +113,9 @@ class openAuth extends PureComponent {
     window.fbAsyncInit = function () {
       window.FB.init({
         appId: '1587076038083305',
-        cookie: true,  // enable cookies to allow the server to access the session
-        xfbml: true,  // parse social plugins on this page
-        version: 'v2.1' // use version 2.1
+        cookie: true,
+        xfbml: true,
+        version: 'v2.1'
       });
     };
   }
@@ -177,7 +153,7 @@ class openAuth extends PureComponent {
     }
   }
   fetchDataFacebook = () => {
-    console.log('Welcome!  Fetching your information.... ');
+    console.log('Welcome!  Fetching your information....');
 
     window.FB.api('/me', function (user) {
       console.log(user);
@@ -189,25 +165,6 @@ class openAuth extends PureComponent {
 
 
   render() {
-
-    // let fbContent;
-
-    // if (this.state.isLoggedIn) {
-    //   fbContent = null;
-
-
-    // } else {
-    //   fbContent = (
-    //     <FacebookLogin
-    //       appId="1587076038083305"
-    //       autoLoad={true}
-    //       fields="name,email,picture"
-    //       onClick={this.componentClicked}
-    //       callback={this.responseFacebook}
-    //     />
-    //   );
-    // }
-
 
     if (this.props.type == 'linkedin') {
       return <Button
@@ -222,7 +179,7 @@ class openAuth extends PureComponent {
       >
         <LinkedInIcon style={{ marginRight: '10px' }} />
         Continue with LinkedIn
-                </Button>
+      </Button>
 
     }
     else if (this.props.type == 'facebook') {
@@ -238,7 +195,7 @@ class openAuth extends PureComponent {
       >
         <FacebookIcon style={{ marginRight: '10px' }} />
         Continue with Facebook
-            </Button>
+      </Button>
     }
     else {
       return null;
