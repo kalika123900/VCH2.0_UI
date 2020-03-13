@@ -23,7 +23,7 @@ class CampaignDetails extends Component {
             <CampaignPieChart />
           </Grid>
           <Grid item md={6} sm={12} xs={12}>
-            <CampaignInfo />
+            <CampaignInfo cId={this.props.match.params.campaignId} />
           </Grid>
         </Grid>
       </Grid>
