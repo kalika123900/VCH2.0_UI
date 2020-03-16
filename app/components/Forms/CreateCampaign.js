@@ -16,8 +16,8 @@ import Grid from '@material-ui/core/Grid';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import ArrowForward from '@material-ui/icons/ArrowForward';
 import { removeCampaignInfo } from 'dan-actions/CampaignActions';
+import { withRouter } from 'react-router';
 import styles from './user-jss';
-import { withRouter } from 'react-router'
 import Step2 from './CampaignSteps/Step2';
 import Step3 from './CampaignSteps/Step3';
 import Step4 from './CampaignSteps/Step4';
@@ -123,7 +123,7 @@ class CreateCampaign extends React.Component {
                     fullWidth
                     color="primary"
                     onClick={() => this.handleNext()}
-                    disabled={(role === -1) ? false : true}
+                    disabled={role !== -1}
                   >
                     Next
                     <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} />
@@ -202,7 +202,7 @@ class CreateCampaign extends React.Component {
                   fullWidth
                   color="primary"
                   onClick={() => this.handleNext()}
-                  disabled={heading.length > 0 ? true : false}
+                  disabled={heading.length > 0}
                 >
                   Next
                   <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} />

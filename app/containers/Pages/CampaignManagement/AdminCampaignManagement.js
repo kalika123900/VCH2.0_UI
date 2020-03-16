@@ -32,7 +32,7 @@ class CampaignTable extends React.Component {
   state = {
     redirect: false,
     showFilter: false,
-    btnText: "Show Filter",
+    btnText: 'Show Filter',
     campaignData: [],
     isCampaigns: false
   }
@@ -63,8 +63,7 @@ class CampaignTable extends React.Component {
               _that.setState({ campaignData });
             });
             this.setState({ isCampaigns: true });
-          }
-          else {
+          } else {
             this.setState({ isCampaigns: true });
           }
         }
@@ -76,21 +75,21 @@ class CampaignTable extends React.Component {
 
   handleFilter = () => {
     if (this.state.showFilter) {
-      this.setState({ showFilter: false, btnText: "Show Filter" })
+      this.setState({ showFilter: false, btnText: 'Show Filter' });
     } else {
-      this.setState({ showFilter: true, btnText: "Hide Filter" })
+      this.setState({ showFilter: true, btnText: 'Hide Filter' });
     }
   }
 
   setRedirect = () => {
     this.setState({
       redirect: true,
-    })
+    });
   }
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to='/admin/campaign-review' />
+      return <Redirect to="/admin/campaign-review" />;
     }
   }
 
@@ -103,7 +102,7 @@ class CampaignTable extends React.Component {
         <Grid style={{ width: '100%' }}>
           {this.state.showFilter && <CampaignFilter />}
         </Grid>
-        <div className={classes.rootTable} >
+        <div className={classes.rootTable}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
               <Typography variant="h6">Campaigns</Typography>
@@ -139,7 +138,7 @@ class CampaignTable extends React.Component {
               ]))}
             </TableBody>
           </Table>
-        </div >
+        </div>
       </Fragment>
     );
   }

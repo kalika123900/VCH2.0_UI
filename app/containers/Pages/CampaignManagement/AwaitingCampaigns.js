@@ -71,8 +71,7 @@ class AwaitingCampaigns extends React.Component {
               _that.setState({ campaignData });
             });
             this.setState({ isCampaigns: true });
-          }
-          else {
+          } else {
             this.setState({ isCampaigns: true });
           }
         }
