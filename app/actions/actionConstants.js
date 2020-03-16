@@ -130,3 +130,11 @@ export const REMOVE_CAMPAIGN_INFO = 'REMOVE_CAMPAIGN_INFO';
 // Authenication Handling
 export const SET_AUTH = 'SET_AUTH';
 export const REMOVE_AUTH = 'REMOVE_AUTH';
+
+// Students Edit Details
+
+export const STORE_PROFILE_DETAILS = 'STORE_PROFILE_DETAILS';
+export const STORE_SKILL_INTERESTS = 'STORE_SKILL_INTERESTS';
+export const STORE_EDUCATION = 'STORE_EDUCATION';
+export const STORE_EXPERIENCE = 'STORE_EXPERIENCE';
+export const STUDENT_PROFILE_INIT = 'STUDENT_PROFILE_INIT';
