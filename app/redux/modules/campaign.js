@@ -11,7 +11,7 @@ import {
 import { DateHelper } from '../helpers/dateTimeHelper';
 
 const initialState = {
-  role: 1,
+  role: -1,
   university: List([]),
   subjects: List([]),
   skills: List([]),
@@ -112,7 +112,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
     case REMOVE_CAMPAIGN_INFO:
       return state.withMutations((mutableState) => {
         mutableState
-          .set('role', 1)
+          .set('role', -1)
           .set('university', List([]))
           .set('subjects', List([]))
           .set('skills', List([]))

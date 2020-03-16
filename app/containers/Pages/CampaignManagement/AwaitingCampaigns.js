@@ -24,7 +24,6 @@ function createData(id, client, campaign, create_date) {
   };
 }
 
-
 class AwaitingCampaigns extends React.Component {
   state = {
     redirect: false,

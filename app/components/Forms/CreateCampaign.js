@@ -87,7 +87,9 @@ class CreateCampaign extends React.Component {
       handleSubmit,
       submitting,
       deco,
-      userType
+      userType,
+      role,
+      heading,
     } = this.props;
     const { activeStep } = this.state;
     const steps = getSteps();
@@ -116,7 +118,13 @@ class CreateCampaign extends React.Component {
                   </FormControl>
                 </Grid>
                 <Grid className={classes.btnArea}>
-                  <Button variant="contained" fullWidth color="primary" onClick={() => this.handleNext()}>
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    color="primary"
+                    onClick={() => this.handleNext()}
+                    disabled={(role === -1) ? false : true}
+                  >
                     Next
                     <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} />
                   </Button>
@@ -189,7 +197,13 @@ class CreateCampaign extends React.Component {
                 </Button>
               </Grid>
               <Grid className={(classes.btnArea, classes.pageFormWrap)}>
-                <Button variant="contained" fullWidth color="primary" onClick={() => this.handleNext()}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  color="primary"
+                  onClick={() => this.handleNext()}
+                  disabled={heading.length > 0 ? true : false}
+                >
                   Next
                   <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} />
                 </Button>
@@ -256,6 +270,8 @@ CreateCampaign.propTypes = {
   removeInfo: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
   deco: PropTypes.bool.isRequired,
+  role: PropTypes.number.isRequired,
+  heading: PropTypes.string.isRequired,
 };
 
 const CreateCampaignReduxed = reduxForm({
@@ -265,6 +281,7 @@ const CreateCampaignReduxed = reduxForm({
 
 const reducer = 'ui';
 const reducerA = 'Auth';
+const reducerCampaign = 'campaign';
 
 const mapDispatchToProps = dispatch => ({
   removeInfo: bindActionCreators(removeCampaignInfo, dispatch)
@@ -274,6 +291,8 @@ const CreateCampaignMapped = connect(
   state => ({
     deco: state.getIn([reducer, 'decoration']),
     userType: state.getIn([reducerA, 'userType']),
+    role: state.getIn([reducerCampaign, 'role']),
+    heading: state.getIn([reducerCampaign, 'heading'])
   }),
   mapDispatchToProps
 )(CreateCampaignReduxed);
