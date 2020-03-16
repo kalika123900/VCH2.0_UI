@@ -10,6 +10,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TableFooter from '@material-ui/core/TableFooter';
+import TablePagination from '@material-ui/core/TablePagination';
 import { ConfirmationDialog } from 'dan-components';
 import styles from 'dan-components/Tables/tableStyle-jss';
 import qs from 'qs';
@@ -47,8 +49,18 @@ class OngoingCampaigns extends React.Component {
     isCampaigns: false,
     open: false,
     type: '',
-    cId: null
+    cId: null,
+    page: 0,
+    rowsPerPage: 5
   }
+
+  handleChangePage = (event, page) => {
+    this.setState({ page });
+  };
+
+  handleChangeRowsPerPage = event => {
+    this.setState({ rowsPerPage: event.target.value });
+  };
 
   handleConfirmation = (str, id) => {
     let value = this.state.open ? false : true
@@ -139,7 +151,8 @@ class OngoingCampaigns extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { isCampaigns, open, type } = this.state;
+    const { isCampaigns, open, type, rowsPerPage, page } = this.state;
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, campaignData.length - (page * rowsPerPage));
 
     return (
       <Fragment>
@@ -169,7 +182,7 @@ class OngoingCampaigns extends React.Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {campaignData.map(n => ([
+                  {campaignData.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(n => (
                     <TableRow key={n.id} onClick={(e) => this.setRedirect(e, n.id)}>
                       <TableCell padding="default">{n.campaigns}</TableCell>
                       <TableCell align="left">{n.start_date}</TableCell>
@@ -190,8 +203,26 @@ class OngoingCampaigns extends React.Component {
                         </Button>
                       </TableCell>
                     </TableRow>
-                  ]))}
+                  ))}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 48 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
                 </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TablePagination
+                      colSpan={3}
+                      count={campaignData.length}
+                      rowsPerPage={rowsPerPage}
+                      rowsPerPageOptions={[5, 10, 15]}
+                      page={page}
+                      onChangePage={this.handleChangePage}
+                      onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    />
+                  </TableRow>
+                </TableFooter>
               </Table>
             )
             : (
