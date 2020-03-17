@@ -93,6 +93,7 @@ class CreateCampaign extends React.Component {
     } = this.props;
     const { activeStep } = this.state;
     const steps = getSteps();
+    const isHeading = heading.length > 0 ? true : false;
 
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
@@ -123,7 +124,7 @@ class CreateCampaign extends React.Component {
                     fullWidth
                     color="primary"
                     onClick={() => this.handleNext()}
-                    disabled={role !== -1}
+                    disabled={(role == -1 ? true : false)}
                   >
                     Next
                     <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} />
@@ -173,7 +174,13 @@ class CreateCampaign extends React.Component {
                 </Button>
               </Grid>
               <Grid className={(classes.btnArea, classes.pageFormWrap)}>
-                <Button variant="contained" fullWidth color="primary" onClick={() => this.handleNext()}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  color="primary"
+                  onClick={() => this.handleNext()}
+                  disabled={isHeading ? false : true}
+                >
                   Next
                   <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} />
                 </Button>
@@ -202,7 +209,6 @@ class CreateCampaign extends React.Component {
                   fullWidth
                   color="primary"
                   onClick={() => this.handleNext()}
-                  disabled={heading.length > 0}
                 >
                   Next
                   <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} />
@@ -217,7 +223,7 @@ class CreateCampaign extends React.Component {
               </Typography>
               <Grid>
                 <FormControl className={(classes.formControl, classes.wrapInput)}>
-                  <Step6 />
+                  <Step6 campaignId={this.props.match.params.campaignId} />
                 </FormControl>
               </Grid>
               <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>

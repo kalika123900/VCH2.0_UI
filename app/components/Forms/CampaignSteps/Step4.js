@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Editor } from 'react-draft-wysiwyg';
-import { markdownToDraft, draftToMarkdown } from 'markdown-draft-js';
+import { draftToMarkdown } from 'markdown-draft-js';
 import {
   EditorState, convertToRaw, ContentState, convertFromHTML, Modifier
 } from 'draft-js';
@@ -22,11 +22,9 @@ import { storeStep4Info } from 'dan-actions/CampaignActions';
 import 'dan-styles/vendors/react-draft-wysiwyg/react-draft-wysiwyg.css';
 import styles from 'dan-components/Email/email-jss';
 import draftToHtml from 'draftjs-to-html';
-import { Element } from 'react-showdown';
 import cmStyles from './step-jss';
 const showdown = require('showdown');
 const converter = new showdown.Converter();
-
 
 const content = {
   blocks: [],
@@ -77,7 +75,6 @@ class CustomOption extends PureComponent {
 
   openPlaceholderDropdown = () => this.setState({ open: !this.state.open })
 
-
   render() {
     return (
       <div onClick={this.openPlaceholderDropdown} className="rdw-block-wrapper" aria-label="rdw-block-control">
@@ -95,28 +92,35 @@ class CustomOption extends PureComponent {
   }
 }
 
-
 class Step4 extends PureComponent {
   constructor(props) {
     super(props);
     const { body, heading } = this.props;
-    const bHTML = converter.makeHtml(body);
-    const blocksFromHTML = convertFromHTML(bHTML);
-    const iState = ContentState.createFromBlockArray(
-      blocksFromHTML.contentBlocks,
-      blocksFromHTML.entityMap,
-    );
 
-
-    if (content) {
-      const editorState = EditorState.createWithContent(iState);
+    if (body == '') {
+      const editorState = EditorState.createEmpty();
       this.state = {
         editorState,
         headingEditor: heading
       };
     }
-  }
+    else {
+      const bHTML = converter.makeHtml(body);
+      const blocksFromHTML = convertFromHTML(bHTML);
+      const iState = ContentState.createFromBlockArray(
+        blocksFromHTML.contentBlocks,
+        blocksFromHTML.entityMap,
+      );
 
+      if (content) {
+        const editorState = EditorState.createWithContent(iState);
+        this.state = {
+          editorState,
+          headingEditor: heading
+        };
+      }
+    }
+  }
   onEditorStateChange = editorState => {
     const { addInfo } = this.props;
     const { headingEditor } = this.state;
