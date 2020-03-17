@@ -30,6 +30,7 @@ class CancelCampaign extends React.Component {
   state = {
     redirect: false,
     campaignData: [],
+    campaignId: null,
     isCampaigns: false,
     page: 0,
     rowsPerPage: 5
@@ -81,15 +82,16 @@ class CancelCampaign extends React.Component {
       });
   }
 
-  setRedirect = () => {
+  setRedirect = (id) => {
     this.setState({
       redirect: true,
+      campaignId: id
     });
   }
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to="/admin/campaign-review" />;
+      return <Redirect to={`/admin/campaign-review/${this.state.campaignId}`} />;
     }
   }
 
@@ -100,7 +102,7 @@ class CancelCampaign extends React.Component {
 
     return (
       <Fragment>
-        {this.renderRedirect()}
+        {/* {this.renderRedirect()} */}
         <div className={classes.rootTable}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
@@ -122,7 +124,7 @@ class CancelCampaign extends React.Component {
                 </TableHead>
                 <TableBody>
                   {campaignData.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(n => (
-                    <TableRow key={n.id} onClick={this.setRedirect}>
+                    <TableRow key={n.id} onClick={(e) => this.setRedirect(n.id)}>
                       <TableCell align="left">{n.campaigns}</TableCell>
                       <TableCell align="left">{n.client_name}</TableCell>
                       <TableCell align="left">{n.start_date}</TableCell>

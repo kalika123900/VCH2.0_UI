@@ -27,6 +27,21 @@ const styles = theme => ({
   root: {
     ...rootWraper
   },
+  placeholderUiOff: {
+    display: 'none'
+  },
+  placeholderUiOn: {
+    display: 'block'
+  },
+  autoComplete: {
+    width: '100% !important',
+    '& autoCompleteInner': {
+      width: '100%'
+    },
+  },
+  autoCompleteInner: {
+    width: '100% !Important'
+  },
   rootFull: {
     ...rootWraper,
     height: '100%',

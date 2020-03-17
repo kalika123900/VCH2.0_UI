@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import qs from 'qs';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import CardHeader from '@material-ui/core/CardHeader';
 import RemoveRedEye from '@material-ui/icons/RemoveRedEye';
+import Avatar from '@material-ui/core/Avatar';
 import Reply from '@material-ui/icons/Reply';
 import brand from 'dan-api/dummy/brand';
 import { storeStep6Info } from 'dan-actions/CampaignActions';
@@ -16,10 +19,74 @@ import { CombineStyles } from 'dan-helpers';
 import styles from './step-jss';
 const showdown = require('showdown');
 const converter = new showdown.Converter();
+import { makeSecureDecrypt } from '../../../Helpers/security';
 
 const combinedStyles = CombineStyles(styles, estyles);
 
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+
+  return await response.json();
+}
+
 class Step6 extends React.Component {
+  state = {
+    email: '',
+    cname: '',
+    user: null
+  }
+
+  componentDidMount() {
+    const { userType } = this.props;
+    if (userType == 'CLIENT') {
+      const user = JSON.parse(
+        makeSecureDecrypt(localStorage.getItem('user'))
+      );
+
+      const data = {
+        client_id: user.id
+      };
+
+      postData(`${API_URL}/client/client-info`, data)
+        .then((res) => {
+          if (res.status === 1) {
+            let { data } = res;
+            let email = data.email;
+            let cname = `${data.firstname} ${data.lastname}`;
+            this.setState({ email, cname });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+
+    if (userType == 'ADMIN') {
+      const data = {
+        campaignId: this.props.campaignId
+      };
+
+      postData(`${API_URL}/admin/client-info`, data)
+        .then((res) => {
+          if (res.status === 1) {
+            let { data } = res;
+            let email = data.email;
+            let cname = `${data.firstname} ${data.lastname}`;
+            this.setState({ email, cname });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }
+
   handleChange = (e) => {
     const { addInfo } = this.props;
     addInfo(e.target.value);
@@ -36,6 +103,7 @@ class Step6 extends React.Component {
       // gender,
       // keywords
     } = this.props;
+    const { email, cname } = this.state;
     // const MapUniversity = university.toJS();
     // const MapKeywords = keywords.toJS();
 
@@ -132,7 +200,16 @@ class Step6 extends React.Component {
             Your ad
           </Typography>
           <Grid>
-            <Typography variant="h5" className={classes.textCapitalize} style={{ color: '#3889de' }}>
+            <Typography
+              variant="h5"
+              className={classes.textCapitalize}
+              style={{
+                color: '#3889de',
+                textAlign: 'left',
+                paddingBottom: 10,
+                paddingLeft: 10
+              }}
+            >
               {heading.length <= 0
                 ? (
                   <Typography
@@ -145,9 +222,20 @@ class Step6 extends React.Component {
                 : heading
               }
             </Typography>
-            <Typography variant="body2" style={{ lineHeight: '2.3rem', color: '#38ae00' }}>
-              Ad www.varsitycareershub.co.uk
-            </Typography>
+            <Grid>
+              <CardHeader
+                avatar={
+                  <Avatar src="/images/pp_girl.svg" />
+                }
+                title={cname}
+                subheader={email}
+                style={{
+                  padding: '0',
+                  paddingBottom: ' 2%',
+                  textAlign: 'left'
+                }}
+              />
+            </Grid>
             <Grid>
               {body.length <= 0
                 ? (
@@ -189,7 +277,7 @@ Step6.propTypes = {
 };
 
 const reducerCampaign = 'campaign';
-
+const reducerA = 'Auth';
 
 const mapStateToProps = state => ({
   name: state.getIn([reducerCampaign, 'name']),
@@ -201,6 +289,7 @@ const mapStateToProps = state => ({
   keywords: state.getIn([reducerCampaign, 'keywords']),
   heading: state.getIn([reducerCampaign, 'heading']),
   body: state.getIn([reducerCampaign, 'body']),
+  userType: state.getIn([reducerA, 'userType']),
 });
 
 const mapDispatchToProps = dispatch => ({

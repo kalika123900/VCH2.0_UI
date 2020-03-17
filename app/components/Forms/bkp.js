@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
-import { bindActionCreators } from 'redux';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import Select from '@material-ui/core/Select';
@@ -11,22 +10,16 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Input from '@material-ui/core/Input';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
 import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form/immutable';
 import styles from './user-jss';
 import { TextFieldRedux } from './ReduxFormMUI';
-import { storeRoleInfo } from 'dan-actions/RoleActions';
-import {
-  courseMenu,
-  skillMenu
-} from '../Forms/CampaignSteps/constantData';
-import SelectAdd from '../../components/SelectAdd/SelectAdd';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -43,36 +36,142 @@ const MenuProps = {
   },
 };
 
-class NewRoleForm extends React.Component {
-  handleMultiSelect = (event) => {
-    const { value } = event.target;
-    const { addInfo } = this.props;
+const DateHelper = {
+  addDays(aDate, numberOfDays) {
+    aDate.setDate(aDate.getDate() + numberOfDays);
+    return aDate;
+  },
+  format: function format(date) {
+    return [
+      ('0' + date.getDate()).slice(-2),
+      ('0' + (date.getMonth() + 1)).slice(-2),
+      date.getFullYear()
+    ].join('/');
+  }
+};
 
-    if (event.target.name == 'skills') {
-      addInfo({ ...this.props, skills: value });
-    }
+class NewRoleForm extends React.Component {
+  state = {
+    rolename: '',
+    courses: [],
+    skills: [],
+    deadline: DateHelper.format(DateHelper.addDays(new Date(), 5)),
+    link: '',
+    customDescriptor: '',
+    skillList: [
+      {
+        id: 1, status: false, value: 'React.js', label: 'React.js'
+      },
+      {
+        id: 2, status: false, value: 'Angular', label: 'Angular'
+      },
+      {
+        id: 3, status: false, value: 'Node.js', label: 'Node.js'
+      },
+    ],
+    courseList: [
+      {
+        id: 1, status: false, value: 'B.E', label: 'B.E'
+      },
+      {
+        id: 2, status: false, value: 'B.Sc', label: 'B.Sc'
+      },
+      {
+        id: 3, status: false, value: 'MBA', label: 'MBA'
+      },
+    ],
+    roleDescriptor: [
+      {
+        id: 1, status: false, value: 'Microsoft Excel', label: 'Microsoft Excel'
+      },
+      {
+        id: 2, status: false, value: 'Work Culture', label: 'Work Culture'
+      },
+      {
+        id: 3, status: false, value: 'Team Work', label: 'Team Work'
+      },
+    ]
   };
 
+  saveRef = ref => {
+    this.ref = ref;
+    return this.ref;
+  };
+
+  handleDateChange = date => {
+    this.setState({ deadline: date });
+  };
+
+  saveData = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    return { name: this.state.rolename, };
+  }
+
+  handleChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
+  handleCheckbox = (e, id) => {
+    const arr = this.state[e.target.name];
+    arr.forEach(item => {
+      if (item.id === id) {
+        item.status = !item.status;
+      }
+    });
+    this.setState({ [e.target.name]: arr });
+  };
+
+  addCustomItem = (e, stateItem) => {
+    if (this.state[e.target.offsetParent.name].length > 0) {
+      const customItem = this.state[e.target.offsetParent.name];
+      const { length } = this.state[e.target.offsetParent.name];
+      const newItemObj = {
+        id: (length + 1), status: false, value: customItem, label: customItem
+      };
+      const newItemArr = [...this.state[stateItem], newItemObj];
+      this.setState({ [stateItem]: newItemArr, [e.target.offsetParent.name]: '' });
+    }
+  }
 
   render() {
     const {
       classes,
       handleSubmit,
-      handleClose,
-      skills,
-      courses
+      handleClose
     } = this.props;
+
+    const {
+      courses, skills, rolename, courseList, skillList,
+      deadline, link, roleDescriptor, customDescriptor
+    } = this.state;
+
+    const roleDescriptors = roleDescriptor.map((item, index) => (
+      <FormControlLabel
+        control={(
+          <Checkbox
+            name="roleDescriptor"
+            checked={item.status}
+            value={item.value}
+            onChange={(e) => { this.handleCheckbox(e, item.id); }}
+          />
+        )}
+        label={item.label}
+        key={index}
+      />
+    ));
 
     return (
       <section className={classes.pageFormWrap}>
-        <form >
-          {/* <div>
+        <form>
+          <div>
             <FormControl className={classes.formControl}>
-              <TextField
+              <Field
                 label="Role Name"
                 className={classes.textField}
                 type="text"
-                value={roleName}
+                value={rolename}
+                ref={this.saveRef}
                 name="role"
                 margin="normal"
                 variant="outlined"
@@ -81,18 +180,35 @@ class NewRoleForm extends React.Component {
                 onChange={e => this.handleChange(e)}
               />
             </FormControl>
-          </div> */}
+          </div>
           <div>
             <FormControl className={classes.formControl}>
-              <Typography variant="h6" style={{ textAlign: 'left' }}>
-                Which course are relevant?
-              </Typography>
-              <SelectAdd
-                classes={this.props.classes}
-                dataList={courseMenu}
-                label="courses"
-                type="courses"
-              />
+              <InputLabel
+                htmlFor="select-course"
+              >
+                Which courses are relevant?
+              </InputLabel>
+              <Select
+                multiple
+                value={courses}
+                name="courses"
+                onChange={e => this.handleChange(e)}
+                input={<Input id="select-courses" />}
+                renderValue={selected => selected.join(', ')}
+                MenuProps={MenuProps}
+                component={Select}
+              >
+                {courseList.map((item, index) => (
+                  <MenuItem key={index} value={item.label}>
+                    <Field
+                      name="courseList"
+                      component={Checkbox}
+                      checked={courses.includes(item.label)}
+                    />
+                    <ListItemText primary={item.label} />
+                  </MenuItem>
+                ))}
+              </Select>
             </FormControl>
           </div>
           <div>
@@ -104,37 +220,24 @@ class NewRoleForm extends React.Component {
               </InputLabel>
               <Select
                 multiple
-                value={skills.toJS()}
-                input={<Input />}
+                value={skills}
                 name="skills"
+                onChange={e => this.handleChange(e)}
+                input={<Input id="select-skills" />}
+                renderValue={selected => selected.join(', ')}
                 MenuProps={MenuProps}
                 component={Select}
-                renderValue={selected => {
-                  const skillName = [];
-                  skillMenu.map((value, index) => {
-                    if (selected.includes(value.id)) {
-                      skillName.push(value.value);
-                    }
-                  });
-                  return skillName.join(', ');
-                }
-                }
-                onChange={e => this.handleMultiSelect(e)}
               >
-                {skillMenu.map((item, index) => (
-                  <MenuItem key={index.toString()} value={item.id}>
-                    <TextField
-                      name="skill-checkbox"
-                      component={Checkbox}
-                      checked={skills.indexOf(item.id) > -1}
-                    />
-                    <ListItemText primary={item.value} />
+                {skillList.map((item, index) => (
+                  <MenuItem key={index} value={item.label}>
+                    <Field name="skill-checkbox" component={Checkbox} checked={skills.includes(item.label)} />
+                    <ListItemText primary={item.label} />
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </div>
-          {/* <div>
+          <div>
             <FormControl className={classes.formControl}>
               <Typography variant="h6">What is the role’s application deadline?</Typography>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -151,8 +254,8 @@ class NewRoleForm extends React.Component {
                 />
               </MuiPickersUtilsProvider>
             </FormControl>
-          </div> */}
-          {/* <div>
+          </div>
+          <div>
             <FormControl component="fieldset" required className={classes.formControl}>
               <Typography variant="h6">Tell us some role descriptors to help:</Typography>
               <Typography variant="caption">(a member of the team will manually check your role description against the target audience)</Typography>
@@ -181,8 +284,8 @@ class NewRoleForm extends React.Component {
                 </Button>
               </Tooltip>
             </FormControl>
-          </div> */}
-          {/* <div>
+          </div>
+          <div>
             <FormControl className={classes.formControl}>
               <Typography variant="h6">What is the role page link?</Typography>
               <Field
@@ -190,16 +293,16 @@ class NewRoleForm extends React.Component {
                 className={classes.textField}
                 type="text"
                 component={TextFieldRedux}
-                // value={link}
+                value={link}
                 name="link"
                 margin="normal"
                 variant="outlined"
                 validate={[required]}
-              // onChange={e => this.handleChange(e)}
+                onChange={e => this.handleChange(e)}
               />
               <Typography variant="caption">(Make sure it is the link to the actual page so that we can scan the page for key information)</Typography>
             </FormControl>
-          </div> */}
+          </div>
           <Button onClick={(e) => handleClose(e)} color="primary">
             Cancel
           </Button>
@@ -216,32 +319,17 @@ class NewRoleForm extends React.Component {
 NewRoleForm.propTypes = {
   classes: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  roleName: PropTypes.string.isRequired,
-  courses: PropTypes.object.isRequired,
-  skills: PropTypes.object.isRequired,
-  roleDeadline: PropTypes.string.isRequired,
-  roleDescriptors: PropTypes.object.isRequired,
-  roleLink: PropTypes.string.isRequired
 };
 
-const reducerRole = 'role';
+const NewRoleFormRedux = reduxForm({
+  form: 'immutableAddRole',
+  enableReinitialize: true,
+})(NewRoleForm);
 
-const mapStateToProps = state => ({
-  roleName: state.getIn([reducerRole, 'roleName']),
-  courses: state.getIn([reducerRole, 'courses']),
-  skills: state.getIn([reducerRole, 'skills']),
-  roleDeadline: state.getIn([reducerRole, 'roleDeadline']),
-  roleDescriptors: state.getIn([reducerRole, 'roleDescriptors']),
-  roleLink: state.getIn([reducerRole, 'roleLink']),
-});
+const NewRoleInit = connect(
+  state => ({
+    initialValues: state.getIn(['role', 'formValues'])
+  })
+)(NewRoleFormRedux);
 
-const mapDispatchToProps = dispatch => ({
-  addInfo: bindActionCreators(storeRoleInfo, dispatch)
-});
-
-const NewRoleFormMapped = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(NewRoleForm);
-
-export default withStyles(styles)(NewRoleFormMapped);
+export default withStyles(styles)(NewRoleInit);

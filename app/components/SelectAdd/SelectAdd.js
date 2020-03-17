@@ -12,6 +12,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { storeStep3Info } from 'dan-actions/CampaignActions';
+import { storeRoleInfo } from 'dan-actions/RoleActions';
 import { withStyles } from '@material-ui/core/styles';
 
 const filter = createFilterOptions();
@@ -92,7 +93,7 @@ class SelectAdd extends Component {
   };
 
   handleChange = (event, newValue) => {
-    const { addInfo } = this.props;
+    const { addInfo, addRoleInfo } = this.props;
 
     const latest = newValue[newValue.length - 1];
     if (latest !== undefined) {
@@ -112,6 +113,9 @@ class SelectAdd extends Component {
         if (this.props.type === 'sectors') {
           addInfo({ ...this.props, interestedSectors: newValue });
         }
+        if (this.props.type === 'courses') {
+          addRoleInfo({ ...this.props, courses: newValue });
+        }
         if (this.props.type === 'keywords') {
           addInfo({ ...this.props, keywords: newValue });
         }
@@ -124,6 +128,9 @@ class SelectAdd extends Component {
       if (this.props.type === 'sectors') {
         addInfo({ ...this.props, interestedSectors: newValue });
       }
+      if (this.props.type === 'courses') {
+        addRoleInfo({ ...this.props, courses: newValue });
+      }
       if (this.props.type === 'keywords') {
         addInfo({ ...this.props, keywords: newValue });
       }
@@ -133,11 +140,12 @@ class SelectAdd extends Component {
   render() {
     const { dataList, open, dialogValue } = this.state;
     const {
-      type, workLocation, interestedSectors, keywords
+      type, workLocation, interestedSectors, keywords, courses
     } = this.props;
     const MapworkLocation = workLocation.toJS();
     const MapinterestedSectors = interestedSectors.toJS();
     const Mapkeywords = keywords.toJS();
+    const MapCourses = courses.toJS();
 
     return (
       <Fragment>
@@ -151,7 +159,9 @@ class SelectAdd extends Component {
               ? MapworkLocation
               : type === 'keywords'
                 ? Mapkeywords
-                : MapinterestedSectors
+                : type === 'courses'
+                  ? MapCourses
+                  : MapinterestedSectors
           }
           onChange={(e, newValue) => this.handleChange(e, newValue)}
           filterOptions={(options, params) => {
@@ -244,10 +254,13 @@ SelectAdd.propTypes = {
   workLocation: PropTypes.object.isRequired,
   experience: PropTypes.string.isRequired,
   minGrade: PropTypes.number.isRequired,
-  addInfo: PropTypes.func.isRequired
+  addInfo: PropTypes.func.isRequired,
+  addRoleInfo: PropTypes.func.isRequired,
+  courses: PropTypes.object.isRequired
 };
 
 const reducerCampaign = 'campaign';
+const reducerRole = 'role';
 
 const mapStateToProps = state => ({
   university: state.getIn([reducerCampaign, 'university']),
@@ -261,10 +274,17 @@ const mapStateToProps = state => ({
   workLocation: state.getIn([reducerCampaign, 'workLocation']),
   experience: state.getIn([reducerCampaign, 'experience']),
   minGrade: state.getIn([reducerCampaign, 'minGrade']),
+  roleName: state.getIn([reducerRole, 'roleName']),
+  courses: state.getIn([reducerRole, 'courses']),
+  skills: state.getIn([reducerRole, 'skills']),
+  roleDeadline: state.getIn([reducerRole, 'roleDeadline']),
+  roleDescriptors: state.getIn([reducerRole, 'roleDescriptors']),
+  roleLink: state.getIn([reducerRole, 'roleLink']),
 });
 
 const mapDispatchToProps = dispatch => ({
-  addInfo: bindActionCreators(storeStep3Info, dispatch)
+  addInfo: bindActionCreators(storeStep3Info, dispatch),
+  addRoleInfo: bindActionCreators(storeRoleInfo, dispatch)
 });
 
 const SelectAddMapped = connect(

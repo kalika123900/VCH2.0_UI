@@ -5,6 +5,13 @@ export const skillMenu = [
   { id: 25, value: 'Express.js' },
 ];
 
+export const courseMenu = [
+  { id: 1, value: 'B.Sc' },
+  { id: 2, value: 'MBA' },
+  { id: 3, value: 'B.E.' },
+  { id: 4, value: 'M.Tech' }
+];
+
 export const years = [
   '2015',
   '2016',

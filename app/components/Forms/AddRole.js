@@ -9,7 +9,7 @@ import FormControl from '@material-ui/core/FormControl';
 import styles from './user-jss';
 import NewRoleForm from './NewRoleForm';
 
-class AddRoleDialog extends React.Component {
+class AddRole extends React.Component {
   sendValues = (values) => {
     const { submit } = this.props;
     setTimeout(() => {
@@ -41,8 +41,10 @@ class AddRoleDialog extends React.Component {
     );
   }
 }
-AddRoleDialog.propTypes = {
+
+AddRole.propTypes = {
   classes: PropTypes.object.isRequired,
   submit: PropTypes.func.isRequired,
 };
-export default withStyles(styles)(AddRoleDialog);
+
+export default withStyles(styles)(AddRole);

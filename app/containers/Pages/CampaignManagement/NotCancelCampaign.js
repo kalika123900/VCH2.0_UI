@@ -36,6 +36,7 @@ class NotCancelCampaign extends React.Component {
     redirect: false,
     showFilter: false,
     btnText: 'Show Filter',
+    campaignId: null,
     campaignData: [],
     isCampaigns: false,
     page: 0,
@@ -96,15 +97,16 @@ class NotCancelCampaign extends React.Component {
     }
   }
 
-  setRedirect = () => {
+  setRedirect = (id) => {
     this.setState({
       redirect: true,
+      campaignId: id
     });
   }
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to="/admin/campaign-review" />;
+      return <Redirect to={`/admin/campaign-review/${this.state.campaignId}`} />;
     }
   }
 
@@ -147,7 +149,7 @@ class NotCancelCampaign extends React.Component {
                 </TableHead>
                 <TableBody>
                   {campaignData.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(n => (
-                    <TableRow key={n.id} onClick={this.setRedirect}>
+                    <TableRow key={n.id} onClick={e => this.setRedirect(n.id)}>
                       <TableCell align="left">{n.campaigns}</TableCell>
                       <TableCell align="left">{n.client_name}</TableCell>
                       <TableCell align="left">{n.start_date}</TableCell>
