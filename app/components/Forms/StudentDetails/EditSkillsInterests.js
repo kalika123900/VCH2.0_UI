@@ -4,6 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import styles from '../user-jss';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox'
@@ -15,6 +17,7 @@ import Grid from '@material-ui/core/Grid';
 import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
 import Typography from '@material-ui/core/Typography';
+import { storeSkillInterests } from 'dan-actions/studentProfileActions';
 
 const industryList = [
   'IT',
@@ -26,6 +29,13 @@ const companyList = [
   'Google',
   'Facebook',
   'Twitter'
+]
+const skillsList = [
+  'Java',
+  'React',
+  'PHP',
+  'JAVA Script',
+  'Node Js'
 ]
 
 const ITEM_HEIGHT = 48;
@@ -42,45 +52,34 @@ const MenuProps = {
 
 
 class EditSkillsInterests extends React.Component {
-  state = {
-    industries: [],
-    companies: [],
-    skills: [],
-    customSkill: '',
-  };
-
-  addSkill = () => {
-    if (this.state.customSkill.length > 0) {
-      let customSkill = '+ ' + this.state.customSkill
-      let newSkillArr = [...this.state.skills, customSkill]
-      this.setState({ skills: newSkillArr, customSkill: '' })
-    }
-  };
-
-  handleSuggestedProduct = (e) => {
-    let customSkill = e.target.outerText
-    let newSkillArr = [...this.state.skills, customSkill]
-    this.setState({ skills: newSkillArr })
+  constructor(props) {
+    super(props)
+    console.log(this.props);
   }
 
+
   handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
+    const { addInfo } = this.props;
+    addInfo({ ...this.props, [event.target.name]: event.target.value });
+
   };
 
   render() {
     const {
       classes,
+      intrestedIndustries,
+      skills,
+      intrestedCompanies
     } = this.props;
 
-    const { skills, industries, companies, customSkill } = this.state;
-
-    const skillItems = skills.length > 0 ? skills.map((item, index) => {
-      return (
-        <Typography variant="subtitle1" className={classes.choosenTerms, classes.skillItems} key={index}>
-          {item}
-        </Typography>
-      )
-    }) : null
+    //const { skills, industries, companies, customSkill } = this.state;
+    // const skillItems = skills.length > 0 ? skills.map((item, index) => {
+    //   return (
+    //     <Typography variant="subtitle1" className={classes.choosenTerms, classes.skillItems} key={index}>
+    //       {item}
+    //     </Typography>
+    //   )
+    // }) : null
 
     return (
       <section className={classes.pageFormWrap} >
@@ -93,16 +92,30 @@ class EditSkillsInterests extends React.Component {
                   </InputLabel>
             <Select
               multiple
-              value={industries}
-              name="industries"
-              onChange={e => this.handleChange(e)}
-              input={<Input id="select-industries" />}
-              renderValue={selected => selected.join(', ')}
+              value={intrestedIndustries.toJS()}
+              input={<Input />}
+              name="intrestedIndustries"
               MenuProps={MenuProps}
+              component={Select}
+              renderValue={selected => {
+                const industrieName = [];
+                industryList.map((value, index) => {
+                  if (selected.includes(value)) {
+                    industrieName.push(value);
+                  }
+                });
+                return industrieName.join(', ');
+              }
+              }
+              onChange={e => this.handleChange(e)}
             >
               {industryList.map((item, index) => (
-                <MenuItem key={index} value={item}>
-                  <Checkbox checked={industryList.indexOf(item) > -1} />
+                <MenuItem key={index.toString()} value={item}>
+                  <TextField
+                    name="industrie-checkbox"
+                    component={Checkbox}
+                    checked={intrestedIndustries.indexOf(item) > -1}
+                  />
                   <ListItemText primary={item} />
                 </MenuItem>
               ))}
@@ -118,32 +131,110 @@ class EditSkillsInterests extends React.Component {
                 </InputLabel>
             <Select
               multiple
-              value={companies}
-              name="companies"
-              onChange={e => this.handleChange(e)}
-              input={<Input id="select-companies" />}
-              renderValue={selected => selected.join(', ')}
+              value={intrestedCompanies.toJS()}
+              input={<Input />}
+              name="intrestedCompanies"
               MenuProps={MenuProps}
+              component={Select}
+              renderValue={selected => {
+                const companieName = [];
+                companyList.map((value, index) => {
+                  if (selected.includes(value)) {
+                    companieName.push(value);
+                  }
+                });
+                return companieName.join(', ');
+              }
+              }
+              onChange={e => this.handleChange(e)}
             >
               {companyList.map((item, index) => (
-                <MenuItem key={index} value={item}>
-                  <Checkbox checked={companyList.indexOf(item) > -1} />
+                <MenuItem key={index.toString()} value={item}>
+                  <TextField
+                    name="company-checkbox"
+                    component={Checkbox}
+                    checked={intrestedCompanies.indexOf(item) > -1}
+                  />
                   <ListItemText primary={item} />
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         </div>
-        <Grid className={classes.customGrid}>
-          {skillItems !== null && skillItems}
+        <div>
+          <FormControl className={classes.formControl}>
+            <InputLabel
+              htmlFor="select-Skills"
+            >
+              Interested Skills
+                </InputLabel>
+            <Select
+              multiple
+              value={skills.toJS()}
+              input={<Input />}
+              name="skills"
+              MenuProps={MenuProps}
+              component={Select}
+              renderValue={selected => {
+                const skillName = [];
+                skillsList.map((value, index) => {
+                  if (selected.includes(value)) {
+                    skillName.push(value);
+                  }
+                });
+                return skillName.join(', ');
+              }
+              }
+              onChange={e => this.handleChange(e)}
+            >
+              {skillsList.map((item, index) => (
+                <MenuItem key={index.toString()} value={item}>
+                  <TextField
+                    name="skill-checkbox"
+                    component={Checkbox}
+                    checked={skills.indexOf(item) > -1}
+                  />
+                  <ListItemText primary={item} />
+                </MenuItem>
+              ))}
+            </Select>
+            {/* <Select
+              multiple
+              value={skills.toJS()}
+              name="skills"
+              onChange={e => this.handleChange(e)}
+              input={<Input id="select-Skills" />}
+              renderValue={selected => {
+                var skillsName = [];
+                skillList.map((value, index) => {
+                  if (selected.includes(value)) {
+                    skillsName = value;
+                  }
+                });
+                return skillsName;
+              }}
+              MenuProps={MenuProps}
+            >
+              {skillList.map((item, index) => (
+                (item != '') &&
+                <MenuItem key={index} value={item}>
+                  <Checkbox checked={skills.indexOf(item) > -1} />
+                  <ListItemText primary={item} />
+                </MenuItem>
+              ))}
+            </Select> */}
+          </FormControl>
+        </div>
+        {/* <Grid className={classes.customGrid}>
+
         </Grid>
         <Grid >
           <TextField
             placeholder="Skills"
             autoCapitalize="true"
-            value={customSkill}
+            value={skills}
             className={classes.textField}
-            name='customSkill'
+            name='skills'
             margin="normal"
             variant="filled"
             onChange={(e) => this.handleChange(e)}
@@ -163,7 +254,7 @@ class EditSkillsInterests extends React.Component {
             </Typography>
             <Grid container>
               <Button variant="outlined" color="secondary"
-                onClick={(e) => this.handleSuggestedProduct(e)}
+                onClick={(e) => this.handleChange(e)}
                 className={classes.btnMargin}
               >
                 + JavaScript
@@ -200,14 +291,33 @@ class EditSkillsInterests extends React.Component {
                     </Button>&nbsp;
                   </Grid>
           </Grid>
-        </Grid>
+        </Grid> */}
       </section >
     );
   }
 }
+const reducerCampaign = 'studentProfile';
 
 EditSkillsInterests.propTypes = {
   classes: PropTypes.object.isRequired,
+  intrestedIndustries: PropTypes.object.isRequired,
+  intrestedCompanies: PropTypes.object.isRequired,
+  skills: PropTypes.object.isRequired,
+  addInfo: PropTypes.func.isRequired
 };
+const mapStateToProps = state => ({
+  intrestedIndustries: state.getIn([reducerCampaign, 'intrestedIndustries']),
+  intrestedCompanies: state.getIn([reducerCampaign, 'intrestedCompanies']),
+  skills: state.getIn([reducerCampaign, 'skills']),
+});
+const mapDispatchToProps = dispatch => ({
+  addInfo: bindActionCreators(storeSkillInterests, dispatch)
+});
 
-export default withStyles(styles)(EditSkillsInterests);
+const StepMapped = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditSkillsInterests);
+
+
+export default withStyles(styles)(StepMapped);

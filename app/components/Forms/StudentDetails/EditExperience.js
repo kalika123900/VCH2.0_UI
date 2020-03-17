@@ -9,52 +9,58 @@ import Grid from '@material-ui/core/Grid';
 import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
 import Typography from '@material-ui/core/Typography';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux'
+import { storeExperience } from 'dan-actions/studentProfileActions';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
 
 class EditExperience extends React.Component {
-  state = {
-    skills: [],
-    customSkill: '',
-    company: '',
-    role: '',
-    roleDescription: '',
-  };
+  // state = {
+  //   skills: [],
+  //   customSkill: '',
+  //   company: '',
+  //   role: '',
+  //   roleDescription: '',
+  // };
 
-  addSkill = () => {
-    if (this.state.customSkill.length > 0) {
-      let customSkill = '+ ' + this.state.customSkill
-      let newSkillArr = [...this.state.skills, customSkill]
-      this.setState({ skills: newSkillArr, customSkill: '' })
-    }
-  };
+  // addSkill = () => {
+  //   if (this.state.customSkill.length > 0) {
+  //     let customSkill = '+ ' + this.state.customSkill
+  //     let newSkillArr = [...this.state.skills, customSkill]
+  //     this.setState({ skills: newSkillArr, customSkill: '' })
+  //   }
+  // };
 
-  handleSuggestedProduct = (e) => {
-    let customSkill = e.target.outerText
-    let newSkillArr = [...this.state.skills, customSkill]
-    this.setState({ skills: newSkillArr })
-  };
+  // handleSuggestedProduct = (e) => {
+  //   let customSkill = e.target.outerText
+  //   let newSkillArr = [...this.state.skills, customSkill]
+  //   this.setState({ skills: newSkillArr })
+  // };
 
   handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
+    const { addInfo } = this.props;
+
+
+    addInfo({ ...this.props, [event.target.name]: event.target.value });
   };
 
   render() {
     const {
       classes,
-
+      company,
+      role,
+      roleDescription
     } = this.props;
 
-    const { skills, customSkill, company, role, roleDescription, } = this.state;
-
-    const skillItems = skills.length > 0 ? skills.map((item, index) => {
-      return (
-        <Typography variant="subtitle1" className={classes.choosenTerms, classes.skillItems} key={index}>
-          {item}
-        </Typography>
-      )
-    }) : null
+    // const skillItems = skills.length > 0 ? skills.map((item, index) => {
+    //   return (
+    //     <Typography variant="subtitle1" className={classes.choosenTerms, classes.skillItems} key={index}>
+    //       {item}
+    //     </Typography>
+    //   )
+    // }) : null
 
     return (
       <section className={classes.pageFormWrap}>
@@ -105,11 +111,11 @@ class EditExperience extends React.Component {
             />
           </FormControl>
         </div>
-        <Grid className={classes.customGrid}>
+        {/*  <Grid className={classes.customGrid}>
           {skillItems !== null && skillItems}
         </Grid>
         <div>
-          <FormControl className={classes.formControl}>
+         <FormControl className={classes.formControl}>
             <TextField
               placeholder="Skills"
               autoCapitalize="true"
@@ -128,18 +134,42 @@ class EditExperience extends React.Component {
                   Add Skill
                     </Button>
               </Tooltip>
-            </Grid>
-          </FormControl>
-        </div>
+            </Grid> 
+          </FormControl> 
+        </div>*/}
 
-      </section>
+      </section >
     );
   }
 }
 
+const reducerCampaign = 'studentProfile';
+
 EditExperience.propTypes = {
   classes: PropTypes.object.isRequired,
-
+  company: PropTypes.string.isRequired,
+  role: PropTypes.string.role,
+  roleDescription: PropTypes.string.isRequired,
+  //experienceskills: PropTypes.string.isRequired,
+  addInfo: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(EditExperience);
+const mapStateToProps = state => ({
+  company: state.getIn([reducerCampaign, 'company']),
+  role: state.getIn([reducerCampaign, 'role']),
+  roleDescription: state.getIn([reducerCampaign, 'roleDescription']),
+  // experienceskills: state.getIn([reducerCampaign, 'experienceskills']),
+});
+
+const mapDispatchToProps = dispatch => ({
+  addInfo: bindActionCreators(storeExperience, dispatch)
+});
+
+const StepMapped = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditExperience);
+
+
+
+export default withStyles(styles)(StepMapped);

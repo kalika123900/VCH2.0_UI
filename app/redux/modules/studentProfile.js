@@ -21,9 +21,17 @@ const initialState = {
   intrestedIndustries: List([]),
   intrestedCompanies: List([]),
   skills: List([]),
+  customSkill: List([]),
   files: List([]),
-  education: List([]),
-  experience: List([]),
+  institute: '',
+  qualification: '',
+  eduFrom: DateHelper.format(DateHelper.addDays(new Date(), -1480)),
+  eduTo: DateHelper.format(DateHelper.addDays(new Date(), -30)),
+  grade: '',
+  company: '',
+  role: '',
+  roleDescription: '',
+  // experienceskills: List([]),
   action: 'create'
 };
 
@@ -59,22 +67,39 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const intrestedIndustries = fromJS(action.data.intrestedIndustries);
         const intrestedCompanies = fromJS(action.data.intrestedCompanies);
         const skills = fromJS(action.data.skills);
+        const customSkill = fromJS(action.data.customSkill);
         mutableState
           .set('intrestedIndustries', intrestedIndustries)
           .set('intrestedCompanies', intrestedCompanies)
           .set('skills', skills)
+
       });
     case STORE_EDUCATION:
       return state.withMutations((mutableState) => {
-        const education = fromJS(action.data.education);
+        const institute = fromJS(action.data.institute);
+        const qualification = fromJS(action.data.qualification);
+        const eduFrom = fromJS(action.data.eduFrom);
+        const eduTo = fromJS(action.data.eduTo);
+        const grade = fromJS(action.data.grade);
         mutableState
-          .set('education', education)
+          .set('institute', institute)
+          .set('qualification', qualification)
+          .set('eduFrom', eduFrom)
+          .set('eduTo', eduTo)
+          .set('grade', grade)
       });
     case STORE_EXPERIENCE:
       return state.withMutations((mutableState) => {
-        const experience = fromJS(action.data.education);
+        const company = fromJS(action.data.company);
+        const role = fromJS(action.data.role);
+        const roleDescription = fromJS(action.data.roleDescription);
+        //const experienceskills = fromJS(action.data.experienceskills);
+
         mutableState
-          .set('experience', experience)
+          .set('company', company)
+          .set('role', role)
+          .set('roleDescription', roleDescription)
+        //.set('experienceskills', experienceskills)
       });
     case STUDENT_PROFILE_INIT:
       return state.withMutations((mutableState) => {
@@ -89,15 +114,21 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const intrestedIndustries = fromJS(action.data.intrestedIndustries);
         const intrestedCompanies = fromJS(action.data.intrestedCompanies);
         const skills = fromJS(action.data.skills);
-        const experience = fromJS(action.data.education);
-        const education = fromJS(action.data.education);
+        const company = fromJS(action.data.company);
+        const role = fromJS(action.data.role);
+        const roleDescription = fromJS(action.data.roleDescription);
+        // const experienceskills = fromJS(action.data.experienceskills);
+        const institute = fromJS(action.data.institute);
+        const qualification = fromJS(action.data.qualification);
+        const eduFrom = fromJS(action.data.eduFrom);
+        const eduTo = fromJS(action.data.eduTo);
+        const grade = fromJS(action.data.grade);
         const files = fromJS(action.data.files)
         mutableState
           .set('firstName', firstName)
           .set('lastName', lastName)
           .set('alternateEmail', alternateEmail)
           .set('phoneNumber', phoneNumber)
-          .set('skills', skills)
           .set('dob', dob)
           .set('gender', gender)
           .set('ethnicity', ethnicity)
@@ -106,7 +137,14 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('intrestedCompanies', intrestedCompanies)
           .set('skills', skills)
           .set('education', education)
-          .set('experience', experience)
+          .set('company', company)
+          .set('role', role)
+          .set('roleDescription', roleDescription)
+          .set('institute', institute)
+          .set('qualification', qualification)
+          .set('eduFrom', eduFrom)
+          .set('eduTo', eduTo)
+          .set('grade', grade)
           .set('file', files)
       });
 

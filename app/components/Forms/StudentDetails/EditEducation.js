@@ -6,38 +6,65 @@ import styles from '../user-jss';
 import TextField from '@material-ui/core/TextField';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import Input from '@material-ui/core/Input';
+import MenuItem from '@material-ui/core/MenuItem';
+import Checkbox from '@material-ui/core/Checkbox'
+import { storeEducation } from 'dan-actions/studentProfileActions';
+import ListItemText from '@material-ui/core/ListItemText';
+import { degreeGradesItems, courstStartYearItems, graduationYearItems } from 'dan-api/apps/profileOption';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 class EditEducation extends React.Component {
-  state = {
-    eduFrom: '01/02/2016',
-    eduTo: '01/02/2020',
-    qualification: '',
-    institute: '',
-    grade: '',
-  };
 
   handleEduFromChange = date => {
-    this.setState({ eduFrom: date });
+    const { addInfo } = this.props;
+
+
+    addInfo({ ...this.props, eduFrom: date });
   };
 
   handleEduToChange = date => {
-    this.setState({ eduTo: date });
+    const { addInfo } = this.props;
+
+
+    addInfo({ ...this.props, eduTo: date });
   };
 
   handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
+    const { addInfo } = this.props;
+
+
+    addInfo({ ...this.props, [event.target.name]: event.target.value });
   };
 
   render() {
     const {
       classes,
-
+      eduFrom,
+      eduTo,
+      qualification,
+      institute,
+      grade
     } = this.props;
 
-    const { eduFrom, eduTo, qualification, institute, grade } = this.state;
+
 
     return (
       <section className={classes.pageFormWrap}>
@@ -104,17 +131,48 @@ class EditEducation extends React.Component {
         </div>
         <div>
           <FormControl className={classes.formControl}>
-            <TextField
-              label="Grade Achieved"
-              className={classes.textField}
-              type="text"
+            <InputLabel
+              htmlFor="select-grade"
+            >
+              Grade Achieved
+                  </InputLabel>
+            <Select
+              placeholder="Grade Achieved"
               value={grade}
               name="grade"
-              margin="normal"
-              variant="outlined"
-              validate={[required]}
               onChange={e => this.handleChange(e)}
-            />
+              MenuProps={MenuProps}
+            >
+              {degreeGradesItems.map((item, index) => (
+                <MenuItem key={index} value={item}>
+                  <ListItemText primary={item} />
+                </MenuItem>
+              ))}
+            </Select>
+            {/* <Select
+              value={grade}
+              name="grade"
+              onChange={e => this.handleChange(e)}
+              input={<Input id="select-grade" />}
+              renderValue={selected => {
+                var gradeName = '';
+                degreeGradesItems.map((value, index) => {
+                  if (selected.includes(value)) {
+                    gradeName = value;
+                  }
+                });
+                return gradeName;
+              }}
+              MenuProps={MenuProps}
+            >
+              {degreeGradesItems.map((item, index) => (
+                (item != '') &&
+                <MenuItem key={index} value={item}>
+                  <Checkbox checked={grade.indexOf(item) > -1} />
+                  <ListItemText primary={item} />
+                </MenuItem>
+              ))}
+            </Select> */}
           </FormControl>
         </div>
 
@@ -123,8 +181,35 @@ class EditEducation extends React.Component {
   }
 }
 
+const reducerCampaign = 'studentProfile';
+
 EditEducation.propTypes = {
   classes: PropTypes.object.isRequired,
+  institute: PropTypes.string.isRequired,
+  qualification: PropTypes.string.isRequired,
+  eduFrom: PropTypes.string.isRequired,
+  eduTo: PropTypes.string.isRequired,
+  grade: PropTypes.string.isRequired,
+  addInfo: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(EditEducation);
+const mapStateToProps = state => ({
+  institute: state.getIn([reducerCampaign, 'institute']),
+  qualification: state.getIn([reducerCampaign, 'qualification']),
+  eduFrom: state.getIn([reducerCampaign, 'eduFrom']),
+  eduTo: state.getIn([reducerCampaign, 'eduTo']),
+  grade: state.getIn([reducerCampaign, 'grade']),
+});
+
+const mapDispatchToProps = dispatch => ({
+  addInfo: bindActionCreators(storeEducation, dispatch)
+});
+
+const StepMapped = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditEducation);
+
+
+
+export default withStyles(styles)(StepMapped);

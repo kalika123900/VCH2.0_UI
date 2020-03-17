@@ -15,21 +15,34 @@ import styles from '../../../components/Forms/user-jss';
 class EditStudentDetails extends Component {
   state = {
     tab: 0,
-    eduField: [null],
-    exField: [null]
+    eduField: [0],
+    exField: [0]
   }
 
   handleChangeTab = (event, value) => {
     this.setState({ tab: value });
   };
+  removeEducationField = itemId => {
 
-  addEducationField = (e) => {
-    const value = [...this.state.eduField, null];
+
+    const value = this.state.eduField.filter(edufield => edufield !== itemId);
+
     this.setState({ eduField: value });
   }
 
+  addEducationField = (e) => {
+    const value = [...this.state.eduField, this.state.eduField.length++];
+    this.setState({ eduField: value });
+  }
+  removeExperienceField = itemId => {
+
+    const value = this.state.exField.filter(exfield => exfield !== itemId);
+    this.setState({ exField: value });
+  }
+
+
   addExperienceField = (e) => {
-    const value = [...this.state.exField, null];
+    const value = [...this.state.exField, this.state.exField.length++];
     this.setState({ exField: value });
   }
 
@@ -39,6 +52,7 @@ class EditStudentDetails extends Component {
     const { tab, eduField, exField } = this.state;
 
     const EducationJSX = eduField.map((item, index) => {
+<<<<<<< HEAD
       if (index > 0) {
         return <Fragment>
           <div className={classes.btnArea}>
@@ -49,11 +63,38 @@ class EditStudentDetails extends Component {
           <EditEducation key={index} />
         </Fragment>
       } else {
+=======
+      if (item != 0) {
+        return <Fragment>
+          <div className={classes.btnArea}>
+            <Button variant="text" color="secondary" onClick={e => this.removeEducationField(item)}>
+              Remove
+          </Button>
+          </div>
+          <EditEducation key={index} />
+        </Fragment>
+      }
+      else {
+>>>>>>> a6e4e835fa25069c5df2878c894c749cde76bd60
         return <EditEducation key={index} />
       }
     });
 
-    const ExperienceJSX = exField.map((item, index) => <EditExperience key={index} />);
+    const ExperienceJSX = exField.map((item, index) => {
+      if (item != 0) {
+        return <Fragment>
+          <div className={classes.btnArea}>
+            <Button variant="text" color="secondary" onClick={e => this.removeExperienceField(item)}>
+              Remove
+        </Button>
+          </div>
+          <EditExperience key={index} />
+        </Fragment>
+
+      } else {
+        return <EditExperience key={index} />
+      }
+    })
 
     return (
       <Paper className={classes.fullWrap, classes.petal} >
@@ -85,6 +126,7 @@ class EditStudentDetails extends Component {
                   <Button variant="text" color="primary" onClick={e => this.addEducationField(e)}>
                     Add More
                   </Button>
+
                 </div>
               </Fragment>
             )}
@@ -95,6 +137,7 @@ class EditStudentDetails extends Component {
                   <Button variant="text" color="primary" onClick={e => this.addExperienceField(e)}>
                     Add More
                   </Button>
+
                 </div>
               </Fragment>
             )}
