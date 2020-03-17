@@ -36,7 +36,6 @@ const styles = theme => ({
   },
   content: {
     background: fade(theme.palette.secondary.main, 0.3),
-    height: '100%',
     width: '100%',
     padding: `70px ${theme.spacing(3)}px 30px`
   },

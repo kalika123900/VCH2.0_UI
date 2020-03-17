@@ -13,16 +13,16 @@ import DateRange from '@material-ui/icons/DateRange';
 import LocationOn from '@material-ui/icons/LocationOn';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Divider from '@material-ui/core/Divider';
-import PapperBlock from '../PapperBlock/PapperBlock';
-import styles from './profile-jss';
 import EmailIcon from '@material-ui/icons/Email';
 import ExploreIcon from '@material-ui/icons/Explore';
 import SchoolIcon from '@material-ui/icons/School';
 import BusinessIcon from '@material-ui/icons/Business';
-import StudentClientCover from '../SocialMedia/StudentClientCover';
 import bgCover from 'dan-images/petal_bg.svg';
 import dummy from 'dan-api/dummy/dummyContents';
 import Typography from '@material-ui/core/Typography';
+import StudentClientCover from '../SocialMedia/StudentClientCover';
+import styles from './profile-jss';
+import PapperBlock from '../PapperBlock/PapperBlock';
 
 class StudentClientView extends React.Component {
   render() {
@@ -35,7 +35,7 @@ class StudentClientView extends React.Component {
           name={dummy.user.name}
           desc="Lorem Ipsum dolar Consectetur adipiscing elit."
         />
-        <Grid >
+        <Grid>
           {/* Personal Details */}
           <PapperBlock title="Personal Details" icon="ios-contact-outline" whiteBg noMargin desc="">
             <List dense className={classes.profileList}>
@@ -132,7 +132,7 @@ class StudentClientView extends React.Component {
           {/* --------------------------------------------------------------------- */}
           <PapperBlock title="Qualifications" icon="ios-aperture-outline" whiteBg desc="">
             <Grid container className={classes.colList}>
-              <Grid >
+              <Grid>
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar className={classNames(classes.avatar)}>
@@ -141,14 +141,14 @@ class StudentClientView extends React.Component {
                   </ListItemAvatar>
                   <Grid>
                     <Typography variant="h6" display="inline">MBA</Typography>
-                    <Typography variant="body2" display="inline" style={{ marginLeft: "5px" }}>SAIT, Indore</Typography>
+                    <Typography variant="body2" display="inline" style={{ marginLeft: '5px' }}>SAIT, Indore</Typography>
                     <Grid>
-                      <Typography variant="body1" display="inline" >Year :</Typography>
-                      <Typography variant="body2" display="inline" style={{ marginLeft: "5px" }}>2016-2020</Typography>
+                      <Typography variant="body1" display="inline">Year :</Typography>
+                      <Typography variant="body2" display="inline" style={{ marginLeft: '5px' }}>2016-2020</Typography>
                     </Grid>
                     <Grid>
-                      <Typography variant="body1" display="inline" >Grade :</Typography>
-                      <Typography variant="body2" display="inline" style={{ marginLeft: "5px" }}>A+</Typography>
+                      <Typography variant="body1" display="inline">Grade :</Typography>
+                      <Typography variant="body2" display="inline" style={{ marginLeft: '5px' }}>A+</Typography>
                     </Grid>
                   </Grid>
                 </ListItem>
@@ -160,14 +160,14 @@ class StudentClientView extends React.Component {
                   </ListItemAvatar>
                   <Grid>
                     <Typography variant="h6" display="inline">Higher Secondry</Typography>
-                    <Typography variant="body2" display="inline" style={{ marginLeft: "5px" }}>SAIT, Indore</Typography>
+                    <Typography variant="body2" display="inline" style={{ marginLeft: '5px' }}>SAIT, Indore</Typography>
                     <Grid>
-                      <Typography variant="body1" display="inline" >Year :</Typography>
-                      <Typography variant="body2" display="inline" style={{ marginLeft: "5px" }}>2012-2014</Typography>
+                      <Typography variant="body1" display="inline">Year :</Typography>
+                      <Typography variant="body2" display="inline" style={{ marginLeft: '5px' }}>2012-2014</Typography>
                     </Grid>
                     <Grid>
-                      <Typography variant="body1" display="inline" >Grade :</Typography>
-                      <Typography variant="body2" display="inline" style={{ marginLeft: "5px" }}>A+</Typography>
+                      <Typography variant="body1" display="inline">Grade :</Typography>
+                      <Typography variant="body2" display="inline" style={{ marginLeft: '5px' }}>A+</Typography>
                     </Grid>
                   </Grid>
                 </ListItem>
@@ -179,14 +179,14 @@ class StudentClientView extends React.Component {
                   </ListItemAvatar>
                   <Grid>
                     <Typography variant="h6" display="inline">High School</Typography>
-                    <Typography variant="body2" display="inline" style={{ marginLeft: "5px" }}>SAIT, Indore</Typography>
+                    <Typography variant="body2" display="inline" style={{ marginLeft: '5px' }}>SAIT, Indore</Typography>
                     <Grid>
-                      <Typography variant="body1" display="inline" >Year :</Typography>
-                      <Typography variant="body2" display="inline" style={{ marginLeft: "5px" }}>2010-2012</Typography>
+                      <Typography variant="body1" display="inline">Year :</Typography>
+                      <Typography variant="body2" display="inline" style={{ marginLeft: '5px' }}>2010-2012</Typography>
                     </Grid>
                     <Grid>
-                      <Typography variant="body1" display="inline" >Grade :</Typography>
-                      <Typography variant="body2" display="inline" style={{ marginLeft: "5px" }}>A+</Typography>
+                      <Typography variant="body1" display="inline">Grade :</Typography>
+                      <Typography variant="body2" display="inline" style={{ marginLeft: '5px' }}>A+</Typography>
                     </Grid>
                   </Grid>
                 </ListItem>
@@ -207,7 +207,7 @@ class StudentClientView extends React.Component {
                   <ListItemText primary="Google" />
                   <Grid>
                     <ListItemText primary="Software Engineer" secondary="Lorem Ipsum dolar sit amend hsopd." />
-                  </Grid >
+                  </Grid>
                 </Grid>
               </ListItem>
               <ListItem>
@@ -220,7 +220,7 @@ class StudentClientView extends React.Component {
                   <ListItemText primary="Facebook" />
                   <Grid>
                     <ListItemText primary="Software Engineer" secondary="Lorem Ipsum dolar sit amend hsopd." />
-                  </Grid >
+                  </Grid>
                 </Grid>
               </ListItem>
               <ListItem>
@@ -233,7 +233,7 @@ class StudentClientView extends React.Component {
                   <ListItemText primary="Twitter" />
                   <Grid>
                     <ListItemText primary="Software Engineer" secondary="Lorem Ipsum dolar sit amend hsopd." />
-                  </Grid >
+                  </Grid>
                 </Grid>
               </ListItem>
             </Grid>
@@ -331,11 +331,8 @@ class StudentClientView extends React.Component {
             </Grid>
             <Button variant="text" color="primary">See All</Button>
           </PapperBlock>
-
         </Grid>
-
-
-      </Fragment >
+      </Fragment>
     );
   }
 }

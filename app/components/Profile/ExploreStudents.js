@@ -2,13 +2,12 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import datas from 'dan-api/apps/connectionData';
 import StudentCard from '../CardPaper/StudentCard';
 import styles from './profile-jss';
 
 class ExploreStudents extends React.Component {
   render() {
-    const { classes } = this.props;
+    const { classes, datas } = this.props;
     return (
       <Grid
         container
@@ -20,7 +19,7 @@ class ExploreStudents extends React.Component {
       >
         {
           datas.map((data, index) => (
-            <Grid item md={3} sm={6} xs={12} key={index.toString()} >
+            <Grid item md={3} sm={6} xs={12} key={index.toString()}>
               <StudentCard
                 cover={data.cover}
                 avatar={data.avatar}

@@ -10,14 +10,14 @@ import Grid from '@material-ui/core/Grid';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import styles from './widget-jss';
-import PapperBlock from '../PapperBlock/PapperBlock';
-import Rating from '../../components/Rating/Rating';
 import Typography from '@material-ui/core/Typography';
 import Place from '@material-ui/icons/Place';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Slider from '@material-ui/core/Slider';
+import Rating from '../Rating/Rating';
+import PapperBlock from '../PapperBlock/PapperBlock';
+import styles from './widget-jss';
 
 class ExploreFilter extends PureComponent {
   state = {
@@ -61,9 +61,7 @@ class ExploreFilter extends PureComponent {
     ]
   };
 
-  valueText = (value) => {
-    return `$${value}`;
-  };
+  valueText = (value) => `$${value}`;
 
   handleReset = () => {
     this.setState({
@@ -79,7 +77,7 @@ class ExploreFilter extends PureComponent {
       location: '',
       checkedA: false,
       sliderValue: 20,
-    })
+    });
   }
 
   handleChange = value => {
@@ -87,7 +85,7 @@ class ExploreFilter extends PureComponent {
   };
 
   handleLocationChange = prop => event => {
-    this.setState({ location: event.target.value })
+    this.setState({ location: event.target.value });
   };
 
   handleChangeSelect = event => {
@@ -100,7 +98,8 @@ class ExploreFilter extends PureComponent {
 
   render() {
     const { classes } = this.props;
-    const { skill, rating, location, checkedA, marks, sliderValue, role, university,
+    const {
+      skill, rating, location, checkedA, marks, sliderValue, role, university,
       degree, grade, experience, interests, activity
     } = this.state;
     return (
@@ -294,48 +293,10 @@ class ExploreFilter extends PureComponent {
               />
             </FormControl>
           </Grid>
-          <Grid item sm={6} xs={6}>
-            <Typography gutterBottom>
-              Hourly Rate
-          </Typography>
-            <Slider
-              defaultValue={sliderValue}
-              getAriaValueText={this.valuetext}
-              aria-labelledby="discrete-slider-custom"
-              step={10}
-              valueLabelDisplay="auto"
-              marks={marks}
-            />
-          </Grid>
-        </Grid>
-        <Grid container spacing={2}>
-          <Grid item sm={6} xs={6}>
-            <Typography variant="button" className={classes.divider}>Rattings</Typography>
-            <FormControl className={classes.formControl} style={{ marginBottom: "0" }}>
-              <Rating
-                value={rating}
-                max={5}
-                onChange={(value) => this.handleChange(value)}
-                style={{ margin: "10px" }}
-              />
-            </FormControl>
-          </Grid>
-          <Grid>
-            <FormControlLabel
-              control={(
-                <Checkbox
-                  checked={checkedA}
-                  onChange={this.handleCheckbox('checkedA')}
-                  value="checkedA"
-                />
-              )}
-              label="Online Freelances Only"
-            />
-          </Grid>
         </Grid>
         <Divider className={classes.divider} />
         <div className={classes.textRight}>
-          <Button color="secondary" variant="contained" className={classes.button} onClick={(e) => { this.handleReset() }}>
+          <Button color="secondary" variant="contained" className={classes.button} onClick={(e) => { this.handleReset(); }}>
             Reset
           </Button>
           <Button color="secondary" variant="contained" className={classes.button}>

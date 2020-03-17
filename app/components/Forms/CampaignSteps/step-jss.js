@@ -13,7 +13,7 @@ const styles = theme => ({
     width: '100% !important',
     '& autoCompleteInner': {
       width: '100%'
-    }
+    },
   },
   autoCompleteInner: {
     width: '100% !Important'
