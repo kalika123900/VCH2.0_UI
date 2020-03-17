@@ -59,11 +59,11 @@ class EditStudentDetails extends Component {
               Remove
           </Button>
           </div>
-          <EditEducation key={index} />
+          <EditEducation id={item} key={index} />
         </Fragment>
       }
       else {
-        return <EditEducation key={index} />
+        return <EditEducation id={item} key={index} />
       }
     });
 
@@ -75,11 +75,11 @@ class EditStudentDetails extends Component {
               Remove
         </Button>
           </div>
-          <EditExperience key={index} />
+          <EditExperience id={item} key={index} />
         </Fragment>
 
       } else {
-        return <EditExperience key={index} />
+        return <EditExperience id={item} key={index} />
       }
     })
 

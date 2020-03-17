@@ -32,6 +32,9 @@ const MenuProps = {
   },
 };
 class EditEducation extends React.Component {
+  constructor(props) {
+    super(props)
+  }
 
   handleEduFromChange = date => {
     const { addInfo } = this.props;
@@ -47,21 +50,21 @@ class EditEducation extends React.Component {
     addInfo({ ...this.props, eduTo: date });
   };
 
-  handleChange = event => {
+  handleChange = (event, id) => {
     const { addInfo } = this.props;
-
-
-    addInfo({ ...this.props, [event.target.name]: event.target.value });
+    educationStore.id.addInfo({ ...this.props, [event.educationStore.name]: event.educationStore.value })
+    // addInfo({ educationStore });
   };
 
   render() {
     const {
       classes,
-      eduFrom,
-      eduTo,
-      qualification,
-      institute,
-      grade
+      // eduFrom,
+      // eduTo,
+      // qualification,
+      // institute,
+      // grade,
+      educationStore
     } = this.props;
 
 
@@ -80,7 +83,7 @@ class EditEducation extends React.Component {
               margin="normal"
               variant="outlined"
               validate={[required]}
-              onChange={e => this.handleChange(e)}
+              onChange={e => this.handleChange(e, this.props.id)}
             />
           </FormControl>
         </div>
@@ -95,7 +98,7 @@ class EditEducation extends React.Component {
               margin="normal"
               variant="outlined"
               validate={[required]}
-              onChange={e => this.handleChange(e)}
+              onChange={e => this.handleChange(e, this.props.id)}
             />
           </FormControl>
         </div>
@@ -108,7 +111,7 @@ class EditEducation extends React.Component {
                 format="dd/MM/yyyy"
                 value={eduFrom}
                 name="eduFrom"
-                onChange={this.handleEduFromChange}
+                onChange={e => this.handleChange(e, this.props.id)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
@@ -121,7 +124,7 @@ class EditEducation extends React.Component {
                 format="dd/MM/yyyy"
                 value={eduTo}
                 name="eduTo"
-                onChange={this.handleEduToChange}
+                onChange={e => this.handleChange(e, this.props.id)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
@@ -140,7 +143,7 @@ class EditEducation extends React.Component {
               placeholder="Grade Achieved"
               value={grade}
               name="grade"
-              onChange={e => this.handleChange(e)}
+              onChange={e => this.handleChange(e, this.props.id)}
               MenuProps={MenuProps}
             >
               {degreeGradesItems.map((item, index) => (
@@ -185,20 +188,22 @@ const reducerCampaign = 'studentProfile';
 
 EditEducation.propTypes = {
   classes: PropTypes.object.isRequired,
-  institute: PropTypes.string.isRequired,
-  qualification: PropTypes.string.isRequired,
-  eduFrom: PropTypes.string.isRequired,
-  eduTo: PropTypes.string.isRequired,
-  grade: PropTypes.string.isRequired,
+  // institute: PropTypes.string.isRequired,
+  // qualification: PropTypes.string.isRequired,
+  // eduFrom: PropTypes.string.isRequired,
+  // eduTo: PropTypes.string.isRequired,
+  // grade: PropTypes.string.isRequired,
+  educationStore: PropTypes.object.isRequired,
   addInfo: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  institute: state.getIn([reducerCampaign, 'institute']),
-  qualification: state.getIn([reducerCampaign, 'qualification']),
-  eduFrom: state.getIn([reducerCampaign, 'eduFrom']),
-  eduTo: state.getIn([reducerCampaign, 'eduTo']),
-  grade: state.getIn([reducerCampaign, 'grade']),
+  // institute: state.getIn([reducerCampaign, 'institute']),
+  // qualification: state.getIn([reducerCampaign, 'qualification']),
+  // eduFrom: state.getIn([reducerCampaign, 'eduFrom']),
+  // eduTo: state.getIn([reducerCampaign, 'eduTo']),
+  // grade: state.getIn([reducerCampaign, 'grade']),
+  educationStore: state.getIn([reducerCampaign, 'educationStore'])
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -151,14 +151,16 @@ EditExperience.propTypes = {
   role: PropTypes.string.role,
   roleDescription: PropTypes.string.isRequired,
   //experienceskills: PropTypes.string.isRequired,
+  experienceStore: PropTypes.string.isRequired,
   addInfo: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  company: state.getIn([reducerCampaign, 'company']),
-  role: state.getIn([reducerCampaign, 'role']),
-  roleDescription: state.getIn([reducerCampaign, 'roleDescription']),
+  // company: state.getIn([reducerCampaign, 'company']),
+  // role: state.getIn([reducerCampaign, 'role']),
+  // roleDescription: state.getIn([reducerCampaign, 'roleDescription']),
   // experienceskills: state.getIn([reducerCampaign, 'experienceskills']),
+  experienceStore: state.setIn([reducerCampaign, 'experienceStore'])
 });
 
 const mapDispatchToProps = dispatch => ({
