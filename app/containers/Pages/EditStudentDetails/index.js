@@ -49,7 +49,16 @@ class EditStudentDetails extends Component {
 
     const { tab, eduField, exField } = this.state;
 
-    const EducationJSX = eduField.map((item, index) => (<EditEducation key={index} />));
+    const EducationJSX = eduField.map((item, index) => {
+      if (index > 0) {
+        <div className={classes.btnArea}>
+          <Button variant="text" color="primary" onClick={e => this.removeEducationField(index)}>
+            Remove
+          </Button>
+        </div>
+      }
+      <EditEducation key={index} />
+    });
 
     const ExperienceJSX = exField.map((item, index) => <EditExperience key={index} />);
 

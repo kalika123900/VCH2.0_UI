@@ -410,7 +410,7 @@ const styles = theme => ({
     padding: `0 ${theme.spacing(0.5)}px`
   },
   customMargin: {
-    marginTop: "10%"
+    marginTop: '10%'
   },
   lineCont: {
     width: '50%',
@@ -447,10 +447,10 @@ const styles = theme => ({
     color: 'white',
     marginLeft: '10px',
     marginBottom: '10px',
-    width: "fit-content"
+    width: 'fit-content'
   },
   btnMargin: {
-    marginBottom: "5px"
+    marginBottom: '5px'
   },
   chatList: {
     padding: `${theme.spacing(6)}px ${theme.spacing(3)}px`,
@@ -641,12 +641,16 @@ const styles = theme => ({
     }
   },
   checkboxButtons: {
-    display: "flex",
+    display: 'flex',
     flexDirection: 'row',
-    justifyContent: "center",
+    justifyContent: 'center',
     marginBottom: 10
-  }
-
+  },
+  studentCardGrid: theme.mixins.gutters({
+    paddingTop: 16,
+    paddingBottom: 16,
+    marginTop: theme.spacing(3),
+  })
 });
 
 

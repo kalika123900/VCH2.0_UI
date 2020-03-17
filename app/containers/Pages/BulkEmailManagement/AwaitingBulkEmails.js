@@ -30,9 +30,7 @@ const data = [
   createData('Jhone Doe', 'Bulk Email 2', '02-January-2020'),
   createData('Jhone Doe', 'Bulk Email 3', '04-January-2020'),
   createData('Jhone Doe', 'Bulk Email 4', '05-January-2020'),
-  createData('Jhone Doe', 'Bulk Email 5', '01-February-2020'),
-  createData('Jhone Doe', 'Bulk Email 6', '05-February-2020'),
-  createData('Jhone Doe', 'Bulk Email 7', '14-February-2020'),
+  createData('Jhone Doe', 'Bulk Email 5', '01-February-2020')
 ];
 
 class BulkEmailTable extends React.Component {

@@ -12,8 +12,18 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { storeStep3Info } from 'dan-actions/CampaignActions';
+import { withStyles } from '@material-ui/core/styles';
 
 const filter = createFilterOptions();
+const GlobalCss = withStyles({
+  // @global is handled by jss-plugin-global.
+  '@global': {
+    // You should target [class*="MuiButton-root"] instead if you nest themes.
+    '.MuiAutocomplete-tag': {
+      paddingTop: '0px !important',
+    },
+  },
+})(() => null);
 
 async function postData(url, data) {
   const response = await fetch(url, {
@@ -131,6 +141,7 @@ class SelectAdd extends Component {
 
     return (
       <Fragment>
+        <GlobalCss />
         <Autocomplete
           style={{ width: '100%' }}
           multiple

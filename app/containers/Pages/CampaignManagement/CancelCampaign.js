@@ -8,47 +8,32 @@ import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
+import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import styles from 'dan-components/Tables/tableStyle-jss';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Button from '@material-ui/core/Button';
 import formatDate from '../../../Helpers/formatDate';
 
-function createData(id, client, campaign, create_date) {
+function createData(id, campaigns, client_name, start_date, end_date, cancel_by) {
   return {
     id,
-    client,
-    campaign,
-    create_date,
+    campaigns,
+    client_name,
+    start_date,
+    end_date,
+    cancel_by
   };
 }
 
-class AwaitingCampaigns extends React.Component {
+class CancelCampaign extends React.Component {
   state = {
     redirect: false,
-    isCampaigns: false,
-    campaignId: null,
     campaignData: [],
+    isCampaigns: false,
     page: 0,
     rowsPerPage: 5
   }
-
-  setRedirect = (id) => {
-    this.setState({
-      redirect: true,
-      campaignId: id
-    });
-  }
-
-  renderRedirect = () => {
-    if (this.state.redirect) {
-      return <Redirect to={`/admin/campaign-review/${this.state.campaignId}`} />;
-    }
-  }
-
 
   handleChangePage = (event, page) => {
     this.setState({ page });
@@ -68,7 +53,7 @@ class AwaitingCampaigns extends React.Component {
       return await response.json();
     }
 
-    getData(`${API_URL}/campaign/pending-campaigns`)
+    getData(`${API_URL}/campaign/admin/cancel-campaign`)
       .then((res) => {
         if (res.status === 1) {
           if (res.data.length > 0) {
@@ -77,8 +62,10 @@ class AwaitingCampaigns extends React.Component {
               const client_name = item.firstname + ' ' + item.lastname;
               item.campaign_masters.map(campaign => {
                 const date = formatDate(campaign.created_at);
+                const endDate = formatDate(campaign.deadline);
+                const cancel = campaign.status === -1 ? 'Admin' : 'Client';
                 campaignData.push(
-                  createData(campaign.id, client_name, campaign.campaign_name, date)
+                  createData(campaign.id, campaign.campaign_name, client_name, date, endDate, cancel)
                 );
               });
               _that.setState({ campaignData });
@@ -94,19 +81,30 @@ class AwaitingCampaigns extends React.Component {
       });
   }
 
+  setRedirect = () => {
+    this.setState({
+      redirect: true,
+    });
+  }
+
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      return <Redirect to="/admin/campaign-review" />;
+    }
+  }
+
   render() {
     const { classes } = this.props;
-    const { isCampaigns, rowsPerPage, page, campaignData } = this.state;
+    const { campaignData, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, campaignData.length - (page * rowsPerPage));
 
-    if (isCampaigns == false) return null;
     return (
       <Fragment>
         {this.renderRedirect()}
         <div className={classes.rootTable}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
-              <Typography variant="h6">Recent Awaiting Campaigns</Typography>
+              <Typography variant="h6">Cancel Campaigns</Typography>
             </div>
             <div className={classes.spacer} />
           </Toolbar>
@@ -115,23 +113,21 @@ class AwaitingCampaigns extends React.Component {
               <Table className={classNames(classes.table, classes.hover)}>
                 <TableHead>
                   <TableRow>
-                    <TableCell padding="default">Client Name</TableCell>
-                    <TableCell padding="default">Campaign Name</TableCell>
-                    <TableCell align="left">Create Date</TableCell>
-                    <TableCell align="left">Action</TableCell>
+                    <TableCell align="left">Campaign Name</TableCell>
+                    <TableCell align="left">Client Name</TableCell>
+                    <TableCell align="left">Start Date</TableCell>
+                    <TableCell align="left">End Date</TableCell>
+                    <TableCell align="left">Cancel by</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {campaignData.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(n => (
-                    <TableRow key={n.id} onClick={() => this.setRedirect(n.id)}>
-                      <TableCell padding="default">{n.client}</TableCell>
-                      <TableCell padding="default">{n.campaign}</TableCell>
-                      <TableCell align="left">{n.create_date}</TableCell>
-                      <TableCell align="left">
-                        <Button>
-                          <DeleteIcon />
-                        </Button>
-                      </TableCell>
+                    <TableRow key={n.id} onClick={this.setRedirect}>
+                      <TableCell align="left">{n.campaigns}</TableCell>
+                      <TableCell align="left">{n.client_name}</TableCell>
+                      <TableCell align="left">{n.start_date}</TableCell>
+                      <TableCell align="left">{n.end_date}</TableCell>
+                      <TableCell align="left">{n.cancel_by}</TableCell>
                     </TableRow>
                   ))}
                   {emptyRows > 0 && (
@@ -146,7 +142,7 @@ class AwaitingCampaigns extends React.Component {
                       colSpan={3}
                       count={campaignData.length}
                       rowsPerPage={rowsPerPage}
-                      rowsPerPageOptions={[5, 10, 15]}
+                      rowsPerPageOptions={[5, 10, 15, 20]}
                       page={page}
                       onChangePage={this.handleChangePage}
                       onChangeRowsPerPage={this.handleChangeRowsPerPage}
@@ -161,7 +157,7 @@ class AwaitingCampaigns extends React.Component {
                 variant="body1"
                 className={classes.warnMsg}
               >
-                No Awaiting campaigns !
+                No Cancel campaigns !
               </Typography>
             )
           }
@@ -171,8 +167,8 @@ class AwaitingCampaigns extends React.Component {
   }
 }
 
-AwaitingCampaigns.propTypes = {
+CancelCampaign.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AwaitingCampaigns);
+export default withStyles(styles)(CancelCampaign);
