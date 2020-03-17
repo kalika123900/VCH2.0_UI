@@ -197,7 +197,7 @@ class NewRoleForm extends React.Component {
             <FormControl className={classes.formControl}>
               <Typography variant="h6">What is the role page link?</Typography>
               <TextField
-                id="outlined-name"
+                id="outlined-link"
                 label="Role Link"
                 name="roleLink"
                 className={classes.textField}
