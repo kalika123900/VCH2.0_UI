@@ -4,6 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import styles from '../user-jss';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox'
@@ -15,14 +17,17 @@ import Grid from '@material-ui/core/Grid';
 import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
 import Typography from '@material-ui/core/Typography';
+import { storeSkillInterests } from 'dan-actions/studentProfileActions';
 
 const industryList = [
+  '',
   'IT',
   'AutoMobile',
   'Robotics'
 ]
 
 const companyList = [
+  '',
   'Google',
   'Facebook',
   'Twitter'
@@ -42,45 +47,55 @@ const MenuProps = {
 
 
 class EditSkillsInterests extends React.Component {
-  state = {
-    industries: [],
-    companies: [],
-    skills: [],
-    customSkill: '',
-  };
-
-  addSkill = () => {
-    if (this.state.customSkill.length > 0) {
-      let customSkill = '+ ' + this.state.customSkill
-      let newSkillArr = [...this.state.skills, customSkill]
-      this.setState({ skills: newSkillArr, customSkill: '' })
-    }
-  };
-
-  handleSuggestedProduct = (e) => {
-    let customSkill = e.target.outerText
-    let newSkillArr = [...this.state.skills, customSkill]
-    this.setState({ skills: newSkillArr })
+  constructor(props) {
+    super(props)
+    console.log(this.props);
   }
 
+  // state = {
+  //   industries: [],
+  //   companies: [],
+  //   skills: [],
+  //   customSkill: '',
+  // };
+
+  // addSkill = () => {
+  //   if (this.state.customSkill.length > 0) {
+  //     let customSkill = '+ ' + this.state.customSkill
+  //     let newSkillArr = [...this.props.skills, customSkill]
+  //     addInfo({ ...this.props, skills: newSkillArr, customSkill: '' })
+  //   }
+  // };
+
+  // handleSuggestedProduct = (e) => {
+  //   const { addInfo } = this.props;
+  //   let customSkill = e.target.outerText
+  //   let newSkillArr = [...this.props.skills, customSkill]
+  //   addInfo({ ...this.props, skills: newSkillArr })
+  // }
+
   handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
+    const { addInfo } = this.props;
+    addInfo({ ...this.props, [event.target.name]: event.target.value });
+
   };
 
   render() {
     const {
       classes,
+      intrestedIndustries,
+      skills,
+      intrestedCompanies
     } = this.props;
 
-    const { skills, industries, companies, customSkill } = this.state;
-
-    const skillItems = skills.length > 0 ? skills.map((item, index) => {
-      return (
-        <Typography variant="subtitle1" className={classes.choosenTerms, classes.skillItems} key={index}>
-          {item}
-        </Typography>
-      )
-    }) : null
+    //const { skills, industries, companies, customSkill } = this.state;
+    // const skillItems = skills.length > 0 ? skills.map((item, index) => {
+    //   return (
+    //     <Typography variant="subtitle1" className={classes.choosenTerms, classes.skillItems} key={index}>
+    //       {item}
+    //     </Typography>
+    //   )
+    // }) : null
 
     return (
       <section className={classes.pageFormWrap} >
@@ -93,16 +108,26 @@ class EditSkillsInterests extends React.Component {
                   </InputLabel>
             <Select
               multiple
-              value={industries}
-              name="industries"
+              value={intrestedIndustries.toJS()}
+              name="intrestedIndustries"
               onChange={e => this.handleChange(e)}
               input={<Input id="select-industries" />}
-              renderValue={selected => selected.join(', ')}
+              renderValue={selected => {
+                var industriesName = '';
+                industryList.map((value, index) => {
+                  if (selected.includes(value)) {
+                    industriesName = value;
+                  }
+
+                });
+                return industriesName;
+              }}
               MenuProps={MenuProps}
             >
               {industryList.map((item, index) => (
+                (item != '') &&
                 <MenuItem key={index} value={item}>
-                  <Checkbox checked={industryList.indexOf(item) > -1} />
+                  <Checkbox checked={intrestedIndustries.indexOf(item) > -1} />
                   <ListItemText primary={item} />
                 </MenuItem>
               ))}
@@ -118,32 +143,41 @@ class EditSkillsInterests extends React.Component {
                 </InputLabel>
             <Select
               multiple
-              value={companies}
-              name="companies"
+              value={intrestedCompanies.toJS()}
+              name="intrestedCompanies"
               onChange={e => this.handleChange(e)}
               input={<Input id="select-companies" />}
-              renderValue={selected => selected.join(', ')}
+              renderValue={selected => {
+                var companiesName = '';
+                companyList.map((value, index) => {
+                  if (selected.includes(value)) {
+                    companiesName = value;
+                  }
+                });
+                return companiesName;
+              }}
               MenuProps={MenuProps}
             >
               {companyList.map((item, index) => (
+                (item != '') &&
                 <MenuItem key={index} value={item}>
-                  <Checkbox checked={companyList.indexOf(item) > -1} />
+                  <Checkbox checked={intrestedCompanies.indexOf(item) > -1} />
                   <ListItemText primary={item} />
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         </div>
-        <Grid className={classes.customGrid}>
-          {skillItems !== null && skillItems}
+        {/* <Grid className={classes.customGrid}>
+
         </Grid>
         <Grid >
           <TextField
             placeholder="Skills"
             autoCapitalize="true"
-            value={customSkill}
+            value={skills}
             className={classes.textField}
-            name='customSkill'
+            name='skills'
             margin="normal"
             variant="filled"
             onChange={(e) => this.handleChange(e)}
@@ -163,7 +197,7 @@ class EditSkillsInterests extends React.Component {
             </Typography>
             <Grid container>
               <Button variant="outlined" color="secondary"
-                onClick={(e) => this.handleSuggestedProduct(e)}
+                onClick={(e) => this.handleChange(e)}
                 className={classes.btnMargin}
               >
                 + JavaScript
@@ -200,14 +234,33 @@ class EditSkillsInterests extends React.Component {
                     </Button>&nbsp;
                   </Grid>
           </Grid>
-        </Grid>
+        </Grid> */}
       </section >
     );
   }
 }
+const reducerCampaign = 'studentProfile';
 
 EditSkillsInterests.propTypes = {
   classes: PropTypes.object.isRequired,
+  intrestedIndustries: PropTypes.object.isRequired,
+  intrestedCompanies: PropTypes.object.isRequired,
+  skills: PropTypes.object.isRequired,
+  addInfo: PropTypes.func.isRequired
 };
+const mapStateToProps = state => ({
+  intrestedIndustries: state.getIn([reducerCampaign, 'intrestedIndustries']),
+  intrestedCompanies: state.getIn([reducerCampaign, 'intrestedCompanies']),
+  skills: state.getIn([reducerCampaign, 'skills']),
+});
+const mapDispatchToProps = dispatch => ({
+  addInfo: bindActionCreators(storeSkillInterests, dispatch)
+});
 
-export default withStyles(styles)(EditSkillsInterests);
+const StepMapped = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditSkillsInterests);
+
+
+export default withStyles(styles)(StepMapped);

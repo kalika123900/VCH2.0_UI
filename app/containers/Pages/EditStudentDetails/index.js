@@ -22,15 +22,26 @@ class EditStudentDetails extends Component {
   handleChangeTab = (event, value) => {
     this.setState({ tab: value });
   };
+  deleteaddEducationField = (e) => {
+    const value = this.state.exField.filter(exfield => exField.length !== exField.length);
+    this.setState({ exField: value });
+  }
 
   addEducationField = (e) => {
     const value = [...this.state.eduField, null];
     this.setState({ eduField: value });
   }
+  deleteExperienceField = (e) => {
+    const value = [...this.state.eduField.filter(edufield => eduField.length !== eduField.length)];
+    this.setState({ eduField: value });
 
+  }
   addExperienceField = (e) => {
-    const value = [...this.state.exField, null];
-    this.setState({ exField: value });
+    this.setState((prevState) => ({
+      exField: [...prevState.exField, null]
+    })
+    );
+
   }
 
   render() {
@@ -43,7 +54,7 @@ class EditStudentDetails extends Component {
     const ExperienceJSX = exField.map((item, index) => <EditExperience key={index} />);
 
     return (
-      <Paper className={classes.fullWrap, classes.petal}>
+      <Paper className={classes.fullWrap, classes.petal} >
         <Tabs
           value={tab}
           onChange={this.handleChangeTab}
@@ -72,6 +83,9 @@ class EditStudentDetails extends Component {
                   <Button variant="text" color="primary" onClick={e => this.addEducationField(e)}>
                     Add More
                   </Button>
+                  <Button variant="text" color="secondary" onClick={e => this.deleteaddEducationField(e)}>
+                    Delete
+                </Button>
                 </div>
               </Fragment>
             )}
@@ -82,6 +96,9 @@ class EditStudentDetails extends Component {
                   <Button variant="text" color="primary" onClick={e => this.addExperienceField(e)}>
                     Add More
                   </Button>
+                  <Button variant="text" color="secondary" onClick={e => this.deleteExperienceField(e)}>
+                    Delete
+                </Button>
                 </div>
               </Fragment>
             )}

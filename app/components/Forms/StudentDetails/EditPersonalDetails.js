@@ -164,29 +164,19 @@ class EditPersonalDetails extends React.Component {
               Gender
                   </InputLabel>
             <Select
+              placeholder="select-gender"
               value={gender}
               name="gender"
               onChange={e => this.handleChange(e)}
-              input={<Input id="select-ethnicity" />}
-              renderValue={selected => {
-                var genderName = '';
-                genderItems.map((value, index) => {
-                  if (selected.includes(value)) {
-                    genderName = value;
-                  }
-                });
-                return genderName;
-              }}
               MenuProps={MenuProps}
             >
-              {genderItems.map((item) => (
-                (item != '') &&
-                <MenuItem key={item} value={item}>
-                  <Checkbox checked={gender.indexOf(item) > -1} />
+              {genderItems.map((item, index) => (
+                <MenuItem key={index} value={item}>
                   <ListItemText primary={item} />
                 </MenuItem>
               ))}
             </Select>
+
           </FormControl>
         </div>
         <div>
@@ -197,29 +187,19 @@ class EditPersonalDetails extends React.Component {
               Ethnicity
                   </InputLabel>
             <Select
+              placeholder="select-ethnicity"
               value={ethnicity}
               name="ethnicity"
               onChange={e => this.handleChange(e)}
-              input={<Input id="select-ethnicity" />}
-              renderValue={selected => {
-                var ethinicityName = '';
-                ethnicityItems.map((value, index) => {
-                  if (selected.includes(value)) {
-                    ethinicityName = value;
-                  }
-                });
-                return ethinicityName;
-              }}
               MenuProps={MenuProps}
             >
               {ethnicityItems.map((item, index) => (
-                (item != '') &&
                 <MenuItem key={index} value={item}>
-                  <Checkbox checked={ethnicity.indexOf(item) > -1} />
                   <ListItemText primary={item} />
                 </MenuItem>
               ))}
             </Select>
+
           </FormControl>
         </div>
         <div>
@@ -230,29 +210,19 @@ class EditPersonalDetails extends React.Component {
               Nationality
                   </InputLabel>
             <Select
+              placeholder="select-nationality"
               value={nationality}
               name="nationality"
               onChange={e => this.handleChange(e)}
-              input={<Input id="select-nationality" />}
-              renderValue={selected => {
-                var nationalityName = '';
-                nationalityItems.map((value, index) => {
-                  if (selected.includes(value)) {
-                    nationalityName = value;
-                  }
-                });
-                return nationalityName;
-              }}
               MenuProps={MenuProps}
             >
               {nationalityItems.map((item, index) => (
-                (item != '') &&
                 <MenuItem key={index} value={item}>
-                  <Checkbox checked={nationality.indexOf(item) > -1} />
                   <ListItemText primary={item} />
                 </MenuItem>
               ))}
             </Select>
+
           </FormControl>
         </div>
         <div>
