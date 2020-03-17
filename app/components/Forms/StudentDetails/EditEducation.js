@@ -15,7 +15,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Checkbox from '@material-ui/core/Checkbox'
 import { storeEducation } from 'dan-actions/studentProfileActions';
 import ListItemText from '@material-ui/core/ListItemText';
-import { degreeGradesItems } from 'dan-api/apps/profileOption';
+import { degreeGradesItems, courstStartYearItems, graduationYearItems } from 'dan-api/apps/profileOption';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);

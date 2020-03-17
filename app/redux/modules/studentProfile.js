@@ -26,7 +26,7 @@ const initialState = {
   institute: '',
   qualification: '',
   eduFrom: DateHelper.format(DateHelper.addDays(new Date(), -1480)),
-  eduTo: DateHelper.format(DateHelper.addDays(new Date(), -100)),
+  eduTo: DateHelper.format(DateHelper.addDays(new Date(), -30)),
   grade: '',
   company: '',
   role: '',
@@ -129,7 +129,6 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('lastName', lastName)
           .set('alternateEmail', alternateEmail)
           .set('phoneNumber', phoneNumber)
-          .set('skills', skills)
           .set('dob', dob)
           .set('gender', gender)
           .set('ethnicity', ethnicity)

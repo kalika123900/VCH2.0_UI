@@ -20,17 +20,22 @@ import Typography from '@material-ui/core/Typography';
 import { storeSkillInterests } from 'dan-actions/studentProfileActions';
 
 const industryList = [
-  '',
   'IT',
   'AutoMobile',
   'Robotics'
 ]
 
 const companyList = [
-  '',
   'Google',
   'Facebook',
   'Twitter'
+]
+const skillsList = [
+  'Java',
+  'React',
+  'PHP',
+  'JAVA Script',
+  'Node Js'
 ]
 
 const ITEM_HEIGHT = 48;
@@ -52,27 +57,6 @@ class EditSkillsInterests extends React.Component {
     console.log(this.props);
   }
 
-  // state = {
-  //   industries: [],
-  //   companies: [],
-  //   skills: [],
-  //   customSkill: '',
-  // };
-
-  // addSkill = () => {
-  //   if (this.state.customSkill.length > 0) {
-  //     let customSkill = '+ ' + this.state.customSkill
-  //     let newSkillArr = [...this.props.skills, customSkill]
-  //     addInfo({ ...this.props, skills: newSkillArr, customSkill: '' })
-  //   }
-  // };
-
-  // handleSuggestedProduct = (e) => {
-  //   const { addInfo } = this.props;
-  //   let customSkill = e.target.outerText
-  //   let newSkillArr = [...this.props.skills, customSkill]
-  //   addInfo({ ...this.props, skills: newSkillArr })
-  // }
 
   handleChange = event => {
     const { addInfo } = this.props;
@@ -109,25 +93,29 @@ class EditSkillsInterests extends React.Component {
             <Select
               multiple
               value={intrestedIndustries.toJS()}
+              input={<Input />}
               name="intrestedIndustries"
-              onChange={e => this.handleChange(e)}
-              input={<Input id="select-industries" />}
+              MenuProps={MenuProps}
+              component={Select}
               renderValue={selected => {
-                var industriesName = '';
+                const industrieName = [];
                 industryList.map((value, index) => {
                   if (selected.includes(value)) {
-                    industriesName = value;
+                    industrieName.push(value);
                   }
-
                 });
-                return industriesName;
-              }}
-              MenuProps={MenuProps}
+                return industrieName.join(', ');
+              }
+              }
+              onChange={e => this.handleChange(e)}
             >
               {industryList.map((item, index) => (
-                (item != '') &&
-                <MenuItem key={index} value={item}>
-                  <Checkbox checked={intrestedIndustries.indexOf(item) > -1} />
+                <MenuItem key={index.toString()} value={item}>
+                  <TextField
+                    name="industrie-checkbox"
+                    component={Checkbox}
+                    checked={intrestedIndustries.indexOf(item) > -1}
+                  />
                   <ListItemText primary={item} />
                 </MenuItem>
               ))}
@@ -144,28 +132,97 @@ class EditSkillsInterests extends React.Component {
             <Select
               multiple
               value={intrestedCompanies.toJS()}
+              input={<Input />}
               name="intrestedCompanies"
-              onChange={e => this.handleChange(e)}
-              input={<Input id="select-companies" />}
+              MenuProps={MenuProps}
+              component={Select}
               renderValue={selected => {
-                var companiesName = '';
+                const companieName = [];
                 companyList.map((value, index) => {
                   if (selected.includes(value)) {
-                    companiesName = value;
+                    companieName.push(value);
                   }
                 });
-                return companiesName;
-              }}
-              MenuProps={MenuProps}
+                return companieName.join(', ');
+              }
+              }
+              onChange={e => this.handleChange(e)}
             >
               {companyList.map((item, index) => (
-                (item != '') &&
-                <MenuItem key={index} value={item}>
-                  <Checkbox checked={intrestedCompanies.indexOf(item) > -1} />
+                <MenuItem key={index.toString()} value={item}>
+                  <TextField
+                    name="company-checkbox"
+                    component={Checkbox}
+                    checked={intrestedCompanies.indexOf(item) > -1}
+                  />
                   <ListItemText primary={item} />
                 </MenuItem>
               ))}
             </Select>
+          </FormControl>
+        </div>
+        <div>
+          <FormControl className={classes.formControl}>
+            <InputLabel
+              htmlFor="select-Skills"
+            >
+              Interested Skills
+                </InputLabel>
+            <Select
+              multiple
+              value={skills.toJS()}
+              input={<Input />}
+              name="skills"
+              MenuProps={MenuProps}
+              component={Select}
+              renderValue={selected => {
+                const skillName = [];
+                skillsList.map((value, index) => {
+                  if (selected.includes(value)) {
+                    skillName.push(value);
+                  }
+                });
+                return skillName.join(', ');
+              }
+              }
+              onChange={e => this.handleChange(e)}
+            >
+              {skillsList.map((item, index) => (
+                <MenuItem key={index.toString()} value={item}>
+                  <TextField
+                    name="skill-checkbox"
+                    component={Checkbox}
+                    checked={skills.indexOf(item) > -1}
+                  />
+                  <ListItemText primary={item} />
+                </MenuItem>
+              ))}
+            </Select>
+            {/* <Select
+              multiple
+              value={skills.toJS()}
+              name="skills"
+              onChange={e => this.handleChange(e)}
+              input={<Input id="select-Skills" />}
+              renderValue={selected => {
+                var skillsName = [];
+                skillList.map((value, index) => {
+                  if (selected.includes(value)) {
+                    skillsName = value;
+                  }
+                });
+                return skillsName;
+              }}
+              MenuProps={MenuProps}
+            >
+              {skillList.map((item, index) => (
+                (item != '') &&
+                <MenuItem key={index} value={item}>
+                  <Checkbox checked={skills.indexOf(item) > -1} />
+                  <ListItemText primary={item} />
+                </MenuItem>
+              ))}
+            </Select> */}
           </FormControl>
         </div>
         {/* <Grid className={classes.customGrid}>
