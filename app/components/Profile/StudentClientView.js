@@ -331,10 +331,7 @@ class StudentClientView extends React.Component {
             </Grid>
             <Button variant="text" color="primary">See All</Button>
           </PapperBlock>
-
         </Grid>
-
-
       </Fragment >
     );
   }

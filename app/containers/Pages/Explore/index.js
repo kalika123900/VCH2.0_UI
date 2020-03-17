@@ -5,7 +5,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from 'dan-components/Forms/user-jss';
 import Grid from '@material-ui/core/Grid';
-import { ExploreStudents, ExploreFilter } from 'dan-components';
+import { Pagination } from 'dan-components';
+import datas from 'dan-api/apps/connectionData';
+import { ExploreFilter } from 'dan-components';
+import { StudentCard } from 'dan-components';
 import Button from '@material-ui/core/Button';
 
 const customStyles = {
@@ -13,10 +16,52 @@ const customStyles = {
     display: 'block'
   }
 }
+
 class Explore extends React.Component {
-  state = {
-    showFilter: false,
-    btnText: " Show Filter",
+  constructor() {
+    super();
+    this.state = {
+      showFilter: false,
+      btnText: " Show Filter",
+      page: 1,
+      contentsPerPage: 24
+    };
+
+    this.onPageChange = this.onPageChange.bind(this);
+    this.onPrev = this.onPrev.bind(this);
+    this.onNext = this.onNext.bind(this);
+    this.onGoFirst = this.onGoFirst.bind(this);
+    this.onGoLast = this.onGoLast.bind(this);
+  }
+
+  onPageChange(page) {
+    this.setState({ page });
+  }
+
+  onPrev() {
+    let { page } = this.state;
+    if (page > 1) {
+      this.setState({ page: page -= 1 });
+    } else {
+      this.setState({ page: 1 });
+    }
+  }
+
+  onNext(totalPages) {
+    let { page } = this.state;
+    if (page < totalPages) {
+      this.setState({ page: page += 1 });
+    } else {
+      this.setState({ page: totalPages });
+    }
+  }
+
+  onGoFirst() {
+    this.setState({ page: 1 });
+  }
+
+  onGoLast(totalPages) {
+    this.setState({ page: totalPages });
   }
 
   handleFilter = () => {
@@ -31,8 +76,32 @@ class Explore extends React.Component {
     const title = brand.name + ' - Explore';
     const description = brand.desc;
     const { classes } = this.props;
-    return (
+    const { page, contentsPerPage } = this.state;
 
+    const indexOfLastTodo = page * contentsPerPage;
+    const indexOfFirstTodo = indexOfLastTodo - contentsPerPage;
+    const currentContent = datas.slice(indexOfFirstTodo, indexOfLastTodo);
+
+    const renderContent = currentContent.map((data, index) => (
+      <Grid item md={3} sm={6} xs={12} key={index.toString()} >
+        <StudentCard
+          cover={data.cover}
+          avatar={data.avatar}
+          name={data.name}
+          title={data.title}
+          isVerified={data.verified}
+          btnText="See Profile"
+          university={data.university}
+        />
+      </Grid>
+    ));
+
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(datas.length / contentsPerPage); i += 1) {
+      pageNumbers.push(i);
+    }
+
+    return (
       <div className={classes.root}>
         <Helmet>
           <title>{title}</title>
@@ -47,10 +116,33 @@ class Explore extends React.Component {
             {this.state.btnText}
           </Button>
         </Grid>
-        <Grid style={{ width: '100%' }}>
+        <Grid style={{ width: '100%', marginBottom: 20 }}>
           {this.state.showFilter && <ExploreFilter />}
         </Grid>
-        <ExploreStudents />
+
+        <Grid
+          container
+          alignItems="flex-start"
+          justify="space-between"
+          direction="row"
+          spacing={2}
+          className={classes.root, classes.studentCardGrid}
+        >
+          {renderContent}
+        </Grid>
+
+        <Pagination
+          curpage={page}
+          totpages={pageNumbers.length}
+          boundaryPagesRange={1}
+          onChange={this.onPageChange}
+          siblingPagesRange={1}
+          hideEllipsis={false}
+          onPrev={this.onPrev}
+          onNext={() => this.onNext(pageNumbers.length)}
+          onGoFirst={this.onGoFirst}
+          onGoLast={() => this.onGoLast(pageNumbers.length)}
+        />
       </div>
     );
   }

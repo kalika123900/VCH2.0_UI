@@ -294,44 +294,6 @@ class ExploreFilter extends PureComponent {
               />
             </FormControl>
           </Grid>
-          <Grid item sm={6} xs={6}>
-            <Typography gutterBottom>
-              Hourly Rate
-          </Typography>
-            <Slider
-              defaultValue={sliderValue}
-              getAriaValueText={this.valuetext}
-              aria-labelledby="discrete-slider-custom"
-              step={10}
-              valueLabelDisplay="auto"
-              marks={marks}
-            />
-          </Grid>
-        </Grid>
-        <Grid container spacing={2}>
-          <Grid item sm={6} xs={6}>
-            <Typography variant="button" className={classes.divider}>Rattings</Typography>
-            <FormControl className={classes.formControl} style={{ marginBottom: "0" }}>
-              <Rating
-                value={rating}
-                max={5}
-                onChange={(value) => this.handleChange(value)}
-                style={{ margin: "10px" }}
-              />
-            </FormControl>
-          </Grid>
-          <Grid>
-            <FormControlLabel
-              control={(
-                <Checkbox
-                  checked={checkedA}
-                  onChange={this.handleCheckbox('checkedA')}
-                  value="checkedA"
-                />
-              )}
-              label="Online Freelances Only"
-            />
-          </Grid>
         </Grid>
         <Divider className={classes.divider} />
         <div className={classes.textRight}>

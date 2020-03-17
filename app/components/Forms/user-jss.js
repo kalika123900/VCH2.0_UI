@@ -645,8 +645,12 @@ const styles = theme => ({
     flexDirection: 'row',
     justifyContent: "center",
     marginBottom: 10
-  }
-
+  },
+  studentCardGrid: theme.mixins.gutters({
+    paddingTop: 16,
+    paddingBottom: 16,
+    marginTop: theme.spacing(3),
+  })
 });
 
 
