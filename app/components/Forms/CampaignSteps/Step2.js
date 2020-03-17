@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import qs from 'qs';
 import { bindActionCreators } from 'redux';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -10,21 +11,45 @@ import Button from '@material-ui/core/Button';
 import { storeStep2Info } from 'dan-actions/CampaignActions';
 import styles from './step-jss';
 import AddRole from '../AddRole';
+import { makeSecureDecrypt } from '../../../Helpers/security';
 
-const roleData = []
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+
+  return await response.json();
+}
 
 class Step2 extends React.Component {
   state = {
-    open: false
+    open: false,
+    roleData: []
   }
 
   componentDidMount() {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
 
+    const data = {
+      client_id: user.id
+    };
+
+    postData(`${API_URL}/client/fetch-role`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({ roleData: res.data });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
-
-  submitRole = (data) => {
-    console.log(data)
-  };
 
   handleRole = (id) => {
     const { addInfo } = this.props;
@@ -37,26 +62,26 @@ class Step2 extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
-    const { open } = this.state;
+    const { classes, role } = this.props;
+    const { open, roleData } = this.state;
     return (
       <Fragment>
         {roleData.length > 0 ?
           roleData.map((value) => (
             <Grid
               className={classes.gridMargin}
-              key={value.get('id')}
+              key={value.id}
             >
               <Typography
-                className={role === value.get('id')
+                className={role === value.id
                   ? (classes.activeBoarder)
                   : null
                 }
                 variant="body1"
                 style={{ cursor: 'pointer' }}
-                onClick={() => this.handleRole(value.get('id'))}
+                onClick={() => this.handleRole(value.id)}
               >
-                {value.get('role')}
+                {value.role_name}
               </Typography>
             </Grid>
           ))
@@ -88,7 +113,6 @@ class Step2 extends React.Component {
           && (
             <AddRole
               open={open}
-              submit={this.submitRole}
               handleClose={this.handleOpen}
             />
           )

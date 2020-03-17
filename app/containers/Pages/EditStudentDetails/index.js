@@ -52,18 +52,6 @@ class EditStudentDetails extends Component {
     const { tab, eduField, exField } = this.state;
 
     const EducationJSX = eduField.map((item, index) => {
-<<<<<<< HEAD
-      if (index > 0) {
-        return <Fragment>
-          <div className={classes.btnArea}>
-            <Button variant="text" color="primary" onClick={e => this.removeEducationField(index)}>
-              Remove
-            </Button>
-          </div>
-          <EditEducation key={index} />
-        </Fragment>
-      } else {
-=======
       if (item != 0) {
         return <Fragment>
           <div className={classes.btnArea}>
@@ -75,7 +63,6 @@ class EditStudentDetails extends Component {
         </Fragment>
       }
       else {
->>>>>>> a6e4e835fa25069c5df2878c894c749cde76bd60
         return <EditEducation key={index} />
       }
     });

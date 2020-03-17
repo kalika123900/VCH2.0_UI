@@ -110,6 +110,9 @@ class SelectAdd extends Component {
         if (this.props.type === 'location') {
           addInfo({ ...this.props, workLocation: newValue });
         }
+        if (this.props.type === 'roleDescriptors') {
+          addRoleInfo({ ...this.props, roleDescriptors: newValue });
+        }
         if (this.props.type === 'sectors') {
           addInfo({ ...this.props, interestedSectors: newValue });
         }
@@ -124,6 +127,9 @@ class SelectAdd extends Component {
       this.setState({ dataValue: '' });
       if (this.props.type === 'location') {
         addInfo({ ...this.props, workLocation: newValue });
+      }
+      if (this.props.type === 'roleDescriptors') {
+        addRoleInfo({ ...this.props, roleDescriptors: newValue });
       }
       if (this.props.type === 'sectors') {
         addInfo({ ...this.props, interestedSectors: newValue });
@@ -140,12 +146,13 @@ class SelectAdd extends Component {
   render() {
     const { dataList, open, dialogValue } = this.state;
     const {
-      type, workLocation, interestedSectors, keywords, courses
+      type, workLocation, interestedSectors, keywords, courses, roleDescriptors
     } = this.props;
     const MapworkLocation = workLocation.toJS();
     const MapinterestedSectors = interestedSectors.toJS();
     const Mapkeywords = keywords.toJS();
     const MapCourses = courses.toJS();
+    const MapRoleDescriptors = roleDescriptors.toJS();
 
     return (
       <Fragment>
@@ -161,7 +168,9 @@ class SelectAdd extends Component {
                 ? Mapkeywords
                 : type === 'courses'
                   ? MapCourses
-                  : MapinterestedSectors
+                  : type === 'roleDescriptors'
+                    ? MapRoleDescriptors
+                    : MapinterestedSectors
           }
           onChange={(e, newValue) => this.handleChange(e, newValue)}
           filterOptions={(options, params) => {

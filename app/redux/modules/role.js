@@ -22,12 +22,12 @@ export default function reducer(state = initialImmutableState, action = {}) {
       return state.withMutations((mutableState) => {
         const courses = fromJS(action.data.courses);
         const skills = fromJS(action.data.skills);
-        const roleDescriptors = fromJS(action.data.workLocation);
+        const roleDescriptors = fromJS(action.data.roleDescriptors);
         mutableState
           .set('roleName', action.data.roleName)
           .set('courses', courses)
           .set('skills', skills)
-          .set('roleDeadline', action.data.deadline)
+          .set('roleDeadline', action.data.roleDeadline)
           .set('roleDescriptors', roleDescriptors)
           .set('roleLink', action.data.roleLink)
       });

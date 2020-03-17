@@ -12,6 +12,12 @@ export const courseMenu = [
   { id: 4, value: 'M.Tech' }
 ];
 
+export const descriptorMenu = [
+  { id: 1, value: 'Excel' },
+  { id: 2, value: 'Communication' },
+  { id: 3, value: 'Development' }
+];
+
 export const years = [
   '2015',
   '2016',

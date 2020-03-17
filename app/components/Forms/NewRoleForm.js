@@ -11,20 +11,17 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Input from '@material-ui/core/Input';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Tooltip from '@material-ui/core/Tooltip';
-import AddIcon from '@material-ui/icons/Add';
 import { connect } from 'react-redux';
-import { reduxForm, Field } from 'redux-form/immutable';
 import styles from './user-jss';
-import { TextFieldRedux } from './ReduxFormMUI';
 import { storeRoleInfo } from 'dan-actions/RoleActions';
 import {
   courseMenu,
-  skillMenu
+  skillMenu,
+  descriptorMenu
 } from '../Forms/CampaignSteps/constantData';
 import SelectAdd from '../../components/SelectAdd/SelectAdd';
 
@@ -53,6 +50,35 @@ class NewRoleForm extends React.Component {
     }
   };
 
+  handleReduxChange = event => {
+    const { addInfo } = this.props;
+
+    if (event.target.name === 'roleName') {
+      addInfo({ ...this.props, roleName: event.target.value });
+    }
+    if (event.target.name === 'roleLink') {
+      addInfo({ ...this.props, roleLink: event.target.value });
+    }
+  };
+
+  handleDateChange = currentDate => {
+    const { addInfo } = this.props;
+    const year = currentDate.getFullYear();
+    let date = currentDate.getDate();
+    let month = currentDate.getMonth();
+
+    if (date < 10) {
+      date = '0' + date;
+    }
+    if (month < 9) {
+      month = '0' + (month + 1);
+    } else {
+      month += 1;
+    }
+
+    const dateMonthYear = year + '-' + (month) + '-' + date;
+    addInfo({ ...this.props, roleDeadline: dateMonthYear });
+  };
 
   render() {
     const {
@@ -60,38 +86,27 @@ class NewRoleForm extends React.Component {
       handleSubmit,
       handleClose,
       skills,
-      courses
+      roleDeadline,
+      roleName,
+      roleLink
     } = this.props;
+
+    const MapSkills = skills.toJS();
 
     return (
       <section className={classes.pageFormWrap}>
         <form >
-          {/* <div>
-            <FormControl className={classes.formControl}>
-              <TextField
-                label="Role Name"
-                className={classes.textField}
-                type="text"
-                value={roleName}
-                name="role"
-                margin="normal"
-                variant="outlined"
-                validate={[required]}
-                component={TextFieldRedux}
-                onChange={e => this.handleChange(e)}
-              />
-            </FormControl>
-          </div> */}
           <div>
             <FormControl className={classes.formControl}>
-              <Typography variant="h6" style={{ textAlign: 'left' }}>
-                Which course are relevant?
-              </Typography>
-              <SelectAdd
-                classes={this.props.classes}
-                dataList={courseMenu}
-                label="courses"
-                type="courses"
+              <TextField
+                id="outlined-name"
+                label="Role Name"
+                name="roleName"
+                className={classes.textField}
+                value={roleName}
+                onChange={e => this.handleReduxChange(e)}
+                margin="normal"
+                variant="outlined"
               />
             </FormControl>
           </div>
@@ -104,7 +119,7 @@ class NewRoleForm extends React.Component {
               </InputLabel>
               <Select
                 multiple
-                value={skills.toJS()}
+                value={MapSkills}
                 input={<Input />}
                 name="skills"
                 MenuProps={MenuProps}
@@ -126,7 +141,7 @@ class NewRoleForm extends React.Component {
                     <TextField
                       name="skill-checkbox"
                       component={Checkbox}
-                      checked={skills.indexOf(item.id) > -1}
+                      checked={MapSkills.indexOf(item.id) > -1}
                     />
                     <ListItemText primary={item.value} />
                   </MenuItem>
@@ -134,72 +149,66 @@ class NewRoleForm extends React.Component {
               </Select>
             </FormControl>
           </div>
-          {/* <div>
+          <div>
             <FormControl className={classes.formControl}>
-              <Typography variant="h6">What is the role’s application deadline?</Typography>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  margin="normal"
-                  placeholder="What is the role’s application deadline?"
-                  format="dd/MM/yyyy"
-                  value={deadline}
-                  name="deadline"
-                  onChange={this.handleDateChange}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                  }}
-                />
-              </MuiPickersUtilsProvider>
+              <Typography variant="h6" style={{ textAlign: 'left' }}>
+                Which course are relevant?
+              </Typography>
+              <SelectAdd
+                classes={this.props.classes}
+                dataList={courseMenu}
+                label="Courses"
+                type="courses"
+              />
             </FormControl>
-          </div> */}
-          {/* <div>
+          </div>
+          <div>
             <FormControl component="fieldset" required className={classes.formControl}>
               <Typography variant="h6">Tell us some role descriptors to help:</Typography>
               <Typography variant="caption">(a member of the team will manually check your role description against the target audience)</Typography>
-              <FormGroup>
-                {roleDescriptors}
-              </FormGroup>
-              <Field
-                name="customDescriptor"
-                className={classes.textField}
-                placeholder="For example : Something"
-                value={customDescriptor}
-                component={TextFieldRedux}
-                margin="normal"
-                variant="filled"
-                onChange={(e) => this.handleChange(e)}
+              <SelectAdd
+                classes={this.props.classes}
+                dataList={descriptorMenu}
+                label="Role Descriptors"
+                type="roleDescriptors"
               />
-              <Tooltip title="Add New">
-                <Button
-                  name="customDescriptor"
-                  variant="text"
-                  color="secondary"
-                  onClick={(e) => this.addCustomItem(e, 'roleDescriptor')}
-                >
-                  <AddIcon />
-                  Add New
-                </Button>
-              </Tooltip>
             </FormControl>
-          </div> */}
-          {/* <div>
+          </div>
+          <div>
+            <FormControl className={classes.formControl}>
+              <Typography variant="h6">What is the role’s application deadline?</Typography>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <Grid container justify="space-around">
+                  <KeyboardDatePicker
+                    margin="normal"
+                    format="dd/MM/yyyy"
+                    placeholder="Choose Date"
+                    value={new Date(roleDeadline)}
+                    onChange={this.handleDateChange}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                  />
+                </Grid>
+              </MuiPickersUtilsProvider>
+            </FormControl>
+          </div>
+          <div>
             <FormControl className={classes.formControl}>
               <Typography variant="h6">What is the role page link?</Typography>
-              <Field
-                label="https://xyz.com/jobs/123"
+              <TextField
+                id="outlined-name"
+                label="Role Link"
+                name="roleLink"
                 className={classes.textField}
-                type="text"
-                component={TextFieldRedux}
-                // value={link}
-                name="link"
+                value={roleLink}
+                onChange={e => this.handleReduxChange(e)}
                 margin="normal"
                 variant="outlined"
-                validate={[required]}
-              // onChange={e => this.handleChange(e)}
               />
               <Typography variant="caption">(Make sure it is the link to the actual page so that we can scan the page for key information)</Typography>
             </FormControl>
-          </div> */}
+          </div>
           <Button onClick={(e) => handleClose(e)} color="primary">
             Cancel
           </Button>
