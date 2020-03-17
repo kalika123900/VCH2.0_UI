@@ -5,39 +5,24 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from 'dan-components/Forms/user-jss';
 import Grid from '@material-ui/core/Grid';
-<<<<<<< HEAD
 import { Pagination, ExploreFilter, StudentCard } from 'dan-components';
 import datas from 'dan-api/apps/connectionData';
 
 
-=======
-import { Pagination } from 'dan-components';
-import datas from 'dan-api/apps/connectionData';
-import { ExploreFilter } from 'dan-components';
-import { StudentCard } from 'dan-components';
->>>>>>> f277f1704771c4ee9288b4c44f932eca897c9758
 import Button from '@material-ui/core/Button';
 
 const customStyles = {
   root: {
     display: 'block'
   }
-<<<<<<< HEAD
 };
-=======
-}
->>>>>>> f277f1704771c4ee9288b4c44f932eca897c9758
 
 class Explore extends React.Component {
   constructor() {
     super();
     this.state = {
       showFilter: false,
-<<<<<<< HEAD
       btnText: ' Show Filter',
-=======
-      btnText: " Show Filter",
->>>>>>> f277f1704771c4ee9288b4c44f932eca897c9758
       page: 1,
       contentsPerPage: 24
     };
@@ -96,7 +81,6 @@ class Explore extends React.Component {
     const indexOfLastTodo = page * contentsPerPage;
     const indexOfFirstTodo = indexOfLastTodo - contentsPerPage;
     const currentContent = datas.slice(indexOfFirstTodo, indexOfLastTodo);
-<<<<<<< HEAD
 
     const renderContent = currentContent.map((data, index) => (
       <Grid item md={3} sm={6} xs={12} key={index.toString()}>
@@ -112,23 +96,6 @@ class Explore extends React.Component {
       </Grid>
     ));
 
-=======
-
-    const renderContent = currentContent.map((data, index) => (
-      <Grid item md={3} sm={6} xs={12} key={index.toString()} >
-        <StudentCard
-          cover={data.cover}
-          avatar={data.avatar}
-          name={data.name}
-          title={data.title}
-          isVerified={data.verified}
-          btnText="See Profile"
-          university={data.university}
-        />
-      </Grid>
-    ));
-
->>>>>>> f277f1704771c4ee9288b4c44f932eca897c9758
     const pageNumbers = [];
     for (let i = 1; i <= Math.ceil(datas.length / contentsPerPage); i += 1) {
       pageNumbers.push(i);
