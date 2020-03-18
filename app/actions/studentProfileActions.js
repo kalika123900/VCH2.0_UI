@@ -10,8 +10,8 @@ export const storeSkillInterests = (data) => ({
   data
 });
 
-export const storeEducation = (data) => ({
-  type: types.STORE_EDUCATION,
+export const storeEducationData = (data) => ({
+  type: types.STORE_EDUCATION_DATA,
   data
 });
 

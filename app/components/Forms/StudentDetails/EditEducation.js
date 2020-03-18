@@ -10,12 +10,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
-import Checkbox from '@material-ui/core/Checkbox'
-import { storeEducation } from 'dan-actions/studentProfileActions';
+import { storeEducationData } from 'dan-actions/studentProfileActions';
 import ListItemText from '@material-ui/core/ListItemText';
-import { degreeGradesItems, courstStartYearItems, graduationYearItems } from 'dan-api/apps/profileOption';
+import { degreeGradesItems } from 'dan-api/apps/profileOption';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -36,42 +34,65 @@ class EditEducation extends React.Component {
     super(props)
   }
 
-  handleEduFromChange = date => {
-    const { addInfo } = this.props;
+  handleEduFromChange = (date, id) => {
+    const { educationInfo, addEducationInfo } = this.props;
+    const MapEducationInfo = educationInfo.toJS();
 
+    const newEducationArr = MapEducationInfo.map(item => {
+      if (item.id === id) {
+        return {
+          ...item,
+          eduFrom: date
+        };
+      };
+      return item;
+    })
 
-    addInfo({ ...this.props, eduFrom: date });
+    addEducationInfo({ educationInfo: newEducationArr });
   };
 
-  handleEduToChange = date => {
-    const { addInfo } = this.props;
+  handleEduToChange = (date, id) => {
+    const { educationInfo, addEducationInfo } = this.props;
+    const MapEducationInfo = educationInfo.toJS();
 
+    const newEducationArr = MapEducationInfo.map(item => {
+      if (item.id === id) {
+        return {
+          ...item,
+          eduTo: date
+        };
+      };
+      return item;
+    })
 
-    addInfo({ ...this.props, eduTo: date });
+    addEducationInfo({ educationInfo: newEducationArr });
   };
 
   handleChange = (event, id) => {
-    const { addInfo } = this.props;
-    educationStore.id.addInfo({ ...this.props, [event.educationStore.name]: event.educationStore.value })
-    // addInfo({ educationStore });
+    const { educationInfo, addEducationInfo } = this.props;
+    const MapEducationInfo = educationInfo.toJS();
+
+    const newEducationArr = MapEducationInfo.map(item => {
+      if (item.id === id) {
+        return {
+          ...item,
+          [event.target.name]: event.target.value
+        };
+      };
+      return item;
+    })
+
+    addEducationInfo({ educationInfo: newEducationArr });
   };
 
   render() {
-    const {
-      classes,
-      // eduFrom,
-      // eduTo,
-      // qualification,
-      // institute,
-      // grade,
-      educationStore
-    } = this.props;
+    const { classes, id, educationInfo } = this.props;
 
-
+    const MapEducationInfo = educationInfo.toJS();
+    const { institute, qualification, grade, eduFrom, eduTo } = MapEducationInfo[id];
 
     return (
       <section className={classes.pageFormWrap}>
-
         <div>
           <FormControl className={classes.formControl}>
             <TextField
@@ -83,7 +104,7 @@ class EditEducation extends React.Component {
               margin="normal"
               variant="outlined"
               validate={[required]}
-              onChange={e => this.handleChange(e, this.props.id)}
+              onChange={e => this.handleChange(e, id)}
             />
           </FormControl>
         </div>
@@ -98,7 +119,7 @@ class EditEducation extends React.Component {
               margin="normal"
               variant="outlined"
               validate={[required]}
-              onChange={e => this.handleChange(e, this.props.id)}
+              onChange={e => this.handleChange(e, id)}
             />
           </FormControl>
         </div>
@@ -109,9 +130,9 @@ class EditEducation extends React.Component {
                 margin="normal"
                 placeholder="From"
                 format="dd/MM/yyyy"
-                value={eduFrom}
+                value={new Date(eduFrom)}
                 name="eduFrom"
-                onChange={e => this.handleChange(e, this.props.id)}
+                onChange={(date) => this.handleEduFromChange(date, id)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
@@ -122,9 +143,9 @@ class EditEducation extends React.Component {
                 margin="normal"
                 placeholder="To"
                 format="dd/MM/yyyy"
-                value={eduTo}
+                value={new Date(eduTo)}
                 name="eduTo"
-                onChange={e => this.handleChange(e, this.props.id)}
+                onChange={e => this.handleEduToChange(e, id)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
@@ -138,12 +159,12 @@ class EditEducation extends React.Component {
               htmlFor="select-grade"
             >
               Grade Achieved
-                  </InputLabel>
+            </InputLabel>
             <Select
               placeholder="Grade Achieved"
               value={grade}
               name="grade"
-              onChange={e => this.handleChange(e, this.props.id)}
+              onChange={e => this.handleChange(e, id)}
               MenuProps={MenuProps}
             >
               {degreeGradesItems.map((item, index) => (
@@ -152,69 +173,32 @@ class EditEducation extends React.Component {
                 </MenuItem>
               ))}
             </Select>
-            {/* <Select
-              value={grade}
-              name="grade"
-              onChange={e => this.handleChange(e)}
-              input={<Input id="select-grade" />}
-              renderValue={selected => {
-                var gradeName = '';
-                degreeGradesItems.map((value, index) => {
-                  if (selected.includes(value)) {
-                    gradeName = value;
-                  }
-                });
-                return gradeName;
-              }}
-              MenuProps={MenuProps}
-            >
-              {degreeGradesItems.map((item, index) => (
-                (item != '') &&
-                <MenuItem key={index} value={item}>
-                  <Checkbox checked={grade.indexOf(item) > -1} />
-                  <ListItemText primary={item} />
-                </MenuItem>
-              ))}
-            </Select> */}
           </FormControl>
         </div>
-
       </section>
     );
   }
 }
 
-const reducerCampaign = 'studentProfile';
+const reducerStudent = 'studentProfile';
 
 EditEducation.propTypes = {
   classes: PropTypes.object.isRequired,
-  // institute: PropTypes.string.isRequired,
-  // qualification: PropTypes.string.isRequired,
-  // eduFrom: PropTypes.string.isRequired,
-  // eduTo: PropTypes.string.isRequired,
-  // grade: PropTypes.string.isRequired,
-  educationStore: PropTypes.object.isRequired,
-  addInfo: PropTypes.func.isRequired
+  educationInfo: PropTypes.object.isRequired,
+  addEducationInfo: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  // institute: state.getIn([reducerCampaign, 'institute']),
-  // qualification: state.getIn([reducerCampaign, 'qualification']),
-  // eduFrom: state.getIn([reducerCampaign, 'eduFrom']),
-  // eduTo: state.getIn([reducerCampaign, 'eduTo']),
-  // grade: state.getIn([reducerCampaign, 'grade']),
-  educationStore: state.getIn([reducerCampaign, 'educationStore'])
+  educationInfo: state.getIn([reducerStudent, 'educationInfo'])
 });
 
 const mapDispatchToProps = dispatch => ({
-  addInfo: bindActionCreators(storeEducation, dispatch)
+  addEducationInfo: bindActionCreators(storeEducationData, dispatch)
 });
 
-const StepMapped = connect(
+const EditEducationMapped = connect(
   mapStateToProps,
   mapDispatchToProps
 )(EditEducation);
 
-
-
-export default withStyles(styles)(StepMapped);
+export default withStyles(styles)(EditEducationMapped);

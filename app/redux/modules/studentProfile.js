@@ -2,7 +2,7 @@ import { fromJS, List } from 'immutable';
 import {
   STORE_PROFILE_DETAILS,
   STORE_SKILL_INTERESTS,
-  STORE_EDUCATION,
+  STORE_EDUCATION_DATA,
   STORE_EXPERIENCE,
   STUDENT_PROFILE_INIT
 } from 'dan-actions/actionConstants';
@@ -31,7 +31,14 @@ const initialState = {
   company: '',
   role: '',
   roleDescription: '',
-  educationStore: List([0]),
+  educationInfo: List([{
+    id: 0,
+    institute: '',
+    qualification: '',
+    eduFrom: DateHelper.format(DateHelper.addDays(new Date(), -1480)),
+    eduTo: DateHelper.format(DateHelper.addDays(new Date(), -30)),
+    grade: ''
+  }]),
   experienceStore: List([0]),
   // experienceskills: List([]),
   action: 'create'
@@ -76,16 +83,16 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('skills', skills)
 
       });
-    case STORE_EDUCATION:
+    case STORE_EDUCATION_DATA:
       return state.withMutations((mutableState) => {
-        const educationStore = fromJs(action.dada.educationStore)
+        const educationInfo = fromJS(action.data.educationInfo)
         // const institute = fromJS(action.data.institute);
         // const qualification = fromJS(action.data.qualification);
         // const eduFrom = fromJS(action.data.eduFrom);
         // const eduTo = fromJS(action.data.eduTo);
         // const grade = fromJS(action.data.grade);
         mutableState
-          .set('educationStore', educationStore)
+          .set('educationInfo', educationInfo)
         // .set('institute', institute)
         // .set('qualification', qualification)
         // .set('eduFrom', eduFrom)

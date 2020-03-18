@@ -5,37 +5,61 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { storeEducationData } from 'dan-actions/studentProfileActions';
 import {
   EditPersonalDetails, EditSkillsInterests,
   EditEducation, EditExperience
 }
   from 'dan-components';
+import { DateHelper } from '../../../redux/helpers/dateTimeHelper';
 import styles from '../../../components/Forms/user-jss';
+
+function arrayRemove(arr, value) {
+  return arr.filter(function (ele) {
+    return ele.id != value;
+  });
+}
 
 class EditStudentDetails extends Component {
   state = {
     tab: 0,
-    eduField: [0],
     exField: [0]
   }
 
   handleChangeTab = (event, value) => {
     this.setState({ tab: value });
   };
-  removeEducationField = itemId => {
-
-
-    const value = this.state.eduField.filter(edufield => edufield !== itemId);
-
-    this.setState({ eduField: value });
-  }
 
   addEducationField = (e) => {
-    const value = [...this.state.eduField, this.state.eduField.length++];
-    this.setState({ eduField: value });
-  }
-  removeExperienceField = itemId => {
+    const { educationInfo, addEducationInfo } = this.props;
+    const MapEducationInfo = educationInfo.toJS();
 
+    const formObject = {
+      id: MapEducationInfo.length,
+      institute: '',
+      qualification: '',
+      eduFrom: DateHelper.format(DateHelper.addDays(new Date(), -1480)),
+      eduTo: DateHelper.format(DateHelper.addDays(new Date(), -30)),
+      grade: ''
+    }
+    MapEducationInfo.push(formObject);
+
+    addEducationInfo({ educationInfo: MapEducationInfo });
+    console.log(educationInfo)
+  }
+
+  removeEducationField = itemId => {
+    const { educationInfo, addEducationInfo } = this.props;
+    const MapEducationInfo = educationInfo.toJS();
+
+    const newEducationArr = arrayRemove(MapEducationInfo, itemId);
+    addEducationInfo({ educationInfo: newEducationArr });
+  }
+
+
+  removeExperienceField = itemId => {
     const value = this.state.exField.filter(exfield => exfield !== itemId);
     this.setState({ exField: value });
   }
@@ -47,23 +71,24 @@ class EditStudentDetails extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, educationInfo } = this.props;
+    const MapEducationInfo = educationInfo.toJS();
 
-    const { tab, eduField, exField } = this.state;
+    const { tab, exField } = this.state;
 
-    const EducationJSX = eduField.map((item, index) => {
-      if (item != 0) {
-        return <Fragment>
+    const EducationJSX = MapEducationInfo.map((item, index) => {
+      if (item.id != 0) {
+        return <Fragment key={index}>
           <div className={classes.btnArea}>
-            <Button variant="text" color="secondary" onClick={e => this.removeEducationField(item)}>
+            <Button variant="text" color="secondary" onClick={e => this.removeEducationField(item.id)}>
               Remove
           </Button>
           </div>
-          <EditEducation id={item} key={index} />
+          <EditEducation id={item.id} />
         </Fragment>
       }
       else {
-        return <EditEducation id={item} key={index} />
+        return <EditEducation id={item.id} key={index} />
       }
     });
 
@@ -140,9 +165,26 @@ class EditStudentDetails extends Component {
   }
 }
 
+const reducerStudent = 'studentProfile';
 
 EditStudentDetails.propTypes = {
   classes: PropTypes.object.isRequired,
+  educationInfo: PropTypes.object.isRequired,
+  addEducationInfo: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(EditStudentDetails);
+const mapStateToProps = state => ({
+  educationInfo: state.getIn([reducerStudent, 'educationInfo'])
+});
+
+const mapDispatchToProps = dispatch => ({
+  addEducationInfo: bindActionCreators(storeEducationData, dispatch)
+});
+
+const EditStudentDetailsMapped = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditStudentDetails);
+
+export default withStyles(styles)(EditStudentDetailsMapped);
+
