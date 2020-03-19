@@ -49,6 +49,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const gender = fromJS(action.data.gender);
         const interestedSectors = fromJS(action.data.interestedSectors);
         const workLocation = fromJS(action.data.workLocation);
+        console.log(gender)
         mutableState
           .set('university', university)
           .set('subjects', subjects)

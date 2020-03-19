@@ -18,13 +18,12 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import { storeStep3Info } from 'dan-actions/CampaignActions';
 import SelectAdd from '../../SelectAdd/SelectAdd';
+import { sectorsData, skillMenu } from 'dan-api/apps/profileOption';
 import {
   subjectMenu,
   years,
   grade,
-  skillMenu,
   locationData,
-  sectorsData,
   keywordsData
 } from './constantData';
 import styles from './step-jss';
@@ -43,10 +42,14 @@ const MenuProps = {
 class Step3 extends React.Component {
   state = {
     universityMenu: [
-      { id: 15, status: false, value: 'Oxford' },
-      { id: 16, status: false, value: 'RGPV' },
-      { id: 17, status: false, value: 'IIST University' },
-      { id: 18, status: false, value: 'Oriental University' },
+      { id: 1, status: false, value: 'University of Oxford' },
+      { id: 2, status: false, value: 'Durham University' },
+      { id: 3, status: false, value: 'University of Cambridge' },
+      { id: 4, status: false, value: 'London School of Economics' },
+      { id: 5, status: false, value: 'University College London' },
+      { id: 6, status: false, value: 'Imperial College London' },
+      { id: 7, status: false, value: 'University of Edinburgh' },
+      { id: 8, status: false, value: 'University of Warwick' },
     ],
     genderMenu: [
       { status: false, value: 0, label: 'Prefer not to say' },
@@ -250,8 +253,8 @@ class Step3 extends React.Component {
                   renderValue={selected => {
                     const skillName = [];
                     skillMenu.map((value, index) => {
-                      if (selected.includes(value.id)) {
-                        skillName.push(value.value);
+                      if (selected.includes(value)) {
+                        skillName.push(value);
                       }
                     });
                     return skillName.join(', ');
@@ -260,13 +263,13 @@ class Step3 extends React.Component {
                   onChange={e => this.handleMultiSelect(e)}
                 >
                   {skillMenu.map((item, index) => (
-                    <MenuItem key={index.toString()} value={item.id}>
+                    <MenuItem key={index.toString()} value={item}>
                       <TextField
                         name="skill-checkbox"
                         component={Checkbox}
-                        checked={skills.indexOf(item.id) > -1}
+                        checked={skills.indexOf(item) > -1}
                       />
-                      <ListItemText primary={item.value} />
+                      <ListItemText primary={item} />
                     </MenuItem>
                   ))}
                 </Select>

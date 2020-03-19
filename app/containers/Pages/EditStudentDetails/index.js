@@ -7,7 +7,9 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { storeEducationData } from 'dan-actions/studentProfileActions';
+import { storeEducationData, storeExperience } from 'dan-actions/studentProfileActions';
+import qs from 'qs';
+import { makeSecureDecrypt } from 'dan-helpers/security';
 import {
   EditPersonalDetails, EditSkillsInterests,
   EditEducation, EditExperience
@@ -21,11 +23,96 @@ function arrayRemove(arr, value) {
     return ele.id != value;
   });
 }
+async function postJSON(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  });
+
+  return await response.json();
+}
+
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+  return await response.json();
+}
+const user = JSON.parse(
+  makeSecureDecrypt(localStorage.getItem('user'))
+);
 
 class EditStudentDetails extends Component {
   state = {
-    tab: 0,
-    exField: [0]
+    tab: 0
+  }
+
+  handleSkillsInterests = () => {
+    const {
+      intrestedIndustries,
+      skills,
+      oldSkills,
+      intrestedCompanies
+    } = this.props;
+
+    const data = {
+      industries: intrestedIndustries,
+      companies: intrestedCompanies,
+      newSkills: skills,
+      oldSkills: oldSkills,
+      user_id: user.id
+    };
+    postJSON(`${API_URL}/student/create-skills-interests`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          console.log("sucessfull")
+        } else {
+          console.log('something not good ');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  handlePersonalDetails = () => {
+    const {
+      phoneNumber,
+      dob,
+      nationality,
+      files,
+      ethnicity,
+      gender
+    } = this.props;
+
+    const data = {
+      phone: phoneNumber,
+      dob: dob,
+      gender: gender,
+      ethnicity: ethnicity,
+      nationality: nationality,
+      resume: '',
+      user_id: user.id
+    };
+
+    postData(`${API_URL}/student/create-personal-details`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          console.log("sucessfull")
+        } else {
+          console.log('something not good ');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   handleChangeTab = (event, value) => {
@@ -58,23 +145,34 @@ class EditStudentDetails extends Component {
     addEducationInfo({ educationInfo: newEducationArr });
   }
 
-
-  removeExperienceField = itemId => {
-    const value = this.state.exField.filter(exfield => exfield !== itemId);
-    this.setState({ exField: value });
+  addExperienceField = (e) => {
+    const { experienceInfo, addExperienceInfo } = this.props;
+    const MapExperienceInfo = experienceInfo.toJS();
+    const fromObject = {
+      id: MapExperienceInfo.length,
+      company: '',
+      role: '',
+      roleDescription: ''
+    }
+    MapExperienceInfo.push(fromObject);
+    addExperienceInfo({ experienceInfo: MapExperienceInfo });
+    console.log(experienceInfo)
   }
 
+  removeExperienceField = itemId => {
+    const { experienceInfo, addExperienceInfo } = this.props;
+    const MapExperienceInfo = experienceInfo.toJS();
 
-  addExperienceField = (e) => {
-    const value = [...this.state.exField, this.state.exField.length++];
-    this.setState({ exField: value });
+    const newExperienceArr = arrayRemove(MapExperienceInfo, itemId);
+    addExperienceInfo({ experienceInfo: newExperienceArr })
   }
 
   render() {
-    const { classes, educationInfo } = this.props;
+    const { classes, educationInfo, experienceInfo } = this.props;
     const MapEducationInfo = educationInfo.toJS();
+    const MapExperienceInfo = experienceInfo.toJS();
 
-    const { tab, exField } = this.state;
+    const { tab } = this.state;
 
     const EducationJSX = MapEducationInfo.map((item, index) => {
       if (item.id != 0) {
@@ -92,19 +190,19 @@ class EditStudentDetails extends Component {
       }
     });
 
-    const ExperienceJSX = exField.map((item, index) => {
-      if (item != 0) {
-        return <Fragment>
+    const ExperienceJSX = MapExperienceInfo.map((item, index) => {
+      if (item.id != 0) {
+        return <Fragment key={index}>
           <div className={classes.btnArea}>
-            <Button variant="text" color="secondary" onClick={e => this.removeExperienceField(item)}>
+            <Button variant="text" color="secondary" onClick={e => this.removeExperienceField(item.id)}>
               Remove
         </Button>
           </div>
-          <EditExperience id={item} key={index} />
+          <EditExperience id={item.id} />
         </Fragment>
 
       } else {
-        return <EditExperience id={item} key={index} />
+        return <EditExperience id={item.id} key={index} />
       }
     })
 
@@ -124,43 +222,37 @@ class EditStudentDetails extends Component {
           <Tab label="Experience" />
         </Tabs>
         <section className={classes.pageFormWrap}>
-          <form>
-            {tab === 0 && (
-              <EditPersonalDetails />
-            )}
-            {tab === 1 && (
-              <EditSkillsInterests />
-            )}
-            {tab === 2 && (
-              <Fragment>
-                {EducationJSX}
-                <div className={classes.btnArea}>
-                  <Button variant="text" color="primary" onClick={e => this.addEducationField(e)}>
-                    Add More
+
+          {tab === 0 && (
+            <EditPersonalDetails handleSubmit={this.handlePersonalDetails} />
+          )}
+          {tab === 1 && (
+            <EditSkillsInterests handleSubmit={this.handleSkillsInterests} />
+          )}
+          {tab === 2 && (
+            <Fragment>
+              {EducationJSX}
+              <div className={classes.btnArea}>
+                <Button variant="text" color="primary" onClick={e => this.addEducationField(e)}>
+                  Add More
+                  </Button>
+              </div>
+            </Fragment>
+          )}
+          {tab === 3 && (
+            <Fragment>
+              {ExperienceJSX}
+              <div className={classes.btnArea}>
+                <Button variant="text" color="primary" onClick={e => this.addExperienceField(e)}>
+                  Add More
                   </Button>
 
-                </div>
-              </Fragment>
-            )}
-            {tab === 3 && (
-              <Fragment>
-                {ExperienceJSX}
-                <div className={classes.btnArea}>
-                  <Button variant="text" color="primary" onClick={e => this.addExperienceField(e)}>
-                    Add More
-                  </Button>
+              </div>
+            </Fragment>
+          )}
 
-                </div>
-              </Fragment>
-            )}
-            <div className={classes.btnArea} style={{ marginTop: '35px' }}>
-              <Button variant="contained" fullWidth color="primary">
-                Save Changes
-              </Button>
-            </div>
-          </form>
         </section>
-      </Paper>
+      </Paper >
     );
   }
 }
@@ -170,15 +262,33 @@ const reducerStudent = 'studentProfile';
 EditStudentDetails.propTypes = {
   classes: PropTypes.object.isRequired,
   educationInfo: PropTypes.object.isRequired,
-  addEducationInfo: PropTypes.func.isRequired
+  addEducationInfo: PropTypes.func.isRequired,
+  experienceInfo: PropTypes.object.isRequired,
+  addExperienceInfo: PropTypes.func.isRequired
+
 };
 
 const mapStateToProps = state => ({
-  educationInfo: state.getIn([reducerStudent, 'educationInfo'])
+  educationInfo: state.getIn([reducerStudent, 'educationInfo']),
+  experienceInfo: state.getIn([reducerStudent, 'experienceInfo']),
+  firstName: state.getIn([reducerStudent, 'firstName']),
+  lastName: state.getIn([reducerStudent, 'lastName']),
+  alternateEmail: state.getIn([reducerStudent, 'alternateEmail']),
+  phoneNumber: state.getIn([reducerStudent, 'phoneNumber']),
+  dob: state.getIn([reducerStudent, 'dob']),
+  gender: state.getIn([reducerStudent, 'gender']),
+  ethnicity: state.getIn([reducerStudent, 'ethnicity']),
+  nationality: state.getIn([reducerStudent, 'nationality']),
+  files: state.getIn([reducerStudent, 'files']),
+  intrestedIndustries: state.getIn([reducerStudent, 'intrestedIndustries']),
+  intrestedCompanies: state.getIn([reducerStudent, 'intrestedCompanies']),
+  skills: state.getIn([reducerStudent, 'skills']),
+  oldSkills: state.getIn([reducerStudent, 'oldSkills'])
 });
 
 const mapDispatchToProps = dispatch => ({
-  addEducationInfo: bindActionCreators(storeEducationData, dispatch)
+  addEducationInfo: bindActionCreators(storeEducationData, dispatch),
+  addExperienceInfo: bindActionCreators(storeExperience, dispatch)
 });
 
 const EditStudentDetailsMapped = connect(

@@ -18,15 +18,15 @@ import TextField from '@material-ui/core/TextField';
 import { connect } from 'react-redux';
 import styles from './user-jss';
 import { storeRoleInfo } from 'dan-actions/RoleActions';
+import { skillMenu } from 'dan-api/apps/profileOption';
 import {
   courseMenu,
-  skillMenu,
   descriptorMenu
 } from '../Forms/CampaignSteps/constantData';
 import SelectAdd from '../../components/SelectAdd/SelectAdd';
 
 // validation functions
-const required = value => (value === null ? 'Required' : undefined);
+const urlValidator = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -127,8 +127,8 @@ class NewRoleForm extends React.Component {
                 renderValue={selected => {
                   const skillName = [];
                   skillMenu.map((value, index) => {
-                    if (selected.includes(value.id)) {
-                      skillName.push(value.value);
+                    if (selected.includes(value)) {
+                      skillName.push(value);
                     }
                   });
                   return skillName.join(', ');
@@ -137,13 +137,13 @@ class NewRoleForm extends React.Component {
                 onChange={e => this.handleMultiSelect(e)}
               >
                 {skillMenu.map((item, index) => (
-                  <MenuItem key={index.toString()} value={item.id}>
+                  <MenuItem key={index.toString()} value={item}>
                     <TextField
                       name="skill-checkbox"
                       component={Checkbox}
-                      checked={MapSkills.indexOf(item.id) > -1}
+                      checked={MapSkills.indexOf(item) > -1}
                     />
-                    <ListItemText primary={item.value} />
+                    <ListItemText primary={item} />
                   </MenuItem>
                 ))}
               </Select>
@@ -212,7 +212,7 @@ class NewRoleForm extends React.Component {
           <Button onClick={(e) => handleClose(e)} color="primary">
             Cancel
           </Button>
-          <Button type="button" color="primary" onClick={handleSubmit}>
+          <Button type="button" color="primary" onClick={handleSubmit} disabled={(this.props.roleName !== '' && this.props.roleLink.match(urlValidator)) ? false : true}>
             Add Role
           </Button>
         </form>

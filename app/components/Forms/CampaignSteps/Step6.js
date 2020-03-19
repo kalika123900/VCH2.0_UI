@@ -19,6 +19,7 @@ import { CombineStyles } from 'dan-helpers';
 import styles from './step-jss';
 const showdown = require('showdown');
 const converter = new showdown.Converter();
+import { genderItems, universityItems } from 'dan-api/apps/profileOption';
 import { makeSecureDecrypt } from '../../../Helpers/security';
 
 const combinedStyles = CombineStyles(styles, estyles);
@@ -99,13 +100,35 @@ class Step6 extends React.Component {
       deadline,
       heading,
       body,
-      // university,
-      // gender,
+      gender,
+      university,
       // keywords
     } = this.props;
+    const Mapgender = gender.toJS();
     const { email, cname } = this.state;
-    // const MapUniversity = university.toJS();
+    const MapUniversity = university.toJS();
     // const MapKeywords = keywords.toJS();
+
+    let selectedGender = '';
+    Mapgender.map(item => {
+      selectedGender = `${selectedGender}${genderItems[item]},  `
+      // if (selectedGender.length == ArrgenderLength) {
+      //   selectedGender = `${selectedGender}, ${genderItems[item]}`
+      // }
+      // else {
+      //   selectedGender = `${selectedGender} ${genderItems[item]},`
+      // }
+    })
+    let selectedUniversity = '';
+    MapUniversity.map(item => {
+      selectedUniversity = `${selectedUniversity}${universityItems[item]},  `
+      // if (selectedUniversity.length < 0) {
+      //   selectedUniversity = universityItems[item];
+      // }
+      // else {
+      //   selectedUniversity = `${selectedUniversity}, ${universityItems[item]}`
+      // }
+    })
 
     const title = brand.name + ' - Review Campaign Settings';
     const description = brand.desc;
@@ -181,7 +204,7 @@ class Step6 extends React.Component {
                 Precise Demographics
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                Men, WOMEN
+                {selectedGender}
               </Typography>
             </Grid>
             <Grid className={classes.sec_3_grid4}>
@@ -189,7 +212,7 @@ class Step6 extends React.Component {
                 Specified Universities
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                Oxford, RGPV
+                {selectedUniversity}
               </Typography>
             </Grid>
           </Grid>
@@ -258,7 +281,7 @@ class Step6 extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      </Grid >
     );
   }
 }
@@ -267,7 +290,7 @@ Step6.propTypes = {
   classes: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,
   deadline: PropTypes.string.isRequired,
-  // gender: PropTypes.number.isRequired,
+  gender: PropTypes.object.isRequired,
   // role: PropTypes.number.isRequired,
   // university: PropTypes.object.isRequired,
   // keywords: PropTypes.object.isRequired,

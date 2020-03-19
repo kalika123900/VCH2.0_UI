@@ -21,7 +21,7 @@ const initialState = {
   intrestedIndustries: List([]),
   intrestedCompanies: List([]),
   skills: List([]),
-  customSkill: List([]),
+  oldSkills: List([19, 21]),
   files: List([]),
   institute: '',
   qualification: '',
@@ -39,8 +39,12 @@ const initialState = {
     eduTo: DateHelper.format(DateHelper.addDays(new Date(), -30)),
     grade: ''
   }]),
-  experienceStore: List([0]),
-  // experienceskills: List([]),
+  experienceInfo: List([{
+    id: 0,
+    company: '',
+    role: '',
+    roleDescription: ''
+  }]),
   action: 'create'
 };
 
@@ -76,43 +80,25 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const intrestedIndustries = fromJS(action.data.intrestedIndustries);
         const intrestedCompanies = fromJS(action.data.intrestedCompanies);
         const skills = fromJS(action.data.skills);
-        const customSkill = fromJS(action.data.customSkill);
+        const oldSkills = fromJS(action.data.oldSkills);
         mutableState
           .set('intrestedIndustries', intrestedIndustries)
           .set('intrestedCompanies', intrestedCompanies)
           .set('skills', skills)
-
+          .set('oldSkills', oldSkills)
       });
     case STORE_EDUCATION_DATA:
       return state.withMutations((mutableState) => {
         const educationInfo = fromJS(action.data.educationInfo)
-        // const institute = fromJS(action.data.institute);
-        // const qualification = fromJS(action.data.qualification);
-        // const eduFrom = fromJS(action.data.eduFrom);
-        // const eduTo = fromJS(action.data.eduTo);
-        // const grade = fromJS(action.data.grade);
         mutableState
           .set('educationInfo', educationInfo)
-        // .set('institute', institute)
-        // .set('qualification', qualification)
-        // .set('eduFrom', eduFrom)
-        // .set('eduTo', eduTo)
-        // .set('grade', grade)
       });
     case STORE_EXPERIENCE:
       return state.withMutations((mutableState) => {
-        // const experienceStore = fromJs(action.data.experienceStore)
-        // const company = fromJS(action.data.company);
-        // const role = fromJS(action.data.role);
-        // const roleDescription = fromJS(action.data.roleDescription);
-        const experienceskills = fromJS(action.data.experienceskills);
-
+        const experienceInfo = fromJS(action.data.experienceInfo)
         mutableState
-          .set('experienceStore', experienceStore)
-        // .set('company', company)
-        // .set('role', role)
-        // .set('roleDescription', roleDescription)
-        // .set('experienceskills', experienceskills)
+          .set('experienceInfo', experienceInfo)
+
       });
     case STUDENT_PROFILE_INIT:
       return state.withMutations((mutableState) => {

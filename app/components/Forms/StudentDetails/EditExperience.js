@@ -1,14 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import styles from '../user-jss';
 import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Tooltip from '@material-ui/core/Tooltip';
-import AddIcon from '@material-ui/icons/Add';
-import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
 import { storeExperience } from 'dan-actions/studentProfileActions';
@@ -17,51 +12,29 @@ import { storeExperience } from 'dan-actions/studentProfileActions';
 const required = value => (value === null ? 'Required' : undefined);
 
 class EditExperience extends React.Component {
-  // state = {
-  //   skills: [],
-  //   customSkill: '',
-  //   company: '',
-  //   role: '',
-  //   roleDescription: '',
-  // };
+  constructor(props) {
+    super(props)
+  }
+  handleChange = (event, id) => {
+    const { experienceInfo, addExperienceInfo } = this.props;
+    const MapExperienceInfo = experienceInfo.toJS();
 
-  // addSkill = () => {
-  //   if (this.state.customSkill.length > 0) {
-  //     let customSkill = '+ ' + this.state.customSkill
-  //     let newSkillArr = [...this.state.skills, customSkill]
-  //     this.setState({ skills: newSkillArr, customSkill: '' })
-  //   }
-  // };
-
-  // handleSuggestedProduct = (e) => {
-  //   let customSkill = e.target.outerText
-  //   let newSkillArr = [...this.state.skills, customSkill]
-  //   this.setState({ skills: newSkillArr })
-  // };
-
-  handleChange = event => {
-    const { addInfo } = this.props;
-
-
-    addInfo({ ...this.props, [event.target.name]: event.target.value });
+    const newExperienceArr = MapExperienceInfo.map(item => {
+      if (item.id === id) {
+        return {
+          ...item,
+          [event.target.name]: event.target.value
+        };
+      };
+      return item;
+    })
+    addExperienceInfo({ experienceInfo: newExperienceArr })
   };
-
   render() {
-    const {
-      classes,
-      company,
-      role,
-      roleDescription
-    } = this.props;
+    const { classes, id, experienceInfo } = this.props;
 
-    // const skillItems = skills.length > 0 ? skills.map((item, index) => {
-    //   return (
-    //     <Typography variant="subtitle1" className={classes.choosenTerms, classes.skillItems} key={index}>
-    //       {item}
-    //     </Typography>
-    //   )
-    // }) : null
-
+    const MapExperienceInfo = experienceInfo.toJS();
+    const { company, role, roleDescription } = MapExperienceInfo[id];
     return (
       <section className={classes.pageFormWrap}>
 
@@ -76,7 +49,7 @@ class EditExperience extends React.Component {
               margin="normal"
               variant="outlined"
               validate={[required]}
-              onChange={e => this.handleChange(e)}
+              onChange={e => this.handleChange(e, id)}
             />
           </FormControl>
         </div>
@@ -91,7 +64,7 @@ class EditExperience extends React.Component {
               margin="normal"
               variant="outlined"
               validate={[required]}
-              onChange={e => this.handleChange(e)}
+              onChange={e => this.handleChange(e, id)}
             />
           </FormControl>
         </div>
@@ -107,64 +80,29 @@ class EditExperience extends React.Component {
               margin="normal"
               variant="filled"
               validate={[required]}
-              onChange={e => this.handleChange(e)}
+              onChange={e => this.handleChange(e, id)}
             />
           </FormControl>
         </div>
-        {/*  <Grid className={classes.customGrid}>
-          {skillItems !== null && skillItems}
-        </Grid>
-        <div>
-         <FormControl className={classes.formControl}>
-            <TextField
-              placeholder="Skills"
-              autoCapitalize="true"
-              value={customSkill}
-              className={classes.textField}
-              name='customSkill'
-              margin="normal"
-              variant="filled"
-              onChange={(e) => this.handleChange(e)}
-              type="text"
-            />
-            <Grid>
-              <Tooltip title="Add New">
-                <Button variant="text" color="secondary" onClick={e => this.addSkill(e)} >
-                  <AddIcon />
-                  Add Skill
-                    </Button>
-              </Tooltip>
-            </Grid> 
-          </FormControl> 
-        </div>*/}
-
       </section >
     );
   }
 }
 
-const reducerCampaign = 'studentProfile';
+const reducerStudent = 'studentProfile';
 
 EditExperience.propTypes = {
   classes: PropTypes.object.isRequired,
-  company: PropTypes.string.isRequired,
-  role: PropTypes.string.role,
-  roleDescription: PropTypes.string.isRequired,
-  //experienceskills: PropTypes.string.isRequired,
-  experienceStore: PropTypes.string.isRequired,
-  addInfo: PropTypes.func.isRequired
+  experienceInfo: PropTypes.object.isRequired,
+  addExperienceInfo: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  // company: state.getIn([reducerCampaign, 'company']),
-  // role: state.getIn([reducerCampaign, 'role']),
-  // roleDescription: state.getIn([reducerCampaign, 'roleDescription']),
-  // experienceskills: state.getIn([reducerCampaign, 'experienceskills']),
-  experienceStore: state.setIn([reducerCampaign, 'experienceStore'])
+  experienceInfo: state.getIn([reducerStudent, 'experienceInfo'])
 });
 
 const mapDispatchToProps = dispatch => ({
-  addInfo: bindActionCreators(storeExperience, dispatch)
+  addExperienceInfo: bindActionCreators(storeExperience, dispatch)
 });
 
 const StepMapped = connect(
