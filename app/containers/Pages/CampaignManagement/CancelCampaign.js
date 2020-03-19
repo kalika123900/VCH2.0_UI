@@ -119,7 +119,7 @@ class CancelCampaign extends React.Component {
                     <TableCell align="left">Client Name</TableCell>
                     <TableCell align="left">Start Date</TableCell>
                     <TableCell align="left">End Date</TableCell>
-                    <TableCell align="left">Cancel by</TableCell>
+                    {/* <TableCell align="left">Cancel by</TableCell> */}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -129,7 +129,7 @@ class CancelCampaign extends React.Component {
                       <TableCell align="left">{n.client_name}</TableCell>
                       <TableCell align="left">{n.start_date}</TableCell>
                       <TableCell align="left">{n.end_date}</TableCell>
-                      <TableCell align="left">{n.cancel_by}</TableCell>
+                      {/* <TableCell align="left">{n.cancel_by}</TableCell> */}
                     </TableRow>
                   ))}
                   {emptyRows > 0 && (

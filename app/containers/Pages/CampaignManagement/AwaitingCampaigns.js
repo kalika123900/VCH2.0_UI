@@ -118,7 +118,7 @@ class AwaitingCampaigns extends React.Component {
                     <TableCell padding="default">Client Name</TableCell>
                     <TableCell padding="default">Campaign Name</TableCell>
                     <TableCell align="left">Create Date</TableCell>
-                    <TableCell align="left">Action</TableCell>
+                    {/* <TableCell align="left">Action</TableCell> */}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -127,11 +127,11 @@ class AwaitingCampaigns extends React.Component {
                       <TableCell padding="default">{n.client}</TableCell>
                       <TableCell padding="default">{n.campaign}</TableCell>
                       <TableCell align="left">{n.create_date}</TableCell>
-                      <TableCell align="left">
+                      {/* <TableCell align="left">
                         <Button>
                           <DeleteIcon />
                         </Button>
-                      </TableCell>
+                      </TableCell> */}
                     </TableRow>
                   ))}
                   {emptyRows > 0 && (

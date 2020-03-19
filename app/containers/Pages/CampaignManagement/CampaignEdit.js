@@ -107,7 +107,7 @@ function alterDeadline(campaignTime) {
 var createdAt = null;
 
 class CampaignEdit extends React.Component {
-  componentDidMount() {
+  componentWillMount() {
     const _that = this;
     const data = {
       campaignId: this.props.match.params.campaignId
@@ -122,10 +122,13 @@ class CampaignEdit extends React.Component {
           const experience = boolNumberToString(res.data.info.experience);
           const gender = stringToArray(res.data.info.gender);
           const deadline = formatDeadline(res.data.info.deadline);
-
+          let roleData = [];
+          roleData.push(res.data.info.roleData);
           createdAt = res.data.info.created_at;
 
           const campaignData = {
+            roleData: roleData,
+            campaignStatus: res.data.info.status,
             name: res.data.info.campaign_name,
             role: res.data.info.role,
             gender,
@@ -226,6 +229,7 @@ class CampaignEdit extends React.Component {
 
 CampaignEdit.propTypes = {
   history: PropTypes.object.isRequired,
+  campaignStatus: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   role: PropTypes.number.isRequired,
   gender: PropTypes.object.isRequired,
@@ -250,6 +254,7 @@ CampaignEdit.propTypes = {
 const reducerCampaign = 'campaign';
 
 const mapStateToProps = state => ({
+  campaignStatus: state.getIn([reducerCampaign, 'campaignStatus']),
   name: state.getIn([reducerCampaign, 'name']),
   role: state.getIn([reducerCampaign, 'role']),
   gender: state.getIn([reducerCampaign, 'gender']),

@@ -30,6 +30,16 @@ export const campaignInfoInit = (data) => ({
   data
 });
 
+export const campaignInitMsg = (data) => ({
+  type: types.CAMPAIGN_INIT_MSG,
+  data
+});
+
+export const campaignRemoveMsg = (data) => ({
+  type: types.CAMPAIGN_REMOVE_MSG,
+  data
+});
+
 export const removeCampaignInfo = () => ({
   type: types.REMOVE_CAMPAIGN_INFO
 });

@@ -22,16 +22,18 @@ async function postData(url, data) {
     body: qs.stringify(data)
   });
 
-  return await response.json();
+  return response.json();
 }
 
 class Step2 extends React.Component {
   state = {
     open: false,
-    roleData: []
+    didUpdate: false,
+    roleData: [],
+    usedRoleData: []
   }
 
-  componentDidMount() {
+  newRoleFetch = () => {
     const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))
     );
@@ -50,6 +52,33 @@ class Step2 extends React.Component {
         console.error(err);
       });
   }
+  componentDidMount() {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const data = {
+      client_id: user.id
+    };
+
+    postData(`${API_URL}/client/fetch-role`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          postData(`${API_URL}/client/fetch-used-role`, data)
+            .then((result) => {
+              if (result.status === 1) {
+                this.setState({ usedRoleData: result.data, roleData: res.data });
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
 
   handleRole = (id) => {
     const { addInfo } = this.props;
@@ -62,76 +91,145 @@ class Step2 extends React.Component {
   };
 
   render() {
-    const { classes, role } = this.props;
-    const { open, roleData } = this.state;
+    const { classes, role, userType } = this.props;
+    const { open, roleData, usedRoleData } = this.state;
+    let reduxRoleData = null;
+    if (userType == "ADMIN") {
+      reduxRoleData = this.props.roleData.toJS();
+    }
+
     return (
-      <Fragment>
-        {roleData.length > 0 ?
-          roleData.map((value) => (
-            <Grid
-              className={classes.gridMargin}
-              key={value.id}
-            >
-              <Typography
-                className={role === value.id
-                  ? (classes.activeBoarder)
-                  : null
-                }
-                variant="body1"
-                style={{ cursor: 'pointer' }}
-                onClick={() => this.handleRole(value.id)}
+      userType == "ADMIN" ? (
+        <Fragment>
+          {reduxRoleData.length > 0
+            ? (reduxRoleData.map((value) => (
+              <Grid
+                className={classes.gridMargin}
+                key={value.id}
               >
-                {value.role_name}
+                <Typography
+                  className={role === value.id
+                    ? (classes.activeBoarder)
+                    : null
+                  }
+                  variant="body1"
+                  style={{ cursor: 'pointer' }}
+                >
+                  {value.role_name}
+                </Typography>
+              </Grid>
+            )))
+            : (
+
+              <Typography
+                variant="caption"
+                color="error"
+                style={{
+                  padding: 20
+                }}
+              >
+                It looks like Client haven't added any roles
               </Typography>
-            </Grid>
-          ))
-          :
-          <Typography
-            variant="caption"
-            color="error"
-            style={{
-              padding: 20
-            }}
-          >
-            It looks like you haven't added any roles yet
-          </Typography>
-        }
-        <Divider />
-        {
-          open === false
-          && (
-            <Button
-              color="secondary"
-              onClick={(e) => this.handleOpen()}
-            >
-              Create New Role
-            </Button>
-          )
-        }
-        {
-          open
-          && (
-            <AddRole
-              open={open}
-              handleClose={this.handleOpen}
-            />
-          )
-        }
-      </Fragment >
-    );
+            )
+          }
+        </Fragment>
+      ) : (
+          <Fragment>
+            {
+              roleData.length > 0 ?
+                roleData.map((value) => (
+                  (usedRoleData.indexOf(value.id) === -1)
+                    ? (
+                      <Grid
+                        className={classes.gridMargin}
+                        key={value.id}
+                      >
+                        <Typography
+                          className={role === value.id
+                            ? (classes.activeBoarder)
+                            : null
+                          }
+                          variant="body1"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => this.handleRole(value.id)}
+                        >
+                          {value.role_name}
+                        </Typography>
+                      </Grid>
+                    )
+                    : (
+                      <Grid
+                        className={classes.gridMargin}
+                        key={value.id}
+                      >
+                        <Typography
+                          className={role === value.id
+                            ? (classes.activeBoarder)
+                            : null
+                          }
+                          variant="body1"
+                          style={{ cursor: 'pointer' }}
+                        // onClick={() => this.handleRole(value.id)}
+                        >
+                          {value.role_name}
+                        </Typography>
+                        <Typography variant="caption" color="error">(Role already in use)</Typography>
+                      </Grid>
+                    )
+                ))
+                :
+                <Typography
+                  variant="caption"
+                  color="error"
+                  style={{
+                    padding: 20
+                  }}
+                >
+                  It looks like you haven't added any roles yet
+                </Typography>
+            }
+            <Divider />
+            {
+              open === false
+              && (
+                <Button
+                  color="secondary"
+                  onClick={(e) => this.handleOpen()}
+                >
+                  Create New Role
+                </Button>
+              )
+            }
+            {
+              open
+              && (
+                <AddRole
+                  open={open}
+                  onSuccess={this.newRoleFetch}
+                  handleClose={this.handleOpen}
+                />
+              )
+            }
+          </Fragment>
+        )
+    )
   }
 }
 
 Step2.propTypes = {
   classes: PropTypes.object.isRequired,
   addInfo: PropTypes.func.isRequired,
-  role: PropTypes.number.isRequired
+  role: PropTypes.number.isRequired,
+  roleData: PropTypes.object.isRequired
 };
 
 const reducerCampaign = 'campaign';
+const reducerA = 'Auth';
 
 const mapStateToProps = state => ({
-  role: state.getIn([reducerCampaign, 'role'])
+  role: state.getIn([reducerCampaign, 'role']),
+  userType: state.getIn([reducerA, 'userType']),
+  roleData: state.getIn([reducerCampaign, 'roleData']),
 });
 
 const mapDispatchToProps = dispatch => ({

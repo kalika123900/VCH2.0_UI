@@ -126,6 +126,8 @@ export const STORE_STEP5_INFO = 'STORE_STEP5_INFO';
 export const STORE_STEP6_INFO = 'STORE_STEP6_INFO';
 export const CAMPAIGN_INFO_INIT = 'CAMPAIGN_INFO_INIT';
 export const REMOVE_CAMPAIGN_INFO = 'REMOVE_CAMPAIGN_INFO';
+export const CAMPAIGN_INIT_MSG = ' CAMPAIGN_INIT_MSG';
+export const CAMPAIGN_REMOVE_MSG = ' CAMPAIGN_REMOVE_MSG';
 
 // Authenication Handling
 export const SET_AUTH = 'SET_AUTH';
