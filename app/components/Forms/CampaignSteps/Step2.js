@@ -22,16 +22,18 @@ async function postData(url, data) {
     body: qs.stringify(data)
   });
 
-  return await response.json();
+  return response.json();
 }
 
 class Step2 extends React.Component {
   state = {
     open: false,
-    roleData: []
+    didUpdate: false,
+    roleData: [],
+    usedRoleData: []
   }
 
-  componentDidMount() {
+  newRoleFetch = () => {
     const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))
     );
@@ -44,6 +46,33 @@ class Step2 extends React.Component {
       .then((res) => {
         if (res.status === 1) {
           this.setState({ roleData: res.data });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+  componentDidMount() {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const data = {
+      client_id: user.id
+    };
+
+    postData(`${API_URL}/client/fetch-role`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          postData(`${API_URL}/client/fetch-used-role`, data)
+            .then((result) => {
+              if (result.status === 1) {
+                this.setState({ usedRoleData: result.data, roleData: res.data });
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+            });
         }
       })
       .catch((err) => {
@@ -63,7 +92,7 @@ class Step2 extends React.Component {
 
   render() {
     const { classes, role, userType } = this.props;
-    const { open, roleData } = this.state;
+    const { open, roleData, usedRoleData } = this.state;
     let reduxRoleData = null;
     if (userType == "ADMIN") {
       reduxRoleData = this.props.roleData.toJS();
@@ -109,22 +138,44 @@ class Step2 extends React.Component {
             {
               roleData.length > 0 ?
                 roleData.map((value) => (
-                  <Grid
-                    className={classes.gridMargin}
-                    key={value.id}
-                  >
-                    <Typography
-                      className={role === value.id
-                        ? (classes.activeBoarder)
-                        : null
-                      }
-                      variant="body1"
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => this.handleRole(value.id)}
-                    >
-                      {value.role_name}
-                    </Typography>
-                  </Grid>
+                  (usedRoleData.indexOf(value.id) === -1)
+                    ? (
+                      <Grid
+                        className={classes.gridMargin}
+                        key={value.id}
+                      >
+                        <Typography
+                          className={role === value.id
+                            ? (classes.activeBoarder)
+                            : null
+                          }
+                          variant="body1"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => this.handleRole(value.id)}
+                        >
+                          {value.role_name}
+                        </Typography>
+                      </Grid>
+                    )
+                    : (
+                      <Grid
+                        className={classes.gridMargin}
+                        key={value.id}
+                      >
+                        <Typography
+                          className={role === value.id
+                            ? (classes.activeBoarder)
+                            : null
+                          }
+                          variant="body1"
+                          style={{ cursor: 'pointer' }}
+                        // onClick={() => this.handleRole(value.id)}
+                        >
+                          {value.role_name}
+                        </Typography>
+                        <Typography variant="caption" color="error">(Role already in use)</Typography>
+                      </Grid>
+                    )
                 ))
                 :
                 <Typography
@@ -154,6 +205,7 @@ class Step2 extends React.Component {
               && (
                 <AddRole
                   open={open}
+                  onSuccess={this.newRoleFetch}
                   handleClose={this.handleOpen}
                 />
               )

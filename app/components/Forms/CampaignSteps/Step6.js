@@ -18,6 +18,7 @@ import estyles from 'dan-components/Email/email-jss';
 import { CombineStyles } from 'dan-helpers';
 import styles from './step-jss';
 const showdown = require('showdown');
+import { campaignRemoveMsg, campaignInitMsg } from 'dan-actions/CampaignActions';
 const converter = new showdown.Converter();
 import { makeSecureDecrypt } from '../../../Helpers/security';
 
@@ -39,7 +40,8 @@ class Step6 extends React.Component {
   state = {
     email: '',
     cname: '',
-    user: null
+    user: null,
+    usedName: []
   }
 
   componentDidMount() {
@@ -60,6 +62,16 @@ class Step6 extends React.Component {
             let email = data.email;
             let cname = `${data.firstname} ${data.lastname}`;
             this.setState({ email, cname });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+
+      postData(`${API_URL}/client/fetch-campaign-name`, data)
+        .then((res) => {
+          if (res.status === 1) {
+            this.setState({ usedName: res.data });
           }
         })
         .catch((err) => {
@@ -88,8 +100,17 @@ class Step6 extends React.Component {
   }
 
   handleChange = (e) => {
-    const { addInfo } = this.props;
-    addInfo(e.target.value);
+    const { usedName } = this.state;
+    const { addInfo, addMsg, removeMsg } = this.props;
+
+    if (usedName.indexOf((e.target.value).toLowerCase()) === -1) {
+      addInfo(e.target.value);
+      removeMsg()
+    }
+    else {
+      addMsg({ warnMsg: 'Campaign Name already in use' })
+      addInfo(e.target.value);
+    }
   };
 
   render() {
@@ -101,7 +122,8 @@ class Step6 extends React.Component {
       body,
       // university,
       // gender,
-      // keywords
+      // keywords,
+      warnMsg
     } = this.props;
     const { email, cname } = this.state;
     // const MapUniversity = university.toJS();
@@ -137,6 +159,11 @@ class Step6 extends React.Component {
             <Typography variant="caption" className={classes.sec_1_heading}>
               (This is just for you and won’t be displayed to candidates)
             </Typography>
+            <Grid>
+              <Typography variant="caption" className={classes.sec_1_heading} color="error">
+                {warnMsg}
+              </Typography>
+            </Grid>
           </Grid>
         </Grid>
         {/* section 2 */}
@@ -273,13 +300,17 @@ Step6.propTypes = {
   // keywords: PropTypes.object.isRequired,
   heading: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
-  addInfo: PropTypes.func.isRequired
+  addInfo: PropTypes.func.isRequired,
+  warnMsg: PropTypes.string.isRequired,
+  removeMsg: PropTypes.func.isRequired,
+  addMsg: PropTypes.func.isRequired
 };
 
 const reducerCampaign = 'campaign';
 const reducerA = 'Auth';
 
 const mapStateToProps = state => ({
+  warnMsg: state.getIn([reducerCampaign, 'warnMsg']),
   campaignStatus: state.getIn([reducerCampaign, 'campaignStatus']),
   name: state.getIn([reducerCampaign, 'name']),
   gender: state.getIn([reducerCampaign, 'gender']),
@@ -294,7 +325,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addInfo: bindActionCreators(storeStep6Info, dispatch)
+  addInfo: bindActionCreators(storeStep6Info, dispatch),
+  removeMsg: bindActionCreators(campaignRemoveMsg, dispatch),
+  addMsg: bindActionCreators(campaignInitMsg, dispatch)
 });
 
 const StepMapped = connect(

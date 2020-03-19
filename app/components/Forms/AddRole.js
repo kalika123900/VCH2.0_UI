@@ -40,7 +40,8 @@ class AddRole extends React.Component {
       roleDeadline,
       roleDescriptors,
       removeInfo,
-      handleClose
+      handleClose,
+      onSuccess
     } = this.props;
 
     const MapCourses = courses.toJS();
@@ -57,13 +58,12 @@ class AddRole extends React.Component {
       clientId: user.id
     };
 
-    console.log(data);
-
     postJSON(`${API_URL}/client/create-role`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
           removeInfo();
           handleClose();
+          onSuccess();
         } else {
           console.log('something not good ');
         }
@@ -71,7 +71,6 @@ class AddRole extends React.Component {
       .catch((err) => {
         console.log(err);
       });
-
   }
 
   render() {
@@ -89,7 +88,10 @@ class AddRole extends React.Component {
             <DialogTitle id="form-dialog-title">Create New Role</DialogTitle>
             <DialogContent style={{ width: '100%' }}>
               <FormControl style={{ width: '100%' }}>
-                <NewRoleForm handleClose={handleClose} handleSubmit={this.sendValues} />
+                <NewRoleForm
+                  handleClose={handleClose}
+                  handleSubmit={this.sendValues}
+                />
               </FormControl>
             </DialogContent>
           </Dialog>

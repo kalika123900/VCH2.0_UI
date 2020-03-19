@@ -5,7 +5,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import brand from 'dan-api/dummy/brand';
 import { CreateCampaign } from 'dan-components';
-import { removeCampaignInfo, campaignInfoInit } from 'dan-actions/CampaignActions';
+import {
+  removeCampaignInfo,
+  campaignInfoInit,
+  campaignRemoveMsg,
+  campaignInitMsg
+} from 'dan-actions/CampaignActions';
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import {
   keywordsData
@@ -166,6 +171,7 @@ class Campaigns extends React.Component {
       keywords,
       gender,
       history,
+      addMsg,
       removeInfo
     } = this.props;
 
@@ -190,12 +196,12 @@ class Campaigns extends React.Component {
         clientId: user.id,
         campaignId: this.props.match.params.campaignId
       };
-      console.log(data);
 
       postJSON(`${API_URL}/campaign/client/update-campaign`, data) // eslint-disable-line
         .then((res) => {
           if (res.status === 1) {
             removeInfo();
+            addMsg({ warnMsg: 'Campaign updated Successfully' });
             history.push('/client/campaign-management');
           } else {
             console.log('something not good ');
@@ -221,6 +227,7 @@ class Campaigns extends React.Component {
         .then((res) => {
           if (res.status === 1) {
             removeInfo();
+            addMsg({ warnMsg: 'Campaign created Successfully' });
             history.push('/client/campaign-management');
           } else {
             console.log('something not good ');
@@ -298,7 +305,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   removeInfo: bindActionCreators(removeCampaignInfo, dispatch),
-  campaignInit: bindActionCreators(campaignInfoInit, dispatch)
+  campaignInit: bindActionCreators(campaignInfoInit, dispatch),
+  addMsg: bindActionCreators(campaignInitMsg, dispatch),
+  removeMsg: bindActionCreators(campaignRemoveMsg, dispatch)
 });
 
 const CampaignMapped = connect(
