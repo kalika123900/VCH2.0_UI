@@ -90,6 +90,7 @@ class CreateCampaign extends React.Component {
       userType,
       role,
       heading,
+      campaignStatus
     } = this.props;
     const { activeStep } = this.state;
     const steps = getSteps();
@@ -164,7 +165,7 @@ class CreateCampaign extends React.Component {
               </Typography>
               <Grid>
                 <FormControl className={(classes.formControl, classes.wrapInput)}>
-                  <Step4 />
+                  <Step4 campaignId={this.props.match.params.campaignId} />
                 </FormControl>
               </Grid>
               <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
@@ -234,23 +235,34 @@ class CreateCampaign extends React.Component {
               </Grid>
               <Grid className={(classes.btnArea, classes.pageFormWrap)}>
                 {
-                  userType == 'ADMIN' && (
-                    <Fragment>
-                      <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
-                        <Button variant="contained" fullWidth color="primary" type="submit">
-                          Approve Campaign
+                  (userType == 'ADMIN' && campaignStatus == 1) ?
+                    (
+                      <Fragment>
+                        <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
+                          <Button variant="contained" fullWidth color="secondary" onClick={() => this.handleReject()}>
+                            Reject Campaign
                           <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
-                        </Button>
-                      </Grid>
-                      <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
-                        <Button variant="contained" fullWidth color="secondary" onClick={() => this.handleReject()}>
-                          Reject Campaign
+                          </Button>
+                        </Grid>
+                      </Fragment>
+                    )
+                    : (userType == 'ADMIN' && campaignStatus == 0) &&
+                    (
+                      <Fragment>
+                        <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
+                          <Button variant="contained" fullWidth color="primary" type="submit">
+                            Approve Campaign
                           <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
-                        </Button>
-                      </Grid>
-                    </Fragment>
-                  )
-
+                          </Button>
+                        </Grid>
+                        <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
+                          <Button variant="contained" fullWidth color="secondary" onClick={() => this.handleReject()}>
+                            Reject Campaign
+                          <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                          </Button>
+                        </Grid>
+                      </Fragment>
+                    )
                 }
                 {
                   userType == 'CLIENT' && (
@@ -273,6 +285,7 @@ CreateCampaign.propTypes = {
   classes: PropTypes.object.isRequired,
   pristine: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  campaignStatus: PropTypes.number.isRequired,
   removeInfo: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
   deco: PropTypes.bool.isRequired,
@@ -298,7 +311,8 @@ const CreateCampaignMapped = connect(
     deco: state.getIn([reducer, 'decoration']),
     userType: state.getIn([reducerA, 'userType']),
     role: state.getIn([reducerCampaign, 'role']),
-    heading: state.getIn([reducerCampaign, 'heading'])
+    heading: state.getIn([reducerCampaign, 'heading']),
+    campaignStatus: state.getIn([reducerCampaign, 'campaignStatus']),
   }),
   mapDispatchToProps
 )(CreateCampaignReduxed);

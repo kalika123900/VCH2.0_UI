@@ -196,7 +196,7 @@ class Campaigns extends React.Component {
         .then((res) => {
           if (res.status === 1) {
             removeInfo();
-            history.push('/client');
+            history.push('/client/campaign-management');
           } else {
             console.log('something not good ');
           }
@@ -221,7 +221,7 @@ class Campaigns extends React.Component {
         .then((res) => {
           if (res.status === 1) {
             removeInfo();
-            history.push('/client');
+            history.push('/client/campaign-management');
           } else {
             console.log('something not good ');
           }

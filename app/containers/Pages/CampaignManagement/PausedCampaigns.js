@@ -41,7 +41,7 @@ async function getData(url, data) {
   return await response.json();
 }
 
-const campaignData = [];
+let campaignData = [];
 
 class PausedCampaigns extends React.Component {
   state = {
@@ -108,12 +108,14 @@ class PausedCampaigns extends React.Component {
       .then((res) => {
         if (res.status === 1) {
           if (res.data.length > 0) {
+            let tempData = [];
             res.data.map(item => {
               item.views = '0k';
               const createDate = formatDate(item.created_at);
               const deadline = formatDate(item.deadline);
-              campaignData.push(createData(item.id, item.campaign_name, createDate, deadline, item.views));
+              tempData.push(createData(item.id, item.campaign_name, createDate, deadline, item.views));
             });
+            campaignData = tempData;
             this.setState({ isCampaigns: true });
           }
         }

@@ -280,6 +280,7 @@ const reducerCampaign = 'campaign';
 const reducerA = 'Auth';
 
 const mapStateToProps = state => ({
+  campaignStatus: state.getIn([reducerCampaign, 'campaignStatus']),
   name: state.getIn([reducerCampaign, 'name']),
   gender: state.getIn([reducerCampaign, 'gender']),
   choosedDeadline: state.getIn([reducerCampaign, 'choosedDeadline']),

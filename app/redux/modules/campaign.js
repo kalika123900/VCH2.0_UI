@@ -11,7 +11,9 @@ import {
 import { DateHelper } from '../helpers/dateTimeHelper';
 
 const initialState = {
+  campaignStatus: -3,
   role: -1,
+  roleData: List([]),
   university: List([]),
   subjects: List([]),
   skills: List([]),
@@ -38,7 +40,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
     case STORE_STEP2_INFO:
       return state.withMutations((mutableState) => {
         mutableState
-          .set('role', action.data.role);
+          .set('role', action.data.role)
       });
     case STORE_STEP3_INFO:
       return state.withMutations((mutableState) => {
@@ -89,7 +91,11 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const gender = fromJS(action.data.gender);
         const interestedSectors = fromJS(action.data.interestedSectors);
         const workLocation = fromJS(action.data.workLocation);
+        const roleData = fromJS(action.data.roleData);
+        console.log(roleData);
         mutableState
+          .set('campaignStatus', action.data.campaignStatus)
+          .set('roleData', roleData)
           .set('role', action.data.role)
           .set('university', university)
           .set('subjects', subjects)
@@ -112,6 +118,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
     case REMOVE_CAMPAIGN_INFO:
       return state.withMutations((mutableState) => {
         mutableState
+          .set('roleData', List([]))
+          .set('campaignStatus', -3)
           .set('role', -1)
           .set('university', List([]))
           .set('subjects', List([]))
