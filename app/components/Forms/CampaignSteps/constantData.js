@@ -12,11 +12,7 @@ export const courseMenu = [
   { id: 4, value: 'M.Tech' }
 ];
 
-export const descriptorMenu = [
-  { id: 1, value: 'Excel' },
-  { id: 2, value: 'Communication' },
-  { id: 3, value: 'Development' }
-];
+export const descriptorMenu = ['Excel', 'Communication', 'Development'];
 
 export const grade = [
   { id: 1, value: 'A+' },

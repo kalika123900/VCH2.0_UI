@@ -60,19 +60,19 @@ class AddRole extends React.Component {
 
     console.log(data);
 
-    // postJSON(`${API_URL}/client/create-role`, data) // eslint-disable-line
-    //   .then((res) => {
-    //     if (res.status === 1) {
-    //       removeInfo();
-    //       handleClose();
-    //       onSuccess();
-    //     } else {
-    //       console.log('something not good ');
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    postJSON(`${API_URL}/client/create-role`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          removeInfo();
+          handleClose();
+          onSuccess();
+        } else {
+          console.log('something not good ');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   render() {
