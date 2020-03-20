@@ -18,25 +18,6 @@ export const descriptorMenu = [
   { id: 3, value: 'Development' }
 ];
 
-export const years = [
-  '2015',
-  '2016',
-  '2017',
-  '2018',
-  '2019',
-  '2020',
-  '2021',
-  '2022',
-  '2023',
-  '2024',
-  '2025',
-  '2026',
-  '2027',
-  '2028',
-  '2029',
-  '2030'
-];
-
 export const grade = [
   { id: 1, value: 'A+' },
   { id: 2, value: 'A' },
@@ -47,12 +28,12 @@ export const grade = [
 ];
 
 export const locationData = [
-  { id: 1, value: 'New York' },
-  { id: 2, value: 'London' },
-  { id: 3, value: 'Indore' },
-  { id: 4, value: 'Florida' },
-  { id: 5, value: 'Washington' },
-  { id: 6, value: 'Banglore' }
+  'New York',
+  'London',
+  'Indore',
+  'Florida',
+  'Washington',
+  'Banglore'
 ];
 
 export const sectorsData = [

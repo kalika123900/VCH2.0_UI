@@ -222,20 +222,20 @@ class Campaigns extends React.Component {
         gender: MapGender,
         clientId: user.id
       };
-
-      postJSON(`${API_URL}/campaign/create-campaign`, data) // eslint-disable-line
-        .then((res) => {
-          if (res.status === 1) {
-            removeInfo();
-            addMsg({ warnMsg: 'Campaign created Successfully' });
-            history.push('/client/campaign-management');
-          } else {
-            console.log('something not good ');
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      console.log(data)
+      // postJSON(`${API_URL}/campaign/create-campaign`, data) // eslint-disable-line
+      //   .then((res) => {
+      //     if (res.status === 1) {
+      //       removeInfo();
+      //       addMsg({ warnMsg: 'Campaign created Successfully' });
+      //       history.push('/client/campaign-management');
+      //     } else {
+      //       console.log('something not good ');
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     }
   };
 

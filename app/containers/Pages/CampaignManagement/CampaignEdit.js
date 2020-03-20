@@ -112,6 +112,7 @@ class CampaignEdit extends React.Component {
     const data = {
       campaignId: this.props.match.params.campaignId
     };
+
     postJSON(`${API_URL}/campaign/get-campaign-info`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {

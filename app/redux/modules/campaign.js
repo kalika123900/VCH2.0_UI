@@ -23,7 +23,7 @@ const initialState = {
   keywords: List([]),
   gender: List([]),
   interestedSectors: List([]),
-  workLocation: List([]),
+  workLocation: List(['London']),
   selectedYear: '',
   ethnicity: 'Prefer not to say',
   experience: 'no',
@@ -55,7 +55,6 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const gender = fromJS(action.data.gender);
         const interestedSectors = fromJS(action.data.interestedSectors);
         const workLocation = fromJS(action.data.workLocation);
-        console.log(gender)
         mutableState
           .set('university', university)
           .set('subjects', subjects)
@@ -112,7 +111,6 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const interestedSectors = fromJS(action.data.interestedSectors);
         const workLocation = fromJS(action.data.workLocation);
         const roleData = fromJS(action.data.roleData);
-        console.log(roleData);
         mutableState
           .set('campaignStatus', action.data.campaignStatus)
           .set('roleData', roleData)
@@ -149,7 +147,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('selectedYear', '')
           .set('ethnicity', 'No-preference')
           .set('interestedSectors', List([]))
-          .set('workLocation', List([]))
+          .set('workLocation', List([['London']]))
           .set('experience', 'no')
           .set('minGrade', 0)
           .set('heading', '')

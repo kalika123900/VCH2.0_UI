@@ -18,14 +18,16 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import { storeStep3Info } from 'dan-actions/CampaignActions';
 import SelectAdd from '../../SelectAdd/SelectAdd';
-import { sectorsData, skillMenu } from 'dan-api/apps/profileOption';
 import {
-  subjectMenu,
-  years,
-  grade,
+  sectorsData,
+  skillMenu,
+  keywordsData,
   locationData,
-  keywordsData
-} from './constantData';
+  years,
+  genderItems,
+  universityItems
+} from 'dan-api/apps/profileOption';
+import { subjectMenu, grade } from './constantData';
 import styles from './step-jss';
 
 const ITEM_HEIGHT = 48;
@@ -40,25 +42,6 @@ const MenuProps = {
 };
 
 class Step3 extends React.Component {
-  state = {
-    universityMenu: [
-      { id: 1, status: false, value: 'University of Oxford' },
-      { id: 2, status: false, value: 'Durham University' },
-      { id: 3, status: false, value: 'University of Cambridge' },
-      { id: 4, status: false, value: 'London School of Economics' },
-      { id: 5, status: false, value: 'University College London' },
-      { id: 6, status: false, value: 'Imperial College London' },
-      { id: 7, status: false, value: 'University of Edinburgh' },
-      { id: 8, status: false, value: 'University of Warwick' },
-    ],
-    genderMenu: [
-      { status: false, value: 0, label: 'Prefer not to say' },
-      { status: false, value: 1, label: 'Men' },
-      { status: false, value: 2, label: 'Women' },
-      { status: false, value: 3, label: 'Non-binary' },
-    ]
-  };
-
   handleReduxChange = event => {
     const { addInfo } = this.props;
 
@@ -120,22 +103,17 @@ class Step3 extends React.Component {
       minGrade
     } = this.props;
 
-    const {
-      genderMenu,
-      universityMenu
-    } = this.state;
-
-    const genderCheckboxes = genderMenu.map((item, index) => (
+    const genderCheckboxes = genderItems.map((item, index) => (
       <FormControlLabel
         control={(
           <Checkbox
             name="genderMenu"
-            checked={gender.includes(item.value)}
-            value={item.value}
-            onChange={() => this.handleGender(item.value)}
+            checked={gender.includes(item)}
+            value={item}
+            onChange={() => this.handleGender(item)}
           />
         )}
-        label={item.label}
+        label={item}
         key={index.toString()}
       />
     ));
@@ -156,9 +134,9 @@ class Step3 extends React.Component {
                   input={<Input />}
                   renderValue={selected => {
                     const universityName = [];
-                    universityMenu.map((value, index) => {
-                      if (selected.includes(value.id)) {
-                        universityName.push(value.value);
+                    universityItems.map((value, index) => {
+                      if (selected.includes(value)) {
+                        universityName.push(value);
                       }
                     });
                     return universityName.join(', ');
@@ -168,14 +146,15 @@ class Step3 extends React.Component {
                   component={Select}
                   onChange={e => this.handleMultiSelect(e)}
                 >
-                  {universityMenu.map((item, index) => (
-                    <MenuItem key={index.toString()} value={item.id}>
+                  {universityItems.map((item, index) => (
+                    (item.length > 0) &&
+                    <MenuItem key={index.toString()} value={item}>
                       <TextField
                         name="university-checkbox"
                         component={Checkbox}
-                        checked={university.indexOf(item.id) > -1}
+                        checked={university.indexOf(item) > -1}
                       />
-                      <ListItemText primary={item.value} />
+                      <ListItemText primary={item} />
                     </MenuItem>
                   ))}
                 </Select>

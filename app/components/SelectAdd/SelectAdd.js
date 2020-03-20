@@ -26,70 +26,37 @@ const GlobalCss = withStyles({
   },
 })(() => null);
 
-async function postData(url, data) {
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: qs.stringify(data)
-  });
-
-  return await response.json();
-}
-
 class SelectAdd extends Component {
   constructor(props) {
     super(props);
     this.state = {
       dataList: this.props.dataList,
       open: false,
-      dialogValue: { id: -1, value: '' },
+      dialogValue: '',
       dataValue: ''
     };
   }
 
-  handleFetchData = (urlString, key) => {
-    const url = `${API_URL}/utils/${urlString}`;
-    const data = { key };
-
-    let responnseData = [];
-    postData(url, data)
-      .then((res) => {
-        if (res.status === 1) {
-          responnseData = res.data;
-        } else {
-          const emptyArray = [];
-          responnseData = emptyArray;
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-
-    this.setState({ dataList: responnseData });
-  }
-
   handleClose = () => {
-    const value = { id: -1, value: '' };
+    const value = '';
     this.setState({ dialogValue: value, open: false });
   };
 
   handleSubmit = (event, type) => {
-    event.preventDefault();
-    event.stopPropagation();
+    // event.preventDefault();
+    // event.stopPropagation();
 
-    const { dialogValue } = this.state;
-    if (this.state.dataValue instanceof Array) {
-      const temp = this.state.dataValue;
-      temp.push(dialogValue);
-      this.setState({ dataValue: temp });
-    } else {
-      const temp = [];
-      temp.push(dialogValue);
-      this.setState({ dataValue: temp });
-    }
-    this.handleClose();
+    // const { dialogValue } = this.state;
+    // if (this.state.dataValue instanceof Array) {
+    //   const temp = this.state.dataValue;
+    //   temp.push(dialogValue);
+    //   this.setState({ dataValue: temp });
+    // } else {
+    //   const temp = [];
+    //   temp.push(dialogValue);
+    //   this.setState({ dataValue: temp });
+    // }
+    // this.handleClose();
   };
 
   handleChange = (event, newValue) => {
@@ -97,33 +64,32 @@ class SelectAdd extends Component {
 
     const latest = newValue[newValue.length - 1];
     if (latest !== undefined) {
-      if (newValue && (typeof latest === 'string' || latest.hasOwnProperty('inputValue'))) {
-        this.setState({ open: true });
-        this.setState({
-          dialogValue: {
-            id: null,
-            value: latest.inputValue
-          }
-        });
-      } else {
-        this.setState({ dataValue: newValue });
-        if (this.props.type === 'location') {
-          addInfo({ ...this.props, workLocation: newValue });
-        }
-        if (this.props.type === 'roleDescriptors') {
-          addRoleInfo({ ...this.props, roleDescriptors: newValue });
-        }
-        if (this.props.type === 'sectors') {
-          addInfo({ ...this.props, interestedSectors: newValue });
-        }
-        if (this.props.type === 'courses') {
-          addRoleInfo({ ...this.props, courses: newValue });
-        }
-        if (this.props.type === 'keywords') {
-          addInfo({ ...this.props, keywords: newValue });
-        }
+      // if (newValue && (typeof latest === 'string' || latest.hasOwnProperty('inputValue'))) {
+      //   this.setState({ open: true });
+      //   this.setState({
+      //     dialogValue: latest.inputValue
+      //   });
+      // } 
+      // else {
+      this.setState({ dataValue: newValue });
+      if (this.props.type === 'location') {
+        addInfo({ ...this.props, workLocation: newValue });
       }
-    } else {
+      if (this.props.type === 'roleDescriptors') {
+        addRoleInfo({ ...this.props, roleDescriptors: newValue });
+      }
+      if (this.props.type === 'sectors') {
+        addInfo({ ...this.props, interestedSectors: newValue });
+      }
+      if (this.props.type === 'courses') {
+        addRoleInfo({ ...this.props, courses: newValue });
+      }
+      if (this.props.type === 'keywords') {
+        addInfo({ ...this.props, keywords: newValue });
+      }
+      // }
+    }
+    else {
       this.setState({ dataValue: '' });
       if (this.props.type === 'location') {
         addInfo({ ...this.props, workLocation: newValue });
@@ -160,6 +126,7 @@ class SelectAdd extends Component {
         <Autocomplete
           style={{ width: '100%' }}
           multiple
+          defaultValue={type == 'location' ? [dataList[1]] : null}
           className={this.props.classes.autoComplete}
           value={
             type === 'location'
@@ -173,18 +140,18 @@ class SelectAdd extends Component {
                     : MapinterestedSectors
           }
           onChange={(e, newValue) => this.handleChange(e, newValue)}
-          filterOptions={(options, params) => {
-            const filtered = filter(options, params);
+          // filterOptions={(options, params) => {
+          //   const filtered = filter(options, params);
 
-            if (params.inputValue !== '') {
-              filtered.push({
-                inputValue: params.inputValue,
-                value: `Add "${params.inputValue}"`,
-              });
-            }
+          //   if (params.inputValue !== '') {
+          //     filtered.push({
+          //       inputValue: params.inputValue,
+          //       value: `Add "${params.inputValue}"`,
+          //     });
+          //   }
 
-            return filtered;
-          }}
+          //   return filtered;
+          // }}
           id={this.props.type}
           options={dataList}
           getOptionLabel={option => {
@@ -194,12 +161,12 @@ class SelectAdd extends Component {
             if (typeof option === 'string') {
               return option;
             }
-            if (option.hasOwnProperty('inputValue')) {
-              return option.inputValue;
-            }
-            return option.value;
+            // if (option.hasOwnProperty('inputValue')) {
+            //   return option;
+            // }
+            return option;
           }}
-          renderOption={option => option.value}
+          renderOption={option => option}
           style={{ width: 300 }}
           freeSolo
           renderInput={params => (
@@ -229,8 +196,8 @@ class SelectAdd extends Component {
                 autoFocus
                 margin="dense"
                 id="name"
-                value={dialogValue.value}
-                onChange={event => this.setState({ ...dialogValue, id: event.target.value })}
+                value={dialogValue}
+                onChange={event => this.setState({ dialogValue })}
                 label={this.props.label}
                 type="text"
               />
