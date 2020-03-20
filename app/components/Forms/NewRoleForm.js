@@ -18,9 +18,8 @@ import TextField from '@material-ui/core/TextField';
 import { connect } from 'react-redux';
 import styles from './user-jss';
 import { storeRoleInfo } from 'dan-actions/RoleActions';
-import { skillMenu } from 'dan-api/apps/profileOption';
+import { skillMenu, courses } from 'dan-api/apps/profileOption';
 import {
-  courseMenu,
   descriptorMenu
 } from '../Forms/CampaignSteps/constantData';
 import SelectAdd from '../../components/SelectAdd/SelectAdd';
@@ -156,7 +155,7 @@ class NewRoleForm extends React.Component {
               </Typography>
               <SelectAdd
                 classes={this.props.classes}
-                dataList={courseMenu}
+                dataList={courses}
                 label="Courses"
                 type="courses"
               />
