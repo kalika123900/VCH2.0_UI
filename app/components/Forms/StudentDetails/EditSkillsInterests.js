@@ -18,13 +18,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
 import Typography from '@material-ui/core/Typography';
 import { storeSkillInterests, } from 'dan-actions/studentProfileActions';
-import { companyList, skillMenu } from 'dan-api/apps/profileOption';
+import { companyList, skillMenu, sectorsData } from 'dan-api/apps/profileOption';
 
-const industryList = [
-  'IT',
-  'AutoMobile',
-  'Robotics'
-]
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -82,7 +77,7 @@ class EditSkillsInterests extends React.Component {
                 component={Select}
                 renderValue={selected => {
                   const industrieName = [];
-                  industryList.map((value, index) => {
+                  sectorsData.map((value, index) => {
                     if (selected.includes(value)) {
                       industrieName.push(value);
                     }
@@ -92,7 +87,7 @@ class EditSkillsInterests extends React.Component {
                 }
                 onChange={e => this.handleChange(e)}
               >
-                {industryList.map((item, index) => (
+                {sectorsData.map((item, index) => (
                   <MenuItem key={index.toString()} value={item}>
                     <TextField
                       name="industrie-checkbox"
