@@ -12,6 +12,13 @@ import { removeRoleInfo } from 'dan-actions/RoleActions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { makeSecureDecrypt } from 'dan-helpers/security';
+import { skillMenu } from 'dan-api/apps/profileOption';
+
+function getIds(arr, data) {
+  return arr.map(item => {
+    return data.indexOf(item);
+  })
+}
 
 async function postJSON(url, data) {
   const response = await fetch(url, {
@@ -24,7 +31,6 @@ async function postJSON(url, data) {
 
   return await response.json();
 }
-
 
 class AddRole extends React.Component {
   sendValues = () => {
@@ -44,8 +50,8 @@ class AddRole extends React.Component {
       onSuccess
     } = this.props;
 
+    const MapSkills = getIds(skills.toJS(), skillMenu);
     const MapCourses = courses.toJS();
-    const MapSkills = skills.toJS();
     const MapRoleDescriptors = roleDescriptors.toJS();
 
     const data = {

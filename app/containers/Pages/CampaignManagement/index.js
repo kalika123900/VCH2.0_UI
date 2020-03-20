@@ -30,8 +30,8 @@ class CampaignManagement extends Component {
     return (
       <Fragment>
         <Grid className={classes.warnMsg}>
-          {/* {warnMsg} */}
-          ****Hello! Its an warn message****
+          {warnMsg}
+          {/* ****Hello! Its an warn message**** */}
         </Grid>
         <Grid container spacing={3} >
           <Grid item md={6} xs={12}>

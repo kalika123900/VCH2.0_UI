@@ -70,7 +70,7 @@ class CreateCampaign extends React.Component {
       .then((res) => {
         if (res.status === 1) {
           removeInfo();
-          this.props.history.push('/admin');
+          this.props.history.push('/admin/campaign-management');
         } else {
           console.log('something not good ');
         }
@@ -90,11 +90,24 @@ class CreateCampaign extends React.Component {
       userType,
       role,
       heading,
+      body,
+      name,
+      warnMsg,
       campaignStatus
     } = this.props;
+
     const { activeStep } = this.state;
     const steps = getSteps();
-    const isHeading = heading.length > 0 ? true : false;
+    let isDisable = true;
+    let isCampaignName = true;
+    if (heading.length > 0) {
+      if (body.length > 0) {
+        isDisable = false;
+      }
+    }
+    if (name.length > 0) {
+      isCampaignName = false;
+    }
 
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
@@ -180,7 +193,7 @@ class CreateCampaign extends React.Component {
                   fullWidth
                   color="primary"
                   onClick={() => this.handleNext()}
-                  disabled={isHeading ? false : true}
+                  disabled={isDisable}
                 >
                   Next
                   <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} />
@@ -246,32 +259,77 @@ class CreateCampaign extends React.Component {
                         </Grid>
                       </Fragment>
                     )
-                    : (userType == 'ADMIN' && campaignStatus == 0) &&
-                    (
-                      <Fragment>
-                        <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
-                          <Button variant="contained" fullWidth color="primary" type="submit">
-                            Approve Campaign
+                    : (userType == 'ADMIN' && campaignStatus == 0) ?
+                      (
+                        <Fragment>
+                          <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
+                            <Button variant="contained" fullWidth color="primary" type="submit">
+                              Approve Campaign
                           <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
-                          </Button>
-                        </Grid>
-                        <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
-                          <Button variant="contained" fullWidth color="secondary" onClick={() => this.handleReject()}>
-                            Reject Campaign
+                            </Button>
+                          </Grid>
+                          <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
+                            <Button variant="contained" fullWidth color="secondary" onClick={() => this.handleReject()}>
+                              Reject Campaign
                           <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
-                          </Button>
-                        </Grid>
-                      </Fragment>
-                    )
+                            </Button>
+                          </Grid>
+                        </Fragment>
+                      )
+                      : (userType == 'ADMIN' && campaignStatus == 10) &&
+                      (
+                        <Fragment>
+                          <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
+                            <Button variant="contained" fullWidth color="secondary" onClick={() => this.handleReject()}>
+                              Reject Campaign
+                          <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                            </Button>
+                          </Grid>
+                        </Fragment>
+                      )
                 }
                 {
+                  (userType == 'CLIENT' && campaignStatus == -3) ?
+                    (
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        color="primary"
+                        type="submit"
+                        disabled={isCampaignName}
+                      >
+                        Create Campaign
+                        <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                      </Button>
+                    )
+                    : (userType == 'CLIENT' && campaignStatus == 0) &&
+                    (
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        color="primary"
+                        type="submit"
+                        disabled={isCampaignName}
+                      >
+                        Update Campaign
+                        <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                      </Button>
+                    )
+                }
+                {/* {
                   userType == 'CLIENT' && (
-                    <Button variant="contained" fullWidth color="primary" type="submit">
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      color="primary"
+                      type="submit"
+                      disabled={isCampaignName}
+                    >
                       Create Campaign
                       <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
                     </Button>
                   )
-                }
+                } */}
               </Grid>
             </section>
           )}
@@ -291,6 +349,8 @@ CreateCampaign.propTypes = {
   deco: PropTypes.bool.isRequired,
   role: PropTypes.number.isRequired,
   heading: PropTypes.string.isRequired,
+  body: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
 };
 
 const CreateCampaignReduxed = reduxForm({
@@ -310,8 +370,11 @@ const CreateCampaignMapped = connect(
   state => ({
     deco: state.getIn([reducer, 'decoration']),
     userType: state.getIn([reducerA, 'userType']),
+    warnMsg: state.getIn([reducerCampaign, 'warnMsg']),
     role: state.getIn([reducerCampaign, 'role']),
+    name: state.getIn([reducerCampaign, 'name']),
     heading: state.getIn([reducerCampaign, 'heading']),
+    body: state.getIn([reducerCampaign, 'body']),
     campaignStatus: state.getIn([reducerCampaign, 'campaignStatus']),
   }),
   mapDispatchToProps

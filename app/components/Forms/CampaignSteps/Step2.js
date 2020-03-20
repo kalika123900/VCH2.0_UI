@@ -52,37 +52,41 @@ class Step2 extends React.Component {
         console.error(err);
       });
   }
+
   componentDidMount() {
-    const user = JSON.parse(
-      makeSecureDecrypt(localStorage.getItem('user'))
-    );
+    const { userType } = this.props;
+    if (userType == "CLIENT") {
+      const user = JSON.parse(
+        makeSecureDecrypt(localStorage.getItem('user'))
+      );
 
-    const data = {
-      client_id: user.id
-    };
+      const data = {
+        client_id: user.id
+      };
 
-    postData(`${API_URL}/client/fetch-role`, data)
-      .then((res) => {
-        if (res.status === 1) {
-          postData(`${API_URL}/client/fetch-used-role`, data)
-            .then((result) => {
-              if (result.status === 1) {
-                this.setState({ usedRoleData: result.data, roleData: res.data });
-              }
-            })
-            .catch((err) => {
-              console.error(err);
-            });
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+      postData(`${API_URL}/client/fetch-role`, data)
+        .then((res) => {
+          if (res.status === 1) {
+            postData(`${API_URL}/client/fetch-used-role`, data)
+              .then((result) => {
+                if (result.status === 1) {
+                  this.setState({ usedRoleData: result.data, roleData: res.data });
+                }
+              })
+              .catch((err) => {
+                console.error(err);
+              });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
   }
 
-  handleRole = (id) => {
+  handleRole = (id, name) => {
     const { addInfo } = this.props;
-    addInfo({ role: id });
+    addInfo({ role: id, roleName: name });
   };
 
   handleOpen = () => {
@@ -151,7 +155,7 @@ class Step2 extends React.Component {
                           }
                           variant="body1"
                           style={{ cursor: 'pointer' }}
-                          onClick={() => this.handleRole(value.id)}
+                          onClick={() => this.handleRole(value.id, value.role_name)}
                         >
                           {value.role_name}
                         </Typography>
