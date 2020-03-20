@@ -123,14 +123,13 @@ class Step6 extends React.Component {
       body,
       university,
       gender,
-      // keywords,
       warnMsg,
       roleName
     } = this.props;
+
     const Mapgender = gender.toJS();
     const { email, cname } = this.state;
     const MapUniversity = university.toJS();
-    // const MapKeywords = keywords.toJS();
 
     let selectedGender = '';
     Mapgender.map(item => {
@@ -229,7 +228,7 @@ class Step6 extends React.Component {
           <Grid item md={12} xs={12}>
             <Grid className={classes.sec_3_grid4} style={{ marginTop: 0 }}>
               <Typography variant="h6">
-                Precise Demographics
+                Precise Genders
               </Typography>
               <Typography variant="body1" color="textSecondary">
                 {Mapgender.join(", ")}
@@ -319,9 +318,6 @@ Step6.propTypes = {
   name: PropTypes.string.isRequired,
   deadline: PropTypes.string.isRequired,
   gender: PropTypes.object.isRequired,
-  // role: PropTypes.number.isRequired,
-  // university: PropTypes.object.isRequired,
-  // keywords: PropTypes.object.isRequired,
   heading: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
   addInfo: PropTypes.func.isRequired,

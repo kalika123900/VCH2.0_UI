@@ -48,33 +48,6 @@ function stringToArray(string) {
 
   return data;
 }
-function stringToArrayWithReferral(string, data) {
-  const splitArray = string.split(',');
-
-  const dataR = [];
-  splitArray.map(item => {
-    if (isNaN(item)) {
-      dataR.push(data.indexOf(item));
-    }
-  });
-
-  return data;
-}
-
-function stringToArrayObj(string) {
-  const splitArray = string.split(',');
-  const data = [];
-  splitArray.map(item => {
-    if (item !== '') {
-      data.push({
-        id: null,
-        value: item
-      });
-    }
-  });
-
-  return data;
-}
 
 function boolNumberToString(num) {
   return num === 0 ? 'no' : 'yes';
@@ -122,7 +95,6 @@ class Campaigns extends React.Component {
       postJSON(`${API_URL}/campaign/get-campaign-info`, data) // eslint-disable-line
         .then((res) => {
           if (res.status === 1) {
-            console.log(res.data);
             const subjects = stringToArray(res.data.info.subjects);
             const gender = stringToArray(res.data.info.gender);
             const selectedYear = stringToArray(res.data.info.selected_year);
@@ -134,10 +106,15 @@ class Campaigns extends React.Component {
             const skills = getIdsItem(res.data.skills, skillMenu);
             const workLocation = stringToArray(res.data.info.work_location);
             const experience = boolNumberToString(res.data.info.experience);
+            let roleData = [];
+            roleData.push(res.data.info.roleData);
 
             const campaignData = {
+              roleName: roleData[0].role_name,
               name: res.data.info.campaign_name,
               role: res.data.info.role,
+              roleData: roleData,
+              campaignStatus: res.data.info.status,
               gender,
               university,
               keywords,
@@ -154,7 +131,6 @@ class Campaigns extends React.Component {
               body: res.data.info.body,
               choosedDeadline: res.data.info.deadline_choice,
             };
-            console.log(campaignData)
             _that.props.campaignInit(campaignData);
             this.setState({ isCampaignExist: true });
           } else {
