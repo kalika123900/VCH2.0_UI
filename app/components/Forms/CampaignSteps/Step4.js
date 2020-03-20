@@ -302,7 +302,7 @@ class Step4 extends PureComponent {
 Step4.propTypes = {
   classes: PropTypes.object.isRequired,
   heading: PropTypes.string.isRequired,
-  body: PropTypes.string.isRequired,
+  // body: PropTypes.object.isRequired,
   addInfo: PropTypes.func.isRequired
 };
 
