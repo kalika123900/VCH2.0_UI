@@ -369,12 +369,12 @@ class Step3 extends React.Component {
                   value={ethnicity}
                   onChange={(e) => this.handleReduxChange(e)}
                 >
-                  <FormControlLabel value="Asian or Asian British" control={<Radio />} label="Asian or Asian British" />
-                  <FormControlLabel value="Black or Black British" control={<Radio />} label="Black or Black British" />
-                  <FormControlLabel value="Mixed" control={<Radio />} label="Mixed" />
+                  <FormControlLabel value="Bame" control={<Radio />} label="BAME" />
+                  <FormControlLabel value="Not Preferable" control={<Radio />} label="Not Preferable" />
+                  {/* <FormControlLabel value="Mixed" control={<Radio />} label="Mixed" />
                   <FormControlLabel value="Other Ethnic Groups" control={<Radio />} label="Other Ethnic Groups" />
                   <FormControlLabel value="White" control={<Radio />} label="White" />
-                  <FormControlLabel value="Prefer not to say" control={<Radio />} label="Prefer not to say" />
+                  <FormControlLabel value="Prefer not to say" control={<Radio />} label="Prefer not to say" /> */}
                 </RadioGroup>
               </FormControl>
             </Grid>
