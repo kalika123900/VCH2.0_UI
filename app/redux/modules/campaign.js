@@ -24,10 +24,10 @@ const initialState = {
   gender: List([]),
   interestedSectors: List([]),
   workLocation: List(['London']),
-  selectedYear: '',
+  selectedYear: List([]),
   ethnicity: 'Prefer not to say',
   experience: 'no',
-  minGrade: 1,
+  minGrade: List([]),
   heading: '',
   body: '',
   deadline: DateHelper.format(DateHelper.addDays(new Date(), 5)),
@@ -55,18 +55,20 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const gender = fromJS(action.data.gender);
         const interestedSectors = fromJS(action.data.interestedSectors);
         const workLocation = fromJS(action.data.workLocation);
+        const minGrade = fromJS(action.data.minGrade);
+        const selectedYear = fromJS(action.data.selectedYear);
         mutableState
           .set('university', university)
           .set('subjects', subjects)
           .set('skills', skills)
           .set('keywords', keywords)
           .set('gender', gender)
-          .set('selectedYear', action.data.selectedYear)
+          .set('selectedYear', selectedYear)
           .set('ethnicity', action.data.ethnicity)
           .set('interestedSectors', interestedSectors)
           .set('workLocation', workLocation)
           .set('experience', action.data.experience)
-          .set('minGrade', action.data.minGrade);
+          .set('minGrade', minGrade);
       });
 
     case STORE_STEP4_INFO:
@@ -111,6 +113,9 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const interestedSectors = fromJS(action.data.interestedSectors);
         const workLocation = fromJS(action.data.workLocation);
         const roleData = fromJS(action.data.roleData);
+        const minGrade = fromJS(action.data.minGrade);
+        const selectedYear = fromJS(action.data.selectedYear);
+
         mutableState
           .set('campaignStatus', action.data.campaignStatus)
           .set('roleData', roleData)
@@ -120,12 +125,12 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('skills', skills)
           .set('keywords', keywords)
           .set('gender', gender)
-          .set('selectedYear', action.data.selectedYear)
+          .set('selectedYear', selectedYear)
           .set('ethnicity', action.data.ethnicity)
           .set('interestedSectors', interestedSectors)
           .set('workLocation', workLocation)
           .set('experience', action.data.experience)
-          .set('minGrade', action.data.minGrade)
+          .set('minGrade', minGrade)
           .set('heading', action.data.heading)
           .set('body', action.data.body)
           .set('deadline', action.data.deadline)
@@ -144,12 +149,12 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('skills', List([]))
           .set('keywords', List([]))
           .set('gender', List([]))
-          .set('selectedYear', '')
+          .set('selectedYear', List([]))
           .set('ethnicity', 'No-preference')
           .set('interestedSectors', List([]))
-          .set('workLocation', List([['London']]))
+          .set('workLocation', List(['London']))
           .set('experience', 'no')
-          .set('minGrade', 0)
+          .set('minGrade', ([]))
           .set('heading', '')
           .set('body', '')
           .set('deadline', DateHelper.format(DateHelper.addDays(new Date(), 5)))
