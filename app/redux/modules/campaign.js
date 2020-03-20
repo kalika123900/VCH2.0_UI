@@ -24,10 +24,10 @@ const initialState = {
   gender: List([]),
   interestedSectors: List([]),
   workLocation: List([]),
-  selectedYear: '',
+  selectedYear: List([]),
   ethnicity: 'Prefer not to say',
   experience: 'no',
-  minGrade: 1,
+  minGrade: List([]),
   heading: '',
   body: '',
   deadline: DateHelper.format(DateHelper.addDays(new Date(), 5)),
@@ -55,7 +55,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const gender = fromJS(action.data.gender);
         const interestedSectors = fromJS(action.data.interestedSectors);
         const workLocation = fromJS(action.data.workLocation);
-        console.log(gender)
+        const minGrade = fromJS(action.data.minGrade);
+        const selectedYear = fromJS(action.data.selectedYear);
         mutableState
           .set('university', university)
           .set('subjects', subjects)
@@ -112,7 +113,9 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const interestedSectors = fromJS(action.data.interestedSectors);
         const workLocation = fromJS(action.data.workLocation);
         const roleData = fromJS(action.data.roleData);
-        console.log(roleData);
+        const minGrade = fromJS(action.data.minGrade);
+        const selectedYear = fromJS(action.data.selectedYear);
+
         mutableState
           .set('campaignStatus', action.data.campaignStatus)
           .set('roleData', roleData)
@@ -146,12 +149,12 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('skills', List([]))
           .set('keywords', List([]))
           .set('gender', List([]))
-          .set('selectedYear', '')
+          .set('selectedYear', List([]))
           .set('ethnicity', 'No-preference')
           .set('interestedSectors', List([]))
           .set('workLocation', List([]))
           .set('experience', 'no')
-          .set('minGrade', 0)
+          .set('minGrade', ([]))
           .set('heading', '')
           .set('body', '')
           .set('deadline', DateHelper.format(DateHelper.addDays(new Date(), 5)))

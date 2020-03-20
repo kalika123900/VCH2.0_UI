@@ -18,11 +18,9 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import { storeStep3Info } from 'dan-actions/CampaignActions';
 import SelectAdd from '../../SelectAdd/SelectAdd';
-import { sectorsData, skillMenu } from 'dan-api/apps/profileOption';
+import { sectorsData, skillMenu, courses, aLevelGradesItems } from 'dan-api/apps/profileOption';
 import {
-  subjectMenu,
   years,
-  grade,
   locationData,
   keywordsData
 } from './constantData';
@@ -61,35 +59,9 @@ class Step3 extends React.Component {
 
   handleReduxChange = event => {
     const { addInfo } = this.props;
-
-    if (event.target.name === 'selectedYear') {
-      addInfo({ ...this.props, selectedYear: event.target.value });
-    }
-    if (event.target.name === 'minGrade') {
-      addInfo({ ...this.props, minGrade: event.target.value });
-    }
-    if (event.target.name === 'experience') {
-      addInfo({ ...this.props, experience: event.target.value });
-    }
-    if (event.target.name === 'ethnicity') {
-      addInfo({ ...this.props, ethnicity: event.target.value });
-    }
+    addInfo({ ...this.props, [event.target.name]: event.target.value });
   };
 
-  handleMultiSelect = (event) => {
-    const { value } = event.target;
-
-    const { addInfo } = this.props;
-    if (event.target.name == 'university') {
-      addInfo({ ...this.props, university: value });
-    }
-    if (event.target.name == 'subjects') {
-      addInfo({ ...this.props, subjects: value });
-    }
-    if (event.target.name == 'skills') {
-      addInfo({ ...this.props, skills: value });
-    }
-  };
 
   handleGender = (value) => {
     const { gender, addInfo } = this.props;
@@ -166,7 +138,7 @@ class Step3 extends React.Component {
                   }
                   MenuProps={MenuProps}
                   component={Select}
-                  onChange={e => this.handleMultiSelect(e)}
+                  onChange={e => this.handleReduxChange(e)}
                 >
                   {universityMenu.map((item, index) => (
                     <MenuItem key={index.toString()} value={item.id}>
@@ -211,24 +183,24 @@ class Step3 extends React.Component {
                   component={Select}
                   renderValue={selected => {
                     const subjectName = [];
-                    subjectMenu.map((value, index) => {
-                      if (selected.includes(value.id)) {
-                        subjectName.push(value.value);
+                    courses.map((value, index) => {
+                      if (selected.includes(value)) {
+                        subjectName.push(value);
                       }
                     });
                     return subjectName.join(', ');
                   }
                   }
-                  onChange={e => this.handleMultiSelect(e)}
+                  onChange={e => this.handleReduxChange(e)}
                 >
-                  {subjectMenu.map((item, index) => (
-                    <MenuItem key={index.toString()} value={item.id}>
+                  {courses.map((item, index) => (
+                    <MenuItem key={index.toString()} value={item}>
                       <TextField
                         name="subject-checkbox"
                         component={Checkbox}
-                        checked={subjects.indexOf(item.id) > -1}
+                        checked={subjects.indexOf(item) > -1}
                       />
-                      <ListItemText primary={item.value} />
+                      <ListItemText primary={item} />
                     </MenuItem>
                   ))}
                 </Select>
@@ -260,7 +232,7 @@ class Step3 extends React.Component {
                     return skillName.join(', ');
                   }
                   }
-                  onChange={e => this.handleMultiSelect(e)}
+                  onChange={e => this.handleReduxChange(e)}
                 >
                   {skillMenu.map((item, index) => (
                     <MenuItem key={index.toString()} value={item}>
@@ -285,6 +257,36 @@ class Step3 extends React.Component {
                   This campaign will only target students graduating in these years:
                 </Typography>
                 <Select
+                  multiple
+                  value={selectedYear.toJS()}
+                  input={<Input />}
+                  name="selectedYear"
+                  MenuProps={MenuProps}
+                  component={Select}
+                  renderValue={selected => {
+                    const yearName = [];
+                    years.map((value, index) => {
+                      if (selected.includes(value)) {
+                        yearName.push(value);
+                      }
+                    });
+                    return yearName.join(', ');
+                  }
+                  }
+                  onChange={e => this.handleReduxChange(e)}
+                >
+                  {years.map((item, index) => (
+                    <MenuItem key={index.toString()} value={item}>
+                      <TextField
+                        name="selectedYear"
+                        component={Checkbox}
+                        checked={selectedYear.indexOf(item) > -1}
+                      />
+                      <ListItemText primary={item} />
+                    </MenuItem>
+                  ))}
+                </Select>
+                {/* <Select
                   placeholder="Select Year"
                   value={selectedYear}
                   name="selectedYear"
@@ -296,7 +298,7 @@ class Step3 extends React.Component {
                       <ListItemText primary={item} />
                     </MenuItem>
                   ))}
-                </Select>
+                </Select> */}
               </FormControl>
             </Grid>
           </Grid>
@@ -309,6 +311,36 @@ class Step3 extends React.Component {
                   Student that achieve these grades will be particularly targeted:
                 </Typography>
                 <Select
+                  multiple
+                  value={minGrade.toJS()}
+                  input={<Input />}
+                  name="minGrade"
+                  MenuProps={MenuProps}
+                  component={Select}
+                  renderValue={selected => {
+                    const gradeName = [];
+                    aLevelGradesItems.map((value, index) => {
+                      if (selected.includes(value)) {
+                        gradeName.push(value);
+                      }
+                    });
+                    return gradeName.join(', ');
+                  }
+                  }
+                  onChange={e => this.handleReduxChange(e)}
+                >
+                  {aLevelGradesItems.map((item, index) => (
+                    <MenuItem key={index.toString()} value={item}>
+                      <TextField
+                        name="minGrade"
+                        component={Checkbox}
+                        checked={minGrade.indexOf(item) > -1}
+                      />
+                      <ListItemText primary={item} />
+                    </MenuItem>
+                  ))}
+                </Select>
+                {/* <Select
                   placeholder="Select Minimum Grade"
                   value={minGrade}
                   name="minGrade"
@@ -320,7 +352,7 @@ class Step3 extends React.Component {
                       <ListItemText primary={item.value} />
                     </MenuItem>
                   ))}
-                </Select>
+                </Select> */}
               </FormControl>
             </Grid>
           </Grid>
@@ -420,12 +452,12 @@ Step3.propTypes = {
   skills: PropTypes.object.isRequired,
   keywords: PropTypes.object.isRequired,
   gender: PropTypes.object.isRequired,
-  selectedYear: PropTypes.string.isRequired,
+  selectedYear: PropTypes.object.isRequired,
   ethnicity: PropTypes.string.isRequired,
   interestedSectors: PropTypes.object.isRequired,
   workLocation: PropTypes.object.isRequired,
   experience: PropTypes.string.isRequired,
-  minGrade: PropTypes.number.isRequired,
+  minGrade: PropTypes.object.isRequired,
   addInfo: PropTypes.func.isRequired
 };
 
