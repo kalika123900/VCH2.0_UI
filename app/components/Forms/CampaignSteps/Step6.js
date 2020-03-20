@@ -124,7 +124,8 @@ class Step6 extends React.Component {
       university,
       gender,
       // keywords,
-      warnMsg
+      warnMsg,
+      roleName
     } = this.props;
     const Mapgender = gender.toJS();
     const { email, cname } = this.state;
@@ -221,7 +222,7 @@ class Step6 extends React.Component {
                 Promoting Role
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                AI Engineer
+                {roleName}
               </Typography>
             </Grid>
           </Grid>
@@ -334,6 +335,7 @@ const reducerA = 'Auth';
 
 const mapStateToProps = state => ({
   warnMsg: state.getIn([reducerCampaign, 'warnMsg']),
+  roleName: state.getIn([reducerCampaign, 'roleName']),
   campaignStatus: state.getIn([reducerCampaign, 'campaignStatus']),
   name: state.getIn([reducerCampaign, 'name']),
   gender: state.getIn([reducerCampaign, 'gender']),

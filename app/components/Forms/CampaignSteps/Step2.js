@@ -80,9 +80,9 @@ class Step2 extends React.Component {
       });
   }
 
-  handleRole = (id) => {
+  handleRole = (id, name) => {
     const { addInfo } = this.props;
-    addInfo({ role: id });
+    addInfo({ role: id, roleName: name });
   };
 
   handleOpen = () => {
@@ -151,7 +151,7 @@ class Step2 extends React.Component {
                           }
                           variant="body1"
                           style={{ cursor: 'pointer' }}
-                          onClick={() => this.handleRole(value.id)}
+                          onClick={() => this.handleRole(value.id, value.role_name)}
                         >
                           {value.role_name}
                         </Typography>

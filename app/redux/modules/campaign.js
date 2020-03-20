@@ -16,6 +16,7 @@ const initialState = {
   warnMsg: '',
   campaignStatus: -3,
   role: -1,
+  roleName: '',
   roleData: List([]),
   university: List([]),
   subjects: List([]),
@@ -44,6 +45,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
       return state.withMutations((mutableState) => {
         mutableState
           .set('role', action.data.role)
+          .set('roleName', action.data.roleName)
       });
 
     case STORE_STEP3_INFO:
@@ -118,6 +120,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
 
         mutableState
           .set('campaignStatus', action.data.campaignStatus)
+          .set('roleName', action.data.roleName)
           .set('roleData', roleData)
           .set('role', action.data.role)
           .set('university', university)
@@ -141,6 +144,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
     case REMOVE_CAMPAIGN_INFO:
       return state.withMutations((mutableState) => {
         mutableState
+          .set('roleName', '')
           .set('roleData', List([]))
           .set('campaignStatus', -3)
           .set('role', -1)
