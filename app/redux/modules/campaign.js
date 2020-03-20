@@ -154,7 +154,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('interestedSectors', List([]))
           .set('workLocation', List(['London']))
           .set('experience', 'no')
-          .set('minGrade', ([]))
+          .set('minGrade', List([]))
           .set('heading', '')
           .set('body', '')
           .set('deadline', DateHelper.format(DateHelper.addDays(new Date(), 5)))

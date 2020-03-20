@@ -231,7 +231,7 @@ class Step6 extends React.Component {
                 Precise Demographics
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {selectedGender}
+                {Mapgender.join(", ")}
               </Typography>
             </Grid>
             <Grid className={classes.sec_3_grid4}>
@@ -239,7 +239,7 @@ class Step6 extends React.Component {
                 Specified Universities
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {selectedUniversity}
+                {MapUniversity.join(", ")}
               </Typography>
             </Grid>
           </Grid>

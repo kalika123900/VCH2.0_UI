@@ -12,9 +12,7 @@ import {
   campaignInitMsg
 } from 'dan-actions/CampaignActions';
 import { makeSecureDecrypt } from 'dan-helpers/security';
-import {
-  keywordsData
-} from '../../../components/Forms/CampaignSteps/constantData';
+import { universityItems, keywordsData, skillMenu } from 'dan-api/apps/profileOption';
 
 async function postJSON(url, data) {
   const response = await fetch(url, {
@@ -37,8 +35,26 @@ function stringToArray(string) {
 
   const data = [];
   splitArray.map(item => {
-    if (parseInt(item) !== NaN) {
-      data.push(parseInt(item));
+    if (isNaN(item)) {
+      data.push(item);
+    }
+    else if (item > 1000) {
+      data.push(item);
+    }
+    else if (typeof item == 'string' && item.length > 0) {
+      data.push(item);
+    }
+  });
+
+  return data;
+}
+function stringToArrayWithReferral(string, data) {
+  const splitArray = string.split(',');
+
+  const dataR = [];
+  splitArray.map(item => {
+    if (isNaN(item)) {
+      dataR.push(data.indexOf(item));
     }
   });
 
@@ -64,32 +80,16 @@ function boolNumberToString(num) {
   return num === 0 ? 'no' : 'yes';
 }
 
-function mapToKeyWords(ids) {
-  const keywords = [];
-  ids.map((value, index) => {
-    const sKeyword = keywordsData.filter((item) => {
-      if (item.id == value.value) {
-        return item;
-      }
-    });
-    if (sKeyword.length > 0) {
-      keywords.push(sKeyword[0]);
-    }
-  });
-  return keywords;
+function getIds(arr, data) {
+  return arr.map(item => {
+    return data.indexOf(item);
+  })
 }
-function arrayToObject(arr) {
-  const data = [];
-  arr.map(item => {
-    if (item !== '') {
-      data.push({
-        id: null,
-        value: item
-      });
-    }
-  });
 
-  return data;
+function getIdsItem(arr, data) {
+  return arr.map(item => {
+    return data[item];
+  })
 }
 
 function formatDeadline(dateStr) {
@@ -122,33 +122,39 @@ class Campaigns extends React.Component {
       postJSON(`${API_URL}/campaign/get-campaign-info`, data) // eslint-disable-line
         .then((res) => {
           if (res.status === 1) {
+            console.log(res.data);
             const subjects = stringToArray(res.data.info.subjects);
-            const keywords = mapToKeyWords(arrayToObject(res.data.keywords));
-            const interestedSectors = stringToArrayObj(res.data.info.interested_sectors);
-            const workLocation = stringToArrayObj(res.data.info.work_location);
-            const experience = boolNumberToString(res.data.info.experience);
             const gender = stringToArray(res.data.info.gender);
+            const selectedYear = stringToArray(res.data.info.selected_year);
+            const interestedSectors = stringToArray(res.data.info.interested_sectors);
+            const minGrade = stringToArray(res.data.info.min_grade);
             const deadline = formatDeadline(res.data.info.deadline);
+            const keywords = getIdsItem(res.data.keywords, keywordsData);
+            const university = getIdsItem(res.data.university, universityItems);
+            const skills = getIdsItem(res.data.skills, skillMenu);
+            const workLocation = stringToArray(res.data.info.work_location);
+            const experience = boolNumberToString(res.data.info.experience);
 
             const campaignData = {
               name: res.data.info.campaign_name,
               role: res.data.info.role,
               gender,
-              university: res.data.university,
+              university,
               keywords,
               deadline,
-              selectedYear: res.data.info.selected_year,
+              selectedYear,
               ethnicity: res.data.info.ethnicity,
               interestedSectors,
               workLocation,
               experience,
-              minGrade: res.data.info.min_grade,
+              minGrade,
               subjects,
-              skills: res.data.skills,
+              skills,
               heading: res.data.info.heading,
               body: res.data.info.body,
               choosedDeadline: res.data.info.deadline_choice,
             };
+            console.log(campaignData)
             _that.props.campaignInit(campaignData);
             this.setState({ isCampaignExist: true });
           } else {
@@ -177,11 +183,12 @@ class Campaigns extends React.Component {
 
     const MapWorkLocation = workLocation.toJS();
     const MapInterestedSectors = interestedSectors.toJS();
-    const MapUniversity = university.toJS();
     const MapSubjects = subjects.toJS();
-    const MapKeywords = keywords.toJS();
-    const MapSkills = skills.toJS();
     const MapGender = gender.toJS();
+
+    const MapSkills = getIds(skills.toJS(), skillMenu);
+    const MapKeywords = getIds(keywords.toJS(), keywordsData);
+    const MapUniversity = getIds(university.toJS(), universityItems);
 
     if (this.state.isCampaignExist) {
       const data = {
@@ -223,21 +230,26 @@ class Campaigns extends React.Component {
         clientId: user.id
       };
       console.log(data)
-      // postJSON(`${API_URL}/campaign/create-campaign`, data) // eslint-disable-line
-      //   .then((res) => {
-      //     if (res.status === 1) {
-      //       removeInfo();
-      //       addMsg({ warnMsg: 'Campaign created Successfully' });
-      //       history.push('/client/campaign-management');
-      //     } else {
-      //       console.log('something not good ');
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
+      postJSON(`${API_URL}/campaign/create-campaign`, data) // eslint-disable-line
+        .then((res) => {
+          if (res.status === 1) {
+            removeInfo();
+            addMsg({ warnMsg: 'Campaign created Successfully' });
+            history.push('/client/campaign-management');
+          } else {
+            console.log('something not good ');
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
+  componentDidUpdate(prevProps) {
+    if (this.props.location.pathname != prevProps.location.pathname) {
+      this.props.removeInfo();
+    }
+  }
 
   render() {
     const title = brand.name + ' - Campaigns';
