@@ -142,9 +142,21 @@ const styles = theme => ({
   contentProfile: {
     flex: '1 0 auto',
     textAlign: 'center',
-    marginTop: -70
+    marginTop: -78,
+    position: 'relative'
+  },
+  absIconGrid: {
+    display: 'flex',
+    marginTop: -85
+  },
+  absItem: {
+    justifyContent: 'flex-start',
+    width: '24%',
+    marginLeft: '0.5%',
+    marginRight: '0.5%'
   },
   mediaProfile: {
+    zIndex: 0,
     height: 0,
     paddingTop: '45%',
     borderRadius: '50%',
@@ -162,7 +174,8 @@ const styles = theme => ({
   avatarBig: {
     width: 80,
     height: 80,
-    margin: '-56px auto 10px',
+    zIndex: 0,
+    margin: '25px auto 10px',
     background: theme.palette.secondary.dark,
     boxShadow: theme.shadows[7]
   },
@@ -406,7 +419,11 @@ const styles = theme => ({
     transition: theme.transitions.create('opacity'),
   },
   customMargin: {
-    marginBottom: "10px"
+    marginBottom: '10px'
+  },
+  iosIcon: {
+    width: 50,
+    height: 50
   }
 });
 

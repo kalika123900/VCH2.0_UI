@@ -59,12 +59,12 @@ class EmailMenu extends React.Component {
             </ListItemIcon>
             <ListItemText primary="Sent" />
           </ListItem>
-          <ListItem button className={selected === 'spam' ? classes.selected : ''} onClick={() => this.gotoPage('spam')}>
+          {/* <ListItem button className={selected === 'spam' ? classes.selected : ''} onClick={() => this.gotoPage('spam')}>
             <ListItemIcon>
               <ReportIcon />
             </ListItemIcon>
             <ListItemText primary="Spam" />
-          </ListItem>
+          </ListItem> */}
         </List>
         <Divider className={classes.divider} />
         <List>
@@ -72,15 +72,15 @@ class EmailMenu extends React.Component {
             <ListItemIcon>
               <Flag className={classes.iconOrange} />
             </ListItemIcon>
-            <ListItemText primary="Updates" />
+            <ListItemText primary="Campaign Responses" />
           </ListItem>
           <ListItem button className={selected === 'social' ? classes.selected : ''} onClick={() => this.gotoPage('social')}>
             <ListItemIcon>
               <People className={classes.iconRed} />
             </ListItemIcon>
-            <ListItemText primary="Social" />
+            <ListItemText primary="Bulk emails queries" />
           </ListItem>
-          <ListItem button className={selected === 'promos' ? classes.selected : ''} onClick={() => this.gotoPage('promos')}>
+          {/* <ListItem button className={selected === 'promos' ? classes.selected : ''} onClick={() => this.gotoPage('promos')}>
             <ListItemIcon>
               <LabelIcon className={classes.iconBlue} />
             </ListItemIcon>
@@ -91,7 +91,7 @@ class EmailMenu extends React.Component {
               <QuestionAnswer className={classes.iconCyan} />
             </ListItemIcon>
             <ListItemText primary="Forums" />
-          </ListItem>
+          </ListItem> */}
         </List>
       </Fragment>
     );
@@ -107,7 +107,7 @@ EmailMenu.propTypes = {
 };
 
 EmailMenu.defaultProps = {
-  onClose: () => {}
+  onClose: () => { }
 };
 
 export default withStyles(styles)(EmailMenu);

@@ -17,10 +17,13 @@ import SendIcon from '@material-ui/icons/Send';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import SchoolOutlined from '@material-ui/icons/SchoolOutlined';
 import Divider from '@material-ui/core/Divider';
-import styles from './cardStyle-jss';
+import IconButton from '@material-ui/core/IconButton';
+import Grid from '@material-ui/core/Grid';
 import { CombineStyles } from 'dan-helpers';
-import MessageDialog from '../../components/Forms/MessageDialog';
-import StudentProfileDialog from '../../components/Profile/StudentProfileDialog';
+import Ionicon from 'react-ionicons';
+import styles from './cardStyle-jss';
+import MessageDialog from '../Forms/MessageDialog';
+import StudentProfileDialog from '../Profile/StudentProfileDialog';
 
 const customStyles = {
   customBottomNavLabel: {
@@ -28,8 +31,12 @@ const customStyles = {
     '& span': {
       fontSize: '0.60rem'
     }
+  },
+  absIconGrid: {
+    position: 'absolute',
+    top: '-20px'
   }
-}
+};
 
 const combinedStyles = CombineStyles(customStyles, styles);
 
@@ -47,7 +54,6 @@ class StudentCard extends React.Component {
     this.setState({ open: false });
   };
 
-
   handleProfileOpen = (e) => {
     this.setState({ profile: true });
   };
@@ -55,7 +61,6 @@ class StudentCard extends React.Component {
   handleProfileClose = () => {
     this.setState({ profile: false });
   };
-
 
   render() {
     const {
@@ -80,6 +85,20 @@ class StudentCard extends React.Component {
             title="cover"
           />
           <CardContent className={classes.contentProfile}>
+            <Grid className={classes.absIconGrid}>
+              <Grid className={classes.absItem}>
+                <Ionicon icon="ios-checkmark" fontSize="40px" color="#fff" style={{ color: '#4bfd00' }} />
+              </Grid>
+              <Grid className={classes.absItem}>
+                <Ionicon icon="ios-list-box" fontSize="40px" color="white" style={{ color: '#fff' }} />
+              </Grid>
+              <Grid className={classes.absItem}>
+                <Ionicon icon="ios-person" fontSize="40px" color="white" style={{ color: '#fff' }} />
+              </Grid>
+              <Grid className={classes.absItem}>
+                <Ionicon icon="ios-ribbon" fontSize="40px" color="white" style={{ color: '#fff' }} />
+              </Grid>
+            </Grid>
             <Avatar alt="avatar" src={avatar} className={classes.avatarBig} />
             <Typography variant="h6" className={classes.name} gutterBottom>
               {name}
@@ -88,13 +107,17 @@ class StudentCard extends React.Component {
             <Typography className={classes.subheading} gutterBottom>
               <span className={Type.regular}>{title}</span>
             </Typography>
-            <Typography variant='subtitle1' className={classes.subheading} gutterBottom>
-              <SchoolOutlined /> {university}
+            <Typography variant="subtitle1" className={classes.subheading} gutterBottom>
+              <SchoolOutlined />
+              {' '}
+              {university}
             </Typography>
-            <Button className={classes.buttonProfile}
-              size="small" variant="outlined"
+            <Button
+              className={classes.buttonProfile}
+              size="small"
+              variant="outlined"
               color="primary"
-              style={{ margin: "10px" }}
+              style={{ margin: '10px' }}
               onClick={(e) => this.handleProfileOpen(e)}
             >
               {btnText}

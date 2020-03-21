@@ -7,7 +7,9 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import { NewStudentsFeed } from 'dan-components';
 import styles from './dashboard-jss';
-import { MiniCampaignTable, MiniBulkEmailTable, Demographics, MiniSeatTable } from '../pageListAsync';
+import {
+  MiniCampaignTable, MiniBulkEmailTable, Demographics, MiniSeatTable
+} from '../pageListAsync';
 
 class ClientDashboard extends PureComponent {
   render() {
