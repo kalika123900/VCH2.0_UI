@@ -29,16 +29,6 @@ const emailValidator = value => (
     ? 'Invalid email'
     : undefined
 );
-async function postData(url, data) {
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: qs.stringify(data)
-  });
-  return await response.json();
-}
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -52,45 +42,8 @@ const MenuProps = {
   },
 };
 
+
 class EditPersonalDetails extends React.Component {
-
-  // componentDidMount() {
-  //   const {
-  //     phoneNumber,
-  //     dob,
-  //     nationality,
-  //     files,
-  //     ethnicity,
-  //     gender
-  //   } = this.props;
-
-  //   const user = JSON.parse(
-  //     makeSecureDecrypt(localStorage.getItem('user'))
-  //   );
-  //   const data = {
-  //     phone: phoneNumber,
-  //     dob: dob,
-  //     gender: gender,
-  //     ethnicity: ethnicity,
-  //     nationality: nationality,
-  //     resume: files,
-  //     user_id: user.id
-  //   };
-
-  //   postData(`${API_URL}/student/create-persnal-details`, data) // eslint-disable-line
-  //     .then((res) => {
-  //       if (res.status === 1) {
-  //         console.log("sucessfull")
-  //       } else {
-  //         console.log('something not good ');
-  //       }
-
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }
-
 
   handleDOB = date => {
     const { addInfo } = this.props;
@@ -154,7 +107,7 @@ class EditPersonalDetails extends React.Component {
           <div>
             <FormControl className={classes.formControl}>
               <TextField
-                label="Alternative Email"
+                label="Email"
                 className={classes.textField}
                 type="email"
                 name="alternateEmail"
@@ -298,16 +251,12 @@ EditPersonalDetails.propTypes = {
   alternateEmail: PropTypes.string.isRequired,
   phoneNumber: PropTypes.string.isRequired,
   dob: PropTypes.string.isRequired,
-  gender: PropTypes.object.isRequired,
-  ethnicity: PropTypes.object.isRequired,
-  nationality: PropTypes.object.isRequired,
-  files: PropTypes.object.isRequired,
-  // intrestedIndustries: PropTypes.string.isRequired,
-  // intrestedCompanies: PropTypes.number.isRequired,
-  // skills: PropTypes.object.isRequired,
-  // education: PropTypes.string.isRequired,
-  // experience: PropTypes.number.isRequired,
-  addInfo: PropTypes.func.isRequired
+  gender: PropTypes.string.isRequired,
+  ethnicity: PropTypes.string.isRequired,
+  nationality: PropTypes.string.isRequired,
+  files: PropTypes.string.isRequired,
+  addInfo: PropTypes.func.isRequired,
+  studentInit: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -328,7 +277,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addInfo: bindActionCreators(storeProfileDetails, dispatch)
+  addInfo: bindActionCreators(storeProfileDetails, dispatch),
+  studentInit: bindActionCreators(storeProfileDetails, dispatch)
 });
 
 const StepMapped = connect(
