@@ -33,7 +33,6 @@ const MenuProps = {
   },
 };
 
-
 class EditSkillsInterests extends React.Component {
   constructor(props) {
     super(props)
@@ -47,6 +46,7 @@ class EditSkillsInterests extends React.Component {
 
   };
 
+
   render() {
     const {
       classes,
@@ -56,7 +56,6 @@ class EditSkillsInterests extends React.Component {
       intrestedCompanies,
       handleSubmit
     } = this.props;
-
 
     return (
       <section className={classes.pageFormWrap} >
