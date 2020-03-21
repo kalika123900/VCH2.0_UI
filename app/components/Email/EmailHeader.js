@@ -15,7 +15,7 @@ const recentCampaign = [
   'Campaign 1',
   'Campaign 2',
   'Campaign 3'
-]
+];
 
 
 const ITEM_HEIGHT = 48;

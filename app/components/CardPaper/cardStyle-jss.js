@@ -419,7 +419,7 @@ const styles = theme => ({
     transition: theme.transitions.create('opacity'),
   },
   customMargin: {
-    marginBottom: "10px"
+    marginBottom: '10px'
   },
   iosIcon: {
     width: 50,

@@ -18,12 +18,12 @@ import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import SchoolOutlined from '@material-ui/icons/SchoolOutlined';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import styles from './cardStyle-jss';
 import Grid from '@material-ui/core/Grid';
 import { CombineStyles } from 'dan-helpers';
-import MessageDialog from '../../components/Forms/MessageDialog';
-import StudentProfileDialog from '../../components/Profile/StudentProfileDialog';
 import Ionicon from 'react-ionicons';
+import styles from './cardStyle-jss';
+import MessageDialog from '../Forms/MessageDialog';
+import StudentProfileDialog from '../Profile/StudentProfileDialog';
 
 const customStyles = {
   customBottomNavLabel: {
@@ -36,7 +36,7 @@ const customStyles = {
     position: 'absolute',
     top: '-20px'
   }
-}
+};
 
 const combinedStyles = CombineStyles(customStyles, styles);
 
@@ -107,13 +107,17 @@ class StudentCard extends React.Component {
             <Typography className={classes.subheading} gutterBottom>
               <span className={Type.regular}>{title}</span>
             </Typography>
-            <Typography variant='subtitle1' className={classes.subheading} gutterBottom>
-              <SchoolOutlined /> {university}
+            <Typography variant="subtitle1" className={classes.subheading} gutterBottom>
+              <SchoolOutlined />
+              {' '}
+              {university}
             </Typography>
-            <Button className={classes.buttonProfile}
-              size="small" variant="outlined"
+            <Button
+              className={classes.buttonProfile}
+              size="small"
+              variant="outlined"
               color="primary"
-              style={{ margin: "10px" }}
+              style={{ margin: '10px' }}
               onClick={(e) => this.handleProfileOpen(e)}
             >
               {btnText}
