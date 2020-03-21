@@ -16,7 +16,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import brand from 'dan-api/dummy/brand';
-import { storeStep5Info } from 'dan-actions/CampaignActions';
+import { storeStep5Info, storeStep2Info } from 'dan-actions/CampaignActions';
 import PapperBlock from '../../PapperBlock/PapperBlock';
 import styles from '../../../containers/Pages/HelpSupport/helpSupport-jss';
 import { parseDateHelper } from '../../../redux/helpers/dateTimeHelper';
@@ -54,11 +54,17 @@ class Step5 extends React.Component {
     }
 
     const dateMonthYear = year + '-' + (month) + '-' + date;
-    addInfo({ deadline: dateMonthYear, choosedDeadline });
+    if (choosedDeadline === '0') {
+      addInfo({ deadline: dateMonthYear, choosedDeadline });
+    }
+    else {
+      const { role, roleName, addRoleInfo } = this.props;
+      addRoleInfo({ role, roleName, roleDeadline: dateMonthYear });
+    }
   };
 
   render() {
-    const { classes, deadline, choosedDeadline } = this.props;
+    const { classes, deadline, choosedDeadline, roleDeadline } = this.props;
     const { expanded } = this.state;
     const title = brand.name + ' - Deadline';
     const description = brand.desc;
@@ -90,8 +96,7 @@ class Step5 extends React.Component {
                   <FormControlLabel value="0" control={<Radio />} label="Custom Deadline" />
                 </RadioGroup>
               </div>
-              <br />
-              {choosedDeadline === '0' && (
+              {(choosedDeadline === '0' || choosedDeadline === '5') && (
                 <div style={{ textAlign: 'left' }}>
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <Grid container justify="space-around">
@@ -99,7 +104,7 @@ class Step5 extends React.Component {
                         margin="normal"
                         format="dd/MM/yyyy"
                         placeholder="Choose Date"
-                        value={new Date(deadline)}
+                        value={choosedDeadline === '0' ? new Date(deadline) : new Date(roleDeadline)}
                         onChange={this.handleDateChange}
                         KeyboardButtonProps={{
                           'aria-label': 'change date',
@@ -107,6 +112,14 @@ class Step5 extends React.Component {
                       />
                     </Grid>
                   </MuiPickersUtilsProvider>
+                  {choosedDeadline === '5' &&
+                    <Grid style={{ textAlign: "center" }}>
+
+                      <Typography variant="caption" color="textSecondary">
+                        (It's Your role deadline)
+                      </Typography>
+                    </Grid>
+                  }
                 </div>
               )}
             </PapperBlock>
@@ -182,11 +195,15 @@ const reducerCampaign = 'campaign';
 
 const mapStateToProps = state => ({
   deadline: state.getIn([reducerCampaign, 'deadline']),
+  role: state.getIn([reducerCampaign, 'role']),
+  roleName: state.getIn([reducerCampaign, 'roleName']),
+  roleDeadline: state.getIn([reducerCampaign, 'roleDeadline']),
   choosedDeadline: state.getIn([reducerCampaign, 'choosedDeadline'])
 });
 
 const mapDispatchToProps = dispatch => ({
-  addInfo: bindActionCreators(storeStep5Info, dispatch)
+  addInfo: bindActionCreators(storeStep5Info, dispatch),
+  addRoleInfo: bindActionCreators(storeStep2Info, dispatch)
 });
 
 const StepMapped = connect(

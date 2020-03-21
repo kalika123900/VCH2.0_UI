@@ -142,12 +142,12 @@ const styles = theme => ({
   contentProfile: {
     flex: '1 0 auto',
     textAlign: 'center',
-    marginTop: -78,
+    marginTop: '-20%',
     position: 'relative'
   },
   absIconGrid: {
     display: 'flex',
-    marginTop: -85
+    marginTop: '-32%'
   },
   absItem: {
     justifyContent: 'flex-start',

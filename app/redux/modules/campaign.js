@@ -16,6 +16,7 @@ const initialState = {
   warnMsg: '',
   campaignStatus: -3,
   role: -1,
+  roleDeadline: '',
   roleName: '',
   roleData: List([]),
   university: List([]),
@@ -32,7 +33,7 @@ const initialState = {
   heading: '',
   body: '',
   deadline: DateHelper.format(DateHelper.addDays(new Date(), 5)),
-  choosedDeadline: '0',
+  choosedDeadline: '5',
   name: '',
   action: 'create'
 };
@@ -46,6 +47,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
         mutableState
           .set('role', action.data.role)
           .set('roleName', action.data.roleName)
+          .set('roleDeadline', action.data.roleDeadline)
       });
 
     case STORE_STEP3_INFO:
@@ -120,6 +122,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
 
         mutableState
           .set('campaignStatus', action.data.campaignStatus)
+          .set('roleDeadline', action.data.roleDeadline)
           .set('roleName', action.data.roleName)
           .set('roleData', roleData)
           .set('role', action.data.role)
@@ -145,6 +148,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
       return state.withMutations((mutableState) => {
         mutableState
           .set('roleName', '')
+          .set('roleDeadline', '')
           .set('roleData', List([]))
           .set('campaignStatus', -3)
           .set('role', -1)

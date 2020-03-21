@@ -118,12 +118,14 @@ class Step6 extends React.Component {
     const {
       classes,
       name,
+      roleDeadline,
       deadline,
       heading,
       body,
       university,
       gender,
       warnMsg,
+      choosedDeadline,
       roleName
     } = this.props;
 
@@ -151,7 +153,7 @@ class Step6 extends React.Component {
       //   selectedUniversity = `${selectedUniversity}, ${universityItems[item]}`
       // }
     })
-
+    const customDeadline = choosedDeadline == 0 ? deadline : roleDeadline;
     const title = brand.name + ' - Review Campaign Settings';
     const description = brand.desc;
     return (
@@ -213,7 +215,7 @@ class Step6 extends React.Component {
                 Campaign Deadline
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {deadline}
+                {customDeadline}
               </Typography>
             </Grid>
             <Grid className={classes.sec_3_grid3}>
@@ -336,6 +338,7 @@ const mapStateToProps = state => ({
   name: state.getIn([reducerCampaign, 'name']),
   gender: state.getIn([reducerCampaign, 'gender']),
   choosedDeadline: state.getIn([reducerCampaign, 'choosedDeadline']),
+  roleDeadline: state.getIn([reducerCampaign, 'roleDeadline']),
   deadline: state.getIn([reducerCampaign, 'deadline']),
   university: state.getIn([reducerCampaign, 'university']),
   role: state.getIn([reducerCampaign, 'role']),

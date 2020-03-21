@@ -84,9 +84,24 @@ class Step2 extends React.Component {
     }
   }
 
-  handleRole = (id, name) => {
+  handleRole = (id, name, roleDate) => {
     const { addInfo } = this.props;
-    addInfo({ role: id, roleName: name });
+
+    let roleDeadline = new Date(roleDate);
+    const year = roleDeadline.getFullYear();
+    let date = roleDeadline.getDate();
+    let month = roleDeadline.getMonth();
+
+    if (date < 10) {
+      date = '0' + date;
+    }
+    if (month < 9) {
+      month = '0' + (month + 1);
+    } else {
+      month += 1;
+    }
+    const dateMonthYear = year + '-' + (month) + '-' + date;
+    addInfo({ role: id, roleName: name, roleDeadline: dateMonthYear });
   };
 
   handleOpen = () => {
@@ -155,7 +170,7 @@ class Step2 extends React.Component {
                           }
                           variant="body1"
                           style={{ cursor: 'pointer' }}
-                          onClick={() => this.handleRole(value.id, value.role_name)}
+                          onClick={() => this.handleRole(value.id, value.role_name, value.role_deadline)}
                         >
                           {value.role_name}
                         </Typography>
@@ -224,7 +239,8 @@ Step2.propTypes = {
   classes: PropTypes.object.isRequired,
   addInfo: PropTypes.func.isRequired,
   role: PropTypes.number.isRequired,
-  roleData: PropTypes.object.isRequired
+  roleData: PropTypes.object.isRequired,
+  roleDeadline: PropTypes.string.isRequired
 };
 
 const reducerCampaign = 'campaign';
@@ -234,6 +250,7 @@ const mapStateToProps = state => ({
   role: state.getIn([reducerCampaign, 'role']),
   userType: state.getIn([reducerA, 'userType']),
   roleData: state.getIn([reducerCampaign, 'roleData']),
+  roleDeadline: state.getIn([reducerCampaign, 'roleDeadline']),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -48,7 +48,8 @@ const styles = theme => ({
   flex: {
     flex: 1,
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
   },
   wrapper: {
     fontFamily: theme.typography.fontFamily,

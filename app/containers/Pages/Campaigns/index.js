@@ -108,8 +108,10 @@ class Campaigns extends React.Component {
             const experience = boolNumberToString(res.data.info.experience);
             let roleData = [];
             roleData.push(res.data.info.roleData);
+            const roleDeadline = formatDeadline(roleData[0].role_deadline);
 
             const campaignData = {
+              roleDeadline: roleDeadline,
               roleName: roleData[0].role_name,
               name: res.data.info.campaign_name,
               role: res.data.info.role,
@@ -154,7 +156,10 @@ class Campaigns extends React.Component {
       gender,
       history,
       addMsg,
-      removeInfo
+      removeInfo,
+      roleDeadline,
+      deadline,
+      choosedDeadline
     } = this.props;
 
     const MapWorkLocation = workLocation.toJS();
@@ -166,9 +171,18 @@ class Campaigns extends React.Component {
     const MapKeywords = getIds(keywords.toJS(), keywordsData);
     const MapUniversity = getIds(university.toJS(), universityItems);
 
+    let customDeadline = '';
+    if (choosedDeadline == '5') {
+      customDeadline = roleDeadline
+    }
+    else {
+      customDeadline = deadline
+    }
+
     if (this.state.isCampaignExist) {
       const data = {
         ...this.props,
+        deadline: customDeadline,
         workLocation: MapWorkLocation,
         interestedSectors: MapInterestedSectors,
         subjects: MapSubjects,
@@ -180,22 +194,25 @@ class Campaigns extends React.Component {
         campaignId: this.props.match.params.campaignId
       };
 
-      postJSON(`${API_URL}/campaign/client/update-campaign`, data) // eslint-disable-line
-        .then((res) => {
-          if (res.status === 1) {
-            removeInfo();
-            addMsg({ warnMsg: 'Campaign updated Successfully' });
-            history.push('/client/campaign-management');
-          } else {
-            console.log('something not good ');
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      console.log(data);
+
+      // postJSON(`${API_URL}/campaign/client/update-campaign`, data) // eslint-disable-line
+      //   .then((res) => {
+      //     if (res.status === 1) {
+      //       removeInfo();
+      //       addMsg({ warnMsg: 'Campaign updated Successfully' });
+      //       history.push('/client/campaign-management');
+      //     } else {
+      //       console.log('something not good ');
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     } else {
       const data = {
         ...this.props,
+        deadline: customDeadline,
         workLocation: MapWorkLocation,
         interestedSectors: MapInterestedSectors,
         subjects: MapSubjects,
@@ -205,22 +222,25 @@ class Campaigns extends React.Component {
         gender: MapGender,
         clientId: user.id
       };
-      console.log(data)
-      postJSON(`${API_URL}/campaign/create-campaign`, data) // eslint-disable-line
-        .then((res) => {
-          if (res.status === 1) {
-            removeInfo();
-            addMsg({ warnMsg: 'Campaign created Successfully' });
-            history.push('/client/campaign-management');
-          } else {
-            console.log('something not good ');
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+
+      console.log(data);
+
+      // postJSON(`${API_URL}/campaign/create-campaign`, data) // eslint-disable-line
+      //   .then((res) => {
+      //     if (res.status === 1) {
+      //       removeInfo();
+      //       addMsg({ warnMsg: 'Campaign created Successfully' });
+      //       history.push('/client/campaign-management');
+      //     } else {
+      //       console.log('something not good ');
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     }
   };
+
   componentDidUpdate(prevProps) {
     if (this.props.location.pathname != prevProps.location.pathname) {
       this.props.removeInfo();
@@ -274,6 +294,7 @@ const reducerCampaign = 'campaign';
 const mapStateToProps = state => ({
   name: state.getIn([reducerCampaign, 'name']),
   role: state.getIn([reducerCampaign, 'role']),
+  roleDeadline: state.getIn([reducerCampaign, 'roleDeadline']),
   gender: state.getIn([reducerCampaign, 'gender']),
   university: state.getIn([reducerCampaign, 'university']),
   keywords: state.getIn([reducerCampaign, 'keywords']),
