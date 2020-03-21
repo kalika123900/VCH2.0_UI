@@ -15,9 +15,6 @@ class Signout extends React.Component {
       props.history.push('/');
     }
   }
-  state = {
-    expanded: null,
-  };
 
   render() {
     return null;

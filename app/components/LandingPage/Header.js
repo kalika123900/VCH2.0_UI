@@ -36,8 +36,9 @@ class Header extends React.Component {
       createData('showcase', '#showcase'),
       createData('testimonials', '#testimonials'),
       createData('pricing', '#tech'),
-      createData('signup', '#pricing'),
-      createData('signin', '#signin'),
+      createData('student', '/student-signin'),
+      createData('client', '/signin'),
+      createData('admin', '/admin-signin'),
     ]
   }
 
@@ -92,7 +93,7 @@ class Header extends React.Component {
                   <Scrollspy items={['feature', 'showcase', 'testimonials', 'pricing', 'signup', 'signin']} currentClassName="active">
                     {menuList.map(item => (
                       <li key={item.id.toString()}>
-                        <Button component={AnchorLink} href={item.url}>{item.name}</Button>
+                        <Button href={item.url}>{item.name}</Button>
                       </li>
                     ))}
                   </Scrollspy>
