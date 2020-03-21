@@ -47,15 +47,28 @@ const styles = theme => ({
   },
   flex: {
     flex: 1,
+    display: 'flex',
+    justifyContent: 'space-between'
   },
   wrapper: {
     fontFamily: theme.typography.fontFamily,
+    width: '79%',
+    marginRight: '1%',
     position: 'relative',
     color: theme.palette.text.secondary,
     borderRadius: theme.rounded.big,
     boxShadow: theme.shadows[2],
     background: theme.palette.background.paper,
     border: `1px solid ${theme.palette.primary.main}`,
+    margin: `${theme.spacing(2)}px 0`
+  },
+  selectWrapper: {
+    fontFamily: theme.typography.fontFamily,
+    width: '19%',
+    minWidth: 180,
+    marginLeft: '1%',
+    position: 'relative',
+    color: theme.palette.text.secondary,
     margin: `${theme.spacing(2)}px 0`
   },
   addBtn: {

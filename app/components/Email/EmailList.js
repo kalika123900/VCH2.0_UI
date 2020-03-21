@@ -83,30 +83,30 @@ class EmailList extends React.Component {
           return (
             <span className={classNames(classes.iconOrange, classes.category)}>
               <Flag />
-              &nbsp;Updates
+              &nbsp;Campaign Response
             </span>
           );
         case 'social':
           return (
             <span className={classNames(classes.iconRed, classes.category)}>
               <People />
-              &nbsp;Social
+              &nbsp;Bulk Email Queries
             </span>
           );
-        case 'promos':
-          return (
-            <span className={classNames(classes.iconBlue, classes.category)}>
-              <LabelIcon />
-              &nbsp;Promos
-            </span>
-          );
-        case 'forums':
-          return (
-            <span className={classNames(classes.iconCyan, classes.category)}>
-              <QuestionAnswer />
-              &nbsp;Forums
-            </span>
-          );
+        // case 'promos':
+        //   return (
+        //     <span className={classNames(classes.iconBlue, classes.category)}>
+        //       <LabelIcon />
+        //       &nbsp;Promos
+        //     </span>
+        //   );
+        // case 'forums':
+        //   return (
+        //     <span className={classNames(classes.iconCyan, classes.category)}>
+        //       <QuestionAnswer />
+        //       &nbsp;Forums
+        //     </span>
+        //   );
         default:
           return false;
       }
@@ -154,7 +154,7 @@ class EmailList extends React.Component {
           <ExpansionPanelSummary className={classes.emailSummary} expandIcon={<ExpandMoreIcon />}>
             <div className={classes.fromHeading}>
               <Tooltip id="tooltip-mark" title="Stared">
-                <IconButton onClick={() => toggleStar(mail)} className={classes.starBtn}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />) }</IconButton>
+                <IconButton onClick={() => toggleStar(mail)} className={classes.starBtn}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
               </Tooltip>
               {mail.get('category') !== 'spam'
                 ? (<Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} />)
@@ -185,7 +185,7 @@ class EmailList extends React.Component {
                 </Typography>
                 <div className={classes.opt}>
                   <Tooltip id="tooltip-mark" title="Stared">
-                    <IconButton onClick={() => toggleStar(mail)}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />) }</IconButton>
+                    <IconButton onClick={() => toggleStar(mail)}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
                   </Tooltip>
                   <Tooltip id="tooltip-mark" title="Mark message to">
                     <IconButton

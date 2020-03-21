@@ -24,7 +24,12 @@ const styles = theme => ({
       padding: '0 !important'
     }
   },
-
+  gridItem: {
+    border: '4px solid #3F50B4',
+    borderRadius: '10px',
+    margin: '10px 0px 0px 0px',
+    padding: '6px !important'
+  }
 });
 
 export default styles;

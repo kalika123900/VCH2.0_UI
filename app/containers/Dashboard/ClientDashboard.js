@@ -30,7 +30,7 @@ class ClientDashboard extends PureComponent {
           </Grid>
         </Grid>
         <Grid container spacing={3} className={classes.root}>
-          <Grid item md={6} xs={12}>
+          <Grid item md={6} xs={12} >
             <MiniCampaignTable />
           </Grid>
           <Grid item md={6} sm={12} xs={12}>
@@ -43,7 +43,7 @@ class ClientDashboard extends PureComponent {
             <Divider className={classes.divider} />
             <NewStudentsFeed />
           </Grid>
-          <Grid item md={6} sm={12} xs={12}>
+          <Grid item md={6} sm={12} xs={12} >
             <MiniSeatTable />
           </Grid>
         </Grid>

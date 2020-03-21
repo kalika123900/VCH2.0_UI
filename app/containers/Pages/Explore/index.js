@@ -7,8 +7,6 @@ import styles from 'dan-components/Forms/user-jss';
 import Grid from '@material-ui/core/Grid';
 import { Pagination, ExploreFilter, StudentCard } from 'dan-components';
 import datas from 'dan-api/apps/connectionData';
-
-
 import Button from '@material-ui/core/Button';
 
 const customStyles = {
