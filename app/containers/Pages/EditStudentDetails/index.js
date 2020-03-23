@@ -101,7 +101,7 @@ class EditStudentDetails extends Component {
     postData(`${API_URL}/student/get-personal-details`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
-          console.log(res.data.firstname)
+
           const firstName = res.data.firstname;
           const lastName = res.data.lastname;
           const alternateEmail = res.data.email;
@@ -150,6 +150,30 @@ class EditStudentDetails extends Component {
         console.log(err);
       });
   }
+  handleEducation = () => {
+    // const { educationInfo } = this.props;
+    // const MapEducationInfo = educationInfo.toJS();
+
+    // // const MapSkills = getIds(skills.toJS(), skillMenu);
+    // // const MapOldSkills = getIds(oldSkills.toJS(), skillMenu)
+
+    // const data = {
+    //   newEducationInfo:MapEducationInfo,
+    //   user_id: user.id
+    // };
+    // postJSON(`${API_URL}/student/create-skills-interests`, data) // eslint-disable-line
+    //   .then((res) => {
+    //     if (res.status === 1) {
+    //       console.log("sucessfull")
+    //     } else {
+    //       console.log('something not good ');
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+  }
+
 
   handleSkillsInterests = () => {
     const {
@@ -228,7 +252,7 @@ class EditStudentDetails extends Component {
     }
     MapEducationInfo.push(formObject);
     addEducationInfo({ educationInfo: MapEducationInfo });
-    console.log(educationInfo)
+
   }
   removeEducationField = itemId => {
     const { educationInfo, addEducationInfo } = this.props;
@@ -247,7 +271,7 @@ class EditStudentDetails extends Component {
     }
     MapExperienceInfo.push(fromObject);
     addExperienceInfo({ experienceInfo: MapExperienceInfo });
-    console.log(experienceInfo)
+
   }
   removeExperienceField = itemId => {
     const { experienceInfo, addExperienceInfo } = this.props;
@@ -269,12 +293,14 @@ class EditStudentDetails extends Component {
           </Button>
           </div>
           <EditEducation id={item.id} />
+
         </Fragment>
       }
       else {
         return <EditEducation id={item.id} key={index} />
       }
     });
+
 
     const ExperienceJSX = MapExperienceInfo.map((item, index) => {
       if (item.id != 0) {
@@ -322,6 +348,11 @@ class EditStudentDetails extends Component {
                 <Button variant="text" color="primary" onClick={e => this.addEducationField(e)}>
                   Add More
                   </Button>
+              </div>
+              <div className={classes.btnArea} style={{ marginTop: '35px' }}>
+                <Button variant="contained" fullWidth color="primary" onClick={() => this.handleEducation()}>
+                  Save Changes
+              </Button>
               </div>
             </Fragment>
           )}

@@ -28,8 +28,9 @@ const initialState = {
   files: List([]),
   institute: '',
   qualification: '',
-  eduFrom: DateHelper.format(DateHelper.addDays(new Date(), -1480)),
-  eduTo: DateHelper.format(DateHelper.addDays(new Date(), -30)),
+  eduFrom: '',
+  eduTo: '',
+  course: '',
   grade: '',
   company: '',
   role: '',
@@ -38,11 +39,27 @@ const initialState = {
     id: 0,
     institute: '',
     qualification: '',
-    eduFrom: DateHelper.format(DateHelper.addDays(new Date(), -1480)),
-    eduTo: DateHelper.format(DateHelper.addDays(new Date(), -30)),
+    eduFrom: '',
+    eduTo: '',
+    course: '',
+    grade: ''
+  }]),
+  oldEdcationInfo: List([{
+    id: 0,
+    institute: '',
+    qualification: '',
+    eduFrom: '',
+    eduTo: '',
+    course: '',
     grade: ''
   }]),
   experienceInfo: List([{
+    id: 0,
+    company: '',
+    role: '',
+    roleDescription: ''
+  }]),
+  oldExperienceInfo: List([{
     id: 0,
     company: '',
     role: '',
@@ -85,14 +102,19 @@ export default function reducer(state = initialImmutableState, action = {}) {
     case STORE_EDUCATION_DATA:
       return state.withMutations((mutableState) => {
         const educationInfo = fromJS(action.data.educationInfo)
+        const oldEdcationInfo = fromJS(action.data.educationInfo)
         mutableState
           .set('educationInfo', educationInfo)
+          .set('oldEdcationInfo', oldEdcationInfo)
+
       });
     case STORE_EXPERIENCE:
       return state.withMutations((mutableState) => {
         const experienceInfo = fromJS(action.data.experienceInfo)
+        const oldExperienceInfo = fromJS(action.data.oldExperienceInfo)
         mutableState
           .set('experienceInfo', experienceInfo)
+          .set('oldExperienceInfo', oldExperienceInfo)
 
       });
     case STUDENT_PROFILE_INIT:
@@ -124,14 +146,18 @@ export default function reducer(state = initialImmutableState, action = {}) {
     case STORE_EDUCATION_DATA_INIT:
       return state.withMutations((mutableState) => {
         const educationInfo = fromJS(action.data.educationInfo)
+        const oldEdcationInfo = fromJS(action.data.oldEdcationInfo)
         mutableState
           .set('educationInfo', educationInfo)
+          .set('oldEdcationInfo', oldEdcationInfo)
       });
     case STORE_EXPERIENCE_INIT:
       return state.withMutations((mutableState) => {
         const experienceInfo = fromJS(action.data.experienceInfo)
+        const oldExperienceInfo = fromJS(action.data.oldExperienceInfo)
         mutableState
           .set('experienceInfo', experienceInfo)
+          .set('oldExperienceInfo', oldExperienceInfo)
 
       });
 
