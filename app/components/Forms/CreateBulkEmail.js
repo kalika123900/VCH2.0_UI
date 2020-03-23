@@ -10,12 +10,12 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import ArrowForward from '@material-ui/icons/ArrowForward';
-import BulkEmailForm from './BulkEmailForm';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import styles from './user-jss';
 import ArrowBack from '@material-ui/icons/ArrowBack';
+import styles from './user-jss';
+import BulkEmailForm from './BulkEmailForm';
 import Step1 from './BulkEmailSteps/Step1';
 import Step2 from './BulkEmailSteps/Step2';
 import Step3 from './BulkEmailSteps/Step3';
@@ -97,7 +97,7 @@ class CreateBulkEmail extends React.Component {
                     fullWidth
                     color="primary"
                     onClick={() => this.handleNext()}
-                    disabled={(role == -1 ? true : false)}
+                    disabled={(role == -1)}
                   >
                     Next
                     <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} />

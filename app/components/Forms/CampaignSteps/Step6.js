@@ -13,15 +13,15 @@ import RemoveRedEye from '@material-ui/icons/RemoveRedEye';
 import Avatar from '@material-ui/core/Avatar';
 import Reply from '@material-ui/icons/Reply';
 import brand from 'dan-api/dummy/brand';
-import { storeStep6Info } from 'dan-actions/CampaignActions';
+import { storeStep6Info, campaignRemoveMsg, campaignInitMsg } from 'dan-actions/CampaignActions';
 import estyles from 'dan-components/Email/email-jss';
 import { CombineStyles } from 'dan-helpers';
-import styles from './step-jss';
-const showdown = require('showdown');
-import { campaignRemoveMsg, campaignInitMsg } from 'dan-actions/CampaignActions';
-const converter = new showdown.Converter();
 import { genderItems, universityItems } from 'dan-api/apps/profileOption';
+import styles from './step-jss';
+
 import { makeSecureDecrypt } from '../../../Helpers/security';
+const showdown = require('showdown');
+const converter = new showdown.Converter();
 
 const combinedStyles = CombineStyles(styles, estyles);
 
@@ -59,9 +59,9 @@ class Step6 extends React.Component {
       postData(`${API_URL}/client/client-info`, data)
         .then((res) => {
           if (res.status === 1) {
-            let { data } = res;
-            let email = data.email;
-            let cname = `${data.firstname} ${data.lastname}`;
+            const { data } = res;
+            const { email } = data;
+            const cname = `${data.firstname} ${data.lastname}`;
             this.setState({ email, cname });
           }
         })
@@ -88,9 +88,9 @@ class Step6 extends React.Component {
       postData(`${API_URL}/admin/client-info`, data)
         .then((res) => {
           if (res.status === 1) {
-            let { data } = res;
-            let email = data.email;
-            let cname = `${data.firstname} ${data.lastname}`;
+            const { data } = res;
+            const { email } = data;
+            const cname = `${data.firstname} ${data.lastname}`;
             this.setState({ email, cname });
           }
         })
@@ -106,10 +106,9 @@ class Step6 extends React.Component {
 
     if (usedName.indexOf((e.target.value).toLowerCase()) === -1) {
       addInfo(e.target.value);
-      removeMsg()
-    }
-    else {
-      addMsg({ warnMsg: 'Campaign Name already in use' })
+      removeMsg();
+    } else {
+      addMsg({ warnMsg: 'Campaign Name already in use' });
       addInfo(e.target.value);
     }
   };
@@ -135,12 +134,12 @@ class Step6 extends React.Component {
 
     let selectedGender = '';
     Mapgender.map(item => {
-      selectedGender = `${selectedGender}${genderItems[item]},  `
-    })
+      selectedGender = `${selectedGender}${genderItems[item]},  `;
+    });
     let selectedUniversity = '';
     MapUniversity.map(item => {
-      selectedUniversity = `${selectedUniversity}${universityItems[item]},  `
-    })
+      selectedUniversity = `${selectedUniversity}${universityItems[item]},  `;
+    });
     const customDeadline = choosedDeadline == 0 ? deadline : roleDeadline;
     const title = brand.name + ' - Review Campaign Settings';
     const description = brand.desc;
@@ -221,7 +220,7 @@ class Step6 extends React.Component {
                 Precise Genders
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {Mapgender.join(", ")}
+                {Mapgender.join(', ')}
               </Typography>
             </Grid>
             <Grid className={classes.sec_3_grid4}>
@@ -229,7 +228,7 @@ class Step6 extends React.Component {
                 Specified Universities
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {MapUniversity.join(", ")}
+                {MapUniversity.join(', ')}
               </Typography>
             </Grid>
           </Grid>
@@ -298,7 +297,7 @@ class Step6 extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-      </Grid >
+      </Grid>
     );
   }
 }

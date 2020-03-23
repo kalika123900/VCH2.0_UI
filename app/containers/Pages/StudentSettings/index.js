@@ -4,10 +4,10 @@ import { Helmet } from 'react-helmet';
 import brand from 'dan-api/dummy/brand';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import DetailSettings from './DetailSettings';
-import styles from './settings-jss';
 import qs from 'qs';
 import { makeSecureDecrypt } from 'dan-helpers/security';
+import DetailSettings from './DetailSettings';
+import styles from './settings-jss';
 
 async function postData(url, data) {
   const response = await fetch(url, {
@@ -43,20 +43,20 @@ class Settings extends React.Component {
     postData(`${API_URL}/meta/get-settings`, data)
       .then((res) => {
         if (res.status == 1) {
-          let temp = [];
+          const temp = [];
 
           res.data.map(item => {
             if (item.value == '1') {
               temp.push(item.key);
             }
-          })
+          });
 
           this.setState({ switchData: temp });
         }
       })
       .catch((e) => {
         console.log(e);
-      })
+      });
   }
 
   componentDidMount() {
@@ -79,7 +79,7 @@ class Settings extends React.Component {
           <meta property="twitter:title" content={title} />
           <meta property="twitter:description" content={description} />
         </Helmet>
-        <Paper className={classes.root} >
+        <Paper className={classes.root}>
           <DetailSettings switchData={switchData} handleIsUpdate={this.handleIsUpdate} />
         </Paper>
       </div>

@@ -37,11 +37,9 @@ function stringToArray(string) {
   splitArray.map(item => {
     if (isNaN(item)) {
       data.push(item);
-    }
-    else if (item > 1000) {
+    } else if (item > 1000) {
       data.push(item);
-    }
-    else if (typeof item == 'string' && item.length > 0) {
+    } else if (typeof item === 'string' && item.length > 0) {
       data.push(item);
     }
   });
@@ -54,15 +52,11 @@ function boolNumberToString(num) {
 }
 
 function getIds(arr, data) {
-  return arr.map(item => {
-    return data.indexOf(item);
-  })
+  return arr.map(item => data.indexOf(item));
 }
 
 function getIdsItem(arr, data) {
-  return arr.map(item => {
-    return data[item];
-  })
+  return arr.map(item => data[item]);
 }
 
 function formatDeadline(dateStr) {
@@ -106,16 +100,16 @@ class Campaigns extends React.Component {
             const skills = getIdsItem(res.data.skills, skillMenu);
             const workLocation = stringToArray(res.data.info.work_location);
             const experience = boolNumberToString(res.data.info.experience);
-            let roleData = [];
+            const roleData = [];
             roleData.push(res.data.info.roleData);
             const roleDeadline = formatDeadline(roleData[0].role_deadline);
 
             const campaignData = {
-              roleDeadline: roleDeadline,
+              roleDeadline,
               roleName: roleData[0].role_name,
               name: res.data.info.campaign_name,
               role: res.data.info.role,
-              roleData: roleData,
+              roleData,
               campaignStatus: res.data.info.status,
               gender,
               university,
@@ -173,10 +167,9 @@ class Campaigns extends React.Component {
 
     let customDeadline = '';
     if (choosedDeadline == '5') {
-      customDeadline = roleDeadline
-    }
-    else {
-      customDeadline = deadline
+      customDeadline = roleDeadline;
+    } else {
+      customDeadline = deadline;
     }
 
     if (this.state.isCampaignExist) {

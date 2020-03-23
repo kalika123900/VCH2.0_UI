@@ -138,7 +138,7 @@ class CreateCampaign extends React.Component {
                     fullWidth
                     color="primary"
                     onClick={() => this.handleNext()}
-                    disabled={(role == -1 ? true : false)}
+                    disabled={(role == -1)}
                   >
                     Next
                     <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} />
@@ -248,49 +248,49 @@ class CreateCampaign extends React.Component {
               </Grid>
               <Grid className={(classes.btnArea, classes.pageFormWrap)}>
                 {
-                  (userType == 'ADMIN' && campaignStatus == 1) ?
-                    (
+                  (userType == 'ADMIN' && campaignStatus == 1)
+                    ? (
                       <Fragment>
                         <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
                           <Button variant="contained" fullWidth color="secondary" onClick={() => this.handleReject()}>
                             Reject Campaign
-                          <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                            <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
                           </Button>
                         </Grid>
                       </Fragment>
                     )
-                    : (userType == 'ADMIN' && campaignStatus == 0) ?
-                      (
+                    : (userType == 'ADMIN' && campaignStatus == 0)
+                      ? (
                         <Fragment>
                           <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
                             <Button variant="contained" fullWidth color="primary" type="submit">
                               Approve Campaign
-                          <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                              <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
                             </Button>
                           </Grid>
                           <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
                             <Button variant="contained" fullWidth color="secondary" onClick={() => this.handleReject()}>
                               Reject Campaign
-                          <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                              <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
                             </Button>
                           </Grid>
                         </Fragment>
                       )
-                      : (userType == 'ADMIN' && campaignStatus == 10) &&
-                      (
+                      : (userType == 'ADMIN' && campaignStatus == 10)
+                      && (
                         <Fragment>
                           <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
                             <Button variant="contained" fullWidth color="secondary" onClick={() => this.handleReject()}>
                               Reject Campaign
-                          <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                              <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
                             </Button>
                           </Grid>
                         </Fragment>
                       )
                 }
                 {
-                  (userType == 'CLIENT' && campaignStatus == -3) ?
-                    (
+                  (userType == 'CLIENT' && campaignStatus == -3)
+                    ? (
                       <Button
                         variant="contained"
                         fullWidth
@@ -302,8 +302,8 @@ class CreateCampaign extends React.Component {
                         <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
                       </Button>
                     )
-                    : (userType == 'CLIENT' && campaignStatus == 0) &&
-                    (
+                    : (userType == 'CLIENT' && campaignStatus == 0)
+                    && (
                       <Button
                         variant="contained"
                         fullWidth

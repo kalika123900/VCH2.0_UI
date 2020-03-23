@@ -56,15 +56,16 @@ class Step4 extends React.Component {
     const dateMonthYear = year + '-' + (month) + '-' + date;
     if (choosedDeadline === '0') {
       addInfo({ deadline: dateMonthYear, choosedDeadline });
-    }
-    else {
+    } else {
       const { role, roleName, addRoleInfo } = this.props;
       addRoleInfo({ role, roleName, roleDeadline: dateMonthYear });
     }
   };
 
   render() {
-    const { classes, deadline, choosedDeadline, roleDeadline } = this.props;
+    const {
+      classes, deadline, choosedDeadline, roleDeadline
+    } = this.props;
     const { expanded } = this.state;
     const title = brand.name + ' - Deadline';
     const description = brand.desc;
@@ -112,13 +113,15 @@ class Step4 extends React.Component {
                       />
                     </Grid>
                   </MuiPickersUtilsProvider>
-                  {choosedDeadline === '5' &&
-                    <Grid style={{ textAlign: "center" }}>
+                  {choosedDeadline === '5'
+                    && (
+                      <Grid style={{ textAlign: 'center' }}>
 
-                      <Typography variant="caption" color="textSecondary">
+                        <Typography variant="caption" color="textSecondary">
                         (It's Your role deadline)
-                      </Typography>
-                    </Grid>
+                        </Typography>
+                      </Grid>
+                    )
                   }
                 </div>
               )}

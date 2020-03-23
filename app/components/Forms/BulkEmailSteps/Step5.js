@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from 'dan-components/Forms/user-jss';
 import Grid from '@material-ui/core/Grid';
-import RecipientStudents from '../../../components/Profile/RecipientStudents';
 import Button from '@material-ui/core/Button';
+import RecipientStudents from '../../Profile/RecipientStudents';
 
 class Step5 extends React.Component {
   render() {

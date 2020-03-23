@@ -123,8 +123,7 @@ class Step3 extends PureComponent {
         editorState,
         headingEditor: heading
       };
-    }
-    else {
+    } else {
       const bHTML = converter.makeHtml(body);
       const blocksFromHTML = convertFromHTML(bHTML);
       const iState = ContentState.createFromBlockArray(
@@ -156,9 +155,9 @@ class Step3 extends PureComponent {
       postData(`${API_URL}/client/client-info`, data)
         .then((res) => {
           if (res.status === 1) {
-            let { data } = res;
-            let email = data.email;
-            let cname = `${data.firstname} ${data.lastname}`;
+            const { data } = res;
+            const { email } = data;
+            const cname = `${data.firstname} ${data.lastname}`;
             this.setState({ email, cname });
           }
         })
@@ -175,9 +174,9 @@ class Step3 extends PureComponent {
       postData(`${API_URL}/admin/client-info`, data)
         .then((res) => {
           if (res.status === 1) {
-            let { data } = res;
-            let email = data.email;
-            let cname = `${data.firstname} ${data.lastname}`;
+            const { data } = res;
+            const { email } = data;
+            const cname = `${data.firstname} ${data.lastname}`;
             this.setState({ email, cname });
           }
         })
@@ -186,6 +185,7 @@ class Step3 extends PureComponent {
         });
     }
   }
+
   onEditorStateChange = editorState => {
     const { addInfo } = this.props;
     const { headingEditor } = this.state;
@@ -205,7 +205,9 @@ class Step3 extends PureComponent {
   };
 
   render() {
-    const { editorState, headingEditor, cname, email } = this.state;
+    const {
+      editorState, headingEditor, cname, email
+    } = this.state;
     const { classes, heading } = this.props;
     return (
       <Fragment>

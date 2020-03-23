@@ -55,7 +55,7 @@ class Step1 extends React.Component {
 
   componentDidMount() {
     const { userType } = this.props;
-    if (userType == "CLIENT") {
+    if (userType == 'CLIENT') {
       const user = JSON.parse(
         makeSecureDecrypt(localStorage.getItem('user'))
       );
@@ -87,7 +87,7 @@ class Step1 extends React.Component {
   handleRole = (id, name, roleDate) => {
     const { addInfo } = this.props;
 
-    let roleDeadline = new Date(roleDate);
+    const roleDeadline = new Date(roleDate);
     const year = roleDeadline.getFullYear();
     let date = roleDeadline.getDate();
     let month = roleDeadline.getMonth();
@@ -105,7 +105,7 @@ class Step1 extends React.Component {
   };
 
   handleOpen = () => {
-    let value = !this.state.open;
+    const value = !this.state.open;
     this.setState({ open: value });
   };
 
@@ -113,12 +113,12 @@ class Step1 extends React.Component {
     const { classes, role, userType } = this.props;
     const { open, roleData, usedRoleData } = this.state;
     let reduxRoleData = null;
-    if (userType == "ADMIN") {
+    if (userType == 'ADMIN') {
       reduxRoleData = this.props.roleData.toJS();
     }
 
     return (
-      userType == "ADMIN" ? (
+      userType == 'ADMIN' ? (
         <Fragment>
           {reduxRoleData.length > 0
             ? (reduxRoleData.map((value) => (
@@ -153,50 +153,50 @@ class Step1 extends React.Component {
           }
         </Fragment>
       ) : (
-          <Fragment>
-            {
-              roleData.length > 0 ?
-                roleData.map((value) => (
-                  (usedRoleData.indexOf(value.id) === -1)
-                    ? (
-                      <Grid
-                        className={classes.gridMargin}
-                        key={value.id}
+        <Fragment>
+          {
+            roleData.length > 0
+              ? roleData.map((value) => (
+                (usedRoleData.indexOf(value.id) === -1)
+                  ? (
+                    <Grid
+                      className={classes.gridMargin}
+                      key={value.id}
+                    >
+                      <Typography
+                        className={role === value.id
+                          ? (classes.activeBoarder)
+                          : null
+                        }
+                        variant="body1"
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => this.handleRole(value.id, value.role_name, value.role_deadline)}
                       >
-                        <Typography
-                          className={role === value.id
-                            ? (classes.activeBoarder)
-                            : null
-                          }
-                          variant="body1"
-                          style={{ cursor: 'pointer' }}
-                          onClick={() => this.handleRole(value.id, value.role_name, value.role_deadline)}
-                        >
-                          {value.role_name}
-                        </Typography>
-                      </Grid>
-                    )
-                    : (
-                      <Grid
-                        className={classes.gridMargin}
-                        key={value.id}
-                      >
-                        <Typography
-                          className={role === value.id
-                            ? (classes.activeBoarder)
-                            : null
-                          }
-                          variant="body1"
-                          style={{ cursor: 'pointer' }}
+                        {value.role_name}
+                      </Typography>
+                    </Grid>
+                  )
+                  : (
+                    <Grid
+                      className={classes.gridMargin}
+                      key={value.id}
+                    >
+                      <Typography
+                        className={role === value.id
+                          ? (classes.activeBoarder)
+                          : null
+                        }
+                        variant="body1"
+                        style={{ cursor: 'pointer' }}
                         // onClick={() => this.handleRole(value.id)}
-                        >
-                          {value.role_name}
-                        </Typography>
-                        <Typography variant="caption" color="error">(Role already in use)</Typography>
-                      </Grid>
-                    )
-                ))
-                :
+                      >
+                        {value.role_name}
+                      </Typography>
+                      <Typography variant="caption" color="error">(Role already in use)</Typography>
+                    </Grid>
+                  )
+              ))
+              : (
                 <Typography
                   variant="caption"
                   color="error"
@@ -206,10 +206,11 @@ class Step1 extends React.Component {
                 >
                   It looks like you haven't added any roles yet
                 </Typography>
-            }
-            <Divider />
-            {
-              open === false
+              )
+          }
+          <Divider />
+          {
+            open === false
               && (
                 <Button
                   color="secondary"
@@ -218,9 +219,9 @@ class Step1 extends React.Component {
                   Create New Role
                 </Button>
               )
-            }
-            {
-              open
+          }
+          {
+            open
               && (
                 <AddRole
                   open={open}
@@ -228,10 +229,10 @@ class Step1 extends React.Component {
                   handleClose={this.handleOpen}
                 />
               )
-            }
-          </Fragment>
-        )
-    )
+          }
+        </Fragment>
+      )
+    );
   }
 }
 

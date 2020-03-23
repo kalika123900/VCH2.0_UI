@@ -9,9 +9,9 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import Divider from '@material-ui/core/Divider';
 import Switch from '@material-ui/core/Switch';
 import { withStyles } from '@material-ui/core/styles';
-import styles from './settings-jss';
 import qs from 'qs';
 import { makeSecureDecrypt } from 'dan-helpers/security';
+import styles from './settings-jss';
 
 async function postData(url, data) {
   const response = await fetch(url, {
@@ -32,13 +32,13 @@ class DetailSettings extends React.Component {
       makeSecureDecrypt(localStorage.getItem('user'))
     );
 
-    let value = e._targetInst.stateNode.checked;
-    let key = e._targetInst.stateNode.name;
+    const value = e._targetInst.stateNode.checked;
+    const key = e._targetInst.stateNode.name;
 
     const data = {
       user_id: user.id,
       type: 'CLIENT',
-      key: key,
+      key,
       value: value ? '1' : '0'
     };
 
@@ -50,7 +50,7 @@ class DetailSettings extends React.Component {
       })
       .catch((e) => {
         console.log(e);
-      })
+      });
   };
 
   render() {
@@ -59,12 +59,12 @@ class DetailSettings extends React.Component {
     return (
       <Grid container justify="center">
         <Grid item md={8} xs={12}>
-          <List >
+          <List>
             <ListItem>
               <ListItemText primary="Bi-weekly Emails" secondary="Send me bi-weekly updates about my campaign via email" />
               <ListItemSecondaryAction>
                 <Switch
-                  name='bi-weekly-emails'
+                  name="bi-weekly-emails"
                   onChange={(e) => this.handleToggle(e)}
                   checked={switchData.indexOf('bi-weekly-emails') !== -1}
                 />
@@ -75,7 +75,7 @@ class DetailSettings extends React.Component {
               <ListItemText primary="Updates via Text" secondary="Send me updates about my campaign via text " />
               <ListItemSecondaryAction>
                 <Switch
-                  name='updates-via-text'
+                  name="updates-via-text"
                   onChange={(e) => this.handleToggle(e)}
                   checked={switchData.indexOf('updates-via-text') !== -1}
                 />
@@ -86,7 +86,7 @@ class DetailSettings extends React.Component {
               <ListItemText primary="Share Email Personally" secondary="Share my email with candidates that I message individually" />
               <ListItemSecondaryAction>
                 <Switch
-                  name='share-email-personally'
+                  name="share-email-personally"
                   onChange={(e) => this.handleToggle(e)}
                   checked={switchData.indexOf('share-email-personally') !== -1}
                 />
@@ -97,7 +97,7 @@ class DetailSettings extends React.Component {
               <ListItemText primary="Email Sharing" secondary="Share my email with candidates that I contact through bulk messages and campaigns " />
               <ListItemSecondaryAction>
                 <Switch
-                  name='email-sharing'
+                  name="email-sharing"
                   onChange={(e) => this.handleToggle(e)}
                   checked={switchData.indexOf('email-sharing') !== -1}
                 />

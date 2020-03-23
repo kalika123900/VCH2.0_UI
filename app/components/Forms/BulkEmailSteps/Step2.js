@@ -17,7 +17,6 @@ import Input from '@material-ui/core/Input';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import { storeStep3Info } from 'dan-actions/CampaignActions';
-import SelectAdd from '../../SelectAdd/SelectAdd';
 import {
   sectorsData,
   skillMenu,
@@ -29,6 +28,7 @@ import {
   genderItems,
   universityItems
 } from 'dan-api/apps/profileOption';
+import SelectAdd from '../../SelectAdd/SelectAdd';
 import { subjectMenu, grade } from '../CampaignSteps/constantData';
 import styles from '../CampaignSteps/step-jss';
 
@@ -123,15 +123,17 @@ class Step2 extends React.Component {
                   onChange={e => this.handleReduxChange(e)}
                 >
                   {universityItems.map((item, index) => (
-                    (item.length > 0) &&
-                    <MenuItem key={index.toString()} value={item}>
-                      <TextField
-                        name="university-checkbox"
-                        component={Checkbox}
-                        checked={university.indexOf(item) > -1}
-                      />
-                      <ListItemText primary={item} />
-                    </MenuItem>
+                    (item.length > 0)
+                    && (
+                      <MenuItem key={index.toString()} value={item}>
+                        <TextField
+                          name="university-checkbox"
+                          component={Checkbox}
+                          checked={university.indexOf(item) > -1}
+                        />
+                        <ListItemText primary={item} />
+                      </MenuItem>
+                    )
                   ))}
                 </Select>
               </FormControl>
