@@ -1,377 +1,327 @@
-import React from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Editor } from 'react-draft-wysiwyg';
+import { draftToMarkdown } from 'markdown-draft-js';
+import qs from 'qs';
+import {
+  EditorState, convertToRaw, ContentState, convertFromHTML, Modifier
+} from 'draft-js';
 import { withStyles } from '@material-ui/core/styles';
-import ReactDOM from 'react-dom';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
 import Grid from '@material-ui/core/Grid';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
-import AddIcon from '@material-ui/icons/Add';
-import styles from '../CampaignSteps/step-jss';
+import CardHeader from '@material-ui/core/CardHeader';
+import IconButton from '@material-ui/core/IconButton';
+import Avatar from '@material-ui/core/Avatar';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Reply from '@material-ui/icons/Reply';
+import ReplyAll from '@material-ui/icons/ReplyAll';
+import ArrowForward from '@material-ui/icons/ArrowForward';
+import { storeStep4Info } from 'dan-actions/CampaignActions';
+import 'dan-styles/vendors/react-draft-wysiwyg/react-draft-wysiwyg.css';
+import styles from 'dan-components/Email/email-jss';
+import draftToHtml from 'draftjs-to-html';
+import cmStyles from '../CampaignSteps/step-jss';
+import { makeSecureDecrypt } from '../../../Helpers/security';
+const showdown = require('showdown');
+const converter = new showdown.Converter();
 
-class Step3 extends React.Component {
-  state = {
-    language: '',
-    labelWidth: 0,
-    category: '',
-    customDemographic: '',
-    keyword: [],
-    customKeyword: '',
-    customUniversity: '',
-    university: [
-      {
-        id: 1, status: false, value: 'oxford', label: 'Oxford'
-      },
-      {
-        id: 2, status: false, value: 'rgpv', label: 'RGPV '
-      },
-      {
-        id: 3, status: false, value: 'ips', label: 'IPS'
-      },
-      {
-        id: 4, status: false, value: 'iiit', label: 'IIIT University'
-      },
-    ],
-    demographic: [
-      {
-        id: 1, status: false, value: 'no-preference', label: 'No preference'
-      },
-      {
-        id: 2, status: false, value: 'women', label: 'Women '
-      },
-      {
-        id: 3, status: false, value: 'men', label: 'Men'
-      },
-      {
-        id: 4, status: false, value: 'bame', label: 'BAME'
-      },
-    ]
-  };
+const content = {
+  blocks: [],
+  entityMap: {}
+};
+
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+
+  return await response.json();
+}
+
+class CustomOption extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false
+    };
+    this.placeholderOptions = [
+      { key: 'firstName', value: '{{firstName}}', text: 'First Name' },
+      { key: 'lastName', value: '{{lastName}}', text: 'Last name' },
+      { key: 'email', value: '{{email}}', text: 'Email' },];
+  }
+
+  static propTypes = {
+    onChange: PropTypes.func,
+    editorState: PropTypes.object,
+  }
 
   componentDidMount() {
-    this.setState({
-      labelWidth: ReactDOM.findDOMNode(this.InputLabelRef).offsetWidth,
-    });
+    const listItem = this.placeholderOptions.map(item => (
+      <li
+        onClick={this.addStar.bind(this, item.value)}
+        key={item.key}
+
+        className="rdw-dropdownoption-default"
+      >
+        {item.text}
+      </li>
+    ));
+
+    this.setState({ listItem });
   }
 
-  handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
+  addStar = (placeholder) => {
+    const { editorState, onChange } = this.props;
+    const contentState = Modifier.replaceText(
+      editorState.getCurrentContent(),
+      editorState.getSelection(),
+      placeholder,
+      editorState.getCurrentInlineStyle(),
+    );
+    onChange(EditorState.push(editorState, contentState, 'insert-characters'));
   };
 
-  handleCheckbox = (e, id) => {
-    const arr = this.state[e.target.name];
-    arr.forEach(item => {
-      if (item.id === id) {
-        item.status = !item.status;
-      }
-    });
-    this.setState({ [e.target.name]: arr });
-  };
-
-  addCustomItem = (e, stateItem) => {
-    if (this.state[e.target.offsetParent.name].length > 0) {
-      const customItem = this.state[e.target.offsetParent.name];
-      const { length } = this.state[e.target.offsetParent.name];
-      const newItemObj = {
-        id: (length + 1), status: false, value: customItem, label: customItem
-      };
-      const newItemArr = [...this.state[stateItem], newItemObj];
-      this.setState({ [stateItem]: newItemArr, [e.target.offsetParent.name]: '' });
-    }
-  }
-
-  addKeyword = () => {
-    if (this.state.customKeyword.length > 0) {
-      const customKeyword = '+ ' + this.state.customKeyword;
-      const newKeywordObj = { value: customKeyword, label: customKeyword };
-      const newKeywordArr = [...this.state.keyword, newKeywordObj];
-      this.setState({ keyword: newKeywordArr, customKeyword: '' });
-    }
-  }
-
-  handleSuggestedKeyword = (e) => {
-    const customKeyword = e.target.outerText;
-    const newKeywordObj = { value: customKeyword, label: customKeyword };
-    const newKeywordArr = [...this.state.keyword, newKeywordObj];
-    this.setState({ keyword: newKeywordArr, customKeyword: '' });
-  }
+  openPlaceholderDropdown = () => this.setState({ open: !this.state.open })
 
   render() {
-    const { classes } = this.props;
-
-    const {
-      language, labelWidth, customUniversity, customDemographic, keyword, customKeyword
-    } = this.state;
-
-    const checkboxButtons = this.state.demographic.map((item, index) => (
-      <FormControlLabel
-        control={(
-          <Checkbox
-            name="demographic"
-            checked={item.status}
-            value={item.value}
-            onChange={(e) => { this.handleCheckbox(e, item.id); }}
-          />
-        )}
-        label={item.label}
-        key={index}
-      />
-    ));
-
-    const universities = this.state.university.map((item, index) => (
-      <FormControlLabel
-        control={(
-          <Checkbox
-            name="university"
-            checked={item.status}
-            value={item.value}
-            onChange={(e) => { this.handleCheckbox(e, item.id); }}
-          />
-        )}
-        label={item.label}
-        key={index}
-      />
-    ));
-
-    const keywordList = keyword.length > 0 ? keyword.map((item, index) => (
-      <Typography variant="subtitle1" className={classes.choosenTerms} key={index}>
-        {item.label}
-      </Typography>
-    )) : null;
-
     return (
-      <div className={classes.root, classes.step3Root}>
-        {/* section 1 */}
-        <Grid container spacing={3} className={classes.divider}>
-          <Grid item md={12} xs={12}>
-            <Typography variant="h6" style={{ textAlign: 'left' }}>
-              Which language do you want to Email?
-            </Typography>
-            <FormControl variant="outlined" style={{ minWidth: 120, float: 'left' }}>
-              <InputLabel
-                ref={ref => {
-                  this.InputLabelRef = ref;
-                }}
-                htmlFor="outlined-language-simple"
-              >
-                Language
-              </InputLabel>
-              <Select
-                value={language}
-                onChange={this.handleChange}
-                input={(
-                  <OutlinedInput
-                    labelWidth={labelWidth}
-                    name="language"
-                    id="outlined-language-simple"
-                  />
-                )}
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={10}>English</MenuItem>
-                <MenuItem value={20}>French</MenuItem>
-                <MenuItem value={30}>Hindi</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-        </Grid>
-
-        {/* section 2 */}
-        <Grid container spacing={3} className={classes.divider}>
-          <Grid item md={6} xs={12}>
-            <Grid style={{ textAlign: 'left' }}>
-              <FormControl component="fieldset" required className={classes.formControl}>
-                <Typography variant="h6">Specify precise demographic for the algorithm to give preference to</Typography>
-                <FormGroup>
-                  {checkboxButtons}
-                </FormGroup>
-                <TextField
-                  name="customDemographic"
-                  className={classes.textField}
-                  placeholder="For example : Plumber"
-                  value={customDemographic}
-                  margin="normal"
-                  variant="filled"
-                  onChange={(e) => this.handleChange(e)}
-                />
-                <Tooltip title="Add Another">
-                  <Button
-                    name="customDemographic"
-                    variant="text"
-                    color="secondary"
-                    onClick={(e) => this.addCustomItem(e, 'demographic')}
-                  >
-                    <AddIcon />
-                    Add New
-                  </Button>
-                </Tooltip>
-              </FormControl>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} className={classes.divider}>
-          <Grid item md={6} xs={12}>
-            <Grid style={{ textAlign: 'left' }}>
-              <FormControl component="fieldset" required className={classes.customWidth, classes.formControl}>
-                <Typography variant="h6">Specify Universities for algorithm to prefer</Typography>
-                <FormGroup>
-                  {universities}
-                </FormGroup>
-                <TextField
-                  name="customUniversity"
-                  className={classes.textField}
-                  placeholder="For example : RGPV"
-                  value={customUniversity}
-                  margin="normal"
-                  variant="filled"
-                  onChange={(e) => this.handleChange(e)}
-                />
-                <Tooltip title="Add Another">
-                  <Button
-                    name="customUniversity"
-                    variant="text"
-                    color="secondary"
-                    onClick={(e) => this.addCustomItem(e, 'university')}
-                  >
-                    <AddIcon />
-                    Add New
-                  </Button>
-                </Tooltip>
-              </FormControl>
-            </Grid>
-          </Grid>
-        </Grid>
-        {/* section 3 */}
-        <Grid container spacing={3} className={classes.divider}>
-          <Grid>
-            <Typography variant="h6" style={{ textAlign: 'left' }}>
-              Specify key words for the algorithm to prefer
-            </Typography>
-          </Grid>
-          <Grid className={classes.customGrid}>
-            {keywordList !== null && keywordList}
-          </Grid>
-          <Grid style={{ width: '100%' }}>
-            <TextField
-              name="customKeyword"
-              placeholder="For example : Something"
-              value={customKeyword}
-              className={classes.textField}
-              margin="normal"
-              variant="filled"
-              onChange={(e) => this.handleChange(e)}
-              style={{ width: '100%' }}
-            />
-            <Grid>
-              <Tooltip title="Add New">
-                <Button variant="text" color="secondary" style={{ textAlign: 'left' }} onClick={(e) => this.addKeyword()}>
-                  <AddIcon />
-                  Add New
-                </Button>
-              </Tooltip>
-            </Grid>
-          </Grid>
-        </Grid>
-        {/* section 4 */}
-        <Grid container spacing={3} className={classes.divider}>
-          <Grid>
-            <Typography variant="h6" style={{ textAlign: 'left', marginBottom: '5px' }}>
-              Suggested Keywords for you
-            </Typography>
-            <Grid container>
-              <Button
-                variant="outlined"
-                color="secondary"
-                className={classes.button}
-                onClick={(e) => this.handleSuggestedKeyword(e)}
-              >
-                + new job
-              </Button>
-&nbsp;&nbsp;
-              <Button
-                variant="outlined"
-                color="secondary"
-                className={classes.button}
-                onClick={(e) => this.handleSuggestedKeyword(e)}
-              >
-                + entry level government jobs
-              </Button>
-&nbsp;
-              <Button
-                variant="outlined"
-                color="secondary"
-                className={classes.button}
-                onClick={(e) => this.handleSuggestedKeyword(e)}
-              >
-                + high paying entry level jobs
-              </Button>
-&nbsp;
-              <Button
-                variant="outlined"
-                color="secondary"
-                className={classes.button}
-                onClick={(e) => this.handleSuggestedKeyword(e)}
-              >
-                + entry level sales jpobs
-              </Button>
-&nbsp;
-              <Button
-                variant="outlined"
-                color="secondary"
-                className={classes.button}
-                onClick={(e) => this.handleSuggestedKeyword(e)}
-              >
-                + entry level business jobs
-              </Button>
-&nbsp;
-              <Button
-                variant="outlined"
-                color="secondary"
-                className={classes.button}
-                onClick={(e) => this.handleSuggestedKeyword(e)}
-              >
-                + entry level computer jobs
-              </Button>
-&nbsp;
-              <Button
-                variant="outlined"
-                color="secondary"
-                className={classes.button}
-                onClick={(e) => this.handleSuggestedKeyword(e)}
-              >
-                + part time job openings
-              </Button>
-&nbsp;
-              <Button
-                variant="outlined"
-                color="secondary"
-                className={classes.button}
-                onClick={(e) => this.handleSuggestedKeyword(e)}
-              >
-                + job now
-              </Button>
-&nbsp;
-            </Grid>
-          </Grid>
-        </Grid>
+      <div onClick={this.openPlaceholderDropdown} className="rdw-block-wrapper" aria-label="rdw-block-control">
+        <div className="rdw-dropdown-wrapper rdw-block-dropdown" aria-label="rdw-dropdown">
+          <div className="rdw-dropdown-selectedtext" title="Placeholders">
+            <span>First Name</span>
+            <div className={`rdw-dropdown-caretto${this.state.open ? 'close' : 'open'}`} />
+          </div>
+          <ul className="rdw-dropdown-optionwrapper " style={{ display: `${this.state.open ? 'block' : 'none'}` }}>
+            {this.state.listItem}
+          </ul>
+        </div>
       </div>
+    );
+  }
+}
+
+class Step3 extends PureComponent {
+  state = {
+    cname: '',
+    email: ''
+  }
+
+  constructor(props) {
+    super(props);
+    const { body, heading } = this.props;
+
+    if (body == '') {
+      const editorState = EditorState.createEmpty();
+      this.state = {
+        editorState,
+        headingEditor: heading
+      };
+    }
+    else {
+      const bHTML = converter.makeHtml(body);
+      const blocksFromHTML = convertFromHTML(bHTML);
+      const iState = ContentState.createFromBlockArray(
+        blocksFromHTML.contentBlocks,
+        blocksFromHTML.entityMap,
+      );
+
+      if (content) {
+        const editorState = EditorState.createWithContent(iState);
+        this.state = {
+          editorState,
+          headingEditor: heading
+        };
+      }
+    }
+  }
+
+  componentDidMount() {
+    const { userType } = this.props;
+    if (userType == 'CLIENT') {
+      const user = JSON.parse(
+        makeSecureDecrypt(localStorage.getItem('user'))
+      );
+
+      const data = {
+        client_id: user.id
+      };
+
+      postData(`${API_URL}/client/client-info`, data)
+        .then((res) => {
+          if (res.status === 1) {
+            let { data } = res;
+            let email = data.email;
+            let cname = `${data.firstname} ${data.lastname}`;
+            this.setState({ email, cname });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+
+    if (userType == 'ADMIN') {
+      const data = {
+        campaignId: this.props.campaignId
+      };
+
+      postData(`${API_URL}/admin/client-info`, data)
+        .then((res) => {
+          if (res.status === 1) {
+            let { data } = res;
+            let email = data.email;
+            let cname = `${data.firstname} ${data.lastname}`;
+            this.setState({ email, cname });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }
+  onEditorStateChange = editorState => {
+    const { addInfo } = this.props;
+    const { headingEditor } = this.state;
+    this.setState({
+      editorState,
+    });
+    addInfo({ body: draftToMarkdown(convertToRaw(editorState.getCurrentContent())), heading: headingEditor });
+  };
+
+  onHeadingChange = (headingEditor) => {
+    const { addInfo } = this.props;
+    const { editorState } = this.state;
+    this.setState({
+      headingEditor,
+    });
+    addInfo({ body: editorState, heading: headingEditor });
+  };
+
+  render() {
+    const { editorState, headingEditor, cname, email } = this.state;
+    const { classes, heading } = this.props;
+    return (
+      <Fragment>
+        <Typography variant="subtitle2">
+          We will use this email to help create the rest of our emails for our Bulk Email. Try to make your email unique and attractive to your future hires.
+        </Typography>
+        <Grid container spacing={3} style={{ marginBottom: '30px', marginTop: '20px' }}>
+          <Grid item md={6} xs={12} style={{ background: 'whitesmoke' }}>
+            <Typography variant="body1" style={{ float: 'left' }}>
+              Write Your Email
+            </Typography>
+            <Grid item xs={12}>
+              <TextField
+                className={classes.textField}
+                placeholder="Heading"
+                margin="normal"
+                variant="filled"
+                value={heading}
+                onChange={(e) => this.onHeadingChange(e.target.value)}
+                style={{ width: '100%', marginTop: '0' }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Editor
+                editorState={editorState}
+                editorClassName={classes.textEditor}
+                toolbarClassName={classes.toolbarEditor}
+                onEditorStateChange={this.onEditorStateChange}
+                toolbarCustomButtons={[<CustomOption />]}
+              />
+            </Grid>
+          </Grid>
+          <Grid item md={6} sm={12} xs={12}>
+            <Grid>
+              <Typography variant="body1" style={{ float: 'left' }}>
+                Your Ad Preview
+              </Typography>
+              <Grid>
+                <textarea
+                  disabled
+                  value={headingEditor}
+                  style={{
+                    width: '100%',
+                    marginTop: '0',
+                    border: 'none',
+                    background: 'white'
+                  }}
+                />
+              </Grid>
+              <Grid>
+                <CardHeader
+                  avatar={
+                    <Avatar src="/images/pp_girl.svg" />
+                  }
+                  action={(
+                    <Fragment>
+                      <IconButton>
+                        <Reply />
+                      </IconButton>
+                      <IconButton>
+                        <ReplyAll />
+                      </IconButton>
+                      <IconButton>
+                        <ArrowForward />
+                      </IconButton>
+                      <IconButton>
+                        <MoreVertIcon />
+                      </IconButton>
+                    </Fragment>
+                  )}
+                  title={cname}
+                  subheader={email}
+                  style={{
+                    padding: '0',
+                    paddingBottom: ' 2%',
+                    textAlign: 'left'
+                  }}
+                />
+              </Grid>
+              <Grid className={classes.textPreview} dangerouslySetInnerHTML={{ __html: draftToHtml(convertToRaw(editorState.getCurrentContent())), }} />
+              <Grid>
+                <Typography variant="caption">
+                  @ 2020 Varsity Careers Hub
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Fragment>
     );
   }
 }
 
 Step3.propTypes = {
   classes: PropTypes.object.isRequired,
+  heading: PropTypes.string.isRequired,
+  // body: PropTypes.object.isRequired,
+  addInfo: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(Step3);
+const reducerCampaign = 'campaign';
+const reducerA = 'Auth';
+
+const mapStateToProps = state => ({
+  heading: state.getIn([reducerCampaign, 'heading']),
+  body: state.getIn([reducerCampaign, 'body']),
+  userType: state.getIn([reducerA, 'userType']),
+});
+
+const mapDispatchToProps = dispatch => ({
+  addInfo: bindActionCreators(storeStep4Info, dispatch)
+});
+
+const StepMapped = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Step3);
+
+export default withStyles(styles, cmStyles)(StepMapped);

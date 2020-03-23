@@ -8,14 +8,19 @@ import {
   LineChart, Line,
   PieChart, Pie, Cell
 } from 'recharts';
+import OndemandVideo from '@material-ui/icons/OndemandVideo';
 import red from '@material-ui/core/colors/red';
+import LanguageIcon from '@material-ui/icons/Language';
 import blue from '@material-ui/core/colors/blue';
 import cyan from '@material-ui/core/colors/cyan';
 import lime from '@material-ui/core/colors/lime';
 import { data1, data2 } from 'dan-api/chart/chartMiniData';
 import colorfull from 'dan-api/palette/colorfull';
 import { CounterWidget } from 'dan-components';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import Divider from '@material-ui/core/Divider';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import TrackChangesIcon from '@material-ui/icons/TrackChanges';
 import styles from 'dan-components/Widget/widget-jss';
 
 const colors = [red[300], blue[300], cyan[300], lime[300]];
@@ -30,69 +35,44 @@ class ChartInfographic extends PureComponent {
             <CounterWidget
               color={colorfull[6]}
               start={0}
-              end={20}
+              end={761}
               duration={3}
-              title="Monthly Income"
-              unitBefore="$ "
-              unitAfter="k"
+              title="Impressions Made"
             >
-              <PieChart width={100} height={100}>
-                <Pie
-                  data={data2}
-                  cx={50}
-                  cy={50}
-                  dataKey="value"
-                  innerRadius={20}
-                  outerRadius={40}
-                  fill="#FFFFFF"
-                  paddingAngle={5}
-                >
-                  {
-                    data2.map((entry, index) => <Cell key={index.toString()} fill={colors[index % colors.length]} />)
-                  }
-                </Pie>
-              </PieChart>
+              <VisibilityIcon className={classes.counterIcon} />
             </CounterWidget>
-
           </Grid>
           <Grid item md={3} xs={6}>
             <CounterWidget
               color={colorfull[3]}
               start={0}
-              end={20}
+              end={459}
               duration={3}
-              title="Weekly Sales"
+              title="Visits to your Application Portal"
             >
-              <BarChart width={100} height={40} data={data1}>
-                <Bar dataKey="uv" fill="#ffffff" />
-              </BarChart>
+              <LanguageIcon className={classes.counterIcon} />
             </CounterWidget>
           </Grid>
-          <Grid item md={3} xs={6}>
+          <Grid item md={3} xs={2}>
             <CounterWidget
               color={colorfull[5]}
               start={0}
-              end={321}
+              end={1039}
               duration={3}
-              title="New Customers"
+              title="Students Targeted"
             >
-              <AreaChart width={100} height={60} data={data1}>
-                <Area type="monotone" dataKey="uv" stroke="#FFFFFF" fill="rgba(255,255,255,.5)" />
-              </AreaChart>
+              <TrackChangesIcon className={classes.counterIcon} />
             </CounterWidget>
-
           </Grid>
           <Grid item md={3} xs={6}>
             <CounterWidget
               color={colorfull[4]}
               start={0}
-              end={82}
+              end={4163}
               duration={3}
-              title="Active Users"
+              title="Students on the Platform"
             >
-              <LineChart width={100} height={80} data={data1}>
-                <Line type="monotone" dataKey="pv" stroke="#FFFFFF" strokeWidth={2} />
-              </LineChart>
+              <SupervisorAccountIcon className={classes.counterIcon} />
             </CounterWidget>
           </Grid>
         </Grid>

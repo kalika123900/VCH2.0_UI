@@ -6,10 +6,67 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import DetailSettings from './DetailSettings';
 import styles from './settings-jss';
+import qs from 'qs';
+import { makeSecureDecrypt } from 'dan-helpers/security';
+
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+
+  return response.json();
+}
 
 class Settings extends React.Component {
+  state = {
+    switchData: []
+  }
+
+  handleIsUpdate = () => {
+    this.getData();
+  }
+
+  getData = () => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const data = {
+      user_id: user.id,
+      type: 'STUDENT'
+    };
+
+    postData(`${API_URL}/meta/get-settings`, data)
+      .then((res) => {
+        if (res.status == 1) {
+          let temp = [];
+
+          res.data.map(item => {
+            if (item.value == '1') {
+              temp.push(item.key);
+            }
+          })
+
+          this.setState({ switchData: temp });
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+  }
+
+  componentDidMount() {
+    this.getData();
+  }
+
   render() {
     const { classes } = this.props;
+    const { switchData } = this.state;
+
     const title = brand.name;
     const description = brand.desc;
     return (
@@ -23,7 +80,7 @@ class Settings extends React.Component {
           <meta property="twitter:description" content={description} />
         </Helmet>
         <Paper className={classes.root} >
-          <DetailSettings />
+          <DetailSettings switchData={switchData} handleIsUpdate={this.handleIsUpdate} />
         </Paper>
       </div>
     );

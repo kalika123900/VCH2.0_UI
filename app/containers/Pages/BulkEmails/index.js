@@ -2,11 +2,13 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import brand from 'dan-api/dummy/brand';
 import NewBulkEmail from '../BulkEmails/NewBulkEmail';
+import { CreateBulkEmail } from 'dan-components';
 
 class BulkEmails extends React.Component {
   render() {
     const title = brand.name + ' - Bulk Emails';
     const description = brand.desc;
+
     return (
       <div >
         <Helmet>
@@ -17,7 +19,7 @@ class BulkEmails extends React.Component {
           <meta property="twitter:title" content={title} />
           <meta property="twitter:description" content={description} />
         </Helmet>
-        <NewBulkEmail />
+        <CreateBulkEmail />
       </div>
     );
   }

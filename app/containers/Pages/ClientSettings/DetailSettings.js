@@ -10,33 +10,52 @@ import Divider from '@material-ui/core/Divider';
 import Switch from '@material-ui/core/Switch';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './settings-jss';
+import qs from 'qs';
+import { makeSecureDecrypt } from 'dan-helpers/security';
+
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+
+  return response.json();
+}
 
 class DetailSettings extends React.Component {
-  state = {
-    checked: ['switch'],
-  };
+  handleToggle = (e) => {
+    const { handleIsUpdate } = this.props;
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
 
-  handleToggle = value => () => {
-    const { checked } = this.state;
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+    let value = e._targetInst.stateNode.checked;
+    let key = e._targetInst.stateNode.name;
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
+    const data = {
+      user_id: user.id,
+      type: 'CLIENT',
+      key: key,
+      value: value ? '1' : '0'
+    };
 
-    this.setState({
-      checked: newChecked,
-    });
+    postData(`${API_URL}/meta/set-settings`, data)
+      .then((res) => {
+        if (res.status == 1) {
+          handleIsUpdate();
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      })
   };
 
   render() {
-    const {
-      classes,
-    } = this.props;
-    const { checked } = this.state;
+    const { switchData } = this.props;
+
     return (
       <Grid container justify="center">
         <Grid item md={8} xs={12}>
@@ -45,8 +64,9 @@ class DetailSettings extends React.Component {
               <ListItemText primary="Bi-weekly Emails" secondary="Send me bi-weekly updates about my campaign via email" />
               <ListItemSecondaryAction>
                 <Switch
-                  onChange={this.handleToggle('switch')}
-                  checked={checked.indexOf('switch') !== -1}
+                  name='bi-weekly-emails'
+                  onChange={(e) => this.handleToggle(e)}
+                  checked={switchData.indexOf('bi-weekly-emails') !== -1}
                 />
               </ListItemSecondaryAction>
             </ListItem>
@@ -55,8 +75,9 @@ class DetailSettings extends React.Component {
               <ListItemText primary="Updates via Text" secondary="Send me updates about my campaign via text " />
               <ListItemSecondaryAction>
                 <Switch
-                  onChange={this.handleToggle('switch2')}
-                  checked={checked.indexOf('switch2') !== -1}
+                  name='updates-via-text'
+                  onChange={(e) => this.handleToggle(e)}
+                  checked={switchData.indexOf('updates-via-text') !== -1}
                 />
               </ListItemSecondaryAction>
             </ListItem>
@@ -65,8 +86,9 @@ class DetailSettings extends React.Component {
               <ListItemText primary="Share Email Personally" secondary="Share my email with candidates that I message individually" />
               <ListItemSecondaryAction>
                 <Switch
-                  onChange={this.handleToggle('switch3')}
-                  checked={checked.indexOf('switch3') !== -1}
+                  name='share-email-personally'
+                  onChange={(e) => this.handleToggle(e)}
+                  checked={switchData.indexOf('share-email-personally') !== -1}
                 />
               </ListItemSecondaryAction>
             </ListItem>
@@ -75,8 +97,9 @@ class DetailSettings extends React.Component {
               <ListItemText primary="Email Sharing" secondary="Share my email with candidates that I contact through bulk messages and campaigns " />
               <ListItemSecondaryAction>
                 <Switch
-                  onChange={this.handleToggle('switch4')}
-                  checked={checked.indexOf('switch4') !== -1}
+                  name='email-sharing'
+                  onChange={(e) => this.handleToggle(e)}
+                  checked={switchData.indexOf('email-sharing') !== -1}
                 />
               </ListItemSecondaryAction>
             </ListItem>

@@ -136,22 +136,10 @@ class Step6 extends React.Component {
     let selectedGender = '';
     Mapgender.map(item => {
       selectedGender = `${selectedGender}${genderItems[item]},  `
-      // if (selectedGender.length == ArrgenderLength) {
-      //   selectedGender = `${selectedGender}, ${genderItems[item]}`
-      // }
-      // else {
-      //   selectedGender = `${selectedGender} ${genderItems[item]},`
-      // }
     })
     let selectedUniversity = '';
     MapUniversity.map(item => {
       selectedUniversity = `${selectedUniversity}${universityItems[item]},  `
-      // if (selectedUniversity.length < 0) {
-      //   selectedUniversity = universityItems[item];
-      // }
-      // else {
-      //   selectedUniversity = `${selectedUniversity}, ${universityItems[item]}`
-      // }
     })
     const customDeadline = choosedDeadline == 0 ? deadline : roleDeadline;
     const title = brand.name + ' - Review Campaign Settings';

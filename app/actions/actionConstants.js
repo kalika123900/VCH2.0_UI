@@ -126,15 +126,27 @@ export const STORE_STEP5_INFO = 'STORE_STEP5_INFO';
 export const STORE_STEP6_INFO = 'STORE_STEP6_INFO';
 export const CAMPAIGN_INFO_INIT = 'CAMPAIGN_INFO_INIT';
 export const REMOVE_CAMPAIGN_INFO = 'REMOVE_CAMPAIGN_INFO';
-export const CAMPAIGN_INIT_MSG = ' CAMPAIGN_INIT_MSG';
-export const CAMPAIGN_REMOVE_MSG = ' CAMPAIGN_REMOVE_MSG';
+export const CAMPAIGN_INIT_MSG = 'CAMPAIGN_INIT_MSG';
+export const CAMPAIGN_REMOVE_MSG = 'CAMPAIGN_REMOVE_MSG';
+
+// // Bulk Email Creation
+// export const STORE_STEP1_INFO = 'STORE_STEP1_INFO';
+// export const STORE_STEP2_INFO = 'STORE_STEP2_INFO';
+// export const STORE_STEP3_INFO = 'STORE_STEP3_INFO';
+// export const STORE_STEP4_INFO = 'STORE_STEP4_INFO';
+// export const STORE_STEP5_INFO = 'STORE_STEP5_INFO';
+// export const STORE_STEP6_INFO = 'STORE_STEP6_INFO';
+// export const EMAIL_INFO_INIT = 'EMAIL_INFO_INIT';
+// export const REMOVE_EMAIL_INFO = 'REMOVE_EMAIL_INFO';
+// export const EMAIL_INIT_MSG = 'EMAIL_INIT_MSG';
+// export const EMAIL_REMOVE_MSG = 'EMAIL_REMOVE_MSG';
+
 
 // Authenication Handling
 export const SET_AUTH = 'SET_AUTH';
 export const REMOVE_AUTH = 'REMOVE_AUTH';
 
 // Students Edit Details
-
 export const STORE_PROFILE_DETAILS = 'STORE_PROFILE_DETAILS';
 export const STORE_SKILL_INTERESTS = 'STORE_SKILL_INTERESTS';
 export const STORE_EDUCATION_DATA = 'STORE_EDUCATION_DATA';

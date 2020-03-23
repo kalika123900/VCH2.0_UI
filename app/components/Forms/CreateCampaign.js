@@ -26,10 +26,10 @@ import Step6 from './CampaignSteps/Step6';
 
 function getSteps() {
   return [
-    'Business & Audience',
-    'Define Product or Service',
+    'Select Role',
+    'Define Your Needs',
     'Your Ad',
-    'Set Your Budget',
+    'Set Your Deadline',
     'Review Settings'
   ];
 }
@@ -316,20 +316,6 @@ class CreateCampaign extends React.Component {
                       </Button>
                     )
                 }
-                {/* {
-                  userType == 'CLIENT' && (
-                    <Button
-                      variant="contained"
-                      fullWidth
-                      color="primary"
-                      type="submit"
-                      disabled={isCampaignName}
-                    >
-                      Create Campaign
-                      <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
-                    </Button>
-                  )
-                } */}
               </Grid>
             </section>
           )}

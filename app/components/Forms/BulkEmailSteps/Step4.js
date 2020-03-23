@@ -1,163 +1,214 @@
-import React, { Fragment, PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import { convertFromRaw, EditorState, convertToRaw } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
-import draftToMarkdown from 'draftjs-to-markdown';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import 'dan-styles/vendors/react-draft-wysiwyg/react-draft-wysiwyg.css';
-import styles from 'dan-components/Email/email-jss';
-import TextField from '@material-ui/core/TextField';
-import CardHeader from '@material-ui/core/CardHeader';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import IconButton from '@material-ui/core/IconButton';
-import Avatar from '@material-ui/core/Avatar';
-import Reply from '@material-ui/icons/Reply';
-import ReplyAll from '@material-ui/icons/ReplyAll';
-import ArrowForward from '@material-ui/icons/ArrowForward';
-import cmStyles from '../CampaignSteps/step-jss';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import brand from 'dan-api/dummy/brand';
+import { storeStep5Info, storeStep2Info } from 'dan-actions/CampaignActions';
+import PapperBlock from '../../PapperBlock/PapperBlock';
+import styles from '../../../containers/Pages/HelpSupport/helpSupport-jss';
+import { parseDateHelper } from '../../../redux/helpers/dateTimeHelper';
 
-const content = {
-  blocks: [{
-    key: '637gr',
-    text: 'Lorem ipsum dolor sit amet 😀',
-    type: 'unstyled',
-    depth: 0,
-    inlineStyleRanges: [],
-    entityRanges: [],
-    data: {}
-  }],
-  entityMap: {}
-};
+class Step4 extends React.Component {
+  state = {
+    expanded: null
+  };
 
-class Step4 extends PureComponent {
-  constructor(props) {
-    super(props);
-    const contentBlock = convertFromRaw(content);
-    if (contentBlock) {
-      const editorState = EditorState.createWithContent(contentBlock);
-      this.state = {
-        editorState,
-        headingEditor: "Heading "
-      };
-    }
-  }
-
-  onEditorStateChange = editorState => {
+  handleQA = panel => (expanded) => {
     this.setState({
-      editorState,
+      expanded: expanded ? panel : false,
     });
   };
-  onHeadingChange = (headingEditor) => {
-    this.setState({
-      headingEditor,
-    })
+
+  handleReduxChange = (value) => {
+    const { addInfo } = this.props;
+    const deadline = parseDateHelper.format(parseDateHelper.addDays(new Date(), value));
+    addInfo({ deadline, choosedDeadline: value });
+  };
+
+  handleDateChange = currentDate => {
+    const { addInfo, choosedDeadline } = this.props;
+    const year = currentDate.getFullYear();
+    let date = currentDate.getDate();
+    let month = currentDate.getMonth();
+
+    if (date < 10) {
+      date = '0' + date;
+    }
+    if (month < 9) {
+      month = '0' + (month + 1);
+    } else {
+      month += 1;
+    }
+
+    const dateMonthYear = year + '-' + (month) + '-' + date;
+    if (choosedDeadline === '0') {
+      addInfo({ deadline: dateMonthYear, choosedDeadline });
+    }
+    else {
+      const { role, roleName, addRoleInfo } = this.props;
+      addRoleInfo({ role, roleName, roleDeadline: dateMonthYear });
+    }
   };
 
   render() {
-    const { editorState } = this.state;
-    const { classes } = this.props;
+    const { classes, deadline, choosedDeadline, roleDeadline } = this.props;
+    const { expanded } = this.state;
+    const title = brand.name + ' - Deadline';
+    const description = brand.desc;
+
     return (
-      <Fragment>
-        <Typography variant="subtitle2"  >
-          Highlight the products and services you offer, and what makes your bussiness unique
-        </Typography>
-        <Grid container spacing={3} style={{ marginBottom: "30px", marginTop: "20px" }} >
-          <Grid item md={6} xs={12} style={{ background: 'whitesmoke' }}>
-            <Typography variant="body1" style={{ float: "left" }} >
-              Write Your Email
-            </Typography>
-            <Grid item xs={12}>
-              <TextField
-                className={classes.textField}
-                placeholder="Heading"
-                margin="normal"
-                variant="filled"
-                onChange={(e) => this.onHeadingChange(e.target.value)}
-                style={{ width: "100%", marginTop: "0" }}
-              />
-            </Grid>
-            <Grid item xs={12} >
-              <Editor
-                editorState={editorState}
-                editorClassName={classes.textEditor}
-                toolbarClassName={classes.toolbarEditor}
-                onEditorStateChange={this.onEditorStateChange}
-              />
-            </Grid>
-          </Grid>
-          <Grid item md={6} sm={12} xs={12} >
-            <Grid >
-              <Typography variant="body1" style={{ float: "left" }}  >
-                Your Email Preview
-              </Typography>
-              <Grid >
-                <textarea
-                  disabled
-                  value={this.state.headingEditor}
-                  style={{
-                    width: "100%", marginTop: "0", border: 'none',
-                    background: "white"
-                  }}
-                />
-              </Grid>
-              <Grid>
-                <CardHeader
-                  avatar={
-                    <Avatar src="/images/pp_girl.svg" />
+      <div>
+        <Helmet>
+          <title>{title}</title>
+          <meta name="description" content={description} />
+          <meta property="og:title" content={title} />
+          <meta property="og:description" content={description} />
+          <meta property="twitter:title" content={title} />
+          <meta property="twitter:description" content={description} />
+        </Helmet>
+        <Grid container spacing={3} className={classes.root}>
+          <Grid item md={6} xs={12}>
+            <PapperBlock title="Set Your Own Deadline" icon="ios-time-outline" whiteBg desc="You can choose your suitable timeline">
+              <div style={{ textAlign: 'left' }}>
+                <RadioGroup
+                  name="deadline"
+                  className={classes.group}
+                  value={choosedDeadline}
+                  onChange={(e) => this.handleReduxChange(e.target.value)}
+                >
+                  <FormControlLabel value="28" control={<Radio />} label="1 Month" />
+                  <FormControlLabel value="56" control={<Radio />} label="2 Month" />
+                  <FormControlLabel value="84" control={<Radio />} label="3 Month" />
+                  <FormControlLabel value="5" control={<Radio />} label="Role deadline as Bulk Email deadline" />
+                  <FormControlLabel value="0" control={<Radio />} label="Custom Deadline" />
+                </RadioGroup>
+              </div>
+              {(choosedDeadline === '0' || choosedDeadline === '5') && (
+                <div style={{ textAlign: 'left' }}>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Grid container justify="space-around">
+                      <KeyboardDatePicker
+                        margin="normal"
+                        format="dd/MM/yyyy"
+                        placeholder="Choose Date"
+                        value={choosedDeadline === '0' ? new Date(deadline) : new Date(roleDeadline)}
+                        onChange={this.handleDateChange}
+                        KeyboardButtonProps={{
+                          'aria-label': 'change date',
+                        }}
+                      />
+                    </Grid>
+                  </MuiPickersUtilsProvider>
+                  {choosedDeadline === '5' &&
+                    <Grid style={{ textAlign: "center" }}>
+
+                      <Typography variant="caption" color="textSecondary">
+                        (It's Your role deadline)
+                      </Typography>
+                    </Grid>
                   }
-                  action={(
-                    <Fragment>
-                      <IconButton>
-                        <Reply />
-                      </IconButton>
-                      <IconButton>
-                        <ReplyAll />
-                      </IconButton>
-                      <IconButton>
-                        <ArrowForward />
-                      </IconButton>
-                      <IconButton>
-                        <MoreVertIcon />
-                      </IconButton>
-                    </Fragment>
-                  )}
-                  title="Aliquam nec ex aliquet"
-                  subheader="<lili@varsitycareershub.co.uk>"
-                  style={{
-                    padding: "0",
-                    paddingBottom: " 2%",
-                    textAlign: "left"
-                  }}
-                />
-              </Grid>
-              <Grid>
-                <textarea
-                  className={classes.textPreview}
-                  disabled
-                  value={editorState && draftToMarkdown(convertToRaw(editorState.getCurrentContent()))}
-                  style={{
-                    border: 'none',
-                    background: "white"
-                  }}
-                />
-              </Grid>
-              <Grid>
-                <Typography variant="caption"  >
-                  @ 2020 Varsity Careers Hub
-                </Typography>
-              </Grid>
-            </Grid>
+                </div>
+              )}
+            </PapperBlock>
+          </Grid>
+          <Grid item md={6} sm={12} xs={12}>
+            <PapperBlock title="FAQs about Bulk Email" icon="ios-help-circle-outline" whiteBg desc="Have a look at some typical issues.">
+              <ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handleQA('panel1')}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography align="left" className={classes.heading}>How many emails will be sent about my campaign?</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                  <Typography align="left">
+                    The number of emails that are sent depends on the length of the campaign but we strictly regulate emails to ensure students are not sent too many!
+                  </Typography>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+              <ExpansionPanel expanded={expanded === 'panel2'} onChange={this.handleQA('panel2')}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography align="left" className={classes.heading}>How else do we get your message to future hires?</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                  <Typography align="left">
+                    Your company profile is also boosted on the VCH campaign, as well as promoted through all of our social media campaigns.
+                  </Typography>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+              <ExpansionPanel expanded={expanded === 'panel3'} onChange={this.handleQA('panel3')}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography align="left" className={classes.heading}>What happens when I submit my campaign?</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                  <Typography align="left">
+                    A member of the VCH team will review it and create all the relevant communication necessary to ensure it all runs smoothly and effectively.
+                  </Typography>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+              <ExpansionPanel expanded={expanded === 'panel4'} onChange={this.handleQA('panel4')}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography align="left" className={classes.heading}>Can I create more than one campaign for the same role?</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                  <Typography align="left">
+                    You can’t run more than one campaign for the same role concurrently however, if you have other roles you are hiring for then you can run campaigns for them.
+                  </Typography>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+              <ExpansionPanel expanded={expanded === 'panel5'} onChange={this.handleQA('panel5')}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography align="left" className={classes.heading}>How many students will be targeted by this campaign?</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                  <Typography align="left">
+                    Click next below to see how many students are being targeted initially, this number will usually grow by around 15% per month for any given campaign.
+                  </Typography>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            </PapperBlock>
           </Grid>
         </Grid>
-      </Fragment >
+      </div>
     );
   }
 }
 
 Step4.propTypes = {
   classes: PropTypes.object.isRequired,
+  deadline: PropTypes.string.isRequired,
+  choosedDeadline: PropTypes.string.isRequired,
+  addInfo: PropTypes.func.isRequired
 };
 
-export default withStyles(styles, cmStyles)(Step4);
+const reducerCampaign = 'campaign';
+
+const mapStateToProps = state => ({
+  deadline: state.getIn([reducerCampaign, 'deadline']),
+  role: state.getIn([reducerCampaign, 'role']),
+  roleName: state.getIn([reducerCampaign, 'roleName']),
+  roleDeadline: state.getIn([reducerCampaign, 'roleDeadline']),
+  choosedDeadline: state.getIn([reducerCampaign, 'choosedDeadline'])
+});
+
+const mapDispatchToProps = dispatch => ({
+  addInfo: bindActionCreators(storeStep5Info, dispatch),
+  addRoleInfo: bindActionCreators(storeStep2Info, dispatch)
+});
+
+const StepMapped = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Step4);
+
+export default withStyles(styles)(StepMapped);
