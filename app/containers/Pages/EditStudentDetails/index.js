@@ -7,7 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { storeEducationData, storeExperience, studentProfileInit, storeSkillInterestsInit } from 'dan-actions/studentProfileActions';
+import { storeEducationData, storeExperience, studentProfileInit, storeSkillInterestsInit, storeEducationDataInit, storeExperienceInit } from 'dan-actions/studentProfileActions';
 import { skillMenu } from 'dan-api/apps/profileOption';
 import qs from 'qs';
 import { makeSecureDecrypt } from 'dan-helpers/security';
@@ -128,6 +128,7 @@ class EditStudentDetails extends Component {
       .catch((err) => {
         console.log(err);
       });
+
     postData(`${API_URL}/student/get-skills-interests`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
@@ -149,29 +150,45 @@ class EditStudentDetails extends Component {
       .catch((err) => {
         console.log(err);
       });
+    postData(`${API_URL}/student/get-education`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          const educationInfo = res.data;
+          const oldEducationInfo = res.data;
+          const studentEducationData = {
+            educationInfo,
+            oldEducationInfo,
+          };
+          _that.props.studentEducationInit(studentEducationData);
+        } else {
+          console.log('something not good ');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
   handleEducation = () => {
-    // const { educationInfo } = this.props;
-    // const MapEducationInfo = educationInfo.toJS();
+    const { educationInfo, oldEducationInfo } = this.props;
+    const MapEducationInfo = educationInfo.toJS();
+    const MapoldEducationInfo = oldEducationInfo.toJS();
 
-    // // const MapSkills = getIds(skills.toJS(), skillMenu);
-    // // const MapOldSkills = getIds(oldSkills.toJS(), skillMenu)
-
-    // const data = {
-    //   newEducationInfo:MapEducationInfo,
-    //   user_id: user.id
-    // };
-    // postJSON(`${API_URL}/student/create-skills-interests`, data) // eslint-disable-line
-    //   .then((res) => {
-    //     if (res.status === 1) {
-    //       console.log("sucessfull")
-    //     } else {
-    //       console.log('something not good ');
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    const data = {
+      newEducationInfo: MapEducationInfo,
+      oldEducationInfo: MapoldEducationInfo,
+      user_id: user.id,
+    };
+    postJSON(`${API_URL}/student/create-education`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          console.log("sucessfull")
+        } else {
+          console.log('something not good ');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
 
@@ -223,7 +240,7 @@ class EditStudentDetails extends Component {
       resume: '',
       user_id: user.id
     };
-    postData(`${API_URL}/student/create-personal-details`, data) // eslint-disable-line
+    postData(`${API_URL} / student / create - personal - details`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
           console.log("sucessfull")
@@ -246,8 +263,9 @@ class EditStudentDetails extends Component {
       id: MapEducationInfo.length,
       institute: '',
       qualification: '',
-      eduFrom: DateHelper.format(DateHelper.addDays(new Date(), -1480)),
-      eduTo: DateHelper.format(DateHelper.addDays(new Date(), -30)),
+      course: '',
+      education_from: '',
+      education_to: '',
       grade: ''
     }
     MapEducationInfo.push(formObject);
@@ -255,10 +273,11 @@ class EditStudentDetails extends Component {
 
   }
   removeEducationField = itemId => {
+
     const { educationInfo, addEducationInfo } = this.props;
     const MapEducationInfo = educationInfo.toJS();
     const newEducationArr = arrayRemove(MapEducationInfo, itemId);
-    addEducationInfo({ educationInfo: newEducationArr });
+    addEducationInfo({ ...this.props, educationInfo: newEducationArr });
   }
   addExperienceField = (e) => {
     const { experienceInfo, addExperienceInfo } = this.props;
@@ -292,12 +311,12 @@ class EditStudentDetails extends Component {
               Remove
           </Button>
           </div>
-          <EditEducation id={item.id} />
+          <EditEducation id={index} />
 
         </Fragment>
       }
       else {
-        return <EditEducation id={item.id} key={index} />
+        return <EditEducation id={index} key={index} />
       }
     });
 
@@ -383,11 +402,13 @@ EditStudentDetails.propTypes = {
   experienceInfo: PropTypes.object.isRequired,
   addExperienceInfo: PropTypes.func.isRequired,
   studentInit: PropTypes.func.isRequired,
-  studentSkillInterestsInit: PropTypes.func.isRequired
+  studentSkillInterestsInit: PropTypes.func.isRequired,
+  studentEducationInit: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   educationInfo: state.getIn([reducerStudent, 'educationInfo']),
+  oldEducationInfo: state.getIn([reducerStudent, 'oldEducationInfo']),
   experienceInfo: state.getIn([reducerStudent, 'experienceInfo']),
   firstName: state.getIn([reducerStudent, 'firstName']),
   lastName: state.getIn([reducerStudent, 'lastName']),
@@ -401,14 +422,16 @@ const mapStateToProps = state => ({
   intrestedIndustries: state.getIn([reducerStudent, 'intrestedIndustries']),
   intrestedCompanies: state.getIn([reducerStudent, 'intrestedCompanies']),
   skills: state.getIn([reducerStudent, 'skills']),
-  oldSkills: state.getIn([reducerStudent, 'oldSkills'])
+  oldSkills: state.getIn([reducerStudent, 'oldSkills']),
+
 });
 
 const mapDispatchToProps = dispatch => ({
   addEducationInfo: bindActionCreators(storeEducationData, dispatch),
   addExperienceInfo: bindActionCreators(storeExperience, dispatch),
   studentInit: bindActionCreators(studentProfileInit, dispatch),
-  studentSkillInterestsInit: bindActionCreators(storeSkillInterestsInit, dispatch)
+  studentSkillInterestsInit: bindActionCreators(storeSkillInterestsInit, dispatch),
+  studentEducationInit: bindActionCreators(storeEducationDataInit, dispatch),
 });
 
 const EditStudentDetailsMapped = connect(

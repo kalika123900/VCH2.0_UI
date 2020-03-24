@@ -34,47 +34,11 @@ class EditEducation extends React.Component {
   constructor(props) {
     super(props)
   }
-
-  handleEduFromChange = (date, id) => {
-    const { educationInfo, addEducationInfo } = this.props;
-    const MapEducationInfo = educationInfo.toJS();
-
-    const newEducationArr = MapEducationInfo.map(item => {
-      if (item.id === id) {
-        return {
-          ...item,
-          eduFrom: date
-        };
-      };
-      return item;
-    })
-
-    addEducationInfo({ educationInfo: newEducationArr });
-  };
-
-  handleEduToChange = (date, id) => {
-    const { educationInfo, addEducationInfo } = this.props;
-    const MapEducationInfo = educationInfo.toJS();
-
-    const newEducationArr = MapEducationInfo.map(item => {
-      if (item.id === id) {
-        return {
-          ...item,
-          eduTo: date
-        };
-      };
-      return item;
-    })
-
-    addEducationInfo({ educationInfo: newEducationArr });
-  };
-
   handleChange = (event, id) => {
-    const { educationInfo, addEducationInfo } = this.props;
+    const { educationInfo, addEducationInfo, } = this.props;
     const MapEducationInfo = educationInfo.toJS();
-
-    const newEducationArr = MapEducationInfo.map(item => {
-      if (item.id === id) {
+    const newEducationArr = MapEducationInfo.map((item, index) => {
+      if (index === id) {
         return {
           ...item,
           [event.target.name]: event.target.value
@@ -84,16 +48,16 @@ class EditEducation extends React.Component {
       return item;
     })
 
-    addEducationInfo({ educationInfo: newEducationArr });
+    addEducationInfo({ ...this.props, educationInfo: newEducationArr });
     // if (event.target.value === 'Other') {
     //   addEducationInfo({ ...this.props, course: '' });
     // }
   };
 
   render() {
-    const { classes, id, educationInfo, handleSubmit } = this.props;
+    const { classes, id, educationInfo } = this.props;
     const MapEducationInfo = educationInfo.toJS();
-    const { institute, qualification, grade, eduFrom, eduTo, course } = MapEducationInfo[id];
+    const { institute, qualification, grade, education_from, education_to, course } = MapEducationInfo[this.props.id];
     var selectedQualification = [];
     var selectedcourses = [];
     var selectedGrade = [];
@@ -118,9 +82,6 @@ class EditEducation extends React.Component {
         selectedGrade = null;
       }
     }
-
-
-
     return (
       <section className={classes.pageFormWrap}>
         <div>
@@ -149,12 +110,12 @@ class EditEducation extends React.Component {
         <div>
           <FormControl className={classes.formControl}>
             <InputLabel
-              htmlFor="Qualification"
+              htmlFor="Qualification Type"
             >
-              Qualification
+              Qualification Type
             </InputLabel>
             <Select
-              placeholder="Qualification"
+              placeholder="Qualification Type"
               value={qualification}
               name="qualification"
               onChange={e => this.handleChange(e, id)}
@@ -179,7 +140,6 @@ class EditEducation extends React.Component {
                 name="course"
                 margin="normal"
                 variant="outlined"
-                validate={[required]}
                 onChange={e => this.handleChange(e, id)}
               />
             </FormControl>
@@ -215,8 +175,8 @@ class EditEducation extends React.Component {
             </InputLabel>
             <Select
               placeholder="Course Start Year"
-              value={eduFrom}
-              name="eduFrom"
+              value={education_from}
+              name="education_from"
               onChange={e => this.handleChange(e, id)}
               MenuProps={MenuProps}
             >
@@ -237,8 +197,8 @@ class EditEducation extends React.Component {
             </InputLabel>
             <Select
               placeholder="Graduation Year"
-              value={eduTo}
-              name="eduTo"
+              value={education_to}
+              name="education_to"
               onChange={e => this.handleChange(e, id)}
               MenuProps={MenuProps}
             >
@@ -261,7 +221,6 @@ class EditEducation extends React.Component {
                 name="grade"
                 margin="normal"
                 variant="outlined"
-                validate={[required]}
                 onChange={e => this.handleChange(e, id)}
               />
             </FormControl>
@@ -277,7 +236,6 @@ class EditEducation extends React.Component {
                 placeholder="Grade Achieved"
                 value={grade}
                 name="grade"
-                validate={[required]}
                 onChange={e => this.handleChange(e, id)}
                 MenuProps={MenuProps}
               >
@@ -299,11 +257,11 @@ const reducerStudent = 'studentProfile';
 EditEducation.propTypes = {
   classes: PropTypes.object.isRequired,
   educationInfo: PropTypes.object.isRequired,
-  addEducationInfo: PropTypes.func.isRequired
+  addEducationInfo: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  educationInfo: state.getIn([reducerStudent, 'educationInfo'])
+  educationInfo: state.getIn([reducerStudent, 'educationInfo']),
 });
 
 const mapDispatchToProps = dispatch => ({

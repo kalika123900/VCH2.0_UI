@@ -26,12 +26,6 @@ const initialState = {
   skills: List([]),
   oldSkills: List([]),
   files: List([]),
-  institute: '',
-  qualification: '',
-  eduFrom: '',
-  eduTo: '',
-  course: '',
-  grade: '',
   company: '',
   role: '',
   roleDescription: '',
@@ -39,19 +33,22 @@ const initialState = {
     id: 0,
     institute: '',
     qualification: '',
-    eduFrom: '',
-    eduTo: '',
+    education_from: '',
+    education_to: '',
     course: '',
-    grade: ''
+    grade: '',
+    type: 'university',
   }]),
-  oldEdcationInfo: List([{
+
+  oldEducationInfo: List([{
     id: 0,
     institute: '',
     qualification: '',
-    eduFrom: '',
+    education_to: '',
     eduTo: '',
     course: '',
-    grade: ''
+    grade: '',
+    type: 'university',
   }]),
   experienceInfo: List([{
     id: 0,
@@ -102,11 +99,10 @@ export default function reducer(state = initialImmutableState, action = {}) {
     case STORE_EDUCATION_DATA:
       return state.withMutations((mutableState) => {
         const educationInfo = fromJS(action.data.educationInfo)
-        const oldEdcationInfo = fromJS(action.data.educationInfo)
+        const oldEducationInfo = fromJS(action.data.oldEducationInfo)
         mutableState
           .set('educationInfo', educationInfo)
-          .set('oldEdcationInfo', oldEdcationInfo)
-
+          .set('oldEducationInfo', oldEducationInfo)
       });
     case STORE_EXPERIENCE:
       return state.withMutations((mutableState) => {
@@ -146,10 +142,11 @@ export default function reducer(state = initialImmutableState, action = {}) {
     case STORE_EDUCATION_DATA_INIT:
       return state.withMutations((mutableState) => {
         const educationInfo = fromJS(action.data.educationInfo)
-        const oldEdcationInfo = fromJS(action.data.oldEdcationInfo)
+        const oldEducationInfo = fromJS(action.data.oldEducationInfo)
+
         mutableState
           .set('educationInfo', educationInfo)
-          .set('oldEdcationInfo', oldEdcationInfo)
+          .set('oldEducationInfo', oldEducationInfo)
       });
     case STORE_EXPERIENCE_INIT:
       return state.withMutations((mutableState) => {
