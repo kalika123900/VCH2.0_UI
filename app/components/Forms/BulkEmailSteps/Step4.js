@@ -16,7 +16,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import brand from 'dan-api/dummy/brand';
-import { storeStep5Info, storeStep2Info } from 'dan-actions/CampaignActions';
+import { emailStep4Info, emailStep1Info } from 'dan-actions/BulkEmailActions';
 import PapperBlock from '../../PapperBlock/PapperBlock';
 import styles from '../../../containers/Pages/HelpSupport/helpSupport-jss';
 import { parseDateHelper } from '../../../redux/helpers/dateTimeHelper';
@@ -118,7 +118,7 @@ class Step4 extends React.Component {
                       <Grid style={{ textAlign: 'center' }}>
 
                         <Typography variant="caption" color="textSecondary">
-                        (It's Your role deadline)
+                          (It's Your role deadline)
                         </Typography>
                       </Grid>
                     )
@@ -194,19 +194,19 @@ Step4.propTypes = {
   addInfo: PropTypes.func.isRequired
 };
 
-const reducerCampaign = 'campaign';
+const reducerBulkEmail = 'bulkEmail';
 
 const mapStateToProps = state => ({
-  deadline: state.getIn([reducerCampaign, 'deadline']),
-  role: state.getIn([reducerCampaign, 'role']),
-  roleName: state.getIn([reducerCampaign, 'roleName']),
-  roleDeadline: state.getIn([reducerCampaign, 'roleDeadline']),
-  choosedDeadline: state.getIn([reducerCampaign, 'choosedDeadline'])
+  deadline: state.getIn([reducerBulkEmail, 'deadline']),
+  role: state.getIn([reducerBulkEmail, 'role']),
+  roleName: state.getIn([reducerBulkEmail, 'roleName']),
+  roleDeadline: state.getIn([reducerBulkEmail, 'roleDeadline']),
+  choosedDeadline: state.getIn([reducerBulkEmail, 'choosedDeadline'])
 });
 
 const mapDispatchToProps = dispatch => ({
-  addInfo: bindActionCreators(storeStep5Info, dispatch),
-  addRoleInfo: bindActionCreators(storeStep2Info, dispatch)
+  addInfo: bindActionCreators(emailStep4Info, dispatch),
+  addRoleInfo: bindActionCreators(emailStep1Info, dispatch)
 });
 
 const StepMapped = connect(

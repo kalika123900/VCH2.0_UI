@@ -2,9 +2,12 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import brand from 'dan-api/dummy/brand';
 import { CreateBulkEmail } from 'dan-components';
-import NewBulkEmail from './NewBulkEmail';
 
 class BulkEmails extends React.Component {
+  submitForm = () => {
+    console.log("Form Submitted");
+  }
+
   render() {
     const title = brand.name + ' - Bulk Emails';
     const description = brand.desc;
@@ -19,7 +22,7 @@ class BulkEmails extends React.Component {
           <meta property="twitter:title" content={title} />
           <meta property="twitter:description" content={description} />
         </Helmet>
-        <CreateBulkEmail />
+        <CreateBulkEmail onSubmit={() => this.submitForm()} />
       </div>
     );
   }

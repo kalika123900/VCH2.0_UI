@@ -129,17 +129,17 @@ export const REMOVE_CAMPAIGN_INFO = 'REMOVE_CAMPAIGN_INFO';
 export const CAMPAIGN_INIT_MSG = 'CAMPAIGN_INIT_MSG';
 export const CAMPAIGN_REMOVE_MSG = 'CAMPAIGN_REMOVE_MSG';
 
-// // Bulk Email Creation
-// export const STORE_STEP1_INFO = 'STORE_STEP1_INFO';
-// export const STORE_STEP2_INFO = 'STORE_STEP2_INFO';
-// export const STORE_STEP3_INFO = 'STORE_STEP3_INFO';
-// export const STORE_STEP4_INFO = 'STORE_STEP4_INFO';
-// export const STORE_STEP5_INFO = 'STORE_STEP5_INFO';
-// export const STORE_STEP6_INFO = 'STORE_STEP6_INFO';
-// export const EMAIL_INFO_INIT = 'EMAIL_INFO_INIT';
-// export const REMOVE_EMAIL_INFO = 'REMOVE_EMAIL_INFO';
-// export const EMAIL_INIT_MSG = 'EMAIL_INIT_MSG';
-// export const EMAIL_REMOVE_MSG = 'EMAIL_REMOVE_MSG';
+// Bulk Email Creation
+export const EMAIL_STEP1_INFO = 'EMAIL_STEP1_INFO';
+export const EMAIL_STEP2_INFO = 'EMAIL_STEP2_INFO';
+export const EMAIL_STEP3_INFO = 'EMAIL_STEP3_INFO';
+export const EMAIL_STEP4_INFO = 'EMAIL_STEP4_INFO';
+export const EMAIL_STEP5_INFO = 'EMAIL_STEP5_INFO';
+export const EMAIL_STEP6_INFO = 'EMAIL_STEP6_INFO';
+export const EMAIL_INFO_INIT = 'EMAIL_INFO_INIT';
+export const EMAIL_INFO_REMOVE = 'EMAIL_INFO_REMOVE';
+export const EMAIL_INIT_MSG = 'EMAIL_INIT_MSG';
+export const EMAIL_REMOVE_MSG = 'EMAIL_REMOVE_MSG';
 
 
 // Authenication Handling

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
@@ -15,14 +15,12 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import styles from './user-jss';
-import BulkEmailForm from './BulkEmailForm';
 import Step1 from './BulkEmailSteps/Step1';
 import Step2 from './BulkEmailSteps/Step2';
 import Step3 from './BulkEmailSteps/Step3';
 import Step4 from './BulkEmailSteps/Step4';
 import Step5 from './BulkEmailSteps/Step5';
 import Step6 from './BulkEmailSteps/Step6';
-
 
 function getSteps() {
   return [
@@ -55,15 +53,8 @@ class CreateBulkEmail extends React.Component {
       handleSubmit,
       submitting,
       deco,
-      userType,
-      role,
-      heading,
-      body,
-      name,
-      warnMsg,
-      campaignStatus
+      role
     } = this.props;
-    // const { tab } = this.state;
 
     const { activeStep } = this.state;
     const steps = getSteps();
@@ -152,7 +143,6 @@ class CreateBulkEmail extends React.Component {
                   fullWidth
                   color="primary"
                   onClick={() => this.handleNext()}
-                // disabled={isDisable}
                 >
                   Next
                   <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} />
@@ -239,11 +229,10 @@ class CreateBulkEmail extends React.Component {
                   variant="contained"
                   fullWidth
                   color="primary"
-                // type="submit"
-                // disabled={isCampaignName}
+                  type="submit"
                 >
                   Create Bulk Email
-                  <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
                 </Button>
               </Grid>
             </section>
@@ -269,7 +258,6 @@ const CreateBulkEmailReduxed = reduxForm({
 const reducer = 'ui';
 const CreateBulkEmailMapped = connect(
   state => ({
-    force: state,
     deco: state.getIn([reducer, 'decoration'])
   }),
 )(CreateBulkEmailReduxed);

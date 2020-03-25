@@ -25,6 +25,7 @@ import studentAuth from './modules/studentAuth';
 import adminAuth from './modules/adminAuth';
 import clientAuth from './modules/clientAuth';
 import campaign from './modules/campaign';
+import bulkEmail from './modules/bulkEmail';
 import Auth from './modules/Auth';
 import studentProfile from './modules/studentProfile';
 import clientEditProfile from './modules/clientEditProfile';
@@ -65,6 +66,7 @@ export default function createReducer(injectedReducers = {}) {
     adminAuth,
     clientAuth,
     campaign,
+    bulkEmail,
     Auth,
     studentProfile,
     clientEditProfile,

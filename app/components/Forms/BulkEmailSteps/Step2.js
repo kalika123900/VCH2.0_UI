@@ -16,7 +16,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Input from '@material-ui/core/Input';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import { storeStep3Info } from 'dan-actions/CampaignActions';
+import { emailStep2Info } from 'dan-actions/BulkEmailActions';
 import {
   sectorsData,
   skillMenu,
@@ -29,7 +29,6 @@ import {
   universityItems
 } from 'dan-api/apps/profileOption';
 import SelectAdd from '../../SelectAdd/SelectAdd';
-import { subjectMenu, grade } from '../CampaignSteps/constantData';
 import styles from '../CampaignSteps/step-jss';
 
 const ITEM_HEIGHT = 48;
@@ -48,7 +47,6 @@ class Step2 extends React.Component {
     const { addInfo } = this.props;
     addInfo({ ...this.props, [event.target.name]: event.target.value });
   };
-
 
   handleGender = (value) => {
     const { gender, addInfo } = this.props;
@@ -271,19 +269,6 @@ class Step2 extends React.Component {
                     </MenuItem>
                   ))}
                 </Select>
-                {/* <Select
-                  placeholder="Select Year"
-                  value={selectedYear}
-                  name="selectedYear"
-                  onChange={(e) => this.handleReduxChange(e)}
-                  MenuProps={MenuProps}
-                >
-                  {years.map((item, index) => (
-                    <MenuItem key={index} value={item}>
-                      <ListItemText primary={item} />
-                    </MenuItem>
-                  ))}
-                </Select> */}
               </FormControl>
             </Grid>
           </Grid>
@@ -325,19 +310,6 @@ class Step2 extends React.Component {
                     </MenuItem>
                   ))}
                 </Select>
-                {/* <Select
-                  placeholder="Select Minimum Grade"
-                  value={minGrade}
-                  name="minGrade"
-                  onChange={e => this.handleReduxChange(e)}
-                  MenuProps={MenuProps}
-                >
-                  {grade.map((item, index) => (
-                    <MenuItem key={index} value={item.id}>
-                      <ListItemText primary={item.value} />
-                    </MenuItem>
-                  ))}
-                </Select> */}
               </FormControl>
             </Grid>
           </Grid>
@@ -442,24 +414,24 @@ Step2.propTypes = {
   addInfo: PropTypes.func.isRequired
 };
 
-const reducerCampaign = 'campaign';
+const reducerBulkEmail = 'bulkEmail';
 
 const mapStateToProps = state => ({
-  university: state.getIn([reducerCampaign, 'university']),
-  subjects: state.getIn([reducerCampaign, 'subjects']),
-  skills: state.getIn([reducerCampaign, 'skills']),
-  keywords: state.getIn([reducerCampaign, 'keywords']),
-  gender: state.getIn([reducerCampaign, 'gender']),
-  selectedYear: state.getIn([reducerCampaign, 'selectedYear']),
-  ethnicity: state.getIn([reducerCampaign, 'ethnicity']),
-  interestedSectors: state.getIn([reducerCampaign, 'interestedSectors']),
-  workLocation: state.getIn([reducerCampaign, 'workLocation']),
-  experience: state.getIn([reducerCampaign, 'experience']),
-  minGrade: state.getIn([reducerCampaign, 'minGrade']),
+  university: state.getIn([reducerBulkEmail, 'university']),
+  subjects: state.getIn([reducerBulkEmail, 'subjects']),
+  skills: state.getIn([reducerBulkEmail, 'skills']),
+  keywords: state.getIn([reducerBulkEmail, 'keywords']),
+  gender: state.getIn([reducerBulkEmail, 'gender']),
+  selectedYear: state.getIn([reducerBulkEmail, 'selectedYear']),
+  ethnicity: state.getIn([reducerBulkEmail, 'ethnicity']),
+  interestedSectors: state.getIn([reducerBulkEmail, 'interestedSectors']),
+  workLocation: state.getIn([reducerBulkEmail, 'workLocation']),
+  experience: state.getIn([reducerBulkEmail, 'experience']),
+  minGrade: state.getIn([reducerBulkEmail, 'minGrade']),
 });
 
 const mapDispatchToProps = dispatch => ({
-  addInfo: bindActionCreators(storeStep3Info, dispatch)
+  addInfo: bindActionCreators(emailStep2Info, dispatch)
 });
 
 const StepMapped = connect(

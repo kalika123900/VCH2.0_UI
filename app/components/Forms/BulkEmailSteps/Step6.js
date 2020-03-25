@@ -13,16 +13,19 @@ import RemoveRedEye from '@material-ui/icons/RemoveRedEye';
 import Avatar from '@material-ui/core/Avatar';
 import Reply from '@material-ui/icons/Reply';
 import brand from 'dan-api/dummy/brand';
-import { storeStep6Info, campaignRemoveMsg, campaignInitMsg } from 'dan-actions/CampaignActions';
+import {
+  emailStep6Info,
+  emailRemoveMsg,
+  emailInitMsg
+} from 'dan-actions/BulkEmailActions';
 import estyles from 'dan-components/Email/email-jss';
 import { CombineStyles } from 'dan-helpers';
 import { genderItems, universityItems } from 'dan-api/apps/profileOption';
 import styles from '../CampaignSteps/step-jss';
-
 import { makeSecureDecrypt } from '../../../Helpers/security';
+
 const showdown = require('showdown');
 const converter = new showdown.Converter();
-
 const combinedStyles = CombineStyles(styles, estyles);
 
 async function postData(url, data) {
@@ -315,30 +318,30 @@ Step6.propTypes = {
   addMsg: PropTypes.func.isRequired
 };
 
-const reducerCampaign = 'campaign';
+const reducerBulkEmail = 'bulkEmail';
 const reducerA = 'Auth';
 
 const mapStateToProps = state => ({
-  warnMsg: state.getIn([reducerCampaign, 'warnMsg']),
-  roleName: state.getIn([reducerCampaign, 'roleName']),
-  campaignStatus: state.getIn([reducerCampaign, 'campaignStatus']),
-  name: state.getIn([reducerCampaign, 'name']),
-  gender: state.getIn([reducerCampaign, 'gender']),
-  choosedDeadline: state.getIn([reducerCampaign, 'choosedDeadline']),
-  roleDeadline: state.getIn([reducerCampaign, 'roleDeadline']),
-  deadline: state.getIn([reducerCampaign, 'deadline']),
-  university: state.getIn([reducerCampaign, 'university']),
-  role: state.getIn([reducerCampaign, 'role']),
-  keywords: state.getIn([reducerCampaign, 'keywords']),
-  heading: state.getIn([reducerCampaign, 'heading']),
-  body: state.getIn([reducerCampaign, 'body']),
+  warnMsg: state.getIn([reducerBulkEmail, 'warnMsg']),
+  roleName: state.getIn([reducerBulkEmail, 'roleName']),
+  campaignStatus: state.getIn([reducerBulkEmail, 'campaignStatus']),
+  name: state.getIn([reducerBulkEmail, 'name']),
+  gender: state.getIn([reducerBulkEmail, 'gender']),
+  choosedDeadline: state.getIn([reducerBulkEmail, 'choosedDeadline']),
+  roleDeadline: state.getIn([reducerBulkEmail, 'roleDeadline']),
+  deadline: state.getIn([reducerBulkEmail, 'deadline']),
+  university: state.getIn([reducerBulkEmail, 'university']),
+  role: state.getIn([reducerBulkEmail, 'role']),
+  keywords: state.getIn([reducerBulkEmail, 'keywords']),
+  heading: state.getIn([reducerBulkEmail, 'heading']),
+  body: state.getIn([reducerBulkEmail, 'body']),
   userType: state.getIn([reducerA, 'userType']),
 });
 
 const mapDispatchToProps = dispatch => ({
-  addInfo: bindActionCreators(storeStep6Info, dispatch),
-  removeMsg: bindActionCreators(campaignRemoveMsg, dispatch),
-  addMsg: bindActionCreators(campaignInitMsg, dispatch)
+  addInfo: bindActionCreators(emailStep6Info, dispatch),
+  removeMsg: bindActionCreators(emailRemoveMsg, dispatch),
+  addMsg: bindActionCreators(emailInitMsg, dispatch)
 });
 
 const StepMapped = connect(

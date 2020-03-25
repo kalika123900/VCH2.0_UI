@@ -42,6 +42,7 @@ async function postJSON(url, data) {
 
   return await response.json();
 }
+
 async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
@@ -67,8 +68,8 @@ class EditDetailsForm extends React.Component {
     const _that = this;
     const data = {
       client_id: user.id
-
     };
+
     postData(`${API_URL}/client/get-account-info`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {

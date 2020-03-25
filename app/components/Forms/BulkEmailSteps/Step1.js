@@ -8,7 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
-import { storeStep2Info } from 'dan-actions/CampaignActions';
+import { emailStep1Info } from 'dan-actions/BulkEmailActions';
 import styles from '../CampaignSteps/step-jss';
 import AddRole from '../AddRole';
 import { makeSecureDecrypt } from '../../../Helpers/security';
@@ -153,64 +153,64 @@ class Step1 extends React.Component {
           }
         </Fragment>
       ) : (
-        <Fragment>
-          {
-            roleData.length > 0
-              ? roleData.map((value) => (
-                (usedRoleData.indexOf(value.id) === -1)
-                  ? (
-                    <Grid
-                      className={classes.gridMargin}
-                      key={value.id}
-                    >
-                      <Typography
-                        className={role === value.id
-                          ? (classes.activeBoarder)
-                          : null
-                        }
-                        variant="body1"
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => this.handleRole(value.id, value.role_name, value.role_deadline)}
+          <Fragment>
+            {
+              roleData.length > 0
+                ? roleData.map((value) => (
+                  (usedRoleData.indexOf(value.id) === -1)
+                    ? (
+                      <Grid
+                        className={classes.gridMargin}
+                        key={value.id}
                       >
-                        {value.role_name}
-                      </Typography>
-                    </Grid>
-                  )
-                  : (
-                    <Grid
-                      className={classes.gridMargin}
-                      key={value.id}
-                    >
-                      <Typography
-                        className={role === value.id
-                          ? (classes.activeBoarder)
-                          : null
-                        }
-                        variant="body1"
-                        style={{ cursor: 'pointer' }}
+                        <Typography
+                          className={role === value.id
+                            ? (classes.activeBoarder)
+                            : null
+                          }
+                          variant="body1"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => this.handleRole(value.id, value.role_name, value.role_deadline)}
+                        >
+                          {value.role_name}
+                        </Typography>
+                      </Grid>
+                    )
+                    : (
+                      <Grid
+                        className={classes.gridMargin}
+                        key={value.id}
+                      >
+                        <Typography
+                          className={role === value.id
+                            ? (classes.activeBoarder)
+                            : null
+                          }
+                          variant="body1"
+                          style={{ cursor: 'pointer' }}
                         // onClick={() => this.handleRole(value.id)}
-                      >
-                        {value.role_name}
-                      </Typography>
-                      <Typography variant="caption" color="error">(Role already in use)</Typography>
-                    </Grid>
-                  )
-              ))
-              : (
-                <Typography
-                  variant="caption"
-                  color="error"
-                  style={{
-                    padding: 20
-                  }}
-                >
-                  It looks like you haven't added any roles yet
-                </Typography>
-              )
-          }
-          <Divider />
-          {
-            open === false
+                        >
+                          {value.role_name}
+                        </Typography>
+                        <Typography variant="caption" color="error">(Role already in use)</Typography>
+                      </Grid>
+                    )
+                ))
+                : (
+                  <Typography
+                    variant="caption"
+                    color="error"
+                    style={{
+                      padding: 20
+                    }}
+                  >
+                    It looks like you haven't added any roles yet
+                  </Typography>
+                )
+            }
+            <Divider />
+            {
+              open === false
               && (
                 <Button
                   color="secondary"
@@ -219,9 +219,9 @@ class Step1 extends React.Component {
                   Create New Role
                 </Button>
               )
-          }
-          {
-            open
+            }
+            {
+              open
               && (
                 <AddRole
                   open={open}
@@ -229,9 +229,9 @@ class Step1 extends React.Component {
                   handleClose={this.handleOpen}
                 />
               )
-          }
-        </Fragment>
-      )
+            }
+          </Fragment>
+        )
     );
   }
 }
@@ -244,18 +244,18 @@ Step1.propTypes = {
   roleDeadline: PropTypes.string.isRequired
 };
 
-const reducerCampaign = 'campaign';
+const reducerBulkEmail = 'bulkEmail';
 const reducerA = 'Auth';
 
 const mapStateToProps = state => ({
-  role: state.getIn([reducerCampaign, 'role']),
+  role: state.getIn([reducerBulkEmail, 'role']),
   userType: state.getIn([reducerA, 'userType']),
-  roleData: state.getIn([reducerCampaign, 'roleData']),
-  roleDeadline: state.getIn([reducerCampaign, 'roleDeadline']),
+  roleData: state.getIn([reducerBulkEmail, 'roleData']),
+  roleDeadline: state.getIn([reducerBulkEmail, 'roleDeadline']),
 });
 
 const mapDispatchToProps = dispatch => ({
-  addInfo: bindActionCreators(storeStep2Info, dispatch)
+  addInfo: bindActionCreators(emailStep1Info, dispatch)
 });
 
 const Step1Mapped = connect(

@@ -34,8 +34,7 @@ const initialState = {
   body: '',
   deadline: DateHelper.format(DateHelper.addDays(new Date(), 5)),
   choosedDeadline: '5',
-  name: '',
-  action: 'create'
+  name: ''
 };
 
 const initialImmutableState = fromJS(initialState);

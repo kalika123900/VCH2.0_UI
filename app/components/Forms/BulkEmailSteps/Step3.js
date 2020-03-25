@@ -19,7 +19,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Reply from '@material-ui/icons/Reply';
 import ReplyAll from '@material-ui/icons/ReplyAll';
 import ArrowForward from '@material-ui/icons/ArrowForward';
-import { storeStep4Info } from 'dan-actions/CampaignActions';
+import { emailStep3Info } from 'dan-actions/BulkEmailActions';
 import 'dan-styles/vendors/react-draft-wysiwyg/react-draft-wysiwyg.css';
 import styles from 'dan-components/Email/email-jss';
 import draftToHtml from 'draftjs-to-html';
@@ -304,21 +304,21 @@ class Step3 extends PureComponent {
 Step3.propTypes = {
   classes: PropTypes.object.isRequired,
   heading: PropTypes.string.isRequired,
-  // body: PropTypes.object.isRequired,
+  body: PropTypes.object.isRequired,
   addInfo: PropTypes.func.isRequired
 };
 
-const reducerCampaign = 'campaign';
+const reducerBulkEmail = 'bulkEmail';
 const reducerA = 'Auth';
 
 const mapStateToProps = state => ({
-  heading: state.getIn([reducerCampaign, 'heading']),
-  body: state.getIn([reducerCampaign, 'body']),
+  heading: state.getIn([reducerBulkEmail, 'heading']),
+  body: state.getIn([reducerBulkEmail, 'body']),
   userType: state.getIn([reducerA, 'userType']),
 });
 
 const mapDispatchToProps = dispatch => ({
-  addInfo: bindActionCreators(storeStep4Info, dispatch)
+  addInfo: bindActionCreators(emailStep3Info, dispatch)
 });
 
 const StepMapped = connect(
