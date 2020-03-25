@@ -27,6 +27,7 @@ import clientAuth from './modules/clientAuth';
 import campaign from './modules/campaign';
 import Auth from './modules/Auth';
 import studentProfile from './modules/studentProfile';
+import clientEditProfile from './modules/clientEditProfile';
 
 /**
  * Branching reducers to use one reducer for many components
@@ -66,6 +67,7 @@ export default function createReducer(injectedReducers = {}) {
     campaign,
     Auth,
     studentProfile,
+    clientEditProfile,
     treeTableArrow: branchReducer(treeTable, 'treeTableArrow'),
     treeTablePM: branchReducer(treeTable, 'treeTablePM'),
     crudTableDemo: branchReducer(crudTable, 'crudTableDemo'),
