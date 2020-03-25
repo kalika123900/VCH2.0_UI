@@ -21,6 +21,13 @@ import {
 }
   from 'dan-components';
 import styles from '../../../components/Forms/user-jss';
+import messageStyles from 'dan-styles/Messages.scss';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 
 function arrayRemove(arr, index) {
   let temp = [];
@@ -57,8 +64,14 @@ async function postData(url, data) {
 }
 
 class EditStudentDetails extends Component {
-  state = {
-    tab: 0
+  constructor(props) {
+    super(props);
+    this.state = {
+      tab: 0,
+      openStyle: false,
+      messageType: 'error',
+      notifyMessage: ''
+    };
   }
 
   educationHandler = (data) => {
@@ -123,21 +136,14 @@ class EditStudentDetails extends Component {
       .catch((err) => {
         console.log(err);
       });
-
   }
-  componentDidMount() {
-    const user = JSON.parse(
-      makeSecureDecrypt(localStorage.getItem('user'))
-    );
-    const data = { user_id: user.id };
-    this.setState({ data: data });
 
-    this.educationHandler(data);
-
+  experienceHandler = (data) => {
     postData(`${API_URL}/student/get-experience`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
           let experienceInfo = [{
+            id: null,
             company: '',
             role: '',
             roleDescription: ''
@@ -154,6 +160,7 @@ class EditStudentDetails extends Component {
           } else {
             experienceInfo = res.data.map((item, index) => {
               return {
+                id: item.id,
                 company: item.company,
                 role: item.role,
                 roleDescription: item.role_description
@@ -162,6 +169,7 @@ class EditStudentDetails extends Component {
 
             oldExperienceInfo = res.data.map((item, index) => {
               return {
+                id: item.id,
                 company: item.company,
                 role: item.role,
                 roleDescription: item.role_description
@@ -184,6 +192,17 @@ class EditStudentDetails extends Component {
       });
   }
 
+  componentDidMount() {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+    const data = { user_id: user.id };
+    this.setState({ data: data });
+
+    this.educationHandler(data);
+    this.experienceHandler(data);
+  }
+
   handleChangeTab = (event, value) => {
     this.setState({ tab: value });
   };
@@ -203,7 +222,6 @@ class EditStudentDetails extends Component {
       MapOldEducationInfo = oldEducationInfo.toJS();
     }
 
-
     const data = {
       educationNew: MapEducationInfo,
       educationOld: MapOldEducationInfo,
@@ -213,12 +231,15 @@ class EditStudentDetails extends Component {
     postJSON(`${API_URL}/student/create-education`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
-          const data = {
-            user_id: user.id
-          };
           _that.educationHandler(_that.state.data);
+          this.setState({ notifyMessage: 'Information update successfully' });
+          this.setState({ messageType: 'success' });
+          this.setState({ openStyle: true });
         } else {
           _that.educationHandler(_that.state.data);
+          this.setState({ notifyMessage: 'Information not updated' });
+          this.setState({ messageType: 'error' });
+          this.setState({ openStyle: true });
         }
       })
       .catch((err) => {
@@ -233,26 +254,37 @@ class EditStudentDetails extends Component {
 
     const { experienceInfo, oldExperienceInfo } = this.props;
     const MapExperienceInfo = experienceInfo.toJS();
-    const MapOldExperienceInfo = oldExperienceInfo.toJS();
+    var MapOldExperienceInfo = [];
+
+    if (typeof oldExperienceInfo == 'undefined') {
+      MapOldExperienceInfo = [];
+    }
+    else {
+      MapOldExperienceInfo = oldExperienceInfo.toJS();
+    }
 
     const data = {
       experienceNew: MapExperienceInfo,
       experienceOld: MapOldExperienceInfo,
       user_id: user.id,
     };
-
-    console.log(data)
-
+    var _that = this;
     postJSON(`${API_URL}/student/create-experience`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
-          console.log("sucessfull data updated")
+          _that.experienceHandler(_that.state.data);
+          this.setState({ notifyMessage: 'Information update successfully' });
+          this.setState({ messageType: 'success' });
+          this.setState({ openStyle: true });
         } else {
-          console.log('something not good ');
+          _that.experienceHandler(_that.state.data);
+          this.setState({ notifyMessage: 'Information not updated' });
+          this.setState({ messageType: 'error' });
+          this.setState({ openStyle: true });
         }
       })
       .catch((err) => {
-        console.log(err);
+        _that.experienceHandler(_that.state.data);
       });
   }
 
@@ -261,6 +293,7 @@ class EditStudentDetails extends Component {
     const MapEducationInfo = educationInfo.toJS();
 
     const formObject = {
+      id: null,
       type: '',
       university_qualification: '',
       subject: '',
@@ -285,6 +318,7 @@ class EditStudentDetails extends Component {
     const MapExperienceInfo = experienceInfo.toJS();
 
     const formObject = {
+      id: null,
       company: '',
       role: '',
       roleDescription: ''
@@ -299,6 +333,11 @@ class EditStudentDetails extends Component {
     const MapExperienceInfo = experienceInfo.toJS();
     const newExperienceArr = arrayRemove(MapExperienceInfo, index);
     addExperienceInfo({ ...this.props, experienceInfo: newExperienceArr });
+  }
+
+  noticeClose = event => {
+    event.preventDefault();
+    this.setState({ openStyle: false });
   }
 
   render() {
@@ -364,6 +403,44 @@ class EditStudentDetails extends Component {
           {tab === 2 && (
             <Fragment>
               {EducationJSX}
+              <Snackbar
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={this.state.openStyle}
+                autoHideDuration={6000}
+                onClose={this.handleCloseStyle}
+              >
+                <SnackbarContent
+                  className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
+                  aria-describedby="client-snackbar"
+                  message={(
+                    <span id="client-snackbar" className={classes.message}>
+                      {
+                        (this.state.messageType == 'error') && <ErrorIcon className="success" />
+                      }
+                      {
+                        (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
+                      }
+
+                  &nbsp;
+                      {this.state.notifyMessage}
+                    </span>
+                  )}
+                  action={[
+                    <IconButton
+                      key="close"
+                      aria-label="Close"
+                      color="inherit"
+                      className={classes.close}
+                      onClick={this.noticeClose}
+                    >
+                      <CloseIcon className={classes.icon} />
+                    </IconButton>,
+                  ]}
+                />
+              </Snackbar>
               <div className={classes.btnArea}>
                 <Button variant="text" color="primary" onClick={e => this.addEducationField(e)}>
                   Add More
@@ -379,6 +456,44 @@ class EditStudentDetails extends Component {
           {tab === 3 && (
             <Fragment>
               {ExperienceJSX}
+              <Snackbar
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={this.state.openStyle}
+                autoHideDuration={6000}
+                onClose={this.handleCloseStyle}
+              >
+                <SnackbarContent
+                  className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
+                  aria-describedby="client-snackbar"
+                  message={(
+                    <span id="client-snackbar" className={classes.message}>
+                      {
+                        (this.state.messageType == 'error') && <ErrorIcon className="success" />
+                      }
+                      {
+                        (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
+                      }
+
+                  &nbsp;
+                      {this.state.notifyMessage}
+                    </span>
+                  )}
+                  action={[
+                    <IconButton
+                      key="close"
+                      aria-label="Close"
+                      color="inherit"
+                      className={classes.close}
+                      onClick={this.noticeClose}
+                    >
+                      <CloseIcon className={classes.icon} />
+                    </IconButton>,
+                  ]}
+                />
+              </Snackbar>
               <div className={classes.btnArea}>
                 <Button variant="text" color="primary" onClick={e => this.addExperienceField(e)}>
                   Add More

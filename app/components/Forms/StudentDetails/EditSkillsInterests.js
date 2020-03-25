@@ -17,6 +17,13 @@ import qs from 'qs';
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import { storeSkillInterests, } from 'dan-actions/studentProfileActions';
 import { companyList, skillMenu, sectorsData } from 'dan-api/apps/profileOption';
+import messageStyles from 'dan-styles/Messages.scss';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -83,6 +90,15 @@ async function postData(url, data) {
 }
 
 class EditSkillsInterests extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      openStyle: false,
+      messageType: 'error',
+      notifyMessage: ''
+    };
+  }
+
   componentDidMount() {
     const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))
@@ -138,15 +154,24 @@ class EditSkillsInterests extends React.Component {
     postJSON(`${API_URL}/student/create-skills-interests`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
-          console.log("updated")
+          this.setState({ notifyMessage: 'Information update successfully' });
+          this.setState({ messageType: 'success' });
+          this.setState({ openStyle: true });
         } else {
-          console.log('something not good ');
+          this.setState({ notifyMessage: 'Information not updated' });
+          this.setState({ messageType: 'error' });
+          this.setState({ openStyle: true });
         }
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
+  noticeClose = event => {
+    event.preventDefault();
+    this.setState({ openStyle: false });
+  }
 
   render() {
     const {
@@ -283,7 +308,44 @@ class EditSkillsInterests extends React.Component {
             </Button>
           </div>
         </form>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={this.state.openStyle}
+          autoHideDuration={6000}
+          onClose={this.handleCloseStyle}
+        >
+          <SnackbarContent
+            className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
+            aria-describedby="client-snackbar"
+            message={(
+              <span id="client-snackbar" className={classes.message}>
+                {
+                  (this.state.messageType == 'error') && <ErrorIcon className="success" />
+                }
+                {
+                  (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
+                }
 
+                  &nbsp;
+                {this.state.notifyMessage}
+              </span>
+            )}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                className={classes.close}
+                onClick={this.noticeClose}
+              >
+                <CloseIcon className={classes.icon} />
+              </IconButton>,
+            ]}
+          />
+        </Snackbar>
       </section >
     );
   }

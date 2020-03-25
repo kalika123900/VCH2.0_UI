@@ -19,6 +19,13 @@ import { storeProfileDetails, warnMsgInit, warnMsgRemove } from 'dan-actions/stu
 import { genderItems, ethnicityItems, nationalityItems } from 'dan-api/apps/profileOption';
 import qs from 'qs';
 import { makeSecureDecrypt } from 'dan-helpers/security';
+import messageStyles from 'dan-styles/Messages.scss';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -66,6 +73,15 @@ async function postData(url, data) {
 }
 
 class EditPersonalDetails extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      openStyle: false,
+      messageType: 'error',
+      notifyMessage: ''
+    };
+  }
+
   handleSubmit = () => {
     const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))
@@ -84,15 +100,13 @@ class EditPersonalDetails extends React.Component {
     postData(`${API_URL}/student/create-personal-details`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
-          this.props.addMsg({ warnMsg: 'Updated SuccessFully' });
-          setTimeout(() => {
-            this.props.removeMsg();
-          }, 4000)
+          this.setState({ notifyMessage: 'Information update successfully' });
+          this.setState({ messageType: 'success' });
+          this.setState({ openStyle: true });
         } else {
-          this.props.addMsg({ warnMsg: 'Information Not updated' });
-          setTimeout(() => {
-            this.props.removeMsg();
-          }, 4000)
+          this.setState({ notifyMessage: 'Information not updated' });
+          this.setState({ messageType: 'error' });
+          this.setState({ openStyle: true });
         }
       })
       .catch((err) => {
@@ -145,6 +159,11 @@ class EditPersonalDetails extends React.Component {
     addInfo({ ...this.props, [event.target.name]: event.target.value });
   };
 
+  noticeClose = event => {
+    event.preventDefault();
+    this.setState({ openStyle: false });
+  }
+
   render() {
     const {
       classes,
@@ -164,9 +183,6 @@ class EditPersonalDetails extends React.Component {
       <Fragment>
 
         <section className={classes.pageFormWrap}>
-          <Grid className={classes.warnMsg}>
-            {warnMsg}
-          </Grid>
           <form >
             <div>
               <FormControl className={classes.formControl}>
@@ -328,6 +344,44 @@ class EditPersonalDetails extends React.Component {
             </Button>
             </div>
           </form>
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={this.state.openStyle}
+            autoHideDuration={6000}
+            onClose={this.handleCloseStyle}
+          >
+            <SnackbarContent
+              className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
+              aria-describedby="client-snackbar"
+              message={(
+                <span id="client-snackbar" className={classes.message}>
+                  {
+                    (this.state.messageType == 'error') && <ErrorIcon className="success" />
+                  }
+                  {
+                    (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
+                  }
+
+                  &nbsp;
+                  {this.state.notifyMessage}
+                </span>
+              )}
+              action={[
+                <IconButton
+                  key="close"
+                  aria-label="Close"
+                  color="inherit"
+                  className={classes.close}
+                  onClick={this.noticeClose}
+                >
+                  <CloseIcon className={classes.icon} />
+                </IconButton>,
+              ]}
+            />
+          </Snackbar>
         </section >
       </Fragment>
     );

@@ -146,7 +146,6 @@ class EditDetailsForm extends React.Component {
       phone,
       username,
       classes,
-
     } = this.props;
     return (
       <Paper className={classes.fullWrap}>

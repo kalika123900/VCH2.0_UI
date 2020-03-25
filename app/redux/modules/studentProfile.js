@@ -26,6 +26,7 @@ const initialState = {
   oldSkills: List([]),
   resume: List([]),
   educationInfo: List([{
+    id: null,
     type: '',
     university_qualification: '',
     subject: '',
@@ -35,6 +36,7 @@ const initialState = {
   }]),
   oldEducationInfo: List([]),
   experienceInfo: List([{
+    id: null,
     company: '',
     role: '',
     roleDescription: ''
