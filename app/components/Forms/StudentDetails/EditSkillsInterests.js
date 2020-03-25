@@ -13,13 +13,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Input from '@material-ui/core/Input';
-import Grid from '@material-ui/core/Grid';
-import Tooltip from '@material-ui/core/Tooltip';
-import AddIcon from '@material-ui/icons/Add';
-import Typography from '@material-ui/core/Typography';
+import qs from 'qs';
+import { makeSecureDecrypt } from 'dan-helpers/security';
 import { storeSkillInterests, } from 'dan-actions/studentProfileActions';
 import { companyList, skillMenu, sectorsData } from 'dan-api/apps/profileOption';
-
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -33,28 +30,130 @@ const MenuProps = {
   },
 };
 
-class EditSkillsInterests extends React.Component {
-  constructor(props) {
-    super(props)
-    console.log(this.props);
-  }
+function stringToArray(string) {
+  const splitArray = string.split(',');
+  const data = [];
+  splitArray.map(item => {
+    if (isNaN(item)) {
+      data.push(item);
+    }
+    else if (item > 1000) {
+      data.push(item);
+    }
+    else if (typeof item == 'string' && item.length > 0) {
+      data.push(item);
+    }
+  });
+  return data;
+}
 
+function getIdsItem(arr, data) {
+  return arr.map(item => {
+    return data[item];
+  })
+}
+
+function getIds(arr, data) {
+  return arr.map(item => {
+    return data.indexOf(item);
+  })
+}
+
+async function postJSON(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  });
+
+  return await response.json();
+}
+
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+  return await response.json();
+}
+
+class EditSkillsInterests extends React.Component {
+  componentDidMount() {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const data = {
+      user_id: user.id
+    };
+
+    postData(`${API_URL}/student/get-skills-interests`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          const intrestedIndustries = stringToArray(res.data.industries);
+          const intrestedCompanies = stringToArray(res.data.companies);
+          const skills = getIdsItem(res.data.skills, skillMenu);
+
+          const studentData = {
+            intrestedIndustries,
+            intrestedCompanies,
+            skills,
+            oldSkills: res.data.skills
+          };
+          this.props.addInfo(studentData);
+        } else {
+          console.log('something not good ');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   handleChange = event => {
     const { addInfo } = this.props;
     addInfo({ ...this.props, [event.target.name]: event.target.value });
-
   };
 
+  handleSubmit = () => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const newSkills = getIds(this.props.skills.toJS(), skillMenu);
+
+    const data = {
+      industries: this.props.intrestedIndustries.toJS(),
+      companies: this.props.intrestedCompanies.toJS(),
+      newSkills,
+      oldSkills: this.props.oldSkills.toJS(),
+      user_id: user.id
+    };
+
+    postJSON(`${API_URL}/student/create-skills-interests`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          console.log("updated")
+        } else {
+          console.log('something not good ');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   render() {
     const {
       classes,
       intrestedIndustries,
       skills,
-      oldSkills,
-      intrestedCompanies,
-      handleSubmit
+      intrestedCompanies
     } = this.props;
 
     return (
@@ -66,7 +165,7 @@ class EditSkillsInterests extends React.Component {
                 htmlFor="select-industries"
               >
                 Interested Industries
-                  </InputLabel>
+              </InputLabel>
               <Select
                 multiple
                 value={intrestedIndustries.toJS()}
@@ -105,7 +204,7 @@ class EditSkillsInterests extends React.Component {
                 htmlFor="select-companies"
               >
                 Interested Companies
-                </InputLabel>
+              </InputLabel>
               <Select
                 multiple
                 value={intrestedCompanies.toJS()}
@@ -179,9 +278,9 @@ class EditSkillsInterests extends React.Component {
             </FormControl>
           </div>
           <div className={classes.btnArea} style={{ marginTop: '35px' }}>
-            <Button variant="contained" fullWidth color="primary" onClick={() => handleSubmit()}>
+            <Button variant="contained" fullWidth color="primary" onClick={() => this.handleSubmit()}>
               Save Changes
-              </Button>
+            </Button>
           </div>
         </form>
 
@@ -189,30 +288,31 @@ class EditSkillsInterests extends React.Component {
     );
   }
 }
-const reducerCampaign = 'studentProfile';
+const reducerStudent = 'studentProfile';
 
 EditSkillsInterests.propTypes = {
   classes: PropTypes.object.isRequired,
   intrestedIndustries: PropTypes.object.isRequired,
   intrestedCompanies: PropTypes.object.isRequired,
   skills: PropTypes.object.isRequired,
-  addInfo: PropTypes.func.isRequired,
-  oldSkills: PropTypes.func.isRequired
+  oldSkills: PropTypes.object.isRequired,
+  addInfo: PropTypes.func.isRequired
 };
+
 const mapStateToProps = state => ({
-  intrestedIndustries: state.getIn([reducerCampaign, 'intrestedIndustries']),
-  intrestedCompanies: state.getIn([reducerCampaign, 'intrestedCompanies']),
-  skills: state.getIn([reducerCampaign, 'skills']),
-  oldSkills: state.getIn([reducerCampaign, 'oldSkills']),
+  intrestedIndustries: state.getIn([reducerStudent, 'intrestedIndustries']),
+  intrestedCompanies: state.getIn([reducerStudent, 'intrestedCompanies']),
+  skills: state.getIn([reducerStudent, 'skills']),
+  oldSkills: state.getIn([reducerStudent, 'oldSkills']),
 });
+
 const mapDispatchToProps = dispatch => ({
   addInfo: bindActionCreators(storeSkillInterests, dispatch)
 });
 
-const StepMapped = connect(
+const EditSkillsInterestsMapped = connect(
   mapStateToProps,
   mapDispatchToProps
 )(EditSkillsInterests);
 
-
-export default withStyles(styles)(StepMapped);
+export default withStyles(styles)(EditSkillsInterestsMapped);

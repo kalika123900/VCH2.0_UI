@@ -10,8 +10,8 @@ export const storeSkillInterests = (data) => ({
   data
 });
 
-export const storeEducationData = (data) => ({
-  type: types.STORE_EDUCATION_DATA,
+export const storeEducation = (data) => ({
+  type: types.STORE_EDUCATION,
   data
 });
 
@@ -20,25 +20,12 @@ export const storeExperience = (data) => ({
   data
 });
 
-export const studentProfileInit = (data) => ({
-  type: types.STUDENT_PROFILE_INIT,
-  data
-});
-export const storeSkillInterestsInit = (data) => ({
-  type: types.STORE_SKILL_INTERESTS_INIT,
+export const warnMsgInit = (data) => ({
+  type: types.WARN_MSG_INIT,
   data
 });
 
-export const storeEducationDataInit = (data) => ({
-  type: types.STORE_EDUCATION_DATA_INIT,
-  data
+export const warnMsgRemove = () => ({
+  type: types.WARN_MSG_INIT
 });
-
-export const storeExperienceInit = (data) => ({
-  type: types.STORE_EXPERIENCE_INIT,
-  data
-});
-
-
-
 

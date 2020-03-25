@@ -2,19 +2,18 @@ import { fromJS, List } from 'immutable';
 import {
   STORE_PROFILE_DETAILS,
   STORE_SKILL_INTERESTS,
-  STORE_EDUCATION_DATA,
+  STORE_EDUCATION,
   STORE_EXPERIENCE,
-  STUDENT_PROFILE_INIT,
-  STORE_SKILL_INTERESTS_INIT,
-  STORE_EDUCATION_DATA_INIT,
-  STORE_EXPERIENCE_INIT,
+  WARN_MSG_INIT,
+  WARN_MSG_REMOVE
 } from 'dan-actions/actionConstants';
 import { DateHelper } from '../helpers/dateTimeHelper';
 
 const initialState = {
+  warnMsg: '',
   firstName: '',
   lastName: '',
-  alternateEmail: '',
+  email: '',
   phoneNumber: '',
   dob: DateHelper.format(DateHelper.addDays(new Date(), -6580)),
   gender: '',
@@ -25,44 +24,22 @@ const initialState = {
   intrestedCompanies: List([]),
   skills: List([]),
   oldSkills: List([]),
-  files: List([]),
-  company: '',
-  role: '',
-  roleDescription: '',
+  resume: List([]),
   educationInfo: List([{
-    id: 0,
-    institute: '',
-    qualification: '',
-    education_from: '',
-    education_to: '',
-    course: '',
-    grade: '',
-    type: 'university',
+    type: '',
+    university_qualification: '',
+    subject: '',
+    from: '',
+    to: '',
+    score: ''
   }]),
-
-  oldEducationInfo: List([{
-    id: 0,
-    institute: '',
-    qualification: '',
-    education_to: '',
-    eduTo: '',
-    course: '',
-    grade: '',
-    type: 'university',
-  }]),
+  oldEducationInfo: List([]),
   experienceInfo: List([{
-    id: 0,
     company: '',
     role: '',
     roleDescription: ''
   }]),
-  oldExperienceInfo: List([{
-    id: 0,
-    company: '',
-    role: '',
-    roleDescription: ''
-  }]),
-  action: 'create'
+  oldExperienceInfo: List([])
 };
 
 const initialImmutableState = fromJS(initialState);
@@ -71,19 +48,19 @@ export default function reducer(state = initialImmutableState, action = {}) {
   switch (action.type) {
     case STORE_PROFILE_DETAILS:
       return state.withMutations((mutableState) => {
-        const files = fromJS(action.data.files);
+        const MapResume = fromJS(action.data.resume);
         mutableState
           .set('firstName', action.data.firstName)
           .set('lastName', action.data.lastName)
-          .set('alternateEmail', action.data.alternateEmail)
+          .set('email', action.data.email)
           .set('phoneNumber', action.data.phoneNumber)
           .set('dob', action.data.dob)
           .set('gender', action.data.gender)
           .set('ethnicity', action.data.ethnicity)
           .set('nationality', action.data.nationality)
-          .set('files', files)
-
+          .set('resume', MapResume)
       });
+
     case STORE_SKILL_INTERESTS:
       return state.withMutations((mutableState) => {
         const intrestedIndustries = fromJS(action.data.intrestedIndustries);
@@ -96,7 +73,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('skills', skills)
           .set('oldSkills', oldSkills)
       });
-    case STORE_EDUCATION_DATA:
+
+    case STORE_EDUCATION:
       return state.withMutations((mutableState) => {
         const educationInfo = fromJS(action.data.educationInfo)
         const oldEducationInfo = fromJS(action.data.oldEducationInfo)
@@ -104,6 +82,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('educationInfo', educationInfo)
           .set('oldEducationInfo', oldEducationInfo)
       });
+
     case STORE_EXPERIENCE:
       return state.withMutations((mutableState) => {
         const experienceInfo = fromJS(action.data.experienceInfo)
@@ -111,51 +90,18 @@ export default function reducer(state = initialImmutableState, action = {}) {
         mutableState
           .set('experienceInfo', experienceInfo)
           .set('oldExperienceInfo', oldExperienceInfo)
+      });
 
-      });
-    case STUDENT_PROFILE_INIT:
+    case WARN_MSG_INIT:
       return state.withMutations((mutableState) => {
-        const files = fromJS(action.data.files);
         mutableState
-          .set('firstName', action.data.firstName)
-          .set('lastName', action.data.lastName)
-          .set('alternateEmail', action.data.alternateEmail)
-          .set('phoneNumber', action.data.phoneNumber)
-          .set('dob', action.data.dob)
-          .set('gender', action.data.gender)
-          .set('ethnicity', action.data.ethnicity)
-          .set('nationality', action.data.nationality)
-          .set('file', files)
+          .set('warnMsg', action.data.warnMsg)
       });
-    case STORE_SKILL_INTERESTS_INIT:
-      return state.withMutations((mutableState) => {
-        const intrestedIndustries = fromJS(action.data.intrestedIndustries);
-        const intrestedCompanies = fromJS(action.data.intrestedCompanies);
-        const skills = fromJS(action.data.skills);
-        const oldSkills = fromJS(action.data.oldSkills);
-        mutableState
-          .set('intrestedIndustries', intrestedIndustries)
-          .set('intrestedCompanies', intrestedCompanies)
-          .set('skills', skills)
-          .set('oldSkills', oldSkills)
-      });
-    case STORE_EDUCATION_DATA_INIT:
-      return state.withMutations((mutableState) => {
-        const educationInfo = fromJS(action.data.educationInfo)
-        const oldEducationInfo = fromJS(action.data.oldEducationInfo)
 
-        mutableState
-          .set('educationInfo', educationInfo)
-          .set('oldEducationInfo', oldEducationInfo)
-      });
-    case STORE_EXPERIENCE_INIT:
+    case WARN_MSG_REMOVE:
       return state.withMutations((mutableState) => {
-        const experienceInfo = fromJS(action.data.experienceInfo)
-        const oldExperienceInfo = fromJS(action.data.oldExperienceInfo)
         mutableState
-          .set('experienceInfo', experienceInfo)
-          .set('oldExperienceInfo', oldExperienceInfo)
-
+          .set('warnMsg', '')
       });
 
     default:

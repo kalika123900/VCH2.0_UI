@@ -12,32 +12,33 @@ import { storeExperience } from 'dan-actions/studentProfileActions';
 const required = value => (value === null ? 'Required' : undefined);
 
 class EditExperience extends React.Component {
-  constructor(props) {
-    super(props)
-  }
   handleChange = (event, id) => {
-    const { experienceInfo, addExperienceInfo } = this.props;
+    const { experienceInfo, addInfo, } = this.props;
     const MapExperienceInfo = experienceInfo.toJS();
-
-    const newExperienceArr = MapExperienceInfo.map(item => {
-      if (item.id === id) {
+    const newExperienceArr = MapExperienceInfo.map((item, index) => {
+      if (index == id) {
         return {
           ...item,
           [event.target.name]: event.target.value
         };
-      };
-      return item;
+      }
+      else {
+        return {
+          ...item
+        }
+      }
     })
-    addExperienceInfo({ experienceInfo: newExperienceArr })
+    addInfo({ ...this.props, experienceInfo: newExperienceArr });
   };
+
   render() {
     const { classes, id, experienceInfo } = this.props;
 
     const MapExperienceInfo = experienceInfo.toJS();
     const { company, role, roleDescription } = MapExperienceInfo[id];
+
     return (
       <section className={classes.pageFormWrap}>
-
         <div>
           <FormControl className={classes.formControl}>
             <TextField
@@ -94,22 +95,24 @@ const reducerStudent = 'studentProfile';
 EditExperience.propTypes = {
   classes: PropTypes.object.isRequired,
   experienceInfo: PropTypes.object.isRequired,
-  addExperienceInfo: PropTypes.func.isRequired
+  oldExperienceInfo: PropTypes.object.isRequired,
+  addInfo: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  experienceInfo: state.getIn([reducerStudent, 'experienceInfo'])
+  experienceInfo: state.getIn([reducerStudent, 'experienceInfo']),
+  oldExperienceInfo: state.getIn([reducerStudent, 'oldExperienceInfo'])
 });
 
 const mapDispatchToProps = dispatch => ({
-  addExperienceInfo: bindActionCreators(storeExperience, dispatch)
+  addInfo: bindActionCreators(storeExperience, dispatch)
 });
 
-const StepMapped = connect(
+const EditExperienceMapped = connect(
   mapStateToProps,
   mapDispatchToProps
 )(EditExperience);
 
 
 
-export default withStyles(styles)(StepMapped);
+export default withStyles(styles)(EditExperienceMapped);
