@@ -7,10 +7,18 @@ import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import Paper from '@material-ui/core/Paper';
 import { clientProfileDetails, clientProfileInit } from 'dan-actions/clientProfileActions';
-import styles from '../../../components/Forms/user-jss';
 import TextField from '@material-ui/core/TextField';
 import { makeSecureDecrypt } from 'dan-helpers/security';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
+import InfoIcon from '@material-ui/icons/Info';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
 import qs from 'qs';
+import messageStyles from 'dan-styles/Messages.scss';
+import styles from '../../../components/Forms/user-jss';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -46,6 +54,14 @@ async function postData(url, data) {
 }
 
 class EditDetailsForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      openStyle: false,
+      messageType: 'error',
+      notifyMessage: ''
+    };
+  }
 
   componentDidMount() {
     const _that = this;
@@ -59,8 +75,8 @@ class EditDetailsForm extends React.Component {
           const firstName = res.data.firstname;
           const lastName = res.data.lastname;
           const userEmail = res.data.email;
-          const phone = res.data.phone;
-          const username = res.data.username;
+          const { phone } = res.data;
+          const { username } = res.data;
           const clientProfileData = {
             firstName,
             lastName,
@@ -77,32 +93,49 @@ class EditDetailsForm extends React.Component {
         console.log(err);
       });
   }
-  handleClient = () => {
+
+  handleClient = (e) => {
+    const _that = this;
+    e.preventDefault();
     const {
       userEmail,
       phone,
     } = this.props;
     const data = {
       email: userEmail,
-      phone: phone,
+      phone,
       client_id: user.id,
     };
     postJSON(`${API_URL}/client/update-account-info`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
-          console.log("sucessfull")
+          _that.setState({ notifyMessage: 'Information update successfully' });
+          _that.setState({ messageType: 'success' });
+          _that.setState({ openStyle: true });
         } else {
-          console.log('something not good ');
+          _that.setState({ notifyMessage: res.errorMessage.toUpperCase() });
+          _that.setState({ messageType: 'error' });
+          _that.setState({ openStyle: true });
         }
+        setTimeout(() => { _that.setState({ openStyle: false }); }, 5000);
       })
       .catch((err) => {
-        console.log(err);
+        _that.setState({ notifyMessage: 'Something went wrong, Please try after sometime.' });
+        _that.setState({ messageType: 'error' });
+        _that.setState({ openStyle: true });
+        setTimeout(() => { _that.setState({ openStyle: false }); }, 5000);
       });
   }
+
   handleChange = event => {
     const { addInfo } = this.props;
     addInfo({ ...this.props, [event.target.name]: event.target.value });
   };
+
+  noticeClose = event => {
+    event.preventDefault();
+    this.setState({ openStyle: false });
+  }
 
   render() {
     const {
@@ -117,7 +150,7 @@ class EditDetailsForm extends React.Component {
     return (
       <Paper className={classes.fullWrap}>
         <section className={classes.pageFormWrap}>
-          <form onSubmit={this.handleClient}>
+          <form onSubmit={(e) => this.handleClient(e)}>
             <div>
               <FormControl className={classes.formControl}>
                 <TextField
@@ -130,6 +163,9 @@ class EditDetailsForm extends React.Component {
                   value={firstName}
                   onChange={(e) => this.handleChange(e)}
                   validate={[required]}
+                  InputProps={{
+                    readOnly: true,
+                  }}
                 />
               </FormControl>
             </div>
@@ -145,6 +181,9 @@ class EditDetailsForm extends React.Component {
                   value={lastName}
                   onChange={(e) => this.handleChange(e)}
                   validate={[required]}
+                  InputProps={{
+                    readOnly: true,
+                  }}
                 />
               </FormControl>
             </div>
@@ -160,6 +199,9 @@ class EditDetailsForm extends React.Component {
                   value={username}
                   onChange={(e) => this.handleChange(e)}
                   validate={[required]}
+                  InputProps={{
+                    readOnly: true,
+                  }}
                 />
               </FormControl>
             </div>
@@ -201,6 +243,44 @@ class EditDetailsForm extends React.Component {
               </Button>
             </div>
           </form>
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={this.state.openStyle}
+            autoHideDuration={6000}
+            onClose={this.handleCloseStyle}
+          >
+            <SnackbarContent
+              className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
+              aria-describedby="client-snackbar"
+              message={(
+                <span id="client-snackbar" className={classes.message}>
+                  {
+                    (this.state.messageType == 'error') && <ErrorIcon className="success" />
+                  }
+                  {
+                    (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
+                  }
+
+                  &nbsp;
+                  {this.state.notifyMessage}
+                </span>
+              )}
+              action={[
+                <IconButton
+                  key="close"
+                  aria-label="Close"
+                  color="inherit"
+                  className={classes.close}
+                  onClick={this.noticeClose}
+                >
+                  <CloseIcon className={classes.icon} />
+                </IconButton>,
+              ]}
+            />
+          </Snackbar>
         </section>
       </Paper>
     );
