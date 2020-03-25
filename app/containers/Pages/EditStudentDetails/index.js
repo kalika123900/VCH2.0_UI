@@ -61,15 +61,7 @@ class EditStudentDetails extends Component {
     tab: 0
   }
 
-  componentDidMount() {
-    const user = JSON.parse(
-      makeSecureDecrypt(localStorage.getItem('user'))
-    );
-
-    const data = {
-      user_id: user.id
-    };
-
+  educationHandler = (data) => {
     postData(`${API_URL}/student/get-education`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
@@ -79,7 +71,8 @@ class EditStudentDetails extends Component {
             to: '',
             score: '',
             subject: '',
-            type: ''
+            type: '',
+            id: null
           }];
           let oldEducationInfo = [];
 
@@ -99,7 +92,8 @@ class EditStudentDetails extends Component {
                 to: item.education_to,
                 score: item.score,
                 subject: item.subject,
-                type: item.type
+                type: item.type,
+                id: item.id
               }
             });
 
@@ -110,7 +104,8 @@ class EditStudentDetails extends Component {
                 to: item.education_to,
                 score: item.score,
                 subject: item.subject,
-                type: item.type
+                type: item.type,
+                id: item.id
               }
             });
 
@@ -128,6 +123,16 @@ class EditStudentDetails extends Component {
       .catch((err) => {
         console.log(err);
       });
+
+  }
+  componentDidMount() {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+    const data = { user_id: user.id };
+    this.setState({ data: data });
+
+    this.educationHandler(data);
 
     postData(`${API_URL}/student/get-experience`, data) // eslint-disable-line
       .then((res) => {
@@ -190,24 +195,34 @@ class EditStudentDetails extends Component {
 
     const { educationInfo, oldEducationInfo } = this.props;
     const MapEducationInfo = educationInfo.toJS();
-    const MapOldEducationInfo = oldEducationInfo.toJS();
+    var MapOldEducationInfo = [];
+    if (typeof oldEducationInfo == 'undefined') {
+      MapOldEducationInfo = [];
+    }
+    else {
+      MapOldEducationInfo = oldEducationInfo.toJS();
+    }
+
 
     const data = {
       educationNew: MapEducationInfo,
       educationOld: MapOldEducationInfo,
       user_id: user.id,
     };
-
+    var _that = this;
     postJSON(`${API_URL}/student/create-education`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
-          console.log("sucessfull data updated")
+          const data = {
+            user_id: user.id
+          };
+          _that.educationHandler(_that.state.data);
         } else {
-          console.log('something not good ');
+          _that.educationHandler(_that.state.data);
         }
       })
       .catch((err) => {
-        console.log(err);
+        _that.educationHandler(_that.state.data);
       });
   }
 
