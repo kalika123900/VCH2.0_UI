@@ -21,7 +21,8 @@ const email = value => (
 
 class EditDetailsForm extends React.Component {
   state = {
-    accountName: "Lorem Ipsum",
+    firstName: "Lorem Ipsum",
+    lastName: 'Ipsum',
     userEmail: "abc@gmail.com",
     phone: '+918545754965',
     username: 'jhon@123',
@@ -37,7 +38,7 @@ class EditDetailsForm extends React.Component {
       handleSubmit,
       deco
     } = this.props;
-    const { accountName, userEmail, phone, username } = this.state;
+    const { firstName, lastName, userEmail, phone, username } = this.state;
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
         <section className={classes.pageFormWrap}>
@@ -45,13 +46,28 @@ class EditDetailsForm extends React.Component {
             <div>
               <FormControl className={classes.formControl}>
                 <TextField
-                  label="Account Name"
+                  label="First Name"
                   className={classes.textField}
                   type="text"
-                  name="accountName"
+                  name="firstName"
                   margin="normal"
                   variant="outlined"
-                  value={accountName}
+                  value={firstName}
+                  onChange={(e) => this.handleChange(e)}
+                  validate={[required]}
+                />
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <TextField
+                  label="Last Name"
+                  className={classes.textField}
+                  type="text"
+                  name="lastName"
+                  margin="normal"
+                  variant="outlined"
+                  value={lastName}
                   onChange={(e) => this.handleChange(e)}
                   validate={[required]}
                 />
