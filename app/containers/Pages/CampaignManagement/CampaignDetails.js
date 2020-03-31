@@ -8,22 +8,24 @@ import Grid from '@material-ui/core/Grid'
 
 class CampaignDetails extends Component {
   render() {
+    const campaignId = this.props.match.params.campaignId;
+
     return (
       <Grid>
         <Grid container spacing={3}>
           <Grid item md={6} sm={12} xs={12}>
-            <CampaignStats />
+            <CampaignStats campaignId={campaignId} />
           </Grid>
           <Grid item md={6} xs={12}>
-            <CampaignGraph />
+            <CampaignGraph campaignId={campaignId} />
           </Grid>
         </Grid>
         <Grid container spacing={3}>
           <Grid item md={6} xs={12}>
-            <CampaignPieChart />
+            <CampaignPieChart campaignId={campaignId} />
           </Grid>
           <Grid item md={6} sm={12} xs={12}>
-            <CampaignInfo cId={this.props.match.params.campaignId} />
+            <CampaignInfo campaignId={campaignId} />
           </Grid>
         </Grid>
       </Grid>

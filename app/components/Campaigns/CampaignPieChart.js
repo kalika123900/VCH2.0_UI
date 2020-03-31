@@ -2,13 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { createMuiTheme } from '@material-ui/core/styles';
 import ThemePallete from 'dan-api/palette/themePalette';
+import { withStyles } from '@material-ui/core/styles';
 import PapperBlock from '../PapperBlock/PapperBlock';
 import {
   PieChart,
   Pie,
-  Sector
+  Sector,
+  ResponsiveContainer
 } from 'recharts';
+import qs from 'qs';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import { data6 } from './sampleData';
+import styles from '../Forms/user-jss';
+import { Grid } from '@material-ui/core';
 
 const theme = createMuiTheme(ThemePallete.greenTheme);
 const color = ({
@@ -40,8 +47,8 @@ const renderActiveShape = props => {
   const ex = mx + ((cos >= 0 ? 1 : -1) * 22);
   const ey = my;
   const textAnchor = cos >= 0 ? 'start' : 'end';
-  return (
 
+  return (
     <g>
       <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>{payload.name}</text>
       <Sector
@@ -100,49 +107,196 @@ renderActiveShape.defaultProps = {
   value: 0,
 };
 
+
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+  return await response.json();
+}
+
 class CampaignPieChart extends React.Component {
   state = {
-    activeIndex: 0
+    activeIndex: 0,
+    tab: 0,
+    genderData: [],
+    universityData: [],
+    courseData: []
   };
 
+  componentDidMount() {
+    const data = {
+      campaignId: this.props.campaignId
+    }
+
+    postData(`${API_URL}/campaign/course-balance`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          if (res.data.length > 0) {
+            let courseData = res.data.map(item => {
+              return {
+                name: item.subject,
+                value: parseInt(item.count)
+              }
+            });
+            this.setState({ courseData })
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    postData(`${API_URL}/campaign/gender-balance`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          if (res.data.length > 0) {
+            let genderData = res.data.map(item => {
+              return {
+                name: item.gender,
+                value: parseInt(item.count)
+              }
+            });
+            this.setState({ genderData })
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    postData(`${API_URL}/campaign/university-balance`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          if (res.data.length > 0) {
+            let universityData = res.data.map(item => {
+              return {
+                name: item.university_qualification,
+                value: parseInt(item.count)
+              }
+            });
+            this.setState({ universityData })
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   onPieEnter(evt) {
-    const index = data6.findIndex(p => p.name === evt.name);
+    var data = [];
+    if (this.state.tab == 0) {
+      data = this.state.genderData;
+    }
+    else if (this.state.tab == 1) {
+      data = this.state.courseData;
+    }
+    else if (this.state.tab == 2) {
+      data = this.state.universityData;
+    }
+
+    const index = data.findIndex(p => p.name === evt.name);
     this.setState({
       activeIndex: index,
     });
   }
 
+  handleChangeTab = (event, value) => {
+    this.setState({ tab: value });
+  };
+
   render() {
-    const { activeIndex } = this.state;
+    const { activeIndex, tab, genderData, universityData, courseData } = this.state;
+    const { classes } = this.props;
+
     return (
       <PapperBlock title="Campaign Pie Chart" icon="ios-pie" whiteBg desc="">
-        <PieChart
-          width={800}
-          height={400}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5
-          }}
+        <Tabs
+          value={tab}
+          onChange={this.handleChangeTab}
+          indicatorColor="secondary"
+          textColor="secondary"
+          centered
+          className={classes.tab}
         >
-          <Pie
-            dataKey="value"
-            activeIndex={activeIndex}
-            activeShape={renderActiveShape}
-            data={data6}
-            cx={150}
-            cy={200}
-            innerRadius={60}
-            outerRadius={100}
-            fill={color.secondary}
-            fillOpacity="0.8"
-            onMouseEnter={(event) => this.onPieEnter(event)}
-          />
-        </PieChart>
+          <Tab label="Gender Balance" />
+          <Tab label="Course Balance" />
+          <Tab label="University Balance" />
+        </Tabs>
+
+        {tab === 0 && (
+          <ResponsiveContainer width="100%" height={400}>
+            <PieChart
+              width={800}
+              height={400}
+              margin={{ top: 5, right: 30, left: 170, bottom: 5 }}
+            >
+              <Pie
+                dataKey="value"
+                activeIndex={activeIndex}
+                activeShape={renderActiveShape}
+                data={genderData}
+                cx={150}
+                cy={200}
+                innerRadius={60}
+                outerRadius={100}
+                fill={color.secondary}
+                fillOpacity="0.8"
+                onMouseEnter={(event) => this.onPieEnter(event)}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        )}
+        {tab === 1 && (
+          <PieChart
+            width={800}
+            height={400}
+            margin={{ top: 5, right: 30, left: 170, bottom: 5 }}
+          >
+            <Pie
+              dataKey="value"
+              activeIndex={activeIndex}
+              activeShape={renderActiveShape}
+              data={courseData}
+              cx={150}
+              cy={200}
+              innerRadius={60}
+              outerRadius={100}
+              fill={color.secondary}
+              fillOpacity="0.8"
+              onMouseEnter={(event) => this.onPieEnter(event, courseData)}
+            />
+          </PieChart>
+        )}
+        {tab === 2 && (
+          <PieChart
+            width={800}
+            height={400}
+            margin={{ top: 5, right: 30, left: 170, bottom: 5 }}
+          >
+            <Pie
+              dataKey="value"
+              activeIndex={activeIndex}
+              activeShape={renderActiveShape}
+              data={universityData}
+              cx={150}
+              cy={200}
+              innerRadius={60}
+              outerRadius={100}
+              fill={color.secondary}
+              fillOpacity="0.8"
+              onMouseEnter={(event) => this.onPieEnter(event, universityData)}
+            />
+          </PieChart>
+        )}
       </PapperBlock >
     );
   }
 }
 
-export default CampaignPieChart;
+export default withStyles(styles)(CampaignPieChart);

@@ -182,13 +182,18 @@ export const data6 = [
   {
     name: 'Course',
     value: 400
-  }, {
+  },
+  {
     name: 'University',
     value: 300
   },
   {
     name: 'Gender',
     value: 300
+  },
+  {
+    name: 'Other',
+    value: 200
   }
 ];
 
