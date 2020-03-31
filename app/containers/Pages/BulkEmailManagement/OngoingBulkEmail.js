@@ -1,25 +1,23 @@
 import React, { Fragment } from 'react';
+import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import classNames from 'classnames';
-import { Redirect } from 'react-router-dom';
-import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button';
-import { isWidthUp } from '@material-ui/core/withWidth';
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import AddIcon from '@material-ui/icons/Add';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
+import { ConfirmationDialog } from 'dan-components';
 import styles from 'dan-components/Tables/tableStyle-jss';
 import qs from 'qs';
-import { makeSecureDecrypt } from '../../Helpers/security';
-import formatDate from '../../Helpers/formatDate';
+import { makeSecureDecrypt } from '../../../Helpers/security';
+import formatDate from '../../../Helpers/formatDate';
+import { Button } from '@material-ui/core';
 
 function createData(id, bulkEmail, created_at, deadline, views) {
   return {
@@ -45,27 +43,11 @@ async function getData(url, data) {
 
 let bulkEmailData = [];
 
-class MiniBulkEmailTable extends React.Component {
+class OngoingCampaigns extends React.Component {
   state = {
-    redirect: false,
     isBulkEmails: false,
-    open: false,
-    type: '',
-    eId: null,
     page: 0,
     rowsPerPage: 5
-  }
-
-  setRedirect = () => {
-    this.setState({
-      redirect: true,
-    })
-  }
-
-  renderRedirect = () => {
-    if (this.state.redirect) {
-      return <Redirect to='/client/bulk-emails' />
-    }
   }
 
   handleChangePage = (event, page) => {
@@ -113,20 +95,10 @@ class MiniBulkEmailTable extends React.Component {
 
     return (
       <Fragment>
-        {this.renderRedirect()}
         <div className={classes.rootTable}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
-              <Typography variant="h6">Recent Bulk Emails</Typography>
-            </div>
-            <div className={classes.spacer} />
-            <div className={classes.actions}>
-              <Tooltip title="Add Email">
-                <Button variant="contained" onClick={this.setRedirect} color="primary" className={classes.button}>
-                  <AddIcon className={classNames(isWidthUp('sm', 'sm') && classes.leftIcon, classes.iconSmall)} />
-                  {isWidthUp('sm', 'sm') && 'New Bulk Email'}
-                </Button>
-              </Tooltip>
+              <Typography variant="h6">Ongoing Bulk Emails</Typography>
             </div>
           </Toolbar>
           {isBulkEmails
@@ -138,15 +110,30 @@ class MiniBulkEmailTable extends React.Component {
                     <TableCell align="left">Created At</TableCell>
                     <TableCell align="left">Deadline</TableCell>
                     <TableCell align="left">Views</TableCell>
+                    {/* <TableCell align="left">Action</TableCell> */}
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {bulkEmailData.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(n => (
-                    <TableRow key={n.id}>
+                    <TableRow key={n.id} >
                       <TableCell padding="default">{n.bulkEmail}</TableCell>
                       <TableCell align="left">{n.created_at}</TableCell>
                       <TableCell align="left">{n.deadline}</TableCell>
                       <TableCell align="left">{n.views}</TableCell>
+                      {/* <TableCell align="left">
+                        <Button
+                          color="primary"
+                          onClick={() => this.handleConfirmation("pause", n.id)}
+                        >
+                          Pause
+                        </Button>
+                        <Button
+                          color="secondary"
+                          onClick={() => this.handleConfirmation("cancel", n.id)}
+                        >
+                          Cancel
+                        </Button>
+                      </TableCell> */}
                     </TableRow>
                   ))}
                   {emptyRows > 0 && (
@@ -176,7 +163,7 @@ class MiniBulkEmailTable extends React.Component {
                 variant="body1"
                 className={classes.warnMsg}
               >
-                No Recent bulk emails !
+                No Ongoing Bulk Emails !
               </Typography>
             )
           }
@@ -186,8 +173,8 @@ class MiniBulkEmailTable extends React.Component {
   }
 }
 
-MiniBulkEmailTable.propTypes = {
+OngoingCampaigns.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(MiniBulkEmailTable);
+export default withStyles(styles)(OngoingCampaigns);

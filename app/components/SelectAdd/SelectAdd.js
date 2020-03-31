@@ -12,6 +12,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { storeStep3Info } from 'dan-actions/CampaignActions';
+import { emailStep2Info } from 'dan-actions/BulkEmailActions';
 import { storeRoleInfo } from 'dan-actions/RoleActions';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -60,7 +61,7 @@ class SelectAdd extends Component {
   };
 
   handleChange = (event, newValue) => {
-    const { addInfo, addRoleInfo } = this.props;
+    const { addInfo, addBulkEmailInfo, addRoleInfo } = this.props;
 
     const latest = newValue[newValue.length - 1];
     if (latest !== undefined) {
@@ -74,18 +75,21 @@ class SelectAdd extends Component {
       this.setState({ dataValue: newValue });
       if (this.props.type === 'location') {
         addInfo({ ...this.props, workLocation: newValue });
+        // addBulkEmailInfo({ ...this.props, workLocation: newValue });
       }
       if (this.props.type === 'roleDescriptors') {
         addRoleInfo({ ...this.props, roleDescriptors: newValue });
       }
       if (this.props.type === 'sectors') {
         addInfo({ ...this.props, interestedSectors: newValue });
+        // addBulkEmailInfo({ ...this.props, interestedSectors: newValue });
       }
       if (this.props.type === 'courses') {
         addRoleInfo({ ...this.props, courses: newValue });
       }
       if (this.props.type === 'keywords') {
         addInfo({ ...this.props, keywords: newValue });
+        // addBulkEmailInfo({ ...this.props, keywords: newValue });
       }
       // }
     }
@@ -93,18 +97,21 @@ class SelectAdd extends Component {
       this.setState({ dataValue: '' });
       if (this.props.type === 'location') {
         addInfo({ ...this.props, workLocation: newValue });
+        // addBulkEmailInfo({ ...this.props, workLocation: newValue });
       }
       if (this.props.type === 'roleDescriptors') {
         addRoleInfo({ ...this.props, roleDescriptors: newValue });
       }
       if (this.props.type === 'sectors') {
         addInfo({ ...this.props, interestedSectors: newValue });
+        // addBulkEmailInfo({ ...this.props, interestedSectors: newValue });
       }
       if (this.props.type === 'courses') {
         addRoleInfo({ ...this.props, courses: newValue });
       }
       if (this.props.type === 'keywords') {
         addInfo({ ...this.props, keywords: newValue });
+        // addBulkEmailInfo({ ...this.props, keywords: newValue });
       }
     }
   }
@@ -236,6 +243,7 @@ SelectAdd.propTypes = {
 };
 
 const reducerCampaign = 'campaign';
+const reducerBulkEmail = 'bulkEmail';
 const reducerRole = 'role';
 
 const mapStateToProps = state => ({
@@ -255,11 +263,12 @@ const mapStateToProps = state => ({
   skills: state.getIn([reducerRole, 'skills']),
   roleDeadline: state.getIn([reducerRole, 'roleDeadline']),
   roleDescriptors: state.getIn([reducerRole, 'roleDescriptors']),
-  roleLink: state.getIn([reducerRole, 'roleLink']),
+  roleLink: state.getIn([reducerRole, 'roleLink'])
 });
 
 const mapDispatchToProps = dispatch => ({
   addInfo: bindActionCreators(storeStep3Info, dispatch),
+  addBulkEmailInfo: bindActionCreators(emailStep2Info, dispatch),
   addRoleInfo: bindActionCreators(storeRoleInfo, dispatch)
 });
 

@@ -357,6 +357,10 @@ export const CampaignEdit = loadable(() =>
   import('./Pages/CampaignManagement/CampaignEdit'), {
   fallback: <Loading />,
 });
+export const BulkEmailEdit = loadable(() =>
+  import('./Pages/BulkEmailManagement/BulkEmailEdit'), {
+  fallback: <Loading />,
+});
 export const BulkEmailManagement = loadable(() =>
   import('./Pages/BulkEmailManagement'), {
   fallback: <Loading />,

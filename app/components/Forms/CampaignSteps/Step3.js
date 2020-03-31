@@ -29,7 +29,6 @@ import {
   genderItems,
   universityItems
 } from 'dan-api/apps/profileOption';
-import { subjectMenu, grade } from './constantData';
 import styles from './step-jss';
 
 const ITEM_HEIGHT = 48;
@@ -48,7 +47,6 @@ class Step3 extends React.Component {
     const { addInfo } = this.props;
     addInfo({ ...this.props, [event.target.name]: event.target.value });
   };
-
 
   handleGender = (value) => {
     const { gender, addInfo } = this.props;
@@ -177,6 +175,7 @@ class Step3 extends React.Component {
                   onChange={e => this.handleReduxChange(e)}
                 >
                   {courses.map((item, index) => (
+                    (item.length > 0) &&
                     <MenuItem key={index.toString()} value={item}>
                       <TextField
                         name="subject-checkbox"
@@ -218,6 +217,7 @@ class Step3 extends React.Component {
                   onChange={e => this.handleReduxChange(e)}
                 >
                   {skillMenu.map((item, index) => (
+                    (item.length > 0) &&
                     <MenuItem key={index.toString()} value={item}>
                       <TextField
                         name="skill-checkbox"
@@ -269,19 +269,6 @@ class Step3 extends React.Component {
                     </MenuItem>
                   ))}
                 </Select>
-                {/* <Select
-                  placeholder="Select Year"
-                  value={selectedYear}
-                  name="selectedYear"
-                  onChange={(e) => this.handleReduxChange(e)}
-                  MenuProps={MenuProps}
-                >
-                  {years.map((item, index) => (
-                    <MenuItem key={index} value={item}>
-                      <ListItemText primary={item} />
-                    </MenuItem>
-                  ))}
-                </Select> */}
               </FormControl>
             </Grid>
           </Grid>
@@ -323,19 +310,6 @@ class Step3 extends React.Component {
                     </MenuItem>
                   ))}
                 </Select>
-                {/* <Select
-                  placeholder="Select Minimum Grade"
-                  value={minGrade}
-                  name="minGrade"
-                  onChange={e => this.handleReduxChange(e)}
-                  MenuProps={MenuProps}
-                >
-                  {grade.map((item, index) => (
-                    <MenuItem key={index} value={item.id}>
-                      <ListItemText primary={item.value} />
-                    </MenuItem>
-                  ))}
-                </Select> */}
               </FormControl>
             </Grid>
           </Grid>

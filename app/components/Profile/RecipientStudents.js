@@ -7,6 +7,24 @@ import RecipientStudentCard from '../CardPaper/RecipientStudentCard';
 import styles from './profile-jss';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
 import { Button } from '@material-ui/core';
+import { CombineStyles } from 'dan-helpers';
+import Ionicon from 'react-ionicons';
+import StudentProfileDialog from '../Profile/StudentProfileDialog';
+
+const customStyles = {
+  customBottomNavLabel: {
+    fontSize: '0.60rem',
+    '& span': {
+      fontSize: '0.60rem'
+    }
+  },
+  absIconGrid: {
+    position: 'absolute',
+    top: '-20px'
+  }
+};
+
+const combinedStyles = CombineStyles(customStyles, styles);
 
 class RecipientStudents extends React.Component {
   state = {

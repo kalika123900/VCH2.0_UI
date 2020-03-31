@@ -85,10 +85,10 @@ class Step6 extends React.Component {
 
     if (userType == 'ADMIN') {
       const data = {
-        campaignId: this.props.campaignId
+        bulkEmailId: this.props.bulkEmailId
       };
 
-      postData(`${API_URL}/admin/client-info`, data)
+      postData(`${API_URL}/admin/bulkemail/client-info`, data)
         .then((res) => {
           if (res.status === 1) {
             const { data } = res;
@@ -182,7 +182,7 @@ class Step6 extends React.Component {
           </Grid>
         </Grid>
         {/* section 2 */}
-        <Grid container spacing={3} style={{ marginBottom: '10px' }} className={(classes.root, classes.sec_2_root)}>
+        {/* <Grid container spacing={3} style={{ marginBottom: '10px' }} className={(classes.root, classes.sec_2_root)}>
           <Grid item md={12} xs={12}>
             <Typography variant="h6">
               Estimated performance
@@ -196,7 +196,7 @@ class Step6 extends React.Component {
               1,115 - 1,860 expected total click-throughs
             </Typography>
           </Grid>
-        </Grid>
+        </Grid> */}
         {/* section 3 */}
         <Grid container spacing={3} className={classes.root}>
           <Grid item md={12} xs={12}>

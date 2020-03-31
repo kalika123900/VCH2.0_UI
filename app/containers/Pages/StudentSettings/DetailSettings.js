@@ -5,13 +5,16 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListSubheader from '@material-ui/core/ListSubheader';
 import Divider from '@material-ui/core/Divider';
 import Switch from '@material-ui/core/Switch';
 import { withStyles } from '@material-ui/core/styles';
 import qs from 'qs';
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import styles from './settings-jss';
+import Button from '@material-ui/core/Button';
+import NotInterestedIcon from '@material-ui/icons/NotInterested';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { Typography } from '@material-ui/core';
 
 async function postData(url, data) {
   const response = await fetch(url, {
@@ -37,7 +40,7 @@ class DetailSettings extends React.Component {
 
     const data = {
       user_id: user.id,
-      type: 'CLIENT',
+      type: 'STUDENT',
       key,
       value: value ? '1' : '0'
     };
@@ -54,7 +57,7 @@ class DetailSettings extends React.Component {
   };
 
   render() {
-    const { switchData } = this.props;
+    const { switchData, classes, handleDelete, handleDeactivate } = this.props;
 
     return (
       <Grid container justify="center">
@@ -104,6 +107,38 @@ class DetailSettings extends React.Component {
               </ListItemSecondaryAction>
             </ListItem>
           </List>
+          <Grid className={classes.customButtonGrid}>
+            <Typography variant="h6" color="error" className={classes.boxHeading}>Danger Zone</Typography>
+            <List>
+              <ListItem>
+                <ListItemText primary="Disable Account" secondary="You can temporary deactivate your account while you login again" />
+                <ListItemSecondaryAction>
+                  <Button
+                    variant="contained"
+                    startIcon={<NotInterestedIcon />}
+                    onClick={() => handleDeactivate()}
+                  >
+                    Disable Account
+                  </Button>
+                </ListItemSecondaryAction>
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <ListItemText primary="Delete Account" secondary="You can delete your account and remove all your data from a platform" />
+                <ListItemSecondaryAction style={{ width: '23%' }} >
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<DeleteIcon />}
+                    style={{ background: '#c31e1e' }}
+                    onClick={() => handleDelete()}
+                  >
+                    Delete Account
+                  </Button>
+                </ListItemSecondaryAction>
+              </ListItem>
+            </List>
+          </Grid>
         </Grid>
       </Grid>
     );

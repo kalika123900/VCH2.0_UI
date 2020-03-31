@@ -17,7 +17,6 @@ import SendIcon from '@material-ui/icons/Send';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import SchoolOutlined from '@material-ui/icons/SchoolOutlined';
 import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import { CombineStyles } from 'dan-helpers';
 import Ionicon from 'react-ionicons';

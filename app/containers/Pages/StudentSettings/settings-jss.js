@@ -147,6 +147,14 @@ const styles = theme => ({
   },
   detailWrap: {
     paddingTop: theme.spacing(10)
+  },
+  customButtonGrid: {
+    border: '0.5px solid indianred',
+    marginTop: '20px',
+    padding: '25px'
+  },
+  boxHeading: {
+    margin: 10
   }
 });
 

@@ -60,7 +60,6 @@ class CreateCampaign extends React.Component {
   }
 
   handleReject = () => {
-    console.log(this.props);
     const { removeInfo } = this.props;
     const data = {
       campaignId: this.props.match.params.campaignId
@@ -98,6 +97,7 @@ class CreateCampaign extends React.Component {
 
     const { activeStep } = this.state;
     const steps = getSteps();
+
     let isDisable = true;
     let isCampaignName = true;
     if (heading.length > 0) {

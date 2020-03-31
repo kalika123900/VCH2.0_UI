@@ -49,7 +49,6 @@ class AwaitingCampaigns extends React.Component {
     }
   }
 
-
   handleChangePage = (event, page) => {
     this.setState({ page });
   };

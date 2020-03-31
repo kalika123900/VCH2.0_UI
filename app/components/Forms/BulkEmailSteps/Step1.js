@@ -240,8 +240,7 @@ Step1.propTypes = {
   classes: PropTypes.object.isRequired,
   addInfo: PropTypes.func.isRequired,
   role: PropTypes.number.isRequired,
-  roleData: PropTypes.object.isRequired,
-  roleDeadline: PropTypes.string.isRequired
+  roleData: PropTypes.object.isRequired
 };
 
 const reducerBulkEmail = 'bulkEmail';
@@ -250,8 +249,7 @@ const reducerA = 'Auth';
 const mapStateToProps = state => ({
   role: state.getIn([reducerBulkEmail, 'role']),
   userType: state.getIn([reducerA, 'userType']),
-  roleData: state.getIn([reducerBulkEmail, 'roleData']),
-  roleDeadline: state.getIn([reducerBulkEmail, 'roleDeadline']),
+  roleData: state.getIn([reducerBulkEmail, 'roleData'])
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -14,8 +14,9 @@ import {
 import { DateHelper } from '../helpers/dateTimeHelper';
 
 const initialState = {
+  studentList: List([]),
+  blackList: List([]),
   warnMsg: '',
-  campaignStatus: -3,
   role: -1,
   roleDeadline: '',
   roleName: '',
@@ -24,11 +25,11 @@ const initialState = {
   subjects: List([]),
   skills: List([]),
   keywords: List([]),
-  gender: List([]),
+  gender: List(['Prefer not to say']),
   interestedSectors: List([]),
   workLocation: List(['London']),
   selectedYear: List([]),
-  ethnicity: 'Prefer not to say',
+  ethnicity: 'Not Preferable',
   experience: 'no',
   minGrade: List([]),
   heading: '',
@@ -91,7 +92,11 @@ export default function reducer(state = initialImmutableState, action = {}) {
 
     case EMAIL_STEP5_INFO:
       return state.withMutations((mutableState) => {
+        const blackList = fromJS(action.data.blackList);
+        const studentList = fromJS(action.data.studentList);
         mutableState
+          .set('blackList', blackList)
+          .set('studentList', studentList)
       });
 
     case EMAIL_STEP6_INFO:
@@ -124,10 +129,12 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const roleData = fromJS(action.data.roleData);
         const minGrade = fromJS(action.data.minGrade);
         const selectedYear = fromJS(action.data.selectedYear);
+        const blackList = fromJS(action.data.blackList);
+        const studentList = fromJS(action.data.studentList);
 
         mutableState
-          .set('roleDeadline', action.data.roleDeadline)
           .set('roleName', action.data.roleName)
+          .set('roleDeadline', action.data.roleDeadline)
           .set('roleData', roleData)
           .set('role', action.data.role)
           .set('university', university)
@@ -145,7 +152,9 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('body', action.data.body)
           .set('deadline', action.data.deadline)
           .set('choosedDeadline', action.data.choosedDeadline)
-          .set('name', action.data.name);
+          .set('name', action.data.name)
+          .set('blackList', blackList)
+          .set('studentList', studentList)
       });
 
     case EMAIL_INFO_REMOVE:
@@ -170,7 +179,9 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('body', '')
           .set('deadline', DateHelper.format(DateHelper.addDays(new Date(), 5)))
           .set('choosedDeadline', '0')
-          .set('name', '');
+          .set('name', '')
+          .set('blackList', List([]))
+          .set('studentList', List([]))
       });
 
     default:

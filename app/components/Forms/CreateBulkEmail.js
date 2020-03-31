@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
@@ -15,6 +15,9 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import styles from './user-jss';
+import { bindActionCreators } from 'redux';
+import { emailInfoRemove } from 'dan-actions/BulkEmailActions';
+import { withRouter } from 'react-router';
 import Step1 from './BulkEmailSteps/Step1';
 import Step2 from './BulkEmailSteps/Step2';
 import Step3 from './BulkEmailSteps/Step3';
@@ -33,6 +36,18 @@ function getSteps() {
   ];
 }
 
+async function postJSON(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  });
+
+  return await response.json();
+}
+
 class CreateBulkEmail extends React.Component {
   state = {
     activeStep: 0,
@@ -46,6 +61,26 @@ class CreateBulkEmail extends React.Component {
     this.setState((prevState) => ({ activeStep: prevState.activeStep + 1 }));
   }
 
+  handleReject = () => {
+    const { removeInfo } = this.props;
+    const data = {
+      bulkEmailId: this.props.match.params.bulkEmailId
+    };
+
+    postJSON(`${API_URL}/bulkemail/reject-bulkemail`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          removeInfo();
+          this.props.history.push('/admin');
+        } else {
+          console.log('something not good ');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   render() {
     const {
       classes,
@@ -53,11 +88,26 @@ class CreateBulkEmail extends React.Component {
       handleSubmit,
       submitting,
       deco,
-      role
+      role,
+      userType,
+      heading,
+      body,
+      name,
     } = this.props;
 
     const { activeStep } = this.state;
     const steps = getSteps();
+
+    let isDisable = true;
+    let isCampaignName = true;
+    if (heading.length > 0) {
+      if (body.length > 0) {
+        isDisable = false;
+      }
+    }
+    if (name.length > 0) {
+      isCampaignName = false;
+    }
 
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
@@ -128,7 +178,7 @@ class CreateBulkEmail extends React.Component {
               </Typography>
               <Grid>
                 <FormControl className={(classes.formControl, classes.wrapInput)}>
-                  <Step3 />
+                  <Step3 bulkEmailId={this.props.match.params.bulkEmailId} />
                 </FormControl>
               </Grid>
               <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
@@ -143,6 +193,7 @@ class CreateBulkEmail extends React.Component {
                   fullWidth
                   color="primary"
                   onClick={() => this.handleNext()}
+                  disabled={isDisable}
                 >
                   Next
                   <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} />
@@ -215,7 +266,7 @@ class CreateBulkEmail extends React.Component {
               </Typography>
               <Grid>
                 <FormControl className={(classes.formControl, classes.wrapInput)}>
-                  <Step6 />
+                  <Step6 bulkEmailId={this.props.match.params.bulkEmailId} />
                 </FormControl>
               </Grid>
               <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
@@ -225,15 +276,40 @@ class CreateBulkEmail extends React.Component {
                 </Button>
               </Grid>
               <Grid className={(classes.btnArea, classes.pageFormWrap)}>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  color="primary"
-                  type="submit"
-                >
-                  Create Bulk Email
-                <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
-                </Button>
+                {
+                  userType == 'ADMIN' &&
+                  (
+                    <Fragment>
+                      <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
+                        <Button variant="contained" fullWidth color="primary" type="submit">
+                          Approve Bulk Email
+                          <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                        </Button>
+                      </Grid>
+                      <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
+                        <Button variant="contained" fullWidth color="secondary" onClick={() => this.handleReject()}>
+                          Reject Bulk Email
+                          <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                        </Button>
+                      </Grid>
+                    </Fragment>
+                  )
+                }
+                {
+                  userType == 'CLIENT' &&
+                  (
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      color="primary"
+                      type="submit"
+                      disabled={isCampaignName}
+                    >
+                      Create Bulk Email
+                      <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                    </Button>
+                  )
+                }
               </Grid>
             </section>
           )}
@@ -248,6 +324,12 @@ CreateBulkEmail.propTypes = {
   pristine: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   deco: PropTypes.bool.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  removeInfo: PropTypes.func.isRequired,
+  role: PropTypes.number.isRequired,
+  heading: PropTypes.string.isRequired,
+  body: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
 };
 
 const CreateBulkEmailReduxed = reduxForm({
@@ -256,10 +338,23 @@ const CreateBulkEmailReduxed = reduxForm({
 })(CreateBulkEmail);
 
 const reducer = 'ui';
+const reducerA = 'Auth';
+const reducerBulkEmail = 'bulkEmail';
+
+const mapDispatchToProps = dispatch => ({
+  removeInfo: bindActionCreators(emailInfoRemove, dispatch)
+});
+
 const CreateBulkEmailMapped = connect(
   state => ({
-    deco: state.getIn([reducer, 'decoration'])
+    deco: state.getIn([reducer, 'decoration']),
+    userType: state.getIn([reducerA, 'userType']),
+    role: state.getIn([reducerBulkEmail, 'role']),
+    name: state.getIn([reducerBulkEmail, 'name']),
+    heading: state.getIn([reducerBulkEmail, 'heading']),
+    body: state.getIn([reducerBulkEmail, 'body']),
   }),
+  mapDispatchToProps
 )(CreateBulkEmailReduxed);
 
-export default withStyles(styles)(CreateBulkEmailMapped);
+export default withRouter(withStyles(styles)(CreateBulkEmailMapped));

@@ -168,10 +168,10 @@ class Step3 extends PureComponent {
 
     if (userType == 'ADMIN') {
       const data = {
-        campaignId: this.props.campaignId
+        bulkEmailId: this.props.bulkEmailId
       };
 
-      postData(`${API_URL}/admin/client-info`, data)
+      postData(`${API_URL}/admin/bulkemail/client-info`, data)
         .then((res) => {
           if (res.status === 1) {
             const { data } = res;

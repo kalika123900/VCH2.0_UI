@@ -16,14 +16,26 @@ import brand from 'dan-api/dummy/brand';
 import { storeStep6Info, campaignRemoveMsg, campaignInitMsg } from 'dan-actions/CampaignActions';
 import estyles from 'dan-components/Email/email-jss';
 import { CombineStyles } from 'dan-helpers';
-import { genderItems, universityItems } from 'dan-api/apps/profileOption';
 import styles from './step-jss';
+import { universityItems, keywordsData, skillMenu, genderItems } from 'dan-api/apps/profileOption';
 
 import { makeSecureDecrypt } from '../../../Helpers/security';
 const showdown = require('showdown');
 const converter = new showdown.Converter();
 
 const combinedStyles = CombineStyles(styles, estyles);
+
+async function postJSON(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  });
+
+  return await response.json();
+}
 
 async function postData(url, data) {
   const response = await fetch(url, {
@@ -37,12 +49,19 @@ async function postData(url, data) {
   return await response.json();
 }
 
+function getIds(arr, data) {
+  return arr.map(item => data.indexOf(item));
+}
+
 class Step6 extends React.Component {
   state = {
     email: '',
     cname: '',
     user: null,
-    usedName: []
+    usedName: [],
+    impressionCount: 0,
+    clickThrough60: 0,
+    clickThrough90: 0
   }
 
   componentDidMount() {
@@ -98,6 +117,36 @@ class Step6 extends React.Component {
           console.error(err);
         });
     }
+
+    const MapSkills = getIds(this.props.skills.toJS(), skillMenu);
+    const MapKeywords = getIds(this.props.keywords.toJS(), keywordsData);
+    const MapUniversity = getIds(this.props.university.toJS(), universityItems);
+
+    const data = {
+      university: MapUniversity,
+      keywords: MapKeywords,
+      skills: MapSkills,
+      ethnicity: this.props.ethnicity
+    };
+
+    postJSON(`${API_URL}/campaign/get-impression`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          const { count } = res.data;
+          let clickThrough60 = Math.floor((count * 60) / 100);
+          let clickThrough90 = Math.floor((count * 90) / 100);
+          if (clickThrough60 < 10) {
+            clickThrough60 = `0${clickThrough60}`
+          }
+          if (clickThrough90 < 10) {
+            clickThrough90 = `0${clickThrough90}`
+          }
+          this.setState({ impressionCount: count, clickThrough60, clickThrough90 });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   handleChange = (e) => {
@@ -140,6 +189,7 @@ class Step6 extends React.Component {
     MapUniversity.map(item => {
       selectedUniversity = `${selectedUniversity}${universityItems[item]},  `;
     });
+
     const customDeadline = choosedDeadline == 0 ? deadline : roleDeadline;
     const title = brand.name + ' - Review Campaign Settings';
     const description = brand.desc;
@@ -186,11 +236,11 @@ class Step6 extends React.Component {
             </Typography>
             <Typography variant="subtitle1">
               <RemoveRedEye />
-              43,544 - 72,640 candidates targeted initially
+              {this.state.impressionCount} candidates targeted initially
             </Typography>
             <Typography variant="subtitle1">
               <Reply />
-              1,115 - 1,860 expected total click-throughs
+              {`${this.state.clickThrough60} - ${this.state.clickThrough90}`} expected total click-throughs
             </Typography>
           </Grid>
         </Grid>
@@ -332,6 +382,8 @@ const mapStateToProps = state => ({
   keywords: state.getIn([reducerCampaign, 'keywords']),
   heading: state.getIn([reducerCampaign, 'heading']),
   body: state.getIn([reducerCampaign, 'body']),
+  ethnicity: state.getIn([reducerCampaign, 'ethnicity']),
+  skills: state.getIn([reducerCampaign, 'skills']),
   userType: state.getIn([reducerA, 'userType']),
 });
 
