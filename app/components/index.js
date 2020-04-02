@@ -176,6 +176,8 @@ export ChatRoom from './Chat/ChatRoom';
 export EmailHeader from './Email/EmailHeader';
 export EmailSidebar from './Email/EmailSidebar';
 export EmailList from './Email/EmailList';
+export ClientEmailList from './Email/ClientEmailList';
+export StudentEmailList from './Email/StudentEmailList';
 export ComposeEmail from './Email/ComposeEmail';
 // Calendar
 export EventCalendar from './Calendar/EventCalendar';

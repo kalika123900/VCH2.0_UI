@@ -7,7 +7,7 @@ import { Footer } from 'dan-components';
 import {
   StudentDashboard, EditStudentDetails, StudentMessage,
   StudentAccount, StudentSettings, NotFound, CompanyProfiles,
-  JobProfile, Email, Signout
+  JobProfile, StudentEmail, Signout
 }
   from '../pageListAsync';
 
@@ -26,7 +26,7 @@ class Student extends React.Component {
           <Switch>
             <Route exact path="/student" component={StudentDashboard} />
             <Route exact path="/student/edit-details" component={EditStudentDetails} />
-            <Route exact path="/student/messages" component={Email} />
+            <Route exact path="/student/messages" component={StudentEmail} />
             <Route exact path="/student/profile" component={StudentAccount} />
             <Route exact path="/student/settings" component={StudentSettings} />
             <Route exact path='/student/company-profiles' component={CompanyProfiles} />

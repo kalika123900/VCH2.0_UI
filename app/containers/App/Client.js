@@ -8,7 +8,7 @@ import {
   ClientDashboard, Campaigns, Explore, BulkEmails,
   CampaignManagement, CampaignDetails, EditDetails,
   BulkEmailManagement, BulkEmailDetails, SeatManagement,
-  Email, CampaignEdit, ClientSettings, NotFound, Signout
+  ClientEmail, CampaignEdit, ClientSettings, NotFound, Signout
 }
   from '../pageListAsync';
 
@@ -32,7 +32,7 @@ class Client extends React.Component {
             <Route exact path="/client/campaign-management" component={CampaignManagement} />
             <Route exact path="/client/campaign-details/:campaignId" component={CampaignDetails} />
             <Route exact path="/client/edit-details" component={EditDetails} />
-            <Route exact path="/client/messages" component={Email} />
+            <Route exact path="/client/messages" component={ClientEmail} />
             <Route exact path="/client/email-management" component={BulkEmailManagement} />
             <Route exact path="/client/email-details" component={BulkEmailDetails} />
             <Route exact path="/client/seat-management" component={SeatManagement} />

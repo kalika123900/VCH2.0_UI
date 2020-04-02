@@ -469,6 +469,14 @@ export const Email = loadable(() =>
   import('./Pages/Email'), {
   fallback: <Loading />,
 });
+export const ClientEmail = loadable(() =>
+  import('./Pages/Email/ClientEmail'), {
+  fallback: <Loading />,
+});
+export const StudentEmail = loadable(() =>
+  import('./Pages/Email/StudentEmail'), {
+  fallback: <Loading />,
+});
 export const Photos = loadable(() =>
   import('./Pages/Photos'), {
   fallback: <Loading />,
