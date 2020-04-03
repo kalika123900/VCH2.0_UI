@@ -473,6 +473,10 @@ export const ClientEmail = loadable(() =>
   import('./Pages/Email/ClientEmail'), {
   fallback: <Loading />,
 });
+export const ClientEmailThread = loadable(() =>
+  import('./Pages/Email/ClientEmailThread'), {
+  fallback: <Loading />,
+});
 export const StudentEmail = loadable(() =>
   import('./Pages/Email/StudentEmail'), {
   fallback: <Loading />,

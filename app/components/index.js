@@ -174,7 +174,9 @@ export ChatHeader from './Chat/ChatHeader';
 export ChatRoom from './Chat/ChatRoom';
 // Email
 export EmailHeader from './Email/EmailHeader';
+export ClientEmailThreadList from './Email/ClientEmailThreadList';
 export EmailSidebar from './Email/EmailSidebar';
+export ClientEmailSidebar from './Email/ClientEmailSidebar';
 export EmailList from './Email/EmailList';
 export ClientEmailList from './Email/ClientEmailList';
 export StudentEmailList from './Email/StudentEmailList';

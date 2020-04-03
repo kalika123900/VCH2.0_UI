@@ -135,6 +135,18 @@ const styles = theme => ({
     position: 'relative',
     minWidth: 0, // So the Typography noWrap works
   },
+  threadContent: {
+    flexGrow: 1,
+    zIndex: 120,
+    marginBottom: theme.spacing(8),
+    padding: theme.spacing(1),
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing(3),
+      marginBottom: theme.spacing(4),
+    },
+    position: 'relative',
+    minWidth: 0, // So the Typography noWrap works
+  },
   toolbar: {
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`
   },
@@ -149,7 +161,7 @@ const styles = theme => ({
     flexBasis: '33.33%',
     overflow: 'hidden',
     paddingRight: '0 !important',
-    paddingTop: 5,
+    paddingTop: 0,
     marginLeft: 20
   },
   secondaryHeading: {
@@ -190,7 +202,7 @@ const styles = theme => ({
     '& $avatar': {
       width: 30,
       height: 30,
-      marginRight: 20
+      marginRight: 10
     }
   },
   topAction: {
@@ -307,9 +319,15 @@ const styles = theme => ({
     }
 
   },
-
   buttonUpload: {
     marginRight: theme.spacing()
+  },
+  item: {
+    width: '100%',
+    margin: 5,
+    padding: 5,
+    backgroundColor: '#f5ecec',
+    cursor: 'pointer'
   }
 });
 

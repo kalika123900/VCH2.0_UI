@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Helmet } from 'react-helmet';
 import brand from 'dan-api/dummy/brand';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { bindActionCreators } from 'redux';
+import Grid from '@material-ui/core/Grid';
 import { connect } from 'react-redux';
 import avatarApi from 'dan-api/images/avatars';
 import {
-  EmailHeader,
-  ClientEmailList,
+  ClientEmailThreadList,
   ClientEmailSidebar,
   ComposeEmail,
   Notification
@@ -60,7 +60,7 @@ async function postData(url, data) {
   return await response.json();
 }
 
-class ClientEmail extends React.Component {
+class ClientEmailThread extends React.Component {
   state = {
     to: '',
     subject: '',
@@ -157,6 +157,10 @@ class ClientEmail extends React.Component {
     });
   }
 
+  handleSidebar = () => {
+    this.props.history.push('/client/messages');
+  }
+
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
@@ -192,15 +196,17 @@ class ClientEmail extends React.Component {
         </Helmet>
         <Notification close={() => closeNotif()} message={messageNotif} />
         <div className={classes.root}>
-          <EmailHeader search={search} handleDrawerToggle={this.handleDrawerToggle} />
-          <ClientEmailSidebar
-            compose={this.handleCompose}
-            goto={goto}
-            selected={currentPage}
-            handleDrawerToggle={this.handleDrawerToggle}
-            mobileOpen={mobileOpen}
-          />
-          <ClientEmailList
+          <Grid onClick={() => this.handleSidebar()}>
+            <ClientEmailSidebar
+              compose={this.handleCompose}
+              goto={goto}
+              selected={currentPage}
+              handleDrawerToggle={this.handleDrawerToggle}
+              mobileOpen={mobileOpen}
+            />
+          </Grid>
+          <ClientEmailThreadList
+            thread={this.props.match.params.thread}
             emailData={emailData}
             openMail={openMail}
             filterPage={currentPage}
@@ -226,7 +232,7 @@ class ClientEmail extends React.Component {
   }
 }
 
-ClientEmail.propTypes = {
+ClientEmailThread.propTypes = {
   classes: PropTypes.object.isRequired,
   emailData: PropTypes.object.isRequired,
   fetchData: PropTypes.func.isRequired,
@@ -271,9 +277,9 @@ const constDispatchToProps = dispatch => ({
   closeNotif: () => dispatch(closeNotifAction),
 });
 
-const ClientEmailMapped = connect(
+const ClientEmailThreadMapped = connect(
   mapStateToProps,
   constDispatchToProps
-)(ClientEmail);
+)(ClientEmailThread);
 
-export default withStyles(styles)(ClientEmailMapped);
+export default withStyles(styles)(ClientEmailThreadMapped);

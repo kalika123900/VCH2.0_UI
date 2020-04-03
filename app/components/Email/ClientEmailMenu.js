@@ -59,38 +59,20 @@ class EmailMenu extends React.Component {
             </ListItemIcon>
             <ListItemText primary="Sent" />
           </ListItem>
-          <ListItem button className={selected === 'spam' ? classes.selected : ''} onClick={() => this.gotoPage('spam')}>
-            <ListItemIcon>
-              <ReportIcon />
-            </ListItemIcon>
-            <ListItemText primary="Spam" />
-          </ListItem>
         </List>
         <Divider className={classes.divider} />
         <List>
-          <ListItem button className={selected === 'updates' ? classes.selected : ''} onClick={() => this.gotoPage('updates')}>
+          <ListItem button className={selected === 'campaign' ? classes.selected : ''} onClick={() => this.gotoPage('campaign')}>
             <ListItemIcon>
               <Flag className={classes.iconOrange} />
             </ListItemIcon>
             <ListItemText primary="Campaign Responses" />
           </ListItem>
-          <ListItem button className={selected === 'social' ? classes.selected : ''} onClick={() => this.gotoPage('social')}>
+          <ListItem button className={selected === 'bulkemail' ? classes.selected : ''} onClick={() => this.gotoPage('bulkemail')}>
             <ListItemIcon>
               <People className={classes.iconRed} />
             </ListItemIcon>
             <ListItemText primary="Bulk emails queries" />
-          </ListItem>
-          <ListItem button className={selected === 'promos' ? classes.selected : ''} onClick={() => this.gotoPage('promos')}>
-            <ListItemIcon>
-              <LabelIcon className={classes.iconBlue} />
-            </ListItemIcon>
-            <ListItemText primary="Promos" />
-          </ListItem>
-          <ListItem button className={selected === 'forums' ? classes.selected : ''} onClick={() => this.gotoPage('forums')}>
-            <ListItemIcon>
-              <QuestionAnswer className={classes.iconCyan} />
-            </ListItemIcon>
-            <ListItemText primary="Forums" />
           </ListItem>
         </List>
       </Fragment>

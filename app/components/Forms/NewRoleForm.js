@@ -136,6 +136,7 @@ class NewRoleForm extends React.Component {
                 onChange={e => this.handleMultiSelect(e)}
               >
                 {skillMenu.map((item, index) => (
+                  (item.length > 0) &&
                   <MenuItem key={index.toString()} value={item}>
                     <TextField
                       name="skill-checkbox"
