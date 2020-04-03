@@ -109,6 +109,7 @@ class ClientEmail extends React.Component {
             let sentEmailsData = res.data.map(item => {
               return {
                 id: item.id,
+                thread: item.thread_id,
                 avatar: avatarApi[6],
                 name: item.receiver_name,
                 date: formatDate(new Date(parseInt(item.sent_on))),
