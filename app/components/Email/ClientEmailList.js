@@ -44,6 +44,7 @@ class EmailList extends React.Component {
     itemToMove: null,
     openThread: false,
     thread: -2,
+    emailJSX: null
   };
 
   handleClickOpt = (event, item) => {
@@ -72,6 +73,15 @@ class EmailList extends React.Component {
       this.props.history.push(`/client/messages/${MapMail.id}`)
     }
   };
+
+
+  // shouldComponentUpdate() {
+  //   if (this.state.emailJSX != null) {
+  //     return true;
+  //   } else {
+  //     return false
+  //   }
+  // }
 
   render() {
     const {
@@ -148,8 +158,9 @@ class EmailList extends React.Component {
     });
 
     const getEmail = (dataArray, type) => {
-      const MappedData = fromJS(dataArray)
-      return MappedData.map(mail => {
+      let MappedData = fromJS(dataArray);
+
+      const emailJSX = MappedData.map(mail => {
         const renderHTML = { __html: mail.get('content') };
         if (mail.get('subject').toLowerCase().indexOf(keyword) === -1) {
           return false;
@@ -229,15 +240,29 @@ class EmailList extends React.Component {
             </ExpansionPanel >
         );
       });
+      this.setState({ emailJSX })
     };
 
     const getClientEmails = (category) => {
       const { showEmail } = this.props;
-      var dataArray = immutableList([]);
 
-      dataArray = showEmail(category);
+      let dataPromise = new Promise((resolve, reject) => {
+        showEmail(category, (data, err) => {
+          if (data == false) {
+            reject(err)
+          }
+          else {
+            resolve(data)
+          }
+        });
+      });
 
-      return getEmail(dataArray, category);
+      dataPromise.then((value) => {
+        getEmail(value, category);
+      })
+        .catch((e) => {
+          console.log(e);
+        })
     }
 
     const showClientEmail = category => {
@@ -245,13 +270,13 @@ class EmailList extends React.Component {
         case 'inbox':
           return getClientEmails('inbox');
         case 'stared':
-          return getEmail('stared');
+          return getClientEmails('stared');
         case 'sent':
-          return getEmail('sent');
+          return getClientEmails('sent');
         case 'campaign':
-          return getEmail('campaign');
+          return getClientEmails('campaign');
         case 'bulkemail':
-          return getEmail('bulkemail');
+          return getClientEmails('bulkemail');
         default:
           return getClientEmails('inbox');
       }
@@ -280,6 +305,7 @@ class EmailList extends React.Component {
             &nbsp;Bulk Email Queries
           </MenuItem>
         </Menu>
+        {this.state.emailJSX}
         {showClientEmail(filterPage)}
       </main >
     );
