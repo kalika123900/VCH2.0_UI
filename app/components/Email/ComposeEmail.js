@@ -24,11 +24,11 @@ class ComposeEmail extends React.Component {
     const branch = '';
     return (
       <div>
-        <Tooltip title="Compose Email">
+        {/* <Tooltip title="Compose Email">
           <Fab color="secondary" onClick={() => compose()} className={classes.addBtn}>
             <Add />
           </Fab>
-        </Tooltip>
+        </Tooltip> */}
         <FloatingPanel
           openForm={open}
           branch={branch}

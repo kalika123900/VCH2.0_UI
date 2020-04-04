@@ -109,8 +109,8 @@ class ClientEmailThreadList extends React.Component {
   }
 
   render() {
-    const { mailData, anchorElOpt } = this.state;
-    const { classes, openMail, keyword, toggleStar, reply } = this.props;
+    const { mailData } = this.state;
+    const { classes, openMail, keyword, toggleStar, reply, remove } = this.props;
 
     const getCategory = cat => {
       switch (cat) {
@@ -176,7 +176,10 @@ class ClientEmailThreadList extends React.Component {
         <ExpansionPanel className={classes.emailList} key={mail.get('id')} onChange={() => openMail(mail)}>
           <ExpansionPanelSummary className={classes.emailSummary} expandIcon={<ExpandMoreIcon />}>
             <div className={classes.fromHeading}>
-              <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} />
+              <Tooltip id="tooltip-mark" title="Stared">
+                <IconButton onClick={() => toggleStar(mail)} className={classes.starBtn}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
+              </Tooltip>
+              <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} style={{ marginRight: 20 }} />
               <Typography className={classes.heading} display="block">
                 {mail.get('category') === 'sent' && ('To ')}
                 {mail.get('name')}
@@ -187,21 +190,26 @@ class ClientEmailThreadList extends React.Component {
               <Typography className={classes.secondaryHeading} noWrap>{mail.get('subject')}</Typography>
               {getCategory(mail.get('category'))}
             </div>
+            <div className={classes.topAction}>
+              <div className={classes.opt}>
+                <Tooltip id="tooltip-mark" title="Remove mail">
+                  <IconButton className={classes.button} aria-label="Delete" onClick={() => remove(mail)}><Delete /></IconButton>
+                </Tooltip>
+              </div>
+            </div>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails className={classes.details}>
             <section>
-              <div className={classes.topAction}>
-                <Typography className={classes.headMail}>
-                  {mail.get('thread') == -1
-                    ? null
-                    : <Fragment>
+              {mail.get('thread') == -1 ? null :
+                <div className={classes.topAction}>
+                  <Typography className={classes.headMail}>
+                    <Fragment>
                       From&nbsp;
                       {mail.get('name')}
                       &nbsp;to me
                       </Fragment>
-                  }
-                </Typography>
-                <div className={classes.opt}>
+                  </Typography>
+                  {/* <div className={classes.opt}>
                   {mail.get('thread') == -1
                     ?
                     null
@@ -223,17 +231,18 @@ class ClientEmailThreadList extends React.Component {
                           <Bookmark />
                         </IconButton>
                       </Tooltip>
-                      {/* <Tooltip id="tooltip-mark" title="Remove mail">
+                      <Tooltip id="tooltip-mark" title="Remove mail">
                         <IconButton className={classes.button} aria-label="Delete"
                           onClick={() => remove(mail)}
                         >
                           <Delete />
                         </IconButton>
-                      </Tooltip> */}
+                      </Tooltip>
                     </Fragment>
                   }
+                </div> */}
                 </div>
-              </div>
+              }
               <div className={classes.emailContent}>
                 <Typography variant="h6" gutterBottom>{mail.get('subject')}</Typography>
                 <article dangerouslySetInnerHTML={renderHTML} />
@@ -246,7 +255,7 @@ class ClientEmailThreadList extends React.Component {
           <Divider />
           <ExpansionPanelActions>
             <div className={classes.action}>
-              <Button size="small">Forwad</Button>
+              {/* <Button size="small">Forwad</Button> */}
               <Button size="small" color="secondary" onClick={() => reply(mail)} >Reply</Button>
             </div>
           </ExpansionPanelActions>

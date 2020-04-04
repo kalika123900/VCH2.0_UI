@@ -193,7 +193,6 @@ const styles = theme => ({
       textDecoration: 'underline',
     },
   },
-  avatar: {},
   fromHeading: {
     overflow: 'hidden',
     display: 'flex',
@@ -207,8 +206,7 @@ const styles = theme => ({
   },
   topAction: {
     display: 'flex',
-    background: theme.palette.type === 'dark' ? theme.palette.grey[700] : theme.palette.grey[100],
-    marginBottom: 20,
+    marginLeft: 'auto',
     alignItems: 'center',
     padding: '0 20px',
     borderRadius: theme.rounded.medium,
@@ -325,8 +323,9 @@ const styles = theme => ({
   item: {
     width: '100%',
     margin: 5,
-    padding: 5,
-    backgroundColor: '#f5ecec',
+    padding: 15,
+    display: 'flex',
+    backgroundColor: '#f3f4fa',
     cursor: 'pointer'
   }
 });

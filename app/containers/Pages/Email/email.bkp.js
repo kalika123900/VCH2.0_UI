@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fromJS } from 'immutable';
 import avatarApi from 'dan-api/images/avatars';
 import {
   EmailHeader,
@@ -67,70 +66,69 @@ class ClientEmail extends React.Component {
     subject: '',
     validMail: '',
     mobileOpen: false,
-    inbox: [],
-    stared: [],
-    sent: [],
-    campaign: [],
-    bulkemail: [],
+    mailApiData: []
   };
 
-  showEmail = (category, callback) => {
+  componentDidMount() {
     const user = JSON.parse(makeSecureDecrypt(localStorage.getItem('user')));
     const apiData = { client_id: user.id }
+    const { fetchData } = this.props;
 
-    if (category == 'inbox') {
-      postData(`${API_URL}/client/get-inbox-emails`, apiData) // eslint-disable-line
-        .then((res) => {
-          if (res.status === 1) {
-            if (res.data.length > 0) {
-              let inboxEmailsData = res.data.map(item => {
-                return {
-                  id: item.id,
-                  thread: item.thread_id,
-                  avatar: avatarApi[6],
-                  name: item.sender_name,
-                  date: formatDate(new Date(parseInt(item.sent_on))),
-                  subject: item.subject,
-                  category: '',
-                  content: item.body,
-                  attachment: [],
-                  stared: false,
-                }
-              })
-              callback(inboxEmailsData);
-            }
+    postData(`${API_URL}/client/get-inbox-emails`, apiData) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          if (res.data.length > 0) {
+            let inboxEmailsData = res.data.map(item => {
+              return {
+                id: item.id,
+                thread: item.thread_id,
+                avatar: avatarApi[6],
+                name: item.sender_name,
+                date: formatDate(new Date(parseInt(item.sent_on))),
+                subject: item.subject,
+                category: '',
+                content: item.body,
+                attachment: [],
+                stared: false,
+              }
+            })
+            let mailData = [...this.state.mailApiData, ...inboxEmailsData]
+            this.setState({ mailApiData: mailData });
           }
-        })
-        .catch((err) => {
-          callback(false, err);
-        });
-    } else if (category == 'sent') {
-      postData(`${API_URL}/client/get-sent-emails`, apiData) // eslint-disable-line
-        .then((res) => {
-          if (res.status === 1) {
-            if (res.data.length > 0) {
-              let sentEmailsData = res.data.map(item => {
-                return {
-                  id: item.id,
-                  thread: item.thread_id,
-                  avatar: avatarApi[6],
-                  name: item.receiver_name,
-                  date: formatDate(new Date(parseInt(item.sent_on))),
-                  subject: item.subject,
-                  category: 'sent',
-                  content: item.body,
-                  attachment: [],
-                  stared: false,
-                }
-              })
-              callback(sentEmailsData);
-            }
+          fetchData(this.state.mailApiData);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    postData(`${API_URL}/client/get-sent-emails`, apiData) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          if (res.data.length > 0) {
+            let sentEmailsData = res.data.map(item => {
+              return {
+                id: item.id,
+                thread: item.thread_id,
+                avatar: avatarApi[6],
+                name: item.receiver_name,
+                date: formatDate(new Date(parseInt(item.sent_on))),
+                subject: item.subject,
+                category: 'sent',
+                content: item.body,
+                attachment: [],
+                stared: false,
+              }
+            })
+            let mailData = [...this.state.mailApiData, ...sentEmailsData]
+            this.setState({ mailApiData: mailData });
           }
-        })
-        .catch((err) => {
-          callback(false, err);
-        });
-    }
+          fetchData(this.state.mailApiData);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   handleChange = (event, name) => {
@@ -179,9 +177,7 @@ class ClientEmail extends React.Component {
       to,
       subject,
       validMail,
-      mobileOpen,
-      inbox,
-      sent, stared, campaign, bulkemail
+      mobileOpen
     } = this.state;
     const title = brand.name + ' - Email';
     const description = brand.desc;
@@ -206,12 +202,7 @@ class ClientEmail extends React.Component {
             mobileOpen={mobileOpen}
           />
           <ClientEmailList
-            inbox={inbox}
-            sent={sent}
-            stared={stared}
-            campaign={campaign}
-            bulkemail={bulkemail}
-            showEmail={this.showEmail}
+            emailData={emailData}
             openMail={openMail}
             filterPage={currentPage}
             keyword={keyword}
