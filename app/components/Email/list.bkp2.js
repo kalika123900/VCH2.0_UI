@@ -91,6 +91,13 @@ class EmailList extends React.Component {
       showEmail
     } = this.props;
     const { anchorElOpt, itemToMove } = this.state;
+    /* Basic Filter */
+    // const inbox = emailData.filter(item => item.get('category') !== 'sent');
+    // const stared = emailData.filter(item => item.get('stared'));
+    // const sent = emailData.filter(item => item.get('category') === 'sent');
+    // /* Category Filter */
+    // const campaign = emailData.filter(item => item.get('category') === 'campaign');
+    // const bulkemail = emailData.filter(item => item.get('category') === 'bulkemail');
 
     const getCategory = cat => {
       switch (cat) {
@@ -147,116 +154,132 @@ class EmailList extends React.Component {
       );
     });
 
-    const getEmail = (dataArray, type) => {
-      const MappedData = fromJS(dataArray)
-      return MappedData.map(mail => {
-        const renderHTML = { __html: mail.get('content') };
-        if (mail.get('subject').toLowerCase().indexOf(keyword) === -1) {
-          return false;
-        }
-        return (
-          type == 'inbox' ?
-            <Grid className={classes.emailList} key={mail.get('id')}>
-              <div className={classes.fromHeading} style={{ background: '#f3f4fa', margin: 10 }}>
-                <Tooltip id="tooltip-mark" title="Stared">
-                  <IconButton onClick={() => toggleStar(mail)} className={classes.starBtn}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
-                </Tooltip>
-                <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} />
-                <div className={classes.item} onClick={() => this.openThread(mail, mail.get('category'))}>
-                  <div>
-                    <Typography className={classes.heading} display="block" >
-                      {mail.get('name')}
-                      <Typography variant="caption" display="block">{mail.get('date')}</Typography>
-                    </Typography>
-                  </div>
-                  <div className={classes.column}>
-                    <Typography className={classes.secondaryHeading} noWrap>{mail.get('subject')}</Typography>
-                    {getCategory(mail.get('category'))}
-                  </div>
-                </div>
-                <div className={classes.topAction}>
-                  <div className={classes.opt}>
-                    <Tooltip id="tooltip-mark" title="Remove mail">
-                      <IconButton className={classes.button} aria-label="Delete" onClick={() => remove(mail)}><Delete /></IconButton>
-                    </Tooltip>
-                  </div>
-                </div>
-              </div>
-            </Grid>
-            :
-            < ExpansionPanel className={classes.emailList} key={mail.get('id')} onChange={() => openMail(mail)}>
-              <ExpansionPanelSummary className={classes.emailSummary} expandIcon={<ExpandMoreIcon />}>
-                <div className={classes.fromHeading}>
-                  <Tooltip id="tooltip-mark" title="Stared">
-                    <IconButton onClick={() => toggleStar(mail)} className={classes.starBtn}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
-                  </Tooltip>
-                  <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} style={{ marginRight: 20 }} />
-                  <Typography className={classes.heading} display="block">
-                    {mail.get('category') === 'sent' && ('To ')}
-                    {mail.get('name')}
-                    <Typography variant="caption" display="block">{mail.get('date')}</Typography>
-                  </Typography>
-                </div>
-                <div className={classes.column}>
-                  <Typography className={classes.secondaryHeading} noWrap>{mail.get('subject')}</Typography>
-                  {getCategory(mail.get('category'))}
-                </div>
-                <div className={classes.topAction}>
-                  <div className={classes.opt}>
-                    <Tooltip id="tooltip-mark" title="Remove mail">
-                      <IconButton className={classes.button} aria-label="Delete" onClick={() => remove(mail)}><Delete /></IconButton>
-                    </Tooltip>
-                  </div>
-                </div>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails className={classes.details}>
-                <section>
-                  <div className={classes.emailContent}>
-                    <Typography variant="h6" gutterBottom>{mail.get('subject')}</Typography>
-                    <article dangerouslySetInnerHTML={renderHTML} />
-                  </div>
-                  <div className={classes.preview}>
-                    {attachmentPreview(mail.get('attachment'))}
-                  </div>
-                </section>
-              </ExpansionPanelDetails>
-              <Divider />
-              <ExpansionPanelActions>
-                <div className={classes.action}>
-                  <Button size="small" color="secondary" onClick={() => reply(mail)}>Reply</Button>
-                </div>
-              </ExpansionPanelActions>
-            </ExpansionPanel >
-        );
-      });
-    };
-
-    const getClientEmails = (category) => {
+    const getEmail = async (type) => {
       const { showEmail } = this.props;
-      var dataArray = immutableList([]);
-
-      dataArray = showEmail(category);
-
-      return getEmail(dataArray, category);
-    }
+      let JSX = [];
+      JSX = fromJS(JSX);
+      const test = async () => {
+        await new Promise((resolve, reject) => {
+          showEmail(type, (data, err) => {
+            if (data == false) {
+              reject(err);
+            }
+            else {
+              resolve(data)
+            }
+          });
+        }).then((value) => {
+          let MappedData = fromJS(value)
+          JSX = MappedData.map(mail => {
+            const renderHTML = { __html: mail.get('content') };
+            if (mail.get('subject').toLowerCase().indexOf(keyword) === -1) {
+              return false;
+            }
+            return (
+              type == 'inbox' ?
+                <Grid className={classes.emailList} key={mail.get('id')}>
+                  <div className={classes.fromHeading} style={{ background: '#f3f4fa', margin: 10 }}>
+                    <Tooltip id="tooltip-mark" title="Stared">
+                      <IconButton onClick={() => toggleStar(mail)} className={classes.starBtn}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
+                    </Tooltip>
+                    <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} />
+                    <div className={classes.item} onClick={() => this.openThread(mail, mail.get('category'))}>
+                      <div>
+                        <Typography className={classes.heading} display="block" >
+                          {mail.get('name')}
+                          <Typography variant="caption" display="block">{mail.get('date')}</Typography>
+                        </Typography>
+                      </div>
+                      <div className={classes.column}>
+                        <Typography className={classes.secondaryHeading} noWrap>{mail.get('subject')}</Typography>
+                        {getCategory(mail.get('category'))}
+                      </div>
+                    </div>
+                    <div className={classes.topAction}>
+                      <div className={classes.opt}>
+                        <Tooltip id="tooltip-mark" title="Remove mail">
+                          <IconButton className={classes.button} aria-label="Delete" onClick={() => remove(mail)}><Delete /></IconButton>
+                        </Tooltip>
+                      </div>
+                    </div>
+                  </div>
+                </Grid>
+                :
+                < ExpansionPanel className={classes.emailList} key={mail.get('id')} onChange={() => openMail(mail)}>
+                  <ExpansionPanelSummary className={classes.emailSummary} expandIcon={<ExpandMoreIcon />}>
+                    <div className={classes.fromHeading}>
+                      <Tooltip id="tooltip-mark" title="Stared">
+                        <IconButton onClick={() => toggleStar(mail)} className={classes.starBtn}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
+                      </Tooltip>
+                      <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} style={{ marginRight: 20 }} />
+                      <Typography className={classes.heading} display="block">
+                        {mail.get('category') === 'sent' && ('To ')}
+                        {mail.get('name')}
+                        <Typography variant="caption" display="block">{mail.get('date')}</Typography>
+                      </Typography>
+                    </div>
+                    <div className={classes.column}>
+                      <Typography className={classes.secondaryHeading} noWrap>{mail.get('subject')}</Typography>
+                      {getCategory(mail.get('category'))}
+                    </div>
+                    <div className={classes.topAction}>
+                      <div className={classes.opt}>
+                        <Tooltip id="tooltip-mark" title="Remove mail">
+                          <IconButton className={classes.button} aria-label="Delete" onClick={() => remove(mail)}><Delete /></IconButton>
+                        </Tooltip>
+                      </div>
+                    </div>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails className={classes.details}>
+                    <section>
+                      <div className={classes.emailContent}>
+                        <Typography variant="h6" gutterBottom>{mail.get('subject')}</Typography>
+                        <article dangerouslySetInnerHTML={renderHTML} />
+                      </div>
+                      <div className={classes.preview}>
+                        {attachmentPreview(mail.get('attachment'))}
+                      </div>
+                    </section>
+                  </ExpansionPanelDetails>
+                  <Divider />
+                  <ExpansionPanelActions>
+                    <div className={classes.action}>
+                      <Button size="small" color="secondary" onClick={() => reply(mail)}>Reply</Button>
+                    </div>
+                  </ExpansionPanelActions>
+                </ExpansionPanel >
+            );
+          });
+        })
+      }
+      await test();
+      return JSX;
+    };
 
     const showClientEmail = category => {
       switch (category) {
         case 'inbox':
-          return getClientEmails('inbox');
+          return getEmail('inbox');
+          break;
         case 'stared':
           return getEmail('stared');
+          break;
         case 'sent':
           return getEmail('sent');
+          break;
         case 'campaign':
           return getEmail('campaign');
+          break;
         case 'bulkemail':
           return getEmail('bulkemail');
+          break;
         default:
-          return getClientEmails('inbox');
+          return getEmail('inbox');
       }
     };
 
+    let JSX = showClientEmail(filterPage);
+    console.log(JSX)
     return (
       <main className={classes.content} >
         <Menu
@@ -280,7 +303,7 @@ class EmailList extends React.Component {
             &nbsp;Bulk Email Queries
           </MenuItem>
         </Menu>
-        {showClientEmail(filterPage)}
+        {typeof JSX != 'promise' && JSX}
       </main >
     );
   }

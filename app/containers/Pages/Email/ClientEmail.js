@@ -74,7 +74,7 @@ class ClientEmail extends React.Component {
     bulkemail: [],
   };
 
-  showEmail = (category, callback) => {
+  showEmail = (category) => {
     const user = JSON.parse(makeSecureDecrypt(localStorage.getItem('user')));
     const apiData = { client_id: user.id }
 
@@ -97,12 +97,12 @@ class ClientEmail extends React.Component {
                   stared: false,
                 }
               })
-              callback(inboxEmailsData);
+              return (fromJS(inboxEmailsData));
             }
           }
         })
         .catch((err) => {
-          callback(false, err);
+          return (false, err);
         });
     } else if (category == 'sent') {
       postData(`${API_URL}/client/get-sent-emails`, apiData) // eslint-disable-line
@@ -123,12 +123,12 @@ class ClientEmail extends React.Component {
                   stared: false,
                 }
               })
-              callback(sentEmailsData);
+              return (fromJS(sentEmailsData));
             }
           }
         })
         .catch((err) => {
-          callback(false, err);
+          return (false, err);
         });
     }
   }
