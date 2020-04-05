@@ -71,10 +71,10 @@ class SigninForm extends React.Component {
           <NavLink to="/" className={classes.brand}>
             <img style={{ width: "70px" }} src={logo} alt={brand.name} />
           </NavLink>
-          <Button size="small" className={classes.buttonLink} component={LinkBtn} to="/signup">
+          {/* <Button size="small" className={classes.buttonLink} component={LinkBtn} to="/signup">
             <Icon className={classes.icon}>arrow_forward</Icon>
             Create new account
-          </Button>
+          </Button> */}
         </div>
         <Typography variant="h4" className={classes.title} gutterBottom>
           Sign In

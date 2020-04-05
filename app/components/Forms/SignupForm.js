@@ -65,8 +65,8 @@ const renderField = (props) => {
       />
       {
         touched
-      && ((error && <span>{error}</span>)
-        || (warning && <span>{warning}</span>))
+        && ((error && <span>{error}</span>)
+          || (warning && <span>{warning}</span>))
       }
     </Fragment>
   );
@@ -111,7 +111,7 @@ class SignupForm extends React.Component {
     const { showPassword } = this.state;
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
-        <div className={classes.topBar}>
+        {/* <div className={classes.topBar}>
           <NavLink to="/" className={classes.brand}>
             <img style={{ width: '70px' }} src={logo} alt={brand.name} />
           </NavLink>
@@ -119,9 +119,9 @@ class SignupForm extends React.Component {
             <Icon className={classes.icon}>arrow_forward</Icon>
             Already have account ?
           </Button>
-        </div>
+        </div> */}
         <Typography variant="h4" className={classes.title} gutterBottom>
-          Register
+          Create Client Token
         </Typography>
         <section className={classes.pageFormWrap}>
           {this.props.flash && this.Message()}
@@ -131,8 +131,8 @@ class SignupForm extends React.Component {
                 <Field
                   name="firstname"
                   component={renderField}
-                  placeholder="First Name"
-                  label="First Name"
+                  placeholder="Client First Name"
+                  label="Client First Name"
                   required
                   className={classes.field}
                   validate={[minTextLength, maxTextLength, text]}
@@ -144,8 +144,8 @@ class SignupForm extends React.Component {
                 <Field
                   name="lastname"
                   component={renderField}
-                  placeholder="Last Name"
-                  label="Last Name"
+                  placeholder="Client Last Name"
+                  label="Client Last Name"
                   required
                   className={classes.field}
                   validate={[minTextLength, maxTextLength, text]}
@@ -157,8 +157,8 @@ class SignupForm extends React.Component {
                 <Field
                   name="username"
                   component={renderField}
-                  placeholder="Username"
-                  label="Username"
+                  placeholder="Client Username"
+                  label="Client Username"
                   required
                   className={classes.field}
                   validate={[minTextLength, maxTextLength]}
@@ -170,15 +170,15 @@ class SignupForm extends React.Component {
                 <Field
                   name="email"
                   component={renderField}
-                  placeholder="Your Email"
-                  label="Your Email"
+                  placeholder="Client Email"
+                  label="Client Email"
                   required
                   validate={[required, email]}
                   className={classes.field}
                 />
               </FormControl>
             </div>
-            <div>
+            {/* <div>
               <FormControl className={classes.formControl}>
                 <Field
                   name="password"
@@ -216,8 +216,8 @@ class SignupForm extends React.Component {
                   className={classes.field}
                 />
               </FormControl>
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <FormControlLabel
                 control={(
                   <Field name="checkbox" component={CheckboxRedux} required className={classes.agree} />
@@ -225,11 +225,11 @@ class SignupForm extends React.Component {
                 label="Agree with"
               />
               <a href="#" className={classes.link}>Terms &amp; Condition</a>
-            </div>
+            </div> */}
             <div className={classes.btnArea}>
               <Button variant="contained" fullWidth color="primary" type="submit">
-                Continue
-                <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                Create
+                {/* <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} /> */}
               </Button>
             </div>
           </form>

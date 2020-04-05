@@ -14,16 +14,12 @@ import { Button } from '@material-ui/core';
 import styles from 'dan-components/Tables/tableStyle-jss';
 import { EditClientDialog } from 'dan-components';
 
-let id = 0;
-function createData(client_name, email, company, budget, status) {
-  id += 1;
+function createData(id, client, campaign, create_date) {
   return {
     id,
-    client_name,
-    email,
-    company,
-    budget,
-    status
+    client,
+    campaign,
+    create_date,
   };
 }
 

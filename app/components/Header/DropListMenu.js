@@ -28,6 +28,7 @@ class DropListMenu extends React.Component {
       active: [],
       openMenu: [],
       anchorEl: null,
+      isVirtual: localStorage.hasOwnProperty('oldUser')
     };
     this.handleClose = this.handleClose.bind(this);
     this.handleOpenMenu = this.handleOpenMenu.bind(this);
@@ -67,7 +68,7 @@ class DropListMenu extends React.Component {
 
   render() {
     const { classes, open, dataMenu } = this.props;
-    const { active, openMenu, anchorEl } = this.state;
+    const { active, openMenu, anchorEl, isVirtual } = this.state;
     const getMenus = (parent, menuArray) => menuArray.map((item, index) => {
       if (item.multilevel) {
         return false;
@@ -130,7 +131,9 @@ class DropListMenu extends React.Component {
           onClick={() => this.handleActiveParent(parent)}
           className={(classes.menuItem, classes.headMenu)}
         >
-          <ListItemText className={classes.menuitemColor} primary={item.name} />
+          <ListItemText className={classes.menuitemColor}
+            primary={isVirtual ? item.name == 'Sign Out' ? 'LogIn As Admin' : item.name : item.name}
+          />
         </ListItem>
       );
     });

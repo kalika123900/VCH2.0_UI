@@ -31,6 +31,7 @@ class MegaMenu extends React.Component {
       active: [],
       openMenu: [],
       anchorEl: null,
+      isVirtual: localStorage.hasOwnProperty('oldUser')
     };
     this.handleClose = this.handleClose.bind(this);
     this.handleOpenMenu = this.handleOpenMenu.bind(this);
@@ -70,7 +71,7 @@ class MegaMenu extends React.Component {
 
   render() {
     const { classes, open, dataMenu } = this.props;
-    const { active, openMenu, anchorEl } = this.state;
+    const { active, openMenu, anchorEl, isVirtual } = this.state;
     const getMenus = (parent, menuArray) => menuArray.map((item, index) => {
       if (item.multilevel) {
         return false;
@@ -92,7 +93,7 @@ class MegaMenu extends React.Component {
               }
               onClick={(event) => this.handleOpenMenu(event, item.key, item.keyParent)}
             >
-              {item.name}
+              {isVirtual ? item.name == 'Sign Out' ? 'LogIn As Admin' : item.name : item.name}
               <ExpandMore className={classes.rightIcon} />
             </Button>
             <Popper
@@ -117,7 +118,7 @@ class MegaMenu extends React.Component {
                         </Grid>
                         <Grid item md={9}>
                           <List role="menu" component="nav" className={classes.megaMenu}>
-                            { getMenus(item.key, item.child) }
+                            {getMenus(item.key, item.child)}
                           </List>
                         </Grid>
                       </Grid>
@@ -151,7 +152,7 @@ class MegaMenu extends React.Component {
           to={item.link}
           onClick={() => this.handleActiveParent(parent)}
         >
-          <ListItemText primary={item.name} />
+          <ListItemText primary={isVirtual ? item.name == 'Sign Out' ? 'LogIn As Admin' : item.name : item.name} />
         </ListItem>
       );
     });

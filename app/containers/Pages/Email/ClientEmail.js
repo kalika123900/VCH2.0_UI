@@ -58,7 +58,8 @@ async function postData(url, data) {
     },
     body: qs.stringify(data)
   });
-  return await response.json();
+  var results = await response.json();
+  return results;
 }
 
 class ClientEmail extends React.Component {
@@ -74,76 +75,88 @@ class ClientEmail extends React.Component {
     bulkemail: [],
   };
 
-  showEmail = (category, callback) => {
+  showEmail = async (category, callback) => {
     const user = JSON.parse(makeSecureDecrypt(localStorage.getItem('user')));
     const apiData = { client_id: user.id }
+    var response = '';
+    const handlerResponse = async () => {
+      try {
+        if (category == 'inbox') {
+          await new Promise((resolve, reject) => {
+            response = fetch(`${API_URL}/client/get-inbox-emails`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              body: qs.stringify(apiData)
+            })
+              .then(response => response.json())
+              .then((res) => { // eslint-disable-line
+                if (res.status === 1) {
+                  if (res.data.length > 0) {
+                    let inboxEmailsData = res.data.map(item => {
+                      return {
+                        id: item.id,
+                        thread: item.thread_id,
+                        avatar: avatarApi[6],
+                        name: item.sender_name,
+                        date: formatDate(new Date(parseInt(item.sent_on))),
+                        subject: item.subject,
+                        category: '',
+                        content: item.body,
+                        attachment: [],
+                        stared: false,
+                      }
+                    })
+                    response = inboxEmailsData;
+                    callback(response);
+                  }
+                }
+              });
+          });
+        }
+        if (category == 'sent') {
+          await new Promise((resolve, reject) => {
+            response = fetch(`${API_URL}/client/get-sent-emails`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              body: qs.stringify(apiData)
+            })
+              .then(response => response.json())
+              .then((res) => { // eslint-disable-line
+                if (res.status === 1) {
+                  if (res.data.length > 0) {
+                    let inboxEmailsData = res.data.map(item => {
+                      return {
+                        id: item.id,
+                        thread: item.thread_id,
+                        avatar: avatarApi[6],
+                        name: item.receiver_name,
+                        date: formatDate(new Date(parseInt(item.sent_on))),
+                        subject: item.subject,
+                        category: 'sent',
+                        content: item.body,
+                        attachment: [],
+                        stared: false,
+                      }
+                    })
+                    response = inboxEmailsData;
+                    callback(response);
+                  }
+                }
+              });
+          });
+        }
+      }
+      catch (err) {
+        throw new Error(`Not possible ${err}`);
+      }
 
-    if (category == 'inbox') {
-      postData(`${API_URL}/client/get-inbox-emails`, apiData) // eslint-disable-line
-        .then((res) => {
-          if (res.status === 1) {
-            if (res.data.length > 0) {
-              let inboxEmailsData = res.data.map(item => {
-                return {
-                  id: item.id,
-                  thread: item.thread_id,
-                  avatar: avatarApi[6],
-                  name: item.sender_name,
-                  date: formatDate(new Date(parseInt(item.sent_on))),
-                  subject: item.subject,
-                  category: '',
-                  content: item.body,
-                  attachment: [],
-                  stared: false,
-                }
-              })
-              callback(inboxEmailsData);
-              return true;
-            }
-          }
-        })
-        .catch((err) => {
-          callback(false, err);
-          return false;
-        });
-    } else if (category == 'sent') {
-      postData(`${API_URL}/client/get-sent-emails`, apiData) // eslint-disable-line
-        .then((res) => {
-          if (res.status === 1) {
-            if (res.data.length > 0) {
-              let sentEmailsData = res.data.map(item => {
-                return {
-                  id: item.id,
-                  thread: item.thread_id,
-                  avatar: avatarApi[6],
-                  name: item.receiver_name,
-                  date: formatDate(new Date(parseInt(item.sent_on))),
-                  subject: item.subject,
-                  category: 'sent',
-                  content: item.body,
-                  attachment: [],
-                  stared: false,
-                }
-              })
-              callback(sentEmailsData);
-              return true;
-            }
-          }
-        })
-        .catch((err) => {
-          callback(false, err);
-          return false;
-        });
     }
-    else if (category == 'campaign') {
-      callback([]);
-    }
-    else if (category == 'bulkemail') {
-      callback([]);
-    }
-    else if (category == 'stared') {
-      callback([]);
-    }
+    await handlerResponse();
+    return response;
   }
 
   handleChange = (event, name) => {

@@ -7,6 +7,18 @@ import { withStyles } from '@material-ui/core/styles';
 import { SignupForm } from 'dan-components';
 import styles from 'dan-components/Forms/user-jss';
 
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+
+  return await response.json();
+}
+
 class Signup extends React.Component {
   state = {
     errorMessage: '',
@@ -18,29 +30,14 @@ class Signup extends React.Component {
   }
 
   submitForm(values) {
-    const { entries } = values._root;
-    const data = { auth_via: 'form' };
+    const MappedValues = values.toJS();
+    const { firstname, lastname, email, username } = MappedValues;
+    const data = { firstname, lastname, email, username };
 
-    entries.forEach((item) => {
-      data[item[0]] = item[1];
-    });
-
-    async function postData(url, data) {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: qs.stringify(data)
-      });
-
-      return await response.json();
-    }
-
-    postData(`${API_URL}/client/signup`, data)
+    postData(`${API_URL}/admin/create-token`, data)
       .then((res) => {
         if (res.status === 1) {
-          window.location.reload();
+          this.props.history.push('/admin/client-accounts');
         } else {
           this.setState({ errorMessage: res.errorMessage, flash: true });
         }

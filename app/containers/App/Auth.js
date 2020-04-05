@@ -14,7 +14,7 @@ class Auth extends React.Component {
       <Outer>
         <Switch>
           <Route exact path="/signin" component={Signin} />
-          <Route exact path="/signup" component={Signup} />
+
           <Route exact path="/login" component={Login} />
           <Route exact path="/reset-password" component={ResetPassword} />
           <Route exact path="/lock-screen" component={LockScreen} />
