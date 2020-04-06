@@ -1,11 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import avatarApi from 'dan-api/images/avatars';
 import { withStyles } from '@material-ui/core/styles';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import data from 'dan-api/apps/contactData';
+// import data from 'dan-api/apps/contactData';
 import { Helmet } from 'react-helmet';
 import brand from 'dan-api/dummy/brand';
+import qs from 'qs';
+import { makeSecureDecrypt } from '../../../Helpers/security';
 import dummy from 'dan-api/dummy/dummyContents';
 import {
   fetchAction,
@@ -28,10 +31,54 @@ import {
 } from 'dan-components';
 import styles from 'dan-components/Contact/contact-jss';
 
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+  return await response.json();
+}
+
 class Contact extends React.Component {
   componentDidMount() {
     const { fetchData } = this.props;
-    fetchData(data);
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+    const data = {
+      client_id: user.id
+    }
+
+    postData(`${API_URL}/client/get-contacts`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          let data = [];
+          if (res.data.length > 0) {
+            data = res.data.map(item => {
+              return {
+                id: item.id,
+                avatar: avatarApi[9],
+                name: `${item.firstname} ${item.lastname}`,
+                title: '',
+                phone: item.phone,
+                // secondaryPhone: '+6280987654321',
+                personalEmail: item.email,
+                // companyEmail: 'johndoe@company.com',
+                // address: 'Ipsum Street no.77 Block A/5A, New York',
+                website: '',
+                favorited: item.favorite
+              }
+            });
+          }
+          fetchData(data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   submitContact = (item, avatar) => {
@@ -96,13 +143,13 @@ class Contact extends React.Component {
             favorite={favorite}
           />
         </div>
-        <AddContact
+        {/* <AddContact
           addContact={add}
           openForm={open}
           closeForm={close}
           submit={this.submitContact}
           avatarInit={avatarInit}
-        />
+        /> */}
       </div>
     );
   }

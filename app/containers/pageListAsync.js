@@ -325,6 +325,10 @@ export const Signup = loadable(() =>
   import('./Pages/Users/Signup'), {
   fallback: <Loading />,
 });
+export const Token = loadable(() =>
+  import('./Pages/Users/Token'), {
+  fallback: <Loading />,
+});
 export const StudentSignin = loadable(() =>
   import('./Pages/Users/StudentSignin'), {
   fallback: <Loading />,

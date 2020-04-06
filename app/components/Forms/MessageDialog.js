@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Editor } from 'react-draft-wysiwyg';
+import { convertToRaw } from 'draft-js';
+import { draftToMarkdown } from 'markdown-draft-js';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -11,9 +13,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
 import Paper from '@material-ui/core/Paper';
 import styles from './user-jss';
+import { TextField } from '@material-ui/core';
 
 class MessageDialog extends React.Component {
   state = {
+    heading: '',
     editorState: ''
   }
 
@@ -25,15 +29,28 @@ class MessageDialog extends React.Component {
     }
   }
 
+  handleChange = (e) => {
+    this.setState({ heading: e.target.value })
+  }
+
+  submit = (message) => {
+    const { sendMessage, handleClose } = this.props;
+    const { editorState, heading } = this.state;
+
+    sendMessage(heading, draftToMarkdown(convertToRaw(editorState.getCurrentContent())));
+    this.setState({ editorState: '', heading: '' });
+    handleClose();
+  }
+
   onEditorStateChange = editorState => {
     this.setState({
-      editorState,
+      editorState
     });
   };
 
   render() {
-    const { classes, open, handleClose } = this.props;
-    const { editorState } = this.state;
+    const { classes, open, handleClose, sendMessage } = this.props;
+    const { editorState, heading } = this.state;
 
     const editorToolbar = {
       options: ['inline', 'blockType', 'list', 'emoji'],
@@ -65,7 +82,14 @@ class MessageDialog extends React.Component {
             <DialogTitle id="form-dialog-title">Message</DialogTitle>
             <DialogContent style={{ width: '100%' }}>
               <FormControl style={{ width: '100%' }}>
-
+                <TextField
+                  variant="outlined"
+                  placeholder="Heading"
+                  name="heading"
+                  value={heading}
+                  onChange={(e) => this.handleChange(e)}
+                  style={{ margin: 10 }}
+                />
                 <Paper className={classes.messageBlock}>
                   <Editor
                     editorState={editorState}
@@ -83,7 +107,7 @@ class MessageDialog extends React.Component {
               <Button onClick={handleClose} color="primary">
                 Cancel
               </Button>
-              <Button onClick={handleClose} color="primary">
+              <Button onClick={(event) => this.submit(editorState)} color="primary">
                 Send
               </Button>
             </DialogActions>

@@ -18,6 +18,7 @@ import Star from '@material-ui/icons/Star';
 import StarBorder from '@material-ui/icons/StarBorder';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import LocalPhone from '@material-ui/icons/LocalPhone';
+import Delete from '@material-ui/icons/Delete';
 import Email from '@material-ui/icons/Email';
 import Smartphone from '@material-ui/icons/Smartphone';
 import LocationOn from '@material-ui/icons/LocationOn';
@@ -25,6 +26,8 @@ import Work from '@material-ui/icons/Work';
 import Language from '@material-ui/icons/Language';
 import Divider from '@material-ui/core/Divider';
 import styles from './contact-jss';
+import qs from 'qs';
+import { makeSecureDecrypt } from '../../Helpers/security';
 
 const optionsOpt = [
   'Block Contact',
@@ -33,6 +36,17 @@ const optionsOpt = [
   'Option 2',
   'Option 3',
 ];
+
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+  return await response.json();
+}
 
 const ITEM_HEIGHT = 48;
 
@@ -51,8 +65,47 @@ class ContactDetail extends React.Component {
 
   deleteContact = (item) => {
     const { remove } = this.props;
-    remove(item);
-    this.setState({ anchorElOpt: null });
+    const MappedItem = item.toJS();
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+    const data = {
+      client_id: user.id,
+      user_id: MappedItem.id
+    }
+
+    postData(`${API_URL}/client/remove-contact`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          remove(item);
+          this.setState({ anchorElOpt: null });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  handleFavAction = (item) => {
+    const { favorite } = this.props;
+    const MappedItem = item.toJS();
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+    const data = {
+      client_id: user.id,
+      user_id: MappedItem.id
+    }
+
+    postData(`${API_URL}/client/fav-contact`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          favorite(item)
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   render() {
@@ -70,13 +123,13 @@ class ContactDetail extends React.Component {
       <main className={classNames(classes.content, showMobileDetail ? classes.detailPopup : '')}>
         <section className={classes.cover}>
           <div className={classes.opt}>
-            <IconButton className={classes.favorite} aria-label="Favorite" onClick={() => favorite(dataContact.get(itemSelected))}>
+            <IconButton className={classes.favorite} aria-label="Favorite" onClick={() => this.handleFavAction(dataContact.get(itemSelected))}>
               {dataContact.getIn([itemSelected, 'favorited']) ? (<Star />) : <StarBorder />}
             </IconButton>
-            <IconButton aria-label="Edit" onClick={() => edit(dataContact.get(itemSelected))}>
-              <Edit />
+            <IconButton aria-label="Delete" onClick={() => this.deleteContact(dataContact.get(itemSelected))}>
+              <Delete />
             </IconButton>
-            <IconButton
+            {/* <IconButton
               aria-label="More"
               aria-owns={anchorElOpt ? 'long-menu' : null}
               aria-haspopup="true"
@@ -111,7 +164,7 @@ class ContactDetail extends React.Component {
                   </MenuItem>
                 );
               })}
-            </Menu>
+            </Menu> */}
           </div>
           <IconButton
             onClick={hideDetail}
@@ -151,7 +204,7 @@ class ContactDetail extends React.Component {
               </ListItemAvatar>
               <ListItemText primary={dataContact.getIn([itemSelected, 'phone'])} secondary="Phone" />
             </ListItem>
-            <Divider variant="inset" />
+            {/* <Divider variant="inset" />
             <ListItem>
               <ListItemAvatar>
                 <Avatar className={classes.amberIcon}>
@@ -159,7 +212,7 @@ class ContactDetail extends React.Component {
                 </Avatar>
               </ListItemAvatar>
               <ListItemText primary={dataContact.getIn([itemSelected, 'secondaryPhone'])} secondary="Secondary Phone" />
-            </ListItem>
+            </ListItem> */}
             <Divider variant="inset" />
             <ListItem>
               <ListItemAvatar>
@@ -169,7 +222,7 @@ class ContactDetail extends React.Component {
               </ListItemAvatar>
               <ListItemText primary={dataContact.getIn([itemSelected, 'personalEmail'])} secondary="Personal Email" />
             </ListItem>
-            <Divider variant="inset" />
+            {/* <Divider variant="inset" />
             <ListItem>
               <ListItemAvatar>
                 <Avatar className={classes.brownIcon}>
@@ -177,8 +230,8 @@ class ContactDetail extends React.Component {
                 </Avatar>
               </ListItemAvatar>
               <ListItemText primary={dataContact.getIn([itemSelected, 'companyEmail'])} secondary="Company Email" />
-            </ListItem>
-            <Divider variant="inset" />
+            </ListItem> */}
+            {/* <Divider variant="inset" />
             <ListItem>
               <ListItemAvatar>
                 <Avatar className={classes.redIcon}>
@@ -186,7 +239,7 @@ class ContactDetail extends React.Component {
                 </Avatar>
               </ListItemAvatar>
               <ListItemText primary={dataContact.getIn([itemSelected, 'address'])} secondary="Address" />
-            </ListItem>
+            </ListItem> */}
             <Divider variant="inset" />
             <ListItem>
               <ListItemAvatar>
@@ -198,7 +251,7 @@ class ContactDetail extends React.Component {
             </ListItem>
           </List>
         </div>
-      </main>
+      </main >
     );
   }
 }

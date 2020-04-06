@@ -79,13 +79,13 @@ class ContactList extends React.Component {
                   </div>
                   <input className={classes.input} onChange={(event) => search(event)} placeholder="Search" />
                 </div>
-                {addFn && (
+                {/* {addFn && (
                   <Tooltip title="Add New Contact">
                     <IconButton className={classes.buttonAdd} onClick={() => addContact()} color="secondary" aria-label="Delete">
                       <Add />
                     </IconButton>
                   </Tooltip>
-                )}
+                )} */}
               </div>
             </div>
             <div className={classes.total}>
@@ -122,7 +122,7 @@ ContactList.propTypes = {
 
 ContactList.defaultProps = {
   clippedRight: false,
-  addContact: () => {},
+  addContact: () => { },
   addFn: false,
 };
 

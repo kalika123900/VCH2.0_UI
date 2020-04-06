@@ -14,6 +14,11 @@ module.exports = [
         link: '/client/settings',
       },
       {
+        key: 'contacts',
+        name: 'Contacts',
+        link: '/client/contacts',
+      },
+      {
         key: 'seat-management',
         name: 'Seat Management',
         link: '/client/seat-management',

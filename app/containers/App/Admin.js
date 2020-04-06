@@ -8,7 +8,7 @@ import Dashboard from '../Templates/AdminDashboard';
 import {
   AdminDashboard, AdminSeatManagement, AdminCampaignManagement, CampaignEdit,
   ClientAccounts, ClientProfiles, StudentReview, Campaigns, Signout, BulkEmailEdit,
-  Signup
+  Token
 }
   from '../pageListAsync';
 
@@ -34,7 +34,7 @@ class Admin extends React.Component {
             <Route exact path="/admin/client-profiles" component={ClientProfiles} />
             <Route exact path="/admin/student-review" component={StudentReview} />
             <Route exact path="/admin/signout" component={Signout} />
-            <Route exact path="/admin/token" component={Signup} />
+            <Route exact path="/admin/token" component={Token} />
             <Route component={NotFound} />
           </Switch>
         </Dashboard>

@@ -21,8 +21,17 @@ import Grid from '@material-ui/core/Grid';
 import { CombineStyles } from 'dan-helpers';
 import Ionicon from 'react-ionicons';
 import styles from './cardStyle-jss';
+import qs from 'qs';
 import MessageDialog from '../Forms/MessageDialog';
 import StudentProfileDialog from '../Profile/StudentProfileDialog';
+import { makeSecureDecrypt } from '../../Helpers/security';
+import messageStyles from 'dan-styles/Messages.scss';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 
 const customStyles = {
   customBottomNavLabel: {
@@ -37,13 +46,37 @@ const customStyles = {
   }
 };
 
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+
+  return await response.json();
+}
+
 const combinedStyles = CombineStyles(customStyles, styles);
 
 class StudentCard extends React.Component {
   state = {
     open: false,
-    profile: false
+    profile: false,
+    openStyle: false,
+    messageType: 'error',
+    notifyMessage: ''
   };
+
+  handleCloseStyle = () => {
+    this.setState({ openStyle: false })
+  }
+
+  noticeClose = event => {
+    event.preventDefault();
+    this.setState({ openStyle: false });
+  }
 
   handleClickOpen = (e) => {
     this.setState({ open: true });
@@ -61,6 +94,43 @@ class StudentCard extends React.Component {
     this.setState({ profile: false });
   };
 
+  handleDirectMessage = (subject, body) => {
+    const { email, user_id } = this.props;
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const data = {
+      sender_id: user.id,
+      sender_type: 'client',
+      receiver_id: user_id,
+      receiver_type: 'user',
+      subject,
+      body,
+      to: email
+    }
+
+    postData(`${API_URL}/client/direct-message`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({
+            notifyMessage: 'Direct Message sent',
+            messageType: 'success',
+            openStyle: true
+          })
+        } else {
+          this.setState({
+            notifyMessage: 'Direct Message not sent',
+            messageType: 'error',
+            openStyle: true
+          })
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
   render() {
     const {
       classes,
@@ -75,7 +145,7 @@ class StudentCard extends React.Component {
 
     return (
       <Fragment>
-        <MessageDialog open={this.state.open} handleClose={this.handleClose} />
+        <MessageDialog open={this.state.open} handleClose={this.handleClose} sendMessage={this.handleDirectMessage} />
         <StudentProfileDialog open={this.state.profile} handleClose={this.handleProfileClose} />
         <Card className={classes.cardSocmed}>
           <CardMedia
@@ -134,6 +204,44 @@ class StudentCard extends React.Component {
             </BottomNavigation>
           </CardActions>
         </Card>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          open={this.state.openStyle}
+          autoHideDuration={6000}
+          onClose={this.handleCloseStyle}
+        >
+          <SnackbarContent
+            className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
+            aria-describedby="client-snackbar"
+            message={(
+              <span id="client-snackbar" className={classes.message}>
+                {
+                  (this.state.messageType == 'error') && <ErrorIcon className="success" />
+                }
+                {
+                  (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
+                }
+
+                  &nbsp;
+                {this.state.notifyMessage}
+              </span>
+            )}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                className={classes.close}
+                onClick={this.noticeClose}
+              >
+                <CloseIcon className={classes.icon} />
+              </IconButton>,
+            ]}
+          />
+        </Snackbar>
       </Fragment>
     );
   }

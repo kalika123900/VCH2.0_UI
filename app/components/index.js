@@ -94,6 +94,7 @@ export Review from './Forms/Review';
 export SideReview from './Forms/SideReview';
 export SigninForm from './Forms/SigninForm';
 export SignupForm from './Forms/SignupForm';
+export TokenForm from './Forms/TokenForm';
 export CreateCampaign from './Forms/CreateCampaign';
 export CreateBulkEmail from './Forms/CreateBulkEmail';
 export BulkEmailForm from './Forms/BulkEmailForm';

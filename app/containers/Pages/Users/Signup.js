@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Helmet } from 'react-helmet';
 import brand from 'dan-api/dummy/brand';
 import PropTypes from 'prop-types';
@@ -6,6 +6,8 @@ import qs from 'qs';
 import { withStyles } from '@material-ui/core/styles';
 import { SignupForm } from 'dan-components';
 import styles from 'dan-components/Forms/user-jss';
+import { Typography } from '@material-ui/core';
+import { ErrorWrap } from 'dan-components';
 
 async function postData(url, data) {
   const response = await fetch(url, {
@@ -20,9 +22,48 @@ async function postData(url, data) {
 }
 
 class Signup extends React.Component {
+  constructor(props) {
+    super(props)
+    console.log(props)
+  }
+
   state = {
+    isVerified: false,
+    token: '',
     errorMessage: '',
-    flash: false
+    flash: false,
+    firstname: '',
+    lastname: '',
+    username: '',
+    useremail: ''
+  }
+
+  verifyToken = () => {
+    const searchString = (this.props.location.search).split('?token=');
+    const data = {
+      token: searchString[1]
+    }
+
+    postData(`${API_URL}/utils/verify-token`, data)
+      .then((res) => {
+        if (res.status == 1) {
+          this.setState({
+            firstname: res.data.firstname,
+            lastname: res.data.lastname,
+            useremail: res.data.email,
+            username: res.data.username,
+            isVerified: true,
+            token: searchString[1]
+          })
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
+  componentDidMount() {
+    this.verifyToken();
   }
 
   handleFlash = () => {
@@ -30,14 +71,15 @@ class Signup extends React.Component {
   }
 
   submitForm(values) {
-    const MappedValues = values.toJS();
-    const { firstname, lastname, email, username } = MappedValues;
-    const data = { firstname, lastname, email, username };
+    const { firstname, lastname, email, username, password } = values;
+    const { token } = this.state;
 
-    postData(`${API_URL}/admin/create-token`, data)
+    const data = { firstname, lastname, email, username, password, token }
+
+    postData(`${API_URL}/client/signup`, data)
       .then((res) => {
         if (res.status === 1) {
-          this.props.history.push('/admin/client-accounts');
+          this.props.history.push('/signin');
         } else {
           this.setState({ errorMessage: res.errorMessage, flash: true });
         }
@@ -51,7 +93,7 @@ class Signup extends React.Component {
     const title = brand.name + ' - Signup';
     const description = brand.desc;
     const { classes } = this.props;
-    const { errorMessage, flash } = this.state;
+    const { errorMessage, flash, firstname, lastname, username, useremail, isVerified } = this.state;
     return (
       <div className={classes.rootFull}>
         <Helmet>
@@ -64,12 +106,22 @@ class Signup extends React.Component {
         </Helmet>
         <div className={classes.container}>
           <div className={classes.fullFormWrap}>
-            <SignupForm
-              onSubmit={(values) => this.submitForm(values)}
-              handleFlash={this.handleFlash}
-              errorMessage={errorMessage}
-              flash={flash}
-            />
+            {isVerified ?
+              <SignupForm
+                firstname={firstname}
+                lastname={lastname}
+                useremail={useremail}
+                username={username}
+                handleSubmit={(values) => this.submitForm(values)}
+                handleFlash={this.handleFlash}
+                errorMessage={errorMessage}
+                flash={flash}
+              />
+              :
+              <Fragment>
+                <ErrorWrap title="" desc="Oops, unauthorised signup :(" />
+              </Fragment>
+            }
           </div>
         </div>
       </div>

@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import TextField from '@material-ui/core/TextField';
 import { Field, reduxForm } from 'redux-form/immutable';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
@@ -77,17 +76,7 @@ const renderField = (props) => {
 class SignupForm extends React.Component {
   state = {
     showPassword: false,
-    firstname: '',
-    lastname: '',
-    password: '',
-    passwordConfirm: '',
-    username: '',
-    email: ''
   };
-
-  handleChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
-  }
 
   Message = () => {
     setTimeout(() => {
@@ -111,21 +100,18 @@ class SignupForm extends React.Component {
     event.preventDefault();
   };
 
-  handleSubmitForm = (e) => {
-    e.preventDefault();
-    this.props.handleSubmit(this.state);
-  }
-
   render() {
     const {
       classes,
       handleSubmit,
+      pristine,
+      submitting,
       deco
     } = this.props;
-    const { showPassword, firstname, lastname, password, passwordConfirm, username, email, } = this.state;
+    const { showPassword } = this.state;
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
-        <div className={classes.topBar}>
+        {/* <div className={classes.topBar}>
           <NavLink to="/" className={classes.brand}>
             <img style={{ width: '70px' }} src={logo} alt={brand.name} />
           </NavLink>
@@ -133,79 +119,75 @@ class SignupForm extends React.Component {
             <Icon className={classes.icon}>arrow_forward</Icon>
             Already have account ?
           </Button>
-        </div>
+        </div> */}
         <Typography variant="h4" className={classes.title} gutterBottom>
-          Create account
+          Create Client Token
         </Typography>
         <section className={classes.pageFormWrap}>
           {this.props.flash && this.Message()}
-          <form onSubmit={(e) => this.handleSubmitForm(e)}>
+          <form onSubmit={handleSubmit}>
             <div>
               <FormControl className={classes.formControl}>
-                <TextField
+                <Field
                   name="firstname"
-                  value={firstname}
-                  // defaultValue={this.props.firstname}
-                  placeholder="First Name"
-                  label="First Name"
+                  component={renderField}
+                  placeholder="Client First Name"
+                  label="Client First Name"
                   required
+                  className={classes.field}
                   validate={[minTextLength, maxTextLength, text]}
-                  onChange={(e) => { this.handleChange(e) }}
                 />
               </FormControl>
             </div>
             <div>
               <FormControl className={classes.formControl}>
-                <TextField
+                <Field
                   name="lastname"
-                  value={lastname}
-                  // defaultValue={this.props.lastname}
-                  placeholder="Last Name"
-                  label="Last Name"
+                  component={renderField}
+                  placeholder="Client Last Name"
+                  label="Client Last Name"
                   required
+                  className={classes.field}
                   validate={[minTextLength, maxTextLength, text]}
-                  onChange={(e) => { this.handleChange(e) }}
                 />
               </FormControl>
             </div>
             <div>
               <FormControl className={classes.formControl}>
-                <TextField
+                <Field
                   name="username"
-                  value={username}
-                  // defaultValue={this.props.username}
-                  placeholder="Username"
-                  label="Username"
+                  component={renderField}
+                  placeholder="Client Username"
+                  label="Client Username"
                   required
-                  onChange={(e) => { this.handleChange(e) }}
+                  className={classes.field}
                   validate={[minTextLength, maxTextLength]}
                 />
               </FormControl>
             </div>
             <div>
               <FormControl className={classes.formControl}>
-                <TextField
+                <Field
                   name="email"
-                  value={email}
-                  // defaultValue={this.props.useremail}
-                  placeholder="Email"
-                  label="Email"
+                  component={renderField}
+                  placeholder="Client Email"
+                  label="Client Email"
                   required
                   validate={[required, email]}
-                  onChange={(e) => { this.handleChange(e) }}
+                  className={classes.field}
                 />
               </FormControl>
             </div>
-            <div>
+            {/* <div>
               <FormControl className={classes.formControl}>
-                <TextField
+                <Field
                   name="password"
-                  value={password}
+                  component={renderField}
                   type="password"
                   label="Your Password"
                   required
                   validate={[required, passwordsMatch, minPasswordLength, maxPasswordLength]}
-                  onChange={(e) => { this.handleChange(e) }}
+                  className={classes.field}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -224,21 +206,21 @@ class SignupForm extends React.Component {
             </div>
             <div>
               <FormControl className={classes.formControl}>
-                <TextField
+                <Field
                   name="passwordConfirm"
+                  component={renderField}
                   type="password"
-                  value={passwordConfirm}
                   label="Re-type Password"
                   required
                   validate={[required, passwordsMatch]}
-                  onChange={(e) => { this.handleChange(e) }}
+                  className={classes.field}
                 />
               </FormControl>
-            </div>
+            </div> */}
             {/* <div>
               <FormControlLabel
                 control={(
-                  <TextField name="checkbox" component={CheckboxRedux} required className={classes.agree} />
+                  <Field name="checkbox" component={CheckboxRedux} required className={classes.agree} />
                 )}
                 label="Agree with"
               />
@@ -246,8 +228,8 @@ class SignupForm extends React.Component {
             </div> */}
             <div className={classes.btnArea}>
               <Button variant="contained" fullWidth color="primary" type="submit">
-                Continue
-                <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} />
+                Create
+                {/* <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} /> */}
               </Button>
             </div>
           </form>
@@ -260,14 +242,21 @@ class SignupForm extends React.Component {
 SignupForm.propTypes = {
   classes: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
   deco: PropTypes.bool.isRequired,
 };
+
+const SignupFormReduxed = reduxForm({
+  form: 'clientSignupForm',
+  enableReinitialize: true,
+})(SignupForm);
 
 const reducer = 'ui';
 const SignupFormMapped = connect(
   state => ({
     deco: state.getIn([reducer, 'decoration'])
   }),
-)(SignupForm);
+)(SignupFormReduxed);
 
 export default withStyles(styles)(SignupFormMapped);
