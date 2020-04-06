@@ -7,8 +7,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import {
-  ClientEmailSidebar,
-  ClientEmailThreadList,
+  StudentEmailSidebar,
+  StudentEmailThreadList,
   ComposeEmail,
   Notification
 } from 'dan-components';
@@ -28,7 +28,7 @@ const email = value => (
     : ''
 );
 
-class ClientEmailThread extends React.Component {
+class StudentEmailThread extends React.Component {
   state = {
     to: '',
     subject: '',
@@ -64,7 +64,7 @@ class ClientEmailThread extends React.Component {
   }
 
   handleSidebar = () => {
-    this.props.history.push('/client/messages');
+    this.props.history.push('/student/messages');
   };
 
   handleDrawerToggle = () => {
@@ -101,7 +101,7 @@ class ClientEmailThread extends React.Component {
         <Notification close={() => closeNotif()} message={messageNotif} />
         <div className={classes.root}>
           <Grid onClick={() => this.handleSidebar()}>
-            <ClientEmailSidebar
+            <StudentEmailSidebar
               compose={this.handleCompose}
               goto={goto}
               selected={currentPage}
@@ -109,7 +109,7 @@ class ClientEmailThread extends React.Component {
               mobileOpen={mobileOpen}
             />
           </Grid>
-          <ClientEmailThreadList
+          <StudentEmailThreadList
             thread={this.props.match.params.thread}
             openMail={openMail}
             keyword={keyword}
@@ -131,7 +131,7 @@ class ClientEmailThread extends React.Component {
   }
 }
 
-ClientEmailThread.propTypes = {
+StudentEmailThread.propTypes = {
   classes: PropTypes.object.isRequired,
   openMail: PropTypes.func.isRequired,
   goto: PropTypes.func.isRequired,
@@ -163,9 +163,9 @@ const constDispatchToProps = dispatch => ({
   closeNotif: () => dispatch(closeNotifAction),
 });
 
-const ClientEmailThreadMapped = connect(
+const StudentEmailThreadMapped = connect(
   mapStateToProps,
   constDispatchToProps
-)(ClientEmailThread);
+)(StudentEmailThread);
 
-export default withStyles(styles)(ClientEmailThreadMapped);
+export default withStyles(styles)(StudentEmailThreadMapped);

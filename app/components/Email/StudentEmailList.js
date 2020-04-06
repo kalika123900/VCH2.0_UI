@@ -1,287 +1,374 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
+import { fromJS } from 'immutable';
 import Tooltip from '@material-ui/core/Tooltip';
-import Bookmark from '@material-ui/icons/Bookmark';
-import Delete from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import Avatar from '@material-ui/core/Avatar';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import Delete from '@material-ui/icons/Delete';
 import Flag from '@material-ui/icons/Flag';
 import People from '@material-ui/icons/People';
-import QuestionAnswer from '@material-ui/icons/QuestionAnswer';
-import ReportIcon from '@material-ui/icons/Report';
-import LabelIcon from '@material-ui/icons/Label';
 import FileIcon from '@material-ui/icons/Description';
 import Download from '@material-ui/icons/CloudDownload';
-import Divider from '@material-ui/core/Divider';
 import StarBorder from '@material-ui/icons/StarBorder';
 import Star from '@material-ui/icons/Star';
 import isImage from '../Forms/helpers/helpers.js';
 import styles from './email-jss';
+import qs from 'qs';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Grid from '@material-ui/core/Grid';
+import messageStyles from 'dan-styles/Messages.scss';
+import CloseIcon from '@material-ui/icons/Close';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 
-const ITEM_HEIGHT = 80;
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+  return await response.json();
+}
+
 class EmailList extends React.Component {
   state = {
-    anchorElOpt: null,
-    itemToMove: null
+    JSX: null,
+    openStyle: false,
+    messageType: 'error',
+    notifyMessage: ''
   };
 
-  handleClickOpt = (event, item) => {
-    this.setState({
-      anchorElOpt: event.currentTarget,
-      itemToMove: item
-    });
-  };
-
-  handleCloseOpt = () => {
-    this.setState({ anchorElOpt: null });
-  };
-
-  handleMoveTo = (item, category) => {
-    const { moveTo } = this.props;
-    moveTo(item, category);
-    this.setState({ anchorElOpt: null });
+  handleCloseStyle = () => {
+    this.setState({ openStyle: false })
   }
 
-  render() {
-    const {
-      classes,
-      emailData,
-      openMail,
-      filterPage,
-      keyword,
-      remove,
-      toggleStar,
-      reply
-    } = this.props;
-    const { anchorElOpt, itemToMove } = this.state;
-    /* Basic Filter */
-    const inbox = emailData.filter(item => item.get('category') !== 'sent' && item.get('category') !== 'spam');
-    const stared = emailData.filter(item => item.get('stared'));
-    const sent = emailData.filter(item => item.get('category') === 'sent');
-    const spam = emailData.filter(item => item.get('category') === 'spam');
-    /* Category Filter */
-    const updates = emailData.filter(item => item.get('category') === 'updates');
-    const social = emailData.filter(item => item.get('category') === 'social');
-    const forums = emailData.filter(item => item.get('category') === 'forums');
-    const promos = emailData.filter(item => item.get('category') === 'promos');
-    const getCategory = cat => {
-      switch (cat) {
-        case 'updates':
-          return (
-            <span className={classNames(classes.iconOrange, classes.category)}>
-              <Flag />
-              &nbsp;Campaign Response
-            </span>
-          );
-        case 'social':
-          return (
-            <span className={classNames(classes.iconRed, classes.category)}>
-              <People />
-              &nbsp;Bulk Email Queries
-            </span>
-          );
-        default:
-          return false;
+
+  openThread = (mail, category) => {
+    const MapMail = mail.toJS();
+    if (category != "sent") {
+      this.props.history.push(`/student/messages/${MapMail.thread}`)
+    } else {
+      this.props.history.push(`/student/messages/${MapMail.id}`)
+    }
+  };
+
+  toggleStar = (mail) => {
+    const MappedMail = mail.toJS();
+    const type = MappedMail.sender_type == 'user' ? 'sender' : 'receiver';
+    const data = {
+      messageId: MappedMail.id,
+      type
+    }
+
+    postData(`${API_URL}/student/toggle-star`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          this.showClientEmail(this.props.filterPage);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  remove = (mail) => {
+    const MappedMail = mail.toJS();
+    const type = MappedMail.sender_type == 'user' ? 'sender' : 'receiver';
+    const data = {
+      messageId: MappedMail.id,
+      type
+    }
+
+    postData(`${API_URL}/student/remove-email`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          this.showClientEmail(this.props.filterPage);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  componentDidMount() {
+    this.showClientEmail(this.props.filterPage);
+  };
+  noticeClose = event => {
+    event.preventDefault();
+    this.setState({ openStyle: false });
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.filterPage != this.props.filterPage) {
+      this.showClientEmail(this.props.filterPage);
+    }
+  };
+
+  getEmailRender = async (type) => {
+    const { openMail, classes, reply } = this.props;
+    var JSX = [];
+    var MappedData = '';
+    var rawData = '';
+    var _that = this;
+    const asyncRender = async () => {
+      try {
+        await new Promise((resolve, reject) => {
+          _that.props.showEmail(type, function (response) {
+            if (response === false) {
+              rawData = false;
+              reject(new Error('Promise rejected'));
+            }
+            else if (response.length > 0) {
+              rawData = response;
+              MappedData = fromJS(rawData);
+              JSX = MappedData.map(mail => {
+                const renderHTML = { __html: mail.get('content') };
+                if (mail.get('subject').toLowerCase().indexOf(_that.props.keyword) === -1) {
+                  return false;
+                }
+                return (
+                  type == 'inbox' ?
+                    <Grid className={classes.emailList} key={mail.get('id')}>
+                      <div className={classes.fromHeading} style={{ background: '#f3f4fa', margin: 10 }}>
+                        <Tooltip id="tooltip-mark" title="Stared">
+                          <IconButton onClick={() => _that.toggleStar(mail)} className={classes.starBtn}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
+                        </Tooltip>
+                        <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} />
+                        <div className={classes.item} onClick={() => _that.openThread(mail, mail.get('category'))}>
+                          <div>
+                            <Typography className={classes.heading} display="block" >
+                              {mail.get('name')}
+                              <Typography variant="caption" display="block">{mail.get('date')}</Typography>
+                            </Typography>
+                          </div>
+                          <div className={classes.column}>
+                            <Typography className={classes.secondaryHeading} noWrap>{mail.get('subject')}</Typography>
+                            {_that.getCategory(mail.get('category'))}
+                          </div>
+                        </div>
+                        <div className={classes.topAction}>
+                          <div className={classes.opt}>
+                            <Tooltip id="tooltip-mark" title="Remove mail">
+                              <IconButton className={classes.button} aria-label="Delete" onClick={() => _that.remove(mail)}><Delete /></IconButton>
+                            </Tooltip>
+                          </div>
+                        </div>
+                      </div>
+                    </Grid>
+                    :
+                    < ExpansionPanel className={classes.emailList} key={mail.get('id')} onChange={() => openMail(mail)}>
+                      <ExpansionPanelSummary className={classes.emailSummary} expandIcon={<ExpandMoreIcon />}>
+                        <div className={classes.fromHeading}>
+                          <Tooltip id="tooltip-mark" title="Stared">
+                            <IconButton onClick={() => _that.toggleStar(mail)} className={classes.starBtn}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
+                          </Tooltip>
+                          <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} style={{ marginRight: 20 }} />
+                          <Typography className={classes.heading} display="block">
+                            {mail.get('category') === 'sent' && ('To ')}
+                            {mail.get('name')}
+                            <Typography variant="caption" display="block">{mail.get('date')}</Typography>
+                          </Typography>
+                        </div>
+                        <div className={classes.column}>
+                          <Typography className={classes.secondaryHeading} noWrap>{mail.get('subject')}</Typography>
+                          {_that.getCategory(mail.get('category'))}
+                        </div>
+                        <div className={classes.topAction}>
+                          <div className={classes.opt}>
+                            <Tooltip id="tooltip-mark" title="Remove mail">
+                              <IconButton className={classes.button} aria-label="Delete" onClick={() => _that.remove(mail)}><Delete /></IconButton>
+                            </Tooltip>
+                          </div>
+                        </div>
+                      </ExpansionPanelSummary>
+                      <ExpansionPanelDetails className={classes.details}>
+                        <section>
+                          <div className={classes.emailContent}>
+                            <Typography variant="h6" gutterBottom>{mail.get('subject')}</Typography>
+                            <article dangerouslySetInnerHTML={renderHTML} />
+                          </div>
+                          <div className={classes.preview}>
+                            {_that.attachmentPreview(mail.get('attachment'))}
+                          </div>
+                        </section>
+                      </ExpansionPanelDetails>
+                      <Divider />
+                      {mail.get('category') !== 'sent' &&
+                        <ExpansionPanelActions>
+                          <div className={classes.action}>
+                            <Button size="small" color="secondary" onClick={() => reply(mail)}>Reply</Button>
+                          </div>
+                        </ExpansionPanelActions>
+                      }
+                    </ExpansionPanel >
+                );
+              });
+              _that.setState({ JSX: JSX });
+              resolve(rawData);
+            } else {
+              _that.setState({ JSX: null });
+              resolve(response)
+            }
+          });
+        });
       }
-    };
-    const attachmentPreview = filesArray => filesArray.map((file, index) => {
-      const base64File = URL.createObjectURL(file);
-      if (isImage(file)) {
+      catch (err) {
+        throw new Error(`Failter to fetch the data ! Err:${err.message}`);
+      }
+    }
+    asyncRender();
+  };
+
+  getCategory = (cat) => {
+    const { classes } = this.props;
+
+    switch (cat) {
+      case 'campaign':
         return (
-          <div key={index.toString()} className={classes.item}>
-            <div className="imageContainer col fileIconImg">
-              <div className="downloadBtn">
-                <IconButton color="secondary" component="a" href={base64File} target="_blank">
-                  <Download />
-                </IconButton>
-              </div>
-              <figure className="imgWrap"><img className="smallPreviewImg" src={base64File} alt="preview" /></figure>
-            </div>
-            <Typography noWrap>{file.name}</Typography>
-          </div>
+          <span className={classNames(classes.iconOrange, classes.category)}>
+            <Flag />
+            &nbsp;Campaign Responses
+          </span>
         );
-      }
+      case 'bulkemail':
+        return (
+          <span className={classNames(classes.iconRed, classes.category)}>
+            <People />
+            &nbsp;Bulk Email Queries
+          </span>
+        );
+      default:
+        return false;
+    }
+  };
+
+  attachmentPreview = filesArray => filesArray.map((file, index) => {
+    const base64File = URL.createObjectURL(file);
+    var classes = this.props.classes;
+    if (isImage(file)) {
       return (
         <div key={index.toString()} className={classes.item}>
           <div className="imageContainer col fileIconImg">
-            <div className="fileWrap">
-              <div className="downloadBtn">
-                <IconButton color="secondary" href={base64File} target="_blank">
-                  <Download />
-                </IconButton>
-              </div>
-              <FileIcon className="smallPreviewImg" alt="preview" />
+            <div className="downloadBtn">
+              <IconButton color="secondary" component="a" href={base64File} target="_blank">
+                <Download />
+              </IconButton>
             </div>
+            <figure className="imgWrap"><img className="smallPreviewImg" src={base64File} alt="preview" /></figure>
           </div>
           <Typography noWrap>{file.name}</Typography>
         </div>
       );
-    });
-    const getEmail = dataArray => dataArray.map(mail => {
-      const renderHTML = { __html: mail.get('content') };
-      if (mail.get('subject').toLowerCase().indexOf(keyword) === -1) {
-        return false;
-      }
-      return (
-        <ExpansionPanel className={classes.emailList} key={mail.get('id')} onChange={() => openMail(mail)}>
-          <ExpansionPanelSummary className={classes.emailSummary} expandIcon={<ExpandMoreIcon />}>
-            <div className={classes.fromHeading}>
-              <Tooltip id="tooltip-mark" title="Stared">
-                <IconButton onClick={() => toggleStar(mail)} className={classes.starBtn}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
-              </Tooltip>
-              {mail.get('category') !== 'spam'
-                ? (<Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} />)
-                : (<Avatar alt="avatar" className={classes.avatar}><ReportIcon /></Avatar>)
-              }
-              <Typography className={classes.heading} display="block">
-                {mail.get('category') === 'sent' && ('To ')}
-                {mail.get('name')}
-                <Typography variant="caption" display="block">{mail.get('date')}</Typography>
-              </Typography>
-            </div>
-            <div className={classes.column}>
-              <Typography className={classes.secondaryHeading} noWrap>{mail.get('subject')}</Typography>
-              {getCategory(mail.get('category'))}
-            </div>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails className={classes.details}>
-            <section>
-              <div className={classes.topAction}>
-                <Typography className={classes.headMail}>
-                  {mail.get('category') !== 'sent' && (
-                    <Fragment>
-                      From&nbsp;
-                      {mail.get('name')}
-                      &nbsp;to me
-                    </Fragment>
-                  )}
-                </Typography>
-                <div className={classes.opt}>
-                  <Tooltip id="tooltip-mark" title="Stared">
-                    <IconButton onClick={() => toggleStar(mail)}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
-                  </Tooltip>
-                  <Tooltip id="tooltip-mark" title="Mark message to">
-                    <IconButton
-                      className={classes.button}
-                      aria-label="mark"
-                      aria-owns={anchorElOpt ? 'long-menu' : null}
-                      aria-haspopup="true"
-                      onClick={(event) => this.handleClickOpt(event, mail)}
-                    >
-                      <Bookmark />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip id="tooltip-mark" title="Remove mail">
-                    <IconButton className={classes.button} aria-label="Delete" onClick={() => remove(mail)}><Delete /></IconButton>
-                  </Tooltip>
-                </div>
-              </div>
-              <div className={classes.emailContent}>
-                <Typography variant="h6" gutterBottom>{mail.get('subject')}</Typography>
-                <article dangerouslySetInnerHTML={renderHTML} />
-              </div>
-              <div className={classes.preview}>
-                {attachmentPreview(mail.get('attachment'))}
-              </div>
-            </section>
-          </ExpansionPanelDetails>
-          <Divider />
-          <ExpansionPanelActions>
-            <div className={classes.action}>
-              <Button size="small">Forwad</Button>
-              <Button size="small" color="secondary" onClick={() => reply(mail)}>Reply</Button>
-            </div>
-          </ExpansionPanelActions>
-        </ExpansionPanel>
-      );
-    });
-    const showEmail = category => {
-      switch (category) {
-        case 'inbox':
-          return getEmail(inbox);
-        case 'stared':
-          return getEmail(stared);
-        case 'sent':
-          return getEmail(sent);
-        case 'spam':
-          return getEmail(spam);
-        case 'updates':
-          return getEmail(updates);
-        case 'social':
-          return getEmail(social);
-        case 'promos':
-          return getEmail(promos);
-        case 'forums':
-          return getEmail(forums);
-        default:
-          return getEmail(inbox);
-      }
-    };
+    }
     return (
-      <main className={classes.content}>
-        <Menu
-          id="long-menu"
-          anchorEl={anchorElOpt}
-          open={Boolean(anchorElOpt)}
-          onClose={this.handleCloseOpt}
-          className={classes.markMenu}
-          PaperProps={{ style: { maxHeight: ITEM_HEIGHT * 4.5, width: 200 } }}
-        >
-          <List
-            component="nav"
-            subheader={<ListSubheader component="div">Mark to... </ListSubheader>}
-          />
-          <MenuItem selected onClick={() => this.handleMoveTo(itemToMove, 'updates')}>
-            <Flag className={classes.iconOrange} />
-            &nbsp;Updates
-          </MenuItem>
-          <MenuItem onClick={() => this.handleMoveTo(itemToMove, 'social')}>
-            <People className={classes.iconRed} />
-            &nbsp;Social
-          </MenuItem>
-          <MenuItem onClick={() => this.handleMoveTo(itemToMove, 'promos')}>
-            <LabelIcon className={classes.iconBlue} />
-            &nbsp;Promos
-          </MenuItem>
-          <MenuItem onClick={() => this.handleMoveTo(itemToMove, 'forums')}>
-            <QuestionAnswer className={classes.iconCyan} />
-            &nbsp;Forums
-          </MenuItem>
-          <Divider />
-          <MenuItem onClick={() => this.handleMoveTo(itemToMove, 'spam')}>
-            <ReportIcon />
-            &nbsp;Spam
-          </MenuItem>
-        </Menu>
-        {showEmail(filterPage)}
-      </main>
+      <div key={index.toString()} className={classes.item}>
+        <div className="imageContainer col fileIconImg">
+          <div className="fileWrap">
+            <div className="downloadBtn">
+              <IconButton color="secondary" href={base64File} target="_blank">
+                <Download />
+              </IconButton>
+            </div>
+            <FileIcon className="smallPreviewImg" alt="preview" />
+          </div>
+        </div>
+        <Typography noWrap>{file.name}</Typography>
+      </div>
+    );
+  });
+
+  showClientEmail = category => {
+    var response = '';
+    switch (category) {
+      case 'inbox':
+        response = this.getEmailRender('inbox');
+        break;
+      case 'stared':
+        response = this.getEmailRender('stared');
+        break;
+      case 'sent':
+        response = this.getEmailRender('sent');
+        break;
+      default:
+        response = this.getEmailRender('inbox');
+    }
+    return response;
+  };
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <Fragment >
+        <main className={classes.content} >
+          {(this.state.JSX != null)
+            &&
+            this.state.JSX}
+        </main >
+        <Grid style={{ zIndex: 50 }}>
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            open={this.state.openStyle}
+            autoHideDuration={6000}
+            onClose={this.handleCloseStyle}
+          >
+            <SnackbarContent
+              className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
+              aria-describedby="client-snackbar"
+              message={(
+                <span id="client-snackbar" className={classes.message}>
+                  {
+                    (this.state.messageType == 'error') && <ErrorIcon className="success" />
+                  }
+                  {
+                    (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
+                  }
+
+                  &nbsp;
+                  {this.state.notifyMessage}
+                </span>
+              )}
+              action={[
+                <IconButton
+                  key="close"
+                  aria-label="Close"
+                  color="inherit"
+                  className={classes.close}
+                  onClick={this.noticeClose}
+                >
+                  <CloseIcon className={classes.icon} />
+                </IconButton>,
+              ]}
+            />
+          </Snackbar>
+        </Grid>
+
+      </Fragment >
     );
   }
 }
 
 EmailList.propTypes = {
   classes: PropTypes.object.isRequired,
-  emailData: PropTypes.object.isRequired,
   openMail: PropTypes.func.isRequired,
-  moveTo: PropTypes.func.isRequired,
-  remove: PropTypes.func.isRequired,
-  toggleStar: PropTypes.func.isRequired,
-  reply: PropTypes.func.isRequired,
   filterPage: PropTypes.string.isRequired,
   keyword: PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(EmailList);
+export default withStyles(styles)(withRouter(EmailList));

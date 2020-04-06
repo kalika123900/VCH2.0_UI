@@ -52,20 +52,20 @@ function formatDate(unixtimestamp) {
   return (month + ', ' + day + ' ' + year + ' ' + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2));
 }
 
-class ClientEmailThreadList extends React.Component {
+class StudentEmailThreadList extends React.Component {
   state = {
     mailData: []
   }
 
   toggleStar = (mail) => {
     const MappedMail = mail.toJS();
-    const type = MappedMail.sender_type == 'client' ? 'sender' : 'receiver';
+    const type = MappedMail.sender_type == 'user' ? 'sender' : 'receiver';
     const data = {
       messageId: MappedMail.id,
       type
     }
 
-    postData(`${API_URL}/client/toggle-star`, data) // eslint-disable-line
+    postData(`${API_URL}/student/toggle-star`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
           this.getThreadEmails()
@@ -78,13 +78,13 @@ class ClientEmailThreadList extends React.Component {
 
   remove = (mail) => {
     const MappedMail = mail.toJS();
-    const type = MappedMail.sender_type == 'client' ? 'sender' : 'receiver';
+    const type = MappedMail.sender_type == 'student' ? 'sender' : 'receiver';
     const data = {
       messageId: MappedMail.id,
       type
     }
 
-    postData(`${API_URL}/client/remove-email`, data) // eslint-disable-line
+    postData(`${API_URL}/student/remove-email`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
           this.getThreadEmails()
@@ -100,7 +100,7 @@ class ClientEmailThreadList extends React.Component {
       thread_id: this.props.thread
     };
 
-    postData(`${API_URL}/client/get-thread-emails`, data) // eslint-disable-line
+    postData(`${API_URL}/student/get-thread-emails`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
           if (res.data.length > 0) {
@@ -116,7 +116,7 @@ class ClientEmailThreadList extends React.Component {
                 category: '',
                 content: item.body,
                 attachment: [],
-                stared: item.sender_type == 'client' ? item.sender_stared : item.receiver_stared,
+                stared: item.sender_type == 'user' ? item.sender_stared : item.receiver_stared,
               }
             })
             this.setState({ mailData: threadEmailsData.sort(compare) });
@@ -266,4 +266,4 @@ class ClientEmailThreadList extends React.Component {
   }
 }
 
-export default withStyles(styles)(ClientEmailThreadList);
+export default withStyles(styles)(StudentEmailThreadList);

@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fromJS } from 'immutable';
 import avatarApi from 'dan-api/images/avatars';
 import {
   EmailHeader,
@@ -15,23 +14,29 @@ import {
   Notification
 } from 'dan-components';
 import {
-  fetchMailAction,
   openMailAction,
   filterAction,
   composeAction,
   discardAction,
   searchAction,
   sendAction,
-  moveAction,
-  deleteAction,
-  toggleStaredAction,
   closeNotifAction
 } from 'dan-actions/EmailActions';
 import qs from 'qs';
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import styles from 'dan-components/Email/email-jss';
 
-// validation functions
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+  return await response.json();
+}
+
 const email = value => (
   value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
     ? 'Invalid email'
@@ -50,16 +55,9 @@ function formatDate(unixtimestamp) {
   return (month + ', ' + day + ' ' + year + ' ' + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2));
 }
 
-async function postData(url, data) {
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: qs.stringify(data)
-  });
-  var results = await response.json();
-  return results;
+const compare = (item1, item2) => {
+  if (item1.sent_on > item2.sent_on) return -1
+  else return 1
 }
 
 class ClientEmail extends React.Component {
@@ -68,12 +66,38 @@ class ClientEmail extends React.Component {
     subject: '',
     validMail: '',
     mobileOpen: false,
-    inbox: [],
-    stared: [],
-    sent: [],
-    campaign: [],
-    bulkemail: [],
-  };
+    thread_id: null,
+    sender_id: null,
+    sender_type: null,
+    receiver_id: null,
+    receiver_type: null
+  }
+
+  sendEmail = (to, subject, emailContent, files) => {
+    const actionSendEmail = this.props.sendEmail;
+    const data = {
+      to,
+      subject,
+      body: emailContent,
+      thread_id: this.state.thread_id,
+      sender_id: this.state.sender_id,
+      sender_type: this.state.sender_type,
+      receiver_id: this.state.receiver_id,
+      receiver_type: this.state.receiver_type
+    }
+
+    console.log(data);
+
+    // postData(`${API_URL}/utils/send-email-reply`, data) // eslint-disable-line
+    //   .then((res) => {
+    //     if (res.status === 1) {
+    //       actionSendEmail()
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+  }
 
   showEmail = async (category, callback) => {
     const user = JSON.parse(makeSecureDecrypt(localStorage.getItem('user')));
@@ -96,6 +120,7 @@ class ClientEmail extends React.Component {
                   if (res.data.length > 0) {
                     let inboxEmailsData = res.data.map(item => {
                       return {
+                        ...item,
                         id: item.id,
                         thread: item.thread_id,
                         avatar: avatarApi[6],
@@ -105,12 +130,15 @@ class ClientEmail extends React.Component {
                         category: '',
                         content: item.body,
                         attachment: [],
-                        stared: false,
+                        stared: item.sender_type == 'client' ? item.sender_stared : item.receiver_stared,
                       }
                     })
                     response = inboxEmailsData;
-                    callback(response);
+                    callback(response.sort(compare));
                   }
+                } else {
+                  let response = [];
+                  callback(response)
                 }
               });
           });
@@ -130,6 +158,7 @@ class ClientEmail extends React.Component {
                   if (res.data.length > 0) {
                     let inboxEmailsData = res.data.map(item => {
                       return {
+                        ...item,
                         id: item.id,
                         thread: item.thread_id,
                         avatar: avatarApi[6],
@@ -139,21 +168,142 @@ class ClientEmail extends React.Component {
                         category: 'sent',
                         content: item.body,
                         attachment: [],
-                        stared: false,
+                        stared: item.sender_type == 'client' ? item.sender_stared : item.receiver_stared,
                       }
                     })
                     response = inboxEmailsData;
+                    callback(response.sort(compare));
+                  } else {
+                    let response = [];
+                    callback(response)
+                  }
+                }
+              });
+          });
+        }
+        if (category == 'stared') {
+          await new Promise((resolve, reject) => {
+            response = fetch(`${API_URL}/client/get-stared-emails`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              body: qs.stringify(apiData)
+            })
+              .then(response => response.json())
+              .then((res) => { // eslint-disable-line
+                if (res.status === 1) {
+                  if (res.data.length > 0) {
+                    let staredEmailsData = res.data.map(item => {
+                      return {
+                        ...item,
+                        id: item.id,
+                        thread: item.thread_id,
+                        avatar: avatarApi[6],
+                        name: item.sender_type == 'client' ? item.receiver_name : item.sender_name,
+                        date: formatDate(new Date(parseInt(item.sent_on))),
+                        subject: item.subject,
+                        category: 'stared',
+                        content: item.body,
+                        attachment: [],
+                        stared: true,
+                      }
+                    })
+                    response = staredEmailsData;
+                    callback(response);
+                  } else {
+                    let response = [];
+                    callback(response)
+                  }
+                }
+              });
+          });
+        }
+        if (category == 'campaign') {
+          await new Promise((resolve, reject) => {
+            response = fetch(`${API_URL}/client/get-campaign-responses`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              body: qs.stringify(apiData)
+            })
+              .then(response => response.json())
+              .then((res) => { // eslint-disable-line
+                if (res.status === 1) {
+                  if (res.data.length > 0) {
+                    let responseEmailsData = res.data.map(item => {
+                      return {
+                        ...item,
+                        id: item.id,
+                        thread: item.thread_id,
+                        avatar: avatarApi[6],
+                        name: item.sender_type == 'client' ? item.receiver_name : item.sender_name,
+                        date: formatDate(new Date(parseInt(item.sent_on))),
+                        subject: item.subject,
+                        category: 'campaign',
+                        content: item.body,
+                        attachment: [],
+                        stared: item.sender_type == 'client' ? item.sender_stared : item.receiver_stared,
+                      }
+                    })
+                    response = responseEmailsData;
+                    callback(response);
+                  } else {
+                    let response = [];
+                    callback(response)
+                  }
+                }
+              });
+          });
+        }
+        if (category == 'bulkemail') {
+          await new Promise((resolve, reject) => {
+            response = fetch(`${API_URL}/client/get-bulkemail-queries`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              body: qs.stringify(apiData)
+            })
+              .then(response => response.json())
+              .then((res) => { // eslint-disable-line
+                if (res.status === 1) {
+                  if (res.data.length > 0) {
+                    let EmailsData = res.data.map(item => {
+                      return {
+                        ...item,
+                        id: item.id,
+                        thread: item.thread_id,
+                        avatar: avatarApi[6],
+                        name: item.sender_type == 'client' ? item.receiver_name : item.sender_name,
+                        date: formatDate(new Date(parseInt(item.sent_on))),
+                        subject: item.subject,
+                        category: 'bulkemail',
+                        content: item.body,
+                        attachment: [],
+                        stared: item.sender_type == 'client' ? item.sender_stared : item.receiver_stared,
+                      }
+                    })
+                    response = EmailsData;
                     callback(response);
                   }
+                  else {
+                    let EmailsData = []
+                    response = EmailsData;
+                    callback(response);
+                  }
+                } else {
+                  let response = [];
+                  callback(response)
                 }
               });
           });
         }
       }
       catch (err) {
-        throw new Error(`Not possible ${err}`);
+        console.log(err);
       }
-
     }
     await handlerResponse();
     return response;
@@ -170,10 +320,16 @@ class ClientEmail extends React.Component {
 
   handleReply = (mail) => {
     const { compose } = this.props;
+    const MappedMail = mail.toJS();
     compose();
     this.setState({
-      to: mail.get('name'),
+      to: MappedMail.sender_type == 'user' ? MappedMail.sender_email : MappedMail.receiver_email,
       subject: 'Reply: ' + mail.get('subject'),
+      thread_id: MappedMail.id,
+      sender_id: MappedMail.sender_id,
+      sender_type: MappedMail.sender_type,
+      receiver_id: MappedMail.receiver_id,
+      receiver_type: MappedMail.receiver_type
     });
   }
 
@@ -192,22 +348,19 @@ class ClientEmail extends React.Component {
 
   render() {
     const {
-      classes,
-      emailData, openMail,
+      classes, openMail,
       goto, currentPage,
       openFrm, discard,
       search, keyword,
-      sendEmail, remove,
-      moveTo, toggleStar,
+      sendEmail,
       closeNotif, messageNotif
     } = this.props;
+
     const {
       to,
       subject,
       validMail,
-      mobileOpen,
-      inbox,
-      sent, stared, campaign, bulkemail
+      mobileOpen
     } = this.state;
     const title = brand.name + ' - Email';
     const description = brand.desc;
@@ -232,18 +385,11 @@ class ClientEmail extends React.Component {
             mobileOpen={mobileOpen}
           />
           <ClientEmailList
-            inbox={inbox}
-            sent={sent}
-            stared={stared}
-            campaign={campaign}
-            bulkemail={bulkemail}
             showEmail={this.showEmail}
             openMail={openMail}
             filterPage={currentPage}
             keyword={keyword}
-            moveTo={moveTo}
-            remove={remove}
-            toggleStar={toggleStar}
+            remove={this.remove}
             reply={this.handleReply}
           />
         </div>
@@ -252,7 +398,7 @@ class ClientEmail extends React.Component {
           subject={subject}
           compose={this.handleCompose}
           validMail={validMail}
-          sendEmail={sendEmail}
+          sendClientEmail={this.sendEmail}
           inputChange={this.handleChange}
           open={openFrm}
           closeForm={discard}
@@ -264,17 +410,12 @@ class ClientEmail extends React.Component {
 
 ClientEmail.propTypes = {
   classes: PropTypes.object.isRequired,
-  emailData: PropTypes.object.isRequired,
-  fetchData: PropTypes.func.isRequired,
   openMail: PropTypes.func.isRequired,
   goto: PropTypes.func.isRequired,
   compose: PropTypes.func.isRequired,
   discard: PropTypes.func.isRequired,
   search: PropTypes.func.isRequired,
   sendEmail: PropTypes.func.isRequired,
-  moveTo: PropTypes.func.isRequired,
-  remove: PropTypes.func.isRequired,
-  toggleStar: PropTypes.func.isRequired,
   keyword: PropTypes.string.isRequired,
   currentPage: PropTypes.string.isRequired,
   openFrm: PropTypes.bool.isRequired,
@@ -286,21 +427,15 @@ const reducer = 'email';
 const mapStateToProps = state => ({
   force: state, // force state from reducer
   keyword: state.getIn([reducer, 'keywordValue']),
-  initValues: state.getIn([reducer, 'formValues']),
-  emailData: state.getIn([reducer, 'inbox']),
   currentPage: state.getIn([reducer, 'currentPage']),
   openFrm: state.getIn([reducer, 'openFrm']),
   messageNotif: state.getIn([reducer, 'notifMsg']),
 });
 
 const constDispatchToProps = dispatch => ({
-  fetchData: bindActionCreators(fetchMailAction, dispatch),
   openMail: bindActionCreators(openMailAction, dispatch),
   goto: bindActionCreators(filterAction, dispatch),
   search: bindActionCreators(searchAction, dispatch),
-  moveTo: bindActionCreators(moveAction, dispatch),
-  remove: bindActionCreators(deleteAction, dispatch),
-  toggleStar: bindActionCreators(toggleStaredAction, dispatch),
   compose: () => dispatch(composeAction),
   discard: () => dispatch(discardAction),
   sendEmail: bindActionCreators(sendAction, dispatch),

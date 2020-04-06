@@ -34,12 +34,6 @@ class EmailMenu extends React.Component {
 
     return (
       <Fragment>
-        {/* <div className={classes.toolbar}>
-          <Button variant="contained" onClick={compose} fullWidth color="secondary">
-            <Add />
-            &nbsp;Compose
-          </Button>
-        </div> */}
         <List>
           <ListItem button className={selected === 'inbox' ? classes.selected : ''} onClick={() => this.gotoPage('inbox')}>
             <ListItemIcon>
@@ -61,20 +55,6 @@ class EmailMenu extends React.Component {
           </ListItem>
         </List>
         <Divider className={classes.divider} />
-        <List>
-          <ListItem button className={selected === 'campaign' ? classes.selected : ''} onClick={() => this.gotoPage('campaign')}>
-            <ListItemIcon>
-              <Flag className={classes.iconOrange} />
-            </ListItemIcon>
-            <ListItemText primary="Campaign Responses" />
-          </ListItem>
-          <ListItem button className={selected === 'bulkemail' ? classes.selected : ''} onClick={() => this.gotoPage('bulkemail')}>
-            <ListItemIcon>
-              <People className={classes.iconRed} />
-            </ListItemIcon>
-            <ListItemText primary="Bulk emails queries" />
-          </ListItem>
-        </List>
       </Fragment>
     );
   }

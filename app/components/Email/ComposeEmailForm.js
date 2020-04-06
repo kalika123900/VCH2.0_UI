@@ -23,7 +23,7 @@ import styles from './email-jss';
 const content = {
   blocks: [{
     key: '637gr',
-    text: 'Lorem ipsum dolor sit amet 😀',
+    text: 'Lorem ipsum dolor sit amet',
     type: 'unstyled',
     depth: 0,
     inlineStyleRanges: [],
@@ -256,7 +256,7 @@ ComposeEmailForm.propTypes = {
   to: PropTypes.string.isRequired,
   subject: PropTypes.string.isRequired,
   validMail: PropTypes.string.isRequired,
-  sendEmail: PropTypes.func.isRequired,
+  // sendEmail: PropTypes.func.isRequired,
   closeForm: PropTypes.func.isRequired,
   inputChange: PropTypes.func.isRequired,
 };

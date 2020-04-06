@@ -66,10 +66,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
       });
     case SEND_MAIL:
       return state.withMutations((mutableState) => {
-        const newMail = buildMessage(action.to, action.subject, action.content, action.attachment);
         mutableState
-          .update('inbox', inbox => inbox.unshift(newMail))
-          .set('selectedMailId', '')
           .set('openFrm', false)
           .set('notifMsg', notif.sent);
       });

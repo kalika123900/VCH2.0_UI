@@ -40,7 +40,7 @@ class ComposeEmail extends React.Component {
             to={to}
             subject={subject}
             validMail={validMail}
-            sendEmail={sendEmail}
+            sendEmail={this.props.sendClientEmail}
             closeForm={closeForm}
             inputChange={inputChange}
           />
@@ -58,7 +58,7 @@ ComposeEmail.propTypes = {
   validMail: PropTypes.string.isRequired,
   compose: PropTypes.func.isRequired,
   closeForm: PropTypes.func.isRequired,
-  sendEmail: PropTypes.func.isRequired,
+  // sendEmail: PropTypes.func.isRequired,
   inputChange: PropTypes.func.isRequired,
 };
 
