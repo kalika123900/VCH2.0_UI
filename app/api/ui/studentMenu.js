@@ -1,21 +1,40 @@
 module.exports = [
   {
-    key: 'home',
-    name: 'Home',
+    key: 'dashboard',
+    name: 'Dashboard',
     icon: 'ios-home-outline',
     link: '/student',
   },
   {
-    key: 'view-profile',
-    name: 'View Profile',
-    icon: 'ios-contact-outline',
-    link: '/student/profile',
-  },
-  {
-    key: 'edit-details',
-    name: 'Edit Details',
-    icon: 'ios-create-outline',
-    link: '/student/edit-details',
+    key: 'my-account',
+    name: 'My Account',
+    icon: 'ios-home-outline',
+    child: [
+      {
+        key: 'my-profile',
+        name: 'My Profile',
+        icon: 'ios-contact-outline',
+        link: '/student/profile',
+      },
+      {
+        key: 'edit-details',
+        name: 'Edit Details',
+        icon: 'ios-create-outline',
+        link: '/student/edit-details',
+      },
+      {
+        key: 'settings',
+        name: 'Settings',
+        icon: 'ios-options-outline',
+        link: '/student/settings',
+      },
+      {
+        key: 'signout',
+        name: 'Sign Out',
+        icon: 'ios-log-in',
+        link: '/student/signout',
+      }
+    ]
   },
   {
     key: 'messages',
@@ -24,21 +43,9 @@ module.exports = [
     link: '/student/messages',
   },
   {
-    key: 'client-profiles',
-    name: 'Company Profiles',
+    key: 'opportunities',
+    name: 'Opportunities',
     icon: 'ios-information-circle-outline',
-    link: '/student/company-profiles',
-  },
-  {
-    key: 'settings',
-    name: 'Settings',
-    icon: 'ios-options-outline',
-    link: '/student/settings',
-  },
-  {
-    key: 'signout',
-    name: 'Sign Out',
-    icon: 'ios-log-in',
-    link: '/student/signout',
+    link: '/student/opportunities',
   }
 ];

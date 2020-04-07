@@ -6,8 +6,8 @@ import Dashboard from '../Templates/StudentDashboard';
 import { Footer } from 'dan-components';
 import {
   StudentDashboard, EditStudentDetails, StudentMessage,
-  StudentAccount, StudentSettings, NotFound, CompanyProfiles,
-  JobProfile, StudentEmail, Signout, StudentEmailThread
+  StudentAccount, StudentSettings, NotFound, JobProfiles,
+  JobDescription, StudentEmail, Signout, StudentEmailThread
 }
   from '../pageListAsync';
 
@@ -30,8 +30,8 @@ class Student extends React.Component {
             <Route exact path="/student/messages/:thread" component={StudentEmailThread} />
             <Route exact path="/student/profile" component={StudentAccount} />
             <Route exact path="/student/settings" component={StudentSettings} />
-            <Route exact path='/student/company-profiles' component={CompanyProfiles} />
-            <Route exact path='/student/company-profiles/:id' component={JobProfile} />
+            <Route exact path='/student/opportunities' component={JobProfiles} />
+            <Route exact path='/student/opportunities/:id' component={JobDescription} />
             <Route exact path="/student/signout" component={Signout} />
             <Route component={NotFound} />
           </Switch>

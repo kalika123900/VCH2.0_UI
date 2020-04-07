@@ -592,12 +592,12 @@ export const HelpSupport = loadable(() =>
   import('./Pages/HelpSupport'), {
   fallback: <Loading />,
 });
-export const CompanyProfiles = loadable(() =>
-  import('./Pages/CompanyProfiles'), {
+export const JobProfiles = loadable(() =>
+  import('./Pages/StudentOpportunities/JobProfiles'), {
   fallback: <Loading />,
 });
-export const JobProfile = loadable(() =>
-  import('./Pages/CompanyProfiles/JobProfile'), {
+export const JobDescription = loadable(() =>
+  import('./Pages/StudentOpportunities/JobDescription'), {
   fallback: <Loading />,
 });
 export const Signout = loadable(() =>

@@ -122,7 +122,7 @@ class ClientJobProfile extends React.Component {
                 <Typography variant="h6" color="primary" className={classes.subHeading}>Apply here</Typography>
                 <Grid className={classes.content}>
                   <Typography variant="body1" color="secondary">
-                    <Link>https://www.google.com</Link>
+                    <a href='https://www.google.com'>https://www.google.com</a>
                   </Typography>
                 </Grid>
               </Grid>
