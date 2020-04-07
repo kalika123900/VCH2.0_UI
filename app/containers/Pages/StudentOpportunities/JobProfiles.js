@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import styles from 'dan-components/Forms/user-jss';
 import Grid from '@material-ui/core/Grid';
-import { ClientProfiles, ClientFilter } from 'dan-components';
+import { ClientJobProfiles, JobFilter } from 'dan-components';
 import Button from '@material-ui/core/Button';
 
 const customStyles = {
@@ -49,9 +49,9 @@ class JobProfiles extends React.Component {
           </Button>
         </Grid>
         <Grid style={{ width: '100%' }}>
-          {this.state.showFilter && <ClientFilter />}
+          {this.state.showFilter && <JobFilter />}
         </Grid>
-        <ClientProfiles />
+        <ClientJobProfiles />
       </div>
     );
   }

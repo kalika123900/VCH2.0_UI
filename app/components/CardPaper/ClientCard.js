@@ -38,7 +38,7 @@ class ClientCard extends React.Component {
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to='/student/company-profiles/job-profile' />
+      return <Redirect to='/student/opportunities/job-profile' />
     }
   }
   render() {

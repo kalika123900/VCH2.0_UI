@@ -1,3 +1,5 @@
+import ClientJobDescription from "./Profile/ClientJobDescription";
+
 // Main Components
 export Header from './Header/Header';
 export HeaderMenu from './Header/HeaderMenu';
@@ -54,7 +56,7 @@ export PerformanceWidget from './Widget/PerformanceWidget';
 export NewStudentsFeed from './Widget/NewStudentsFeed';
 export ExploreFilter from './Widget/ExploreFilter';
 export CampaignFilter from './Widget/CampaignFilter';
-export ClientFilter from './Widget/ClientFilter';
+export JobFilter from './Widget/JobFilter';
 // Calculator
 export Calculator from './Calculator';
 // Campaigns
@@ -135,8 +137,8 @@ export Connection from './Profile/Connection';
 export Favorites from './Profile/Favorites';
 export ExploreStudents from './Profile/ExploreStudents';
 export StudentProfile from './Profile/StudentProfile';
-export ClientProfiles from './Profile/ClientProfiles';
-export ClientJobProfile from './Profile/ClientJobProfile';
+export ClientJobProfiles from './Profile/ClientJobProfiles';
+export ClientJobDescription from './Profile/ClientJobDescription';
 // Card
 export StudentCard from './CardPaper/StudentCard';
 export RecipientStudentCard from './CardPaper/RecipientStudentCard';
