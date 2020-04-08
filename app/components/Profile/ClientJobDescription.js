@@ -2,6 +2,9 @@ import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -12,15 +15,80 @@ import LocationOn from '@material-ui/icons/LocationOn';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import PapperBlock from '../PapperBlock/PapperBlock';
 import styles from './profile-jss';
+import qs from 'qs';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import imgApi from 'dan-api/images/photos';
+import avatarApi from 'dan-api/images/avatars';
 import EmailIcon from '@material-ui/icons/Email';
-import datas from 'dan-api/apps/ClientData'
+import datas from 'dan-api/apps/ClientData';
+import ClientCard from '../CardPaper/ClientCard';
 import { Button, Typography, Divider } from '@material-ui/core';
 import WatchLaterOutlinedIcon from '@material-ui/icons/WatchLaterOutlined';
 
-class ClientJobProfile extends React.Component {
-  render() {
-    const data = datas[0]
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+  return await response.json();
+}
 
+class ClientJobProfile extends React.Component {
+  state = {
+    tab: 0,
+    name: '',
+    phone: '',
+    headquarter: '',
+    email: '',
+    role_name: '',
+    role_link: '',
+    role_deadline: ''
+  }
+
+  componentDidMount() {
+    const { data } = this.props
+
+    postData(`${API_URL}/student/get-company-info`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          if (res.data.length > 0) {
+            this.setState({ name: res.data[0].name })
+            this.setState({ phone: res.data[0].phone })
+            this.setState({ email: res.data[0].email })
+            this.setState({ headquarter: res.data[0].headquarter })
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    postData(`${API_URL}/student/get-job-info`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          if (res.data.length > 0) {
+            const role_deadline = res.data[0].role_deadline.split('T')
+            this.setState({ role_name: res.data[0].role_name })
+            this.setState({ role_link: res.data[0].role_link })
+            this.setState({ role_deadline: role_deadline[0] })
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  handleChangeTab = (event, value) => {
+    this.setState({ tab: value });
+  };
+
+  render() {
+    const { tab, name, phone, email, headquarter, role_name, role_link, role_deadline } = this.state;
     const { classes } = this.props;
     return (
       <Fragment>
@@ -28,12 +96,10 @@ class ClientJobProfile extends React.Component {
           <Grid item md={4} xs={12}>
             <PapperBlock title="Company Info" icon="ios-contact-outline" whiteBg noMargin desc="">
               <Grid className={classes.companyTitle}>
-                <Avatar alt="avatar" src={data.avatar} className={classes.avatarBig}
+                {/* <Avatar alt="avatar" src={avatarApi[0]} className={classes.avatarBig}
                   className={classes.customAvatar}
-                />
-                <Grid className={classes.customHeading}>
-                  <Typography variant="h6">{data.name}</Typography>
-                </Grid>
+                /> */}
+                <Typography variant="h6" color="secondary">{name}</Typography>
               </Grid>
               <List dense className={classes.profileList}>
                 <ListItem>
@@ -42,7 +108,7 @@ class ClientJobProfile extends React.Component {
                       <LocalPhone />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary="Contact" secondary="(+62)8765432190" />
+                  <ListItemText primary="Contact" secondary={phone} />
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>
@@ -50,7 +116,7 @@ class ClientJobProfile extends React.Component {
                       <EmailIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary="Company Email" secondary="abc@gmail.com" />
+                  <ListItemText primary="Company Email" secondary={email} />
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>
@@ -58,75 +124,193 @@ class ClientJobProfile extends React.Component {
                       <LocationOn />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary="Headquarter" secondary="Barcelona, Spain" />
+                  <ListItemText primary="Headquarter" secondary={headquarter} />
                 </ListItem>
               </List>
-              <Grid>
+              {/* <Grid>
                 <Button variant="text" color="primary">
                   <Link to="/student/company-profiles">See All Jobs</Link></Button>
-              </Grid>
+              </Grid> */}
             </PapperBlock>
           </Grid>
           <Grid item md={8} sm={12} xs={12}>
-            <PapperBlock title="Job Info" icon="ios-aperture-outline" whiteBg desc="">
-              <Grid className={classes.makeFlex}>
+            <Tabs
+              value={tab}
+              onChange={this.handleChangeTab}
+              indicatorColor="secondary"
+              textColor="secondary"
+              centered
+              className={classes.tab}
+            >
+              <Tab label="About this job" />
+              <Tab label="Cover letter" />
+              <Tab label="CV tips" />
+              <Tab label="Others like this" />
+            </Tabs>
+            {tab === 0 && (
+              <PapperBlock title="Job Info" icon="ios-aperture-outline" whiteBg desc="">
                 <Grid className={classes.makeFlex}>
-                  <WatchLaterOutlinedIcon style={{ marginRight: "10px" }} />
-                  <Typography variant="subtitle2" color="textSecondary" >Posted 4 days ago</Typography>
+                  {/* <Grid className={classes.makeFlex}>
+                    <WatchLaterOutlinedIcon style={{ marginRight: "10px" }} />
+                    <Typography variant="subtitle2" color="textSecondary" >Posted 4 days ago</Typography>
+                  </Grid> */}
                 </Grid>
-              </Grid>
-              <Grid className={classes.jobTitle}>
-                <Typography variant="h4" color="secondary">
-                  Interns for AI
-                </Typography>
-              </Grid>
-              <Divider />
-              <Typography variant="h6" color="primary" className={classes.subHeading}>About this Job :</Typography>
-              <Grid className={classes.content}>
-                <Grid className={classes.makeFlex}>
-                  <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin} >Job Type :</Typography>
-                  <Typography variant="subtitle2">Full Time</Typography>
-                </Grid>
-                <Grid className={classes.makeFlex}>
-                  <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin}>Experience level :</Typography>
-                  <Typography variant="subtitle2">Mid-Level, Senior</Typography>
-                </Grid>
-                <Grid className={classes.makeFlex}>
-                  <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin}>Role :</Typography>
-                  <Typography variant="subtitle2">Full Stack Developer</Typography>
-                </Grid>
-              </Grid>
-              <Typography variant="h6" color="primary" className={classes.subHeading}>Technologies :</Typography>
-              <Grid className={classes.content}>
-                <Typography variant="subtitle2">C/C++</Typography>
-                <Typography variant="subtitle2">Oracle Database</Typography>
-                <Typography variant="subtitle2">Linux</Typography>
-              </Grid>
-              <Grid className={classes.subHeading}>
-                <Typography variant="h6" color="primary" className={classes.customMargin}>Location : </Typography>
-                <Grid className={classes.content}>
-                  <Typography variant="subtitle2">Indore, India</Typography>
-                </Grid>
-              </Grid>
-              <Typography variant="h6" color="primary" className={classes.subHeading}>Job description :</Typography>
-              <Grid className={classes.content}>
-                <Typography variant="subtitle2" color="textSecondary" >Cupidatat fugiat sit esse adipisicing non quis consectetur ut reprehenderit incididunt veniam proident sint excepteur. Amet sit quis ullamco nisi ad id voluptate in ea officia aute tempor dolore. Incididunt deserunt nisi cupidatat deserunt elit in mollit ex qui nisi ad exercitation esse. Adipisicing magna dolor ea deserunt mollit exercitation magna do. Consectetur qui ad adipisicing occaecat culpa non.</Typography>
-              </Grid>
-              <Grid className={classes.subHeading}>
-                <Typography variant="h6" color="primary" className={classes.customMargin}>Last Date : </Typography>
-                <Grid className={classes.content}>
-                  <Typography variant="subtitle2">20 January 2020</Typography>
-                </Grid>
-              </Grid>
-              <Grid>
-                <Typography variant="h6" color="primary" className={classes.subHeading}>Apply here</Typography>
-                <Grid className={classes.content}>
-                  <Typography variant="body1" color="secondary">
-                    <a href='https://www.google.com'>https://www.google.com</a>
+                <Grid className={classes.jobTitle}>
+                  <Typography variant="h4" color="secondary">
+                    {role_name}
                   </Typography>
                 </Grid>
-              </Grid>
-            </PapperBlock>
+                <Divider />
+                <Typography variant="h6" color="primary" className={classes.subHeading}>About {name} :</Typography>
+                <Grid className={classes.content}>
+                  <Grid className={classes.makeFlex}>
+                    <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin} >Job Type :</Typography>
+                    <Typography variant="subtitle2">Full Time</Typography>
+                  </Grid>
+                  <Grid className={classes.makeFlex}>
+                    <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin}>Experience level :</Typography>
+                    <Typography variant="subtitle2">Mid-Level, Senior</Typography>
+                  </Grid>
+                  <Grid className={classes.makeFlex}>
+                    <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin}>Role :</Typography>
+                    <Typography variant="subtitle2">{role_name}</Typography>
+                  </Grid>
+                </Grid>
+                <Typography variant="h6" color="primary" className={classes.subHeading}>Technologies :</Typography>
+                <Grid className={classes.content}>
+                  <Typography variant="subtitle2">C/C++</Typography>
+                  <Typography variant="subtitle2">Oracle Database</Typography>
+                  <Typography variant="subtitle2">Linux</Typography>
+                </Grid>
+                <Grid className={classes.subHeading}>
+                  <Typography variant="h6" color="primary" className={classes.customMargin}>Location : </Typography>
+                  <Grid className={classes.content}>
+                    <Typography variant="subtitle2">London</Typography>
+                  </Grid>
+                </Grid>
+                <Typography variant="h6" color="primary" className={classes.subHeading}>Job description :</Typography>
+                <Grid className={classes.content}>
+                  <Typography variant="subtitle2" color="textSecondary" >Cupidatat fugiat sit esse adipisicing non quis consectetur ut reprehenderit incididunt veniam proident sint excepteur. Amet sit quis ullamco nisi ad id voluptate in ea officia aute tempor dolore. Incididunt deserunt nisi cupidatat deserunt elit in mollit ex qui nisi ad exercitation esse. Adipisicing magna dolor ea deserunt mollit exercitation magna do. Consectetur qui ad adipisicing occaecat culpa non.</Typography>
+                </Grid>
+                <Grid className={classes.subHeading}>
+                  <Typography variant="h6" color="primary" className={classes.customMargin}>Last Date : </Typography>
+                  <Grid className={classes.content}>
+                    <Typography variant="subtitle2">{role_deadline}</Typography>
+                  </Grid>
+                </Grid>
+                <Grid>
+                  <Typography variant="h6" color="primary" className={classes.subHeading}>Apply here</Typography>
+                  <Grid className={classes.content}>
+                    <Typography variant="body1" color="secondary">
+                      <a href='https://www.google.com'>{role_link}</a>
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </PapperBlock>
+            )}
+            {tab === 1 && (
+              <Fragment>
+                <Typography variant="body1" style={{ padding: 20 }}>
+                  The standard Lorem Ipsum passage, used since the 1500s
+                </Typography>
+                <Typography variant="caption" style={{ padding: 20 }}>
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                </Typography>
+                <Typography variant="body1" style={{ padding: 20 }}>
+                  The standard Lorem Ipsum passage, used since the 1500s
+                </Typography>
+                <Typography variant="caption" style={{ padding: 20 }}>
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                </Typography>
+                <Typography variant="body1" style={{ padding: 20 }}>
+                  The standard Lorem Ipsum passage, used since the 1500s
+                </Typography>
+                <Typography variant="caption" style={{ padding: 20 }}>
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                </Typography>
+              </Fragment>
+            )}
+            {tab === 2 && (
+              <Fragment >
+                <Typography variant="body1" style={{ padding: 20 }}>
+                  The standard Lorem Ipsum passage, used since the 1500s
+                </Typography>
+                <Typography variant="caption" style={{ padding: 20 }}>
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                </Typography>
+                <Typography variant="body1" style={{ padding: 20 }}>
+                  The standard Lorem Ipsum passage, used since the 1500s
+                </Typography>
+                <Typography variant="caption" style={{ padding: 20 }}>
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                </Typography>
+                <Typography variant="body1" style={{ padding: 20 }}>
+                  The standard Lorem Ipsum passage, used since the 1500s
+                </Typography>
+                <Typography variant="caption" style={{ padding: 20 }}>
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                </Typography>
+              </Fragment>
+            )}
+            {tab === 3 && (
+              <Fragment >
+                {/* <Grid
+                  container
+                  alignItems="flex-start"
+                  justify="space-between"
+                  direction="row"
+                  spacing={2}
+                  className={classes.root}
+                >
+                  {
+                    datas.map((data, index) => (
+                      <Grid item md={4} sm={6} xs={6} key={index.toString()} >
+                        <ClientCard
+                          id={data.id}
+                          cover={data.cover}
+                          avatar={data.avatar}
+                          name={data.name}
+                          role={data.role}
+                          roleDesc={data.roleDesc}
+                          isVerified={data.verified}
+                          btnText="See Details"
+                        />
+                      </Grid>
+                    ))
+                  }
+                </Grid> */}
+              </Fragment>
+            )}
           </Grid>
         </Grid>
       </Fragment>

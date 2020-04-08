@@ -12,7 +12,7 @@ import VerifiedUser from '@material-ui/icons/VerifiedUser';
 import Divider from '@material-ui/core/Divider';
 import styles from './cardStyle-jss';
 import { CombineStyles } from 'dan-helpers';
-import { Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import WorkOutlineOutlinedIcon from '@material-ui/icons/WorkOutlineOutlined';
 
 const customStyles = {
@@ -27,22 +27,13 @@ const customStyles = {
 const combinedStyles = CombineStyles(customStyles, styles);
 
 class ClientCard extends React.Component {
-  state = {
-    redirect: false,
-  }
-  setRedirect = () => {
-    this.setState({
-      redirect: true,
-    })
+  handleRedirect = (obj) => {
+    this.props.history.push(`/student/opportunities/${obj}`);
   }
 
-  renderRedirect = () => {
-    if (this.state.redirect) {
-      return <Redirect to='/student/opportunities/job-profile' />
-    }
-  }
   render() {
     const {
+      id,
       classes,
       cover,
       avatar,
@@ -51,11 +42,12 @@ class ClientCard extends React.Component {
       roleDesc,
       isVerified,
       btnText,
+      data
     } = this.props;
+    const dataObj = JSON.stringify({ role_id: data.id, company_id: data.company_id });
 
     return (
       <Fragment>
-        {this.renderRedirect()}
         <Card className={classes.cardSocmed}>
           <CardMedia
             className={classes.mediaProfile}
@@ -79,7 +71,7 @@ class ClientCard extends React.Component {
               size="small" variant="outlined"
               color="primary"
               style={{ margin: "10px" }}
-              onClick={this.setRedirect}
+              onClick={() => this.handleRedirect(dataObj)}
             >
               {btnText}
             </Button>
@@ -106,4 +98,4 @@ ClientCard.defaultProps = {
   isVerified: false
 };
 
-export default withStyles(combinedStyles)(ClientCard);
+export default withStyles(combinedStyles)(withRouter(ClientCard));

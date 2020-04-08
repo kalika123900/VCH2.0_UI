@@ -19,6 +19,11 @@ module.exports = [
         link: '/client/contacts',
       },
       {
+        key: 'company-profile',
+        name: 'Company Profile',
+        link: '/client/company-profile',
+      },
+      {
         key: 'seat-management',
         name: 'Seat Management',
         link: '/client/seat-management',

@@ -211,7 +211,8 @@ class Campaigns extends React.Component {
         keywords: MapKeywords,
         skills: MapSkills,
         gender: MapGender,
-        clientId: user.id
+        clientId: user.id,
+        company_id: user.cId
       };
 
       postJSON(`${API_URL}/campaign/create-campaign`, data) // eslint-disable-line

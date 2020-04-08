@@ -329,6 +329,10 @@ export const Token = loadable(() =>
   import('./Pages/Users/Token'), {
   fallback: <Loading />,
 });
+export const CreateCompany = loadable(() =>
+  import('./Pages/Users/CreateCompany'), {
+  fallback: <Loading />,
+});
 export const StudentSignin = loadable(() =>
   import('./Pages/Users/StudentSignin'), {
   fallback: <Loading />,
@@ -523,6 +527,14 @@ export const MiniSeatTable = loadable(() =>
 });
 export const ClientAccounts = loadable(() =>
   import('./Pages/ClientAccounts'), {
+  fallback: <Loading />,
+});
+export const CompanyProfile = loadable(() =>
+  import('./Pages/CompanyProfile'), {
+  fallback: <Loading />,
+});
+export const EditCompanyForm = loadable(() =>
+  import('./Pages/CompanyProfile/EditCompanyForm'), {
   fallback: <Loading />,
 });
 export const ClientProfiles = loadable(() =>

@@ -73,7 +73,7 @@ const renderField = (props) => {
 };
 
 // eslint-disable-next-line
-class SignupForm extends React.Component {
+class CreateCompanyForm extends React.Component {
   state = {
     showPassword: false,
   };
@@ -111,73 +111,12 @@ class SignupForm extends React.Component {
     const { showPassword } = this.state;
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
-        {/* <div className={classes.topBar}>
-          <NavLink to="/" className={classes.brand}>
-            <img style={{ width: '70px' }} src={logo} alt={brand.name} />
-          </NavLink>
-          <Button size="small" className={classes.buttonLink} component={LinkBtn} to="/signin">
-            <Icon className={classes.icon}>arrow_forward</Icon>
-            Already have account ?
-          </Button>
-        </div> */}
         <Typography variant="h4" className={classes.title} gutterBottom>
-          Create Client Token
+          Create Company Profile
         </Typography>
         <section className={classes.pageFormWrap}>
           {this.props.flash && this.Message()}
           <form onSubmit={handleSubmit}>
-            <div>
-              <FormControl className={classes.formControl}>
-                <Field
-                  name="firstname"
-                  component={renderField}
-                  placeholder="Client First Name"
-                  label="Client First Name"
-                  required
-                  className={classes.field}
-                  validate={[minTextLength, maxTextLength, text]}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <Field
-                  name="lastname"
-                  component={renderField}
-                  placeholder="Client Last Name"
-                  label="Client Last Name"
-                  required
-                  className={classes.field}
-                  validate={[minTextLength, maxTextLength, text]}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <Field
-                  name="username"
-                  component={renderField}
-                  placeholder="Client Username"
-                  label="Client Username"
-                  required
-                  className={classes.field}
-                  validate={[minTextLength, maxTextLength]}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <Field
-                  name="email"
-                  component={renderField}
-                  placeholder="Client Email"
-                  label="Client Email"
-                  required
-                  validate={[required, email]}
-                  className={classes.field}
-                />
-              </FormControl>
-            </div>
             <div>
               <FormControl className={classes.formControl}>
                 <Field
@@ -230,19 +169,9 @@ class SignupForm extends React.Component {
                 />
               </FormControl>
             </div>
-            {/* <div>
-              <FormControlLabel
-                control={(
-                  <Field name="checkbox" component={CheckboxRedux} required className={classes.agree} />
-                )}
-                label="Agree with"
-              />
-              <a href="#" className={classes.link}>Terms &amp; Condition</a>
-            </div> */}
             <div className={classes.btnArea}>
               <Button variant="contained" fullWidth color="primary" type="submit">
                 Create
-                {/* <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} /> */}
               </Button>
             </div>
           </form>
@@ -252,7 +181,7 @@ class SignupForm extends React.Component {
   }
 }
 
-SignupForm.propTypes = {
+CreateCompanyForm.propTypes = {
   classes: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   pristine: PropTypes.bool.isRequired,
@@ -260,16 +189,16 @@ SignupForm.propTypes = {
   deco: PropTypes.bool.isRequired,
 };
 
-const SignupFormReduxed = reduxForm({
-  form: 'clientSignupForm',
+const CreateCompanyFormReduxed = reduxForm({
+  form: 'clientCreateCompanyForm',
   enableReinitialize: true,
-})(SignupForm);
+})(CreateCompanyForm);
 
 const reducer = 'ui';
-const SignupFormMapped = connect(
+const CreateCompanyFormMapped = connect(
   state => ({
     deco: state.getIn([reducer, 'decoration'])
   }),
-)(SignupFormReduxed);
+)(CreateCompanyFormReduxed);
 
-export default withStyles(styles)(SignupFormMapped);
+export default withStyles(styles)(CreateCompanyFormMapped);

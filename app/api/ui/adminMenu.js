@@ -42,6 +42,11 @@ module.exports = [
         key: 'client-profile',
         name: 'Client Profiles',
         link: '/admin/client-profiles',
+      },
+      {
+        key: 'company-profile',
+        name: 'Company Profile',
+        link: '/admin/company-profile',
       }
     ]
   },

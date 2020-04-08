@@ -2,7 +2,7 @@ import imgApi from '../images/photos';
 import avatarApi from '../images/avatars';
 const connectionData = [
   {
-    id: 0,
+    id: 1,
     cover: imgApi[0],
     avatar: avatarApi[0],
     name: 'Dandelion',
@@ -12,7 +12,7 @@ const connectionData = [
 
   },
   {
-    id: 1,
+    id: 2,
     cover: imgApi[0],
     avatar: avatarApi[0],
     name: 'Benidict',
@@ -21,7 +21,7 @@ const connectionData = [
     verified: true,
   },
   {
-    id: 2,
+    id: 3,
     cover: imgApi[0],
     avatar: avatarApi[0],
     name: 'Google',
@@ -30,7 +30,7 @@ const connectionData = [
     verified: false,
   },
   {
-    id: 3,
+    id: 4,
     cover: imgApi[0],
     avatar: avatarApi[0],
     name: 'Facebook',
@@ -39,7 +39,7 @@ const connectionData = [
     verified: true,
   },
   {
-    id: 4,
+    id: 5,
     cover: imgApi[0],
     avatar: avatarApi[0],
     name: 'Codes For Tomorrow',
@@ -48,7 +48,7 @@ const connectionData = [
     verified: false,
   },
   {
-    id: 5,
+    id: 6,
     cover: imgApi[0],
     avatar: avatarApi[0],
     name: 'Rapid Hire',
@@ -57,7 +57,7 @@ const connectionData = [
     verified: true,
   },
   {
-    id: 6,
+    id: 7,
     cover: imgApi[0],
     avatar: avatarApi[0],
     name: 'Task Us',
@@ -66,7 +66,7 @@ const connectionData = [
     verified: true,
   },
   {
-    id: 7,
+    id: 8,
     cover: imgApi[0],
     avatar: avatarApi[0],
     name: 'Arxxus',
@@ -75,7 +75,7 @@ const connectionData = [
     verified: false,
   },
   {
-    id: 8,
+    id: 9,
     cover: imgApi[0],
     avatar: avatarApi[0],
     name: 'Web Masters',

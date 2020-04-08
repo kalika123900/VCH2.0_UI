@@ -2,13 +2,24 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import brand from 'dan-api/dummy/brand';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { SigninForm } from 'dan-components';
-import styles from 'dan-components/Forms/user-jss';
 import qs from 'qs';
-import { makeSecureEncrypt } from '../../../Helpers/security';
+import { withStyles } from '@material-ui/core/styles';
+import { CreateCompanyForm } from 'dan-components';
+import styles from 'dan-components/Forms/user-jss';
 
-class Signin extends React.Component {
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+
+  return await response.json();
+}
+
+class CreateCompany extends React.Component {
   state = {
     errorMessage: '',
     flash: false
@@ -18,38 +29,17 @@ class Signin extends React.Component {
     this.setState({ errorMessage: '', flash: false });
   }
 
-  submitForm = (values) => {
-    const { entries } = values._root;
-    const data = {};
+  submitForm(values) {
+    const MappedValues = values.toJS();
+    const { cName, cEmail, cPhone, cHeadquarter } = MappedValues;
+    const data = { cName, cEmail, cPhone, cHeadquarter };
 
-    entries.forEach((item) => {
-      data[item[0]] = item[1];
-    });
-
-    async function postData(url, data) {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: qs.stringify(data)
-      });
-
-      return await response.json();
-    }
-
-    postData(`${API_URL}/client/signin`, data)
+    postData(`${API_URL}/admin/create-company`, data)
       .then((res) => {
         if (res.status === 1) {
-          localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
-            id: res.data.id,
-            cId: res.data.cId,
-            type: 'CLIENT',
-            token: res.data.token
-          })));
-          window.location.reload();
+          this.props.history.push('/admin/company-profile');
         } else {
-          this.setState({ errorMessage: res.errorMessage, flash: true });
+          this.setState({ errorMessage: res.errorMessage.errors[0].message, flash: true });
         }
       })
       .catch((err) => {
@@ -58,7 +48,7 @@ class Signin extends React.Component {
   }
 
   render() {
-    const title = brand.name + ' - Signin';
+    const title = brand.name + ' - CreateCompany';
     const description = brand.desc;
     const { classes } = this.props;
     const { errorMessage, flash } = this.state;
@@ -74,7 +64,7 @@ class Signin extends React.Component {
         </Helmet>
         <div className={classes.container}>
           <div className={classes.fullFormWrap}>
-            <SigninForm
+            <CreateCompanyForm
               onSubmit={(values) => this.submitForm(values)}
               handleFlash={this.handleFlash}
               errorMessage={errorMessage}
@@ -87,8 +77,8 @@ class Signin extends React.Component {
   }
 }
 
-Signin.propTypes = {
+CreateCompany.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Signin);
+export default withStyles(styles)(CreateCompany);

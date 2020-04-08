@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import { ClientJobDescription } from 'dan-components'
 
 export default class JobDescription extends Component {
+
   render() {
+    const parseData = JSON.parse(this.props.match.params.id)
     return (
       <div>
-        <ClientJobDescription />
+        <ClientJobDescription data={parseData} />
       </div>
     )
   }

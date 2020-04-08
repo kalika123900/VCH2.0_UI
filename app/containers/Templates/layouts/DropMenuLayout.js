@@ -65,7 +65,7 @@ class DropMenuLayout extends React.Component {
                 <BreadCrumb separator=" / " theme={bgPosition === 'header' ? 'dark' : 'light'} location={history.location} />
               </div>
             )}
-            { !pageLoaded && (<img src="/images/spinner.gif" alt="spinner" className={classes.circularProgress} />) }
+            {!pageLoaded && (<img src="/images/spinner.gif" alt="spinner" className={classes.circularProgress} />)}
             <Fade
               in={pageLoaded}
               mountOnEnter
@@ -74,7 +74,7 @@ class DropMenuLayout extends React.Component {
             >
               <div className={!pageLoaded ? classes.hideApp : ''}>
                 {/* Application content will load here */}
-                { children }
+                {children}
               </div>
             </Fade>
           </section>

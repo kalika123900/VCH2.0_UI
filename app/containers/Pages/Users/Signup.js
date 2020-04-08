@@ -22,11 +22,6 @@ async function postData(url, data) {
 }
 
 class Signup extends React.Component {
-  constructor(props) {
-    super(props)
-    console.log(props)
-  }
-
   state = {
     isVerified: false,
     token: '',
@@ -35,7 +30,11 @@ class Signup extends React.Component {
     firstname: '',
     lastname: '',
     username: '',
-    useremail: ''
+    useremail: '',
+    cName: '',
+    cEmail: '',
+    cPhone: '',
+    cHeadquarter: ''
   }
 
   verifyToken = () => {
@@ -52,6 +51,10 @@ class Signup extends React.Component {
             lastname: res.data.lastname,
             useremail: res.data.email,
             username: res.data.username,
+            cName: res.data.company_name,
+            cEmail: res.data.company_email,
+            cPhone: res.data.company_phone,
+            cHeadquarter: res.data.company_headquarter,
             isVerified: true,
             token: searchString[1]
           })
@@ -71,10 +74,10 @@ class Signup extends React.Component {
   }
 
   submitForm(values) {
-    const { firstname, lastname, email, username, password } = values;
+    const { firstname, lastname, email, username, password, cName, cEmail, cPhone, cHeadquarter } = values;
     const { token } = this.state;
 
-    const data = { firstname, lastname, email, username, password, token }
+    const data = { firstname, lastname, email, username, password, token, cName, cEmail, cPhone, cHeadquarter }
 
     postData(`${API_URL}/client/signup`, data)
       .then((res) => {
@@ -93,7 +96,7 @@ class Signup extends React.Component {
     const title = brand.name + ' - Signup';
     const description = brand.desc;
     const { classes } = this.props;
-    const { errorMessage, flash, firstname, lastname, username, useremail, isVerified } = this.state;
+    const { errorMessage, flash, firstname, lastname, username, useremail, isVerified, cName, cEmail, cPhone, cHeadquarter } = this.state;
     return (
       <div className={classes.rootFull}>
         <Helmet>
@@ -112,6 +115,10 @@ class Signup extends React.Component {
                 lastname={lastname}
                 useremail={useremail}
                 username={username}
+                cName={cName}
+                cEmail={cEmail}
+                cPhone={cPhone}
+                cHeadquarter={cHeadquarter}
                 handleSubmit={(values) => this.submitForm(values)}
                 handleFlash={this.handleFlash}
                 errorMessage={errorMessage}

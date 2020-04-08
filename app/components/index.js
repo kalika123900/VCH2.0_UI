@@ -1,5 +1,3 @@
-import ClientJobDescription from "./Profile/ClientJobDescription";
-
 // Main Components
 export Header from './Header/Header';
 export HeaderMenu from './Header/HeaderMenu';
@@ -97,6 +95,7 @@ export SideReview from './Forms/SideReview';
 export SigninForm from './Forms/SigninForm';
 export SignupForm from './Forms/SignupForm';
 export TokenForm from './Forms/TokenForm';
+export CreateCompanyForm from './Forms/CreateCompanyForm';
 export CreateCampaign from './Forms/CreateCampaign';
 export CreateBulkEmail from './Forms/CreateBulkEmail';
 export BulkEmailForm from './Forms/BulkEmailForm';
