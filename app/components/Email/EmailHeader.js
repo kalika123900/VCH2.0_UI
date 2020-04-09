@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -12,9 +13,9 @@ import Select from '@material-ui/core/Select';
 import styles from './email-jss';
 
 const recentCampaign = [
-  'Campaign 1',
-  'Campaign 2',
-  'Campaign 3'
+  'Development Campaign',
+  'Test Development',
+  'Testing Campaign'
 ];
 
 
@@ -30,8 +31,12 @@ const MenuProps = {
 };
 
 class EmailHeader extends React.Component {
+  constructor(props) {
+    super(props)
+    console.log(this.props)
+  }
   state = {
-    cname: 'Campaign 1'
+    cname: 'Test Development'
   }
 
   handleChange = event => {
@@ -60,22 +65,24 @@ class EmailHeader extends React.Component {
               </div>
               <input className={classes.input} onChange={(event) => search(event)} placeholder="Search Email" />
             </div>
-            <div className={classes.selectWrapper}>
-              <Select
-                placeholder="Recent Campaign"
-                value={cname}
-                name="cname"
-                onChange={(e) => this.handleChange(e)}
-                MenuProps={MenuProps}
-                style={{ width: '100%' }}
-              >
-                {recentCampaign.map((item, index) => (
-                  <MenuItem key={index} value={item}>
-                    <ListItemText primary={item} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </div>
+            {this.props.userType == 'CLIENT' &&
+              <div className={classes.selectWrapper}>
+                <Select
+                  placeholder="Recent Campaign"
+                  value={cname}
+                  name="cname"
+                  onChange={(e) => this.handleChange(e)}
+                  MenuProps={MenuProps}
+                  style={{ width: '100%' }}
+                >
+                  {recentCampaign.map((item, index) => (
+                    <MenuItem key={index} value={item}>
+                      <ListItemText primary={item} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </div>
+            }
           </div>
         </Toolbar>
       </AppBar>
@@ -89,4 +96,13 @@ EmailHeader.propTypes = {
   handleDrawerToggle: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(EmailHeader);
+const reducerA = 'Auth';
+const mapStateToProps = state => ({
+  userType: state.getIn([reducerA, 'userType'])
+});
+
+const EmailHeaderMapped = connect(
+  mapStateToProps
+)(EmailHeader);
+
+export default withStyles(styles)(EmailHeaderMapped);

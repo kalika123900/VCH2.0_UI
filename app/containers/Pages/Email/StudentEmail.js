@@ -104,15 +104,15 @@ class StudentEmail extends React.Component {
 
     console.log(data);
 
-    // postData(`${API_URL}/utils/send-email-reply`, data) // eslint-disable-line
-    //   .then((res) => {
-    //     if (res.status === 1) {
-    //       actionSendEmail()
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    postData(`${API_URL}/utils/send-email-reply`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          actionSendEmail()
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   showEmail = async (category, callback) => {
@@ -408,6 +408,7 @@ const mapStateToProps = state => ({
   currentPage: state.getIn([reducer, 'currentPage']),
   openFrm: state.getIn([reducer, 'openFrm']),
   messageNotif: state.getIn([reducer, 'notifMsg']),
+
 });
 
 const constDispatchToProps = dispatch => ({

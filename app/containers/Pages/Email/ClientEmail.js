@@ -88,20 +88,20 @@ class ClientEmail extends React.Component {
 
     console.log(data);
 
-    // postData(`${API_URL}/utils/send-email-reply`, data) // eslint-disable-line
-    //   .then((res) => {
-    //     if (res.status === 1) {
-    //       actionSendEmail()
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    postData(`${API_URL}/utils/send-email-reply`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          actionSendEmail()
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   showEmail = async (category, callback) => {
     const user = JSON.parse(makeSecureDecrypt(localStorage.getItem('user')));
-    const apiData = { company_id: user.cId }
+    const apiData = { user_id: user.id }
     var response = '';
     const handlerResponse = async () => {
       try {

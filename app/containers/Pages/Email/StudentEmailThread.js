@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
+import qs from 'qs';
 import {
   StudentEmailSidebar,
   StudentEmailThreadList,
@@ -28,6 +29,17 @@ const email = value => (
     : ''
 );
 
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+  return await response.json();
+}
+
 class StudentEmailThread extends React.Component {
   state = {
     to: '',
@@ -44,6 +56,32 @@ class StudentEmailThread extends React.Component {
       [name]: event.target.value,
     });
   };
+
+  sendEmail = (to, subject, emailContent, files) => {
+    const actionSendEmail = this.props.sendEmail;
+    const data = {
+      to,
+      subject,
+      body: emailContent,
+      thread_id: this.state.thread_id,
+      sender_id: this.state.sender_id,
+      sender_type: this.state.sender_type,
+      receiver_id: this.state.receiver_id,
+      receiver_type: this.state.receiver_type
+    }
+
+    console.log(data);
+
+    postData(`${API_URL}/utils/send-email-reply`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          actionSendEmail()
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   handleReply = (mail) => {
     const { compose } = this.props;
