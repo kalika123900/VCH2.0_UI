@@ -101,7 +101,7 @@ class ClientEmail extends React.Component {
 
   showEmail = async (category, callback) => {
     const user = JSON.parse(makeSecureDecrypt(localStorage.getItem('user')));
-    const apiData = { client_id: user.id }
+    const apiData = { company_id: user.cId }
     var response = '';
     const handlerResponse = async () => {
       try {

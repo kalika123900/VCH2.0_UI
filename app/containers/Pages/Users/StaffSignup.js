@@ -4,7 +4,7 @@ import brand from 'dan-api/dummy/brand';
 import PropTypes from 'prop-types';
 import qs from 'qs';
 import { withStyles } from '@material-ui/core/styles';
-import { SignupForm } from 'dan-components';
+import { StaffSignupForm } from 'dan-components';
 import styles from 'dan-components/Forms/user-jss';
 import { Typography } from '@material-ui/core';
 import { ErrorWrap } from 'dan-components';
@@ -25,26 +25,25 @@ class Signup extends React.Component {
   state = {
     isVerified: false,
     token: '',
+    company_id: -1,
     errorMessage: '',
     flash: false,
     firstname: '',
     lastname: '',
     username: '',
     useremail: '',
-    phone: '',
-    cName: '',
-    cEmail: '',
-    cPhone: '',
-    cHeadquarter: ''
+    phone: ''
   }
 
   verifyToken = () => {
-    const searchString = (this.props.location.search).split('?token=');
+    const searchString = (this.props.location.search).split('&');
+    const token = searchString[0].split('?token=');
+    const company_id = searchString[1].split('cId=');
     const data = {
-      token: searchString[1]
+      token: token[1]
     }
 
-    postData(`${API_URL}/utils/verify-token`, data)
+    postData(`${API_URL}/utils/verify-staff-token`, data)
       .then((res) => {
         if (res.status == 1) {
           this.setState({
@@ -53,12 +52,9 @@ class Signup extends React.Component {
             useremail: res.data.email,
             username: res.data.username,
             phone: res.data.phone,
-            cName: res.data.company_name,
-            cEmail: res.data.company_email,
-            cPhone: res.data.company_phone,
-            cHeadquarter: res.data.company_headquarter,
             isVerified: true,
-            token: searchString[1]
+            token: token[1],
+            company_id: company_id[1]
           })
         }
       })
@@ -76,12 +72,12 @@ class Signup extends React.Component {
   }
 
   submitForm(values) {
-    const { firstname, lastname, email, username, password, phone, cName, cEmail, cPhone, cHeadquarter } = values;
-    const { token } = this.state;
+    const { firstname, lastname, email, username, password, phone } = values;
+    const { token, company_id } = this.state;
 
-    const data = { firstname, lastname, email, username, password, phone, token, cName, cEmail, cPhone, cHeadquarter }
+    const data = { firstname, lastname, email, username, password, phone, token, company_id }
 
-    postData(`${API_URL}/client/signup`, data)
+    postData(`${API_URL}/client/staff-signup`, data)
       .then((res) => {
         if (res.status === 1) {
           this.props.history.push('/signin');
@@ -98,7 +94,7 @@ class Signup extends React.Component {
     const title = brand.name + ' - Signup';
     const description = brand.desc;
     const { classes } = this.props;
-    const { errorMessage, flash, firstname, lastname, username, phone, useremail, isVerified, cName, cEmail, cPhone, cHeadquarter } = this.state;
+    const { errorMessage, flash, firstname, lastname, username, useremail, isVerified, phone } = this.state;
     return (
       <div className={classes.rootFull}>
         <Helmet>
@@ -112,16 +108,12 @@ class Signup extends React.Component {
         <div className={classes.container}>
           <div className={classes.fullFormWrap}>
             {isVerified ?
-              <SignupForm
+              <StaffSignupForm
                 firstname={firstname}
                 lastname={lastname}
                 useremail={useremail}
                 username={username}
                 phone={phone}
-                cName={cName}
-                cEmail={cEmail}
-                cPhone={cPhone}
-                cHeadquarter={cHeadquarter}
                 handleSubmit={(values) => this.submitForm(values)}
                 handleFlash={this.handleFlash}
                 errorMessage={errorMessage}

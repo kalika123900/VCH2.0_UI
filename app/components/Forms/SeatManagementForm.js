@@ -2,113 +2,144 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
-import { reduxForm } from 'redux-form/immutable';
-import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
-import Typography from '@material-ui/core/Typography';
+import { Field, reduxForm } from 'redux-form/immutable';
+import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import Paper from '@material-ui/core/Paper';
+import ArrowForward from '@material-ui/icons/ArrowForward';
+import Typography from '@material-ui/core/Typography';
+import { TextFieldRedux } from './ReduxFormMUI';
 import styles from './user-jss';
-import TextField from '@material-ui/core/TextField';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
+const maxLength = max => value => (value && value.length > max ? `Must be ${max} characters or less` : undefined);
+const minLength = min => value => (value && value.length < min ? `Must be ${min} characters or more` : undefined);
+const email = value => (
+  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
+    ? 'Invalid email'
+    : undefined
+);
+const text = value => (
+  value && !/^[A-Za-z]+$/i.test(value)
+    ? 'Must be a Alphabet'
+    : undefined
+);
+
+const minTextLength = minLength(3);
+const maxTextLength = maxLength(20);
+
+const renderField = (props) => {
+  const {
+    input, label, meta, ...custom
+  } = props;
+  const { touched, error, warning } = meta;
+  return (
+    <Fragment>
+      <TextFieldRedux
+        {...props}
+      />
+      {
+        touched
+        && ((error && <span>{error}</span>)
+          || (warning && <span>{warning}</span>))
+      }
+    </Fragment>
+  );
+};
 
 // eslint-disable-next-line
 class SeatManagementForm extends React.Component {
-  state = {
-    username: '',
-    level: [
-      { id: 1, status: false, value: 'super', label: 'Super User' },
-      { id: 2, status: false, value: 'sub-admin', label: 'Sub User' },
-      { id: 3, status: false, value: 'approve', label: 'Normal' },
-    ]
-  }
-  handleChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value })
-  }
-
-  handleCheckbox = (e, id) => {
-    let arr = this.state[e.target.name]
-    arr.forEach(item => {
-      if (item.id === id) {
-        item.status = item.status ? false : true
-      }
-    });
-    this.setState({ [e.target.name]: arr })
-  };
-
   render() {
     const {
       classes,
       handleSubmit,
-      deco,
+      pristine,
+      submitting,
+      deco
     } = this.props;
-    const { username } = this.state
-
-    const checkboxButtons = this.state.level.map((item, index) => {
-      return (
-        <FormControlLabel
-          control={
-            <Checkbox
-              name="level"
-              checked={item.status}
-              value={item.value}
-              onChange={(e) => { this.handleCheckbox(e, item.id) }}
-            />
-          }
-          label={item.label}
-          key={index}
-        />
-      )
-    })
-
     return (
-      <Fragment>
-        <Paper className={classNames(classes.paperWrap, deco && classes.petal)}>
-          <Typography variant="h4" className={classes.title} gutterBottom>
-            Create Seat
-          </Typography>
-          <Typography variant="caption" className={classes.subtitle} gutterBottom align="center">
-            Lorem ipsum dolor sit amet
-          </Typography>
-          <section className={classes.formWrap}>
-            <form onSubmit={handleSubmit}>
-              <div>
-                <FormControl className={classes.formControl}>
-                  <TextField
-                    label="Username"
-                    className={classes.textField}
-                    type="text"
-                    name="username"
-                    margin="normal"
-                    variant="outlined"
-                    value={username}
-                    onChange={(e) => this.handleChange(e)}
-                    validate={[required]}
-                  />
-                </FormControl>
-              </div>
-              <div>
-                <Typography variant="h6" >Specify User Type</Typography>
-                <div >
-                  <FormGroup className={classes.checkboxButtons}>
-                    {checkboxButtons}
-                  </FormGroup>
-                </div>
-              </div>
-              <div className={classes.btnArea}>
-                <Button variant="contained" color="primary" size="large" type="submit">
-                  Create
-                </Button>
-              </div>
-            </form>
-          </section>
-        </Paper>
-      </Fragment>
+      <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
+        <Typography variant="h4" className={classes.title} gutterBottom>
+          Create Seat Token
+        </Typography>
+        <section className={classes.pageFormWrap}>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <FormControl className={classes.formControl}>
+                <Field
+                  name="firstname"
+                  component={renderField}
+                  placeholder="First Name"
+                  label="First Name"
+                  required
+                  className={classes.field}
+                  validate={[minTextLength, maxTextLength, text]}
+                />
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <Field
+                  name="lastname"
+                  component={renderField}
+                  placeholder="Last Name"
+                  label="Last Name"
+                  required
+                  className={classes.field}
+                  validate={[minTextLength, maxTextLength, text]}
+                />
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <Field
+                  name="username"
+                  component={renderField}
+                  placeholder="Username"
+                  label="Username"
+                  required
+                  className={classes.field}
+                  validate={[minTextLength, maxTextLength]}
+                />
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <Field
+                  name="email"
+                  component={renderField}
+                  placeholder="Email"
+                  label="Email"
+                  required
+                  validate={[required, email]}
+                  className={classes.field}
+                />
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <Field
+                  name="phone"
+                  component={renderField}
+                  placeholder="Phone"
+                  label="Phone"
+                  required
+                  className={classes.field}
+                  validate={[minTextLength, maxTextLength]}
+                />
+              </FormControl>
+            </div>
+            <div className={classes.btnArea}>
+              <Button variant="contained" fullWidth color="primary" type="submit">
+                Create
+                <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+              </Button>
+            </div>
+          </form>
+        </section>
+      </Paper>
     );
   }
 }
@@ -116,22 +147,21 @@ class SeatManagementForm extends React.Component {
 SeatManagementForm.propTypes = {
   classes: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
   deco: PropTypes.bool.isRequired,
 };
 
 const SeatManagementFormReduxed = reduxForm({
-  form: 'immutableExample',
+  form: 'SeatManagementForm',
   enableReinitialize: true,
 })(SeatManagementForm);
 
-const reducerLogin = 'login';
-const reducerUi = 'ui';
-const FormInit = connect(
+const reducer = 'ui';
+const SeatManagementFormMapped = connect(
   state => ({
-    force: state,
-    initialValues: state.getIn([reducerLogin, 'usersLogin']),
-    deco: state.getIn([reducerUi, 'decoration'])
+    deco: state.getIn([reducer, 'decoration'])
   }),
 )(SeatManagementFormReduxed);
 
-export default withStyles(styles)(FormInit);
+export default withStyles(styles)(SeatManagementFormMapped);

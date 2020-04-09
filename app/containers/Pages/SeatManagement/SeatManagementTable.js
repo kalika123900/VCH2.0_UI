@@ -12,33 +12,70 @@ import TableRow from '@material-ui/core/TableRow';
 import styles from 'dan-components/Tables/tableStyle-jss';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Button } from '@material-ui/core';
+import qs from 'qs';
+import { makeSecureDecrypt } from '../../../Helpers/security';
 
-let id = 0;
-function createData(name, token, date_create, date_used, status) {
-  id += 1;
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+  return await response.json();
+}
+
+function createData(id, name, username, email, phone, status) {
   return {
     id,
     name,
-    token,
-    date_create,
-    date_used,
+    username,
+    email,
+    phone,
     status
   };
 }
 
-const data = [
-  createData('Lorem Ipsum', '5fswe5fs1fa5', '01-January-2020', '01-March-2020', 'Active'),
-  createData('Lorem Ipsum', '5fswe5fs1fa5', '02-January-2020', '01-February-2020', 'Inactive'),
-  createData('Lorem Ipsum', '5fswe5fs1fa5', '04-January-2020', '01-April-2020', 'Active'),
-  createData('Lorem Ipsum', '5fswe5fs1fa5', '05-January-2020', '01-September-2020', 'Inactive'),
-  createData('Lorem Ipsum', '5fswe5fs1fa5', '01-February-2020', '01-October-2020', 'Active'),
-  createData('Lorem Ipsum', '5fswe5fs1fa5', '05-February-2020', '08-October-2020', 'Inactive'),
-  createData('Lorem Ipsum', '5fswe5fs1fa5', '14-February-2020', '12-October-2020', 'Active'),
-];
+var seatData = [];
 
 class SeatManagementTable extends React.Component {
+  state = {
+    isSeatData: false
+  }
+
+  componentDidMount() {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const data = {
+      company_id: user.cId,
+    };
+
+    postData(`${API_URL}/client/get-seats`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          if (res.data.length > 0) {
+            let tempData = [];
+            res.data.map(item => {
+              const name = `${item.firstname} ${item.lastname}`;
+              const status = item.status == 0 ? 'Deactivated' : 'Active';
+              tempData.push(createData(item.id, name, item.username, item.email, item.phone, status));
+            });
+            seatData = tempData;
+            this.setState({ isSeatData: true });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   render() {
     const { classes } = this.props;
+    const { isSeatData } = this.state;
 
     return (
       <Fragment>
@@ -49,32 +86,44 @@ class SeatManagementTable extends React.Component {
             </div>
             <div className={classes.spacer} />
           </Toolbar>
-          <Table className={classNames(classes.table, classes.hover)}>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="default">ID</TableCell>
-                <TableCell align="left">Name</TableCell>
-                <TableCell align="left">Token</TableCell>
-                <TableCell align="left">Create Date</TableCell>
-                <TableCell align="left">Used Date</TableCell>
-                <TableCell align="left">Status</TableCell>
-                <TableCell align="left">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map(n => ([
-                <TableRow key={n.id}>
-                  <TableCell padding="default">{n.id}</TableCell>
-                  <TableCell padding="default">{n.name}</TableCell>
-                  <TableCell padding="default">{n.token}</TableCell>
-                  <TableCell align="left">{n.date_create}</TableCell>
-                  <TableCell align="left">{n.date_used}</TableCell>
-                  <TableCell align="left">{n.status}</TableCell>
-                  <TableCell align="left"> <Button><DeleteIcon /></Button></TableCell>
-                </TableRow>
-              ]))}
-            </TableBody>
-          </Table>
+          {isSeatData
+            ?
+            (
+              <Table className={classNames(classes.table, classes.hover)}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="left">Name</TableCell>
+                    <TableCell align="left">Username</TableCell>
+                    <TableCell align="left">Email</TableCell>
+                    <TableCell align="left">Phone</TableCell>
+                    <TableCell align="left">Status</TableCell>
+                    <TableCell align="left">Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {seatData.map(n => ([
+                    <TableRow key={n.id}>
+                      <TableCell align="left">{n.name}</TableCell>
+                      <TableCell align="left">{n.username}</TableCell>
+                      <TableCell align="left">{n.email}</TableCell>
+                      <TableCell align="left">{n.phone}</TableCell>
+                      <TableCell align="left">{n.status}</TableCell>
+                      <TableCell align="left"> <Button><DeleteIcon /></Button></TableCell>
+                    </TableRow>
+                  ]))}
+                </TableBody>
+              </Table>
+            )
+            : (
+              <Typography
+                color="textSecondary"
+                variant="body1"
+                className={classes.warnMsg}
+              >
+                No Seats are created yet !
+              </Typography>
+            )
+          }
         </div >
       </Fragment>
     );

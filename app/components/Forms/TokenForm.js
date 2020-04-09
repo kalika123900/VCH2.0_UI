@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import ArrowForward from '@material-ui/icons/ArrowForward';
 import FlashMessage from 'react-flash-message';
 import { TextFieldRedux, CheckboxRedux } from './ReduxFormMUI';
 import styles from './user-jss';
@@ -234,7 +235,7 @@ class SignupForm extends React.Component {
             <div className={classes.btnArea}>
               <Button variant="contained" fullWidth color="primary" type="submit">
                 Create
-                {/* <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} /> */}
+                <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
               </Button>
             </div>
           </form>

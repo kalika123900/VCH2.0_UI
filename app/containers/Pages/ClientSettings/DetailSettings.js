@@ -36,13 +36,12 @@ class DetailSettings extends React.Component {
     const key = e._targetInst.stateNode.name;
 
     const data = {
-      user_id: user.id,
-      type: 'CLIENT',
+      company_id: user.cId,
       key,
       value: value ? '1' : '0'
     };
 
-    postData(`${API_URL}/meta/set-settings`, data)
+    postData(`${API_URL}/client/set-settings`, data)
       .then((res) => {
         if (res.status == 1) {
           handleIsUpdate();

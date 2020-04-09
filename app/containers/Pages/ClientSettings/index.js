@@ -36,11 +36,10 @@ class Settings extends React.Component {
     );
 
     const data = {
-      user_id: user.id,
-      type: 'CLIENT'
+      company_id: user.cId,
     };
 
-    postData(`${API_URL}/meta/get-settings`, data)
+    postData(`${API_URL}/client/get-settings`, data)
       .then((res) => {
         if (res.status == 1) {
           const temp = [];

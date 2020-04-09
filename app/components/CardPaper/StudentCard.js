@@ -94,6 +94,37 @@ class StudentCard extends React.Component {
     this.setState({ profile: false });
   };
 
+  handleAddContact = (user_id) => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const data = {
+      company_id: user.cId,
+      user_id
+    }
+
+    postData(`${API_URL}/client/add-contact`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({
+            notifyMessage: 'Contact Added in your list',
+            messageType: 'success',
+            openStyle: true
+          })
+        } else {
+          this.setState({
+            notifyMessage: 'Contact already in your list',
+            messageType: 'error',
+            openStyle: true
+          })
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
   handleDirectMessage = (subject, body) => {
     const { email, user_id } = this.props;
     const user = JSON.parse(
@@ -133,6 +164,7 @@ class StudentCard extends React.Component {
 
   render() {
     const {
+      user_id,
       classes,
       cover,
       avatar,
@@ -200,7 +232,7 @@ class StudentCard extends React.Component {
             >
               <BottomNavigationAction onClick={(e) => this.handleClickOpen(e)} className={classes.customBottomNavLabel} label="Send Message" className={classes.customBottomNavLabel} icon={<SendIcon className={classes.customMargin} />} />
               <BottomNavigationAction className={classes.customBottomNavLabel} label="Add to Shortlist" icon={<PlaylistAddIcon className={classes.customMargin} />} />
-              <BottomNavigationAction className={classes.customBottomNavLabel} label="Add to Contacts" icon={<ContactsIcon className={classes.customMargin} />} />
+              <BottomNavigationAction onClick={(e) => this.handleAddContact(user_id)} className={classes.customBottomNavLabel} label="Add to Contacts" icon={<ContactsIcon className={classes.customMargin} />} />
             </BottomNavigation>
           </CardActions>
         </Card>

@@ -5,7 +5,7 @@ import {
   Signin, Signup, Login,
   ResetPassword, LockScreen, ComingSoon,
   Maintenance, AdminSignin,
-  NotFound, StudentSignin, StudentSignup
+  NotFound, StudentSignin, StudentSignup, StaffSignup
 } from '../pageListAsync';
 
 class Auth extends React.Component {
@@ -15,6 +15,7 @@ class Auth extends React.Component {
         <Switch>
           <Route exact path="/signin" component={Signin} />
           <Route exact path="/signup" component={Signup} />
+          <Route exact path="/staff-signup" component={StaffSignup} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/reset-password" component={ResetPassword} />
           <Route exact path="/lock-screen" component={LockScreen} />

@@ -84,10 +84,6 @@ class SignupForm extends React.Component {
     username: '',
     phone: '',
     email: '',
-    cName: '',
-    cEmail: '',
-    cPhone: '',
-    cHeadquarter: ''
   };
 
   componentDidMount() {
@@ -97,10 +93,6 @@ class SignupForm extends React.Component {
       username: this.props.username,
       email: this.props.useremail,
       phone: this.props.phone,
-      cName: this.props.cName,
-      cEmail: this.props.cEmail,
-      cPhone: this.props.cPhone,
-      cHeadquarter: this.props.cHeadquarter,
     })
   }
 
@@ -141,7 +133,7 @@ class SignupForm extends React.Component {
       handleSubmit,
       deco
     } = this.props;
-    const { showPassword, firstname, lastname, password, phone, passwordConfirm, username, email, cName, cEmail, cPhone, cHeadquarter } = this.state;
+    const { showPassword, firstname, lastname, password, phone, passwordConfirm, username, email } = this.state;
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
         <div className={classes.topBar}>
@@ -164,7 +156,6 @@ class SignupForm extends React.Component {
                 <TextField
                   name="firstname"
                   value={firstname}
-                  // defaultValue={this.props.firstname}
                   placeholder="First Name"
                   label="First Name"
                   required
@@ -178,7 +169,6 @@ class SignupForm extends React.Component {
                 <TextField
                   name="lastname"
                   value={lastname}
-                  // defaultValue={this.props.lastname}
                   placeholder="Last Name"
                   label="Last Name"
                   required
@@ -192,7 +182,6 @@ class SignupForm extends React.Component {
                 <TextField
                   name="username"
                   value={username}
-                  // defaultValue={this.props.username}
                   placeholder="Username"
                   label="Username"
                   required
@@ -206,7 +195,6 @@ class SignupForm extends React.Component {
                 <TextField
                   name="email"
                   value={email}
-                  // defaultValue={this.props.useremail}
                   placeholder="Email"
                   label="Email"
                   required
@@ -224,58 +212,6 @@ class SignupForm extends React.Component {
                   label="Client Phone"
                   required
                   validate={[minTextLength, maxTextLength]}
-                  onChange={(e) => { this.handleChange(e) }}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  name="cName"
-                  value={cName}
-                  placeholder="Company Name"
-                  label="Company Name"
-                  required
-                  validate={[minTextLength, maxTextLength]}
-                  onChange={(e) => { this.handleChange(e) }}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  name="cPhone"
-                  value={cPhone}
-                  placeholder="Company Phone"
-                  label="Company Phone"
-                  required
-                  validate={[minTextLength, maxTextLength]}
-                  onChange={(e) => { this.handleChange(e) }}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  name="cEmail"
-                  value={cEmail}
-                  placeholder="Company Email"
-                  label="Company Email"
-                  required
-                  validate={[required, email]}
-                  onChange={(e) => { this.handleChange(e) }}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  name="cHeadquarter"
-                  value={cHeadquarter}
-                  placeholder="Company Headquarter"
-                  label="Company Headquarter"
-                  required
-                  validate={[required]}
                   onChange={(e) => { this.handleChange(e) }}
                 />
               </FormControl>
@@ -319,15 +255,6 @@ class SignupForm extends React.Component {
                 />
               </FormControl>
             </div>
-            {/* <div>
-              <FormControlLabel
-                control={(
-                  <TextField name="checkbox" component={CheckboxRedux} required className={classes.agree} />
-                )}
-                label="Agree with"
-              />
-              <a href="#" className={classes.link}>Terms &amp; Condition</a>
-            </div> */}
             <div className={classes.btnArea}>
               <Button variant="contained" fullWidth color="primary" type="submit">
                 Continue
