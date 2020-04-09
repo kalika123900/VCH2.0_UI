@@ -73,11 +73,11 @@ class AwaitingCampaigns extends React.Component {
           if (res.data.length > 0) {
             const campaignData = [];
             res.data.map(item => {
-              const client_name = item.firstname + ' ' + item.lastname;
+              const name = item.name;
               item.campaign_masters.map(campaign => {
                 const date = formatDate(campaign.created_at);
                 campaignData.push(
-                  createData(campaign.id, client_name, campaign.campaign_name, date)
+                  createData(campaign.id, name, campaign.campaign_name, date)
                 );
               });
               _that.setState({ campaignData });

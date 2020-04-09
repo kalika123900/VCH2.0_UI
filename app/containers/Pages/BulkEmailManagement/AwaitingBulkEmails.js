@@ -73,11 +73,11 @@ class BulkEmailTable extends React.Component {
           if (res.data.length > 0) {
             const bulkEmailData = [];
             res.data.map(item => {
-              const client_name = item.firstname + ' ' + item.lastname;
+              const name = item.name;
               item.bulk_email_masters.map(bulkemail => {
                 const date = formatDate(bulkemail.created_at);
                 bulkEmailData.push(
-                  createData(bulkemail.id, client_name, bulkemail.name, date)
+                  createData(bulkemail.id, name, bulkemail.name, date)
                 );
               });
               _that.setState({ bulkEmailData });

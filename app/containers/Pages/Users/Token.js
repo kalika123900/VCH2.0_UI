@@ -31,8 +31,8 @@ class Token extends React.Component {
 
   submitForm(values) {
     const MappedValues = values.toJS();
-    const { firstname, lastname, email, username, cName, cEmail, cPhone, cHeadquarter } = MappedValues;
-    const data = { firstname, lastname, email, username, cName, cEmail, cPhone, cHeadquarter };
+    const { firstname, lastname, email, username, phone, cName, cEmail, cPhone, cHeadquarter } = MappedValues;
+    const data = { firstname, lastname, email, username, phone, cName, cEmail, cPhone, cHeadquarter };
 
     postData(`${API_URL}/admin/create-token`, data)
       .then((res) => {

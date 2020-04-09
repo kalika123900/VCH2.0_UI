@@ -61,11 +61,8 @@ class AddRole extends React.Component {
       skills: MapSkills,
       roleDescriptors: MapRoleDescriptors,
       roleDeadline,
-      clientId: user.id,
       company_id: user.cId
     };
-
-    console.log(data);
 
     postJSON(`${API_URL}/client/create-role`, data) // eslint-disable-line
       .then((res) => {

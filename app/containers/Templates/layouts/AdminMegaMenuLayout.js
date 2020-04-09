@@ -61,8 +61,8 @@ class DropMenuLayout extends React.Component {
           <section className={classNames(classes.mainWrap, classes.topbarLayout)}>
             {titleException.indexOf(history.location.pathname) < 0 && (
               <div className={classes.pageTitle}>
-                <Typography component="h4" className={bgPosition === 'header' ? classes.darkTitle : classes.lightTitle} variant="h4">{place}</Typography>
-                <BreadCrumb separator=" / " theme={bgPosition === 'header' ? 'dark' : 'light'} location={history.location} />
+                {/* <Typography component="h4" className={bgPosition === 'header' ? classes.darkTitle : classes.lightTitle} variant="h4">{place}</Typography>
+                <BreadCrumb separator=" / " theme={bgPosition === 'header' ? 'dark' : 'light'} location={history.location} /> */}
               </div>
             )}
             {!pageLoaded && (<img src="/images/spinner.gif" alt="spinner" className={classes.circularProgress} />)}

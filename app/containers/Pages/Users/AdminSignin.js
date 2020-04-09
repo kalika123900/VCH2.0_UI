@@ -43,6 +43,11 @@ class AdminSignin extends React.Component {
         if (res.status === 1) {
           localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
             id: res.data.id,
+            name: res.data.name,
+            email: res.data.email,
+            username: res.data.username,
+            phone: res.data.phone,
+            managerType: res.data.type,
             type: 'ADMIN',
             token: res.data.token
           })));

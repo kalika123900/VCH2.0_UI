@@ -183,7 +183,7 @@ class Campaigns extends React.Component {
         keywords: MapKeywords,
         skills: MapSkills,
         gender: MapGender,
-        clientId: user.id,
+        company_id: user.cId,
         campaignId: this.props.match.params.campaignId
       };
 
@@ -199,7 +199,7 @@ class Campaigns extends React.Component {
         })
         .catch((err) => {
           console.log(err);
-        });
+        }); ''
     } else {
       const data = {
         ...this.props,
@@ -211,7 +211,6 @@ class Campaigns extends React.Component {
         keywords: MapKeywords,
         skills: MapSkills,
         gender: MapGender,
-        clientId: user.id,
         company_id: user.cId
       };
 

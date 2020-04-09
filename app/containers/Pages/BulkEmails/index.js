@@ -83,10 +83,8 @@ class BulkEmails extends React.Component {
       gender: MapGender,
       studentList: JSON.stringify(MapStudentList),
       blackList: JSON.stringify(MapBlackList),
-      client_id: user.id
+      company_id: user.cId
     };
-
-    console.log(data)
 
     postJSON(`${API_URL}/bulkemail/create-bulkemail`, data) // eslint-disable-line
       .then((res) => {

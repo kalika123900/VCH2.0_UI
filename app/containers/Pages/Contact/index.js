@@ -49,7 +49,7 @@ class Contact extends React.Component {
       makeSecureDecrypt(localStorage.getItem('user'))
     );
     const data = {
-      client_id: user.id
+      company_id: user.cId
     }
 
     postData(`${API_URL}/client/get-contacts`, data) // eslint-disable-line

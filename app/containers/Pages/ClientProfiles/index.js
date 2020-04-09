@@ -16,17 +16,31 @@ import styles from 'dan-components/Tables/tableStyle-jss';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Button from '@material-ui/core/Button';
 import formatDate from '../../../Helpers/formatDate';
+import qs from 'qs';
 import { makeSecureEncrypt } from '../../../Helpers/security';
 import { makeSecureDecrypt } from '../../../Helpers/security';
 
-function createData(id, client_name, username, email, phone) {
+function createData(id, client_name, username, email, phone, password) {
   return {
     id,
     client_name,
     username,
     email,
-    phone
+    phone,
+    password
   };
+}
+
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+
+  return await response.json();
 }
 
 class ClientProfile extends React.Component {
@@ -48,18 +62,61 @@ class ClientProfile extends React.Component {
     const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))
     );
-    localStorage.setItem('oldUser', makeSecureEncrypt(JSON.stringify({
-      id: user.id,
-      type: 'ADMIN',
-      token: user.token,
-    })));
 
-    localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
-      id: n.id,
-      type: 'CLIENT',
-      token: null,
-    })));
-    window.location.reload();
+    const data = {
+      username: n.username,
+      password: n.password,
+      userType: "ADMIN"
+    }
+
+    postData(`${API_URL}/client/signin`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          localStorage.setItem('oldUser', makeSecureEncrypt(JSON.stringify({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            username: user.username,
+            phone: user.phone,
+            managerType: user.type,
+            type: "ADMIN",
+            token: user.token
+          })));
+
+          if (res.data.type == 2) {
+            localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
+              id: res.data.id,
+              cId: res.data.cId,
+              name: res.data.name,
+              email: res.data.email,
+              role: res.data.role,
+              username: res.data.username,
+              phone: res.data.phone,
+              managerType: res.data.type,
+              type: 'CLIENT',
+              token: res.data.token
+            })));
+          } else {
+            localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
+              id: res.data.id,
+              cId: res.data.cId,
+              name: res.data.name,
+              email: res.data.email,
+              username: res.data.username,
+              phone: res.data.phone,
+              managerType: res.data.type,
+              role: res.data.role,
+              capabilities: res.data.capabilities,
+              type: 'CLIENT',
+              token: res.data.token
+            })));
+          }
+          window.location.reload();
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   componentDidMount() {
@@ -81,7 +138,7 @@ class ClientProfile extends React.Component {
               const client_name = item.firstname + ' ' + item.lastname;
               const phone = item.phone == null ? 'Not Avilable' : item.phone;
               clientData.push(
-                createData(item.id, client_name, item.username, item.email, phone)
+                createData(item.id, client_name, item.username, item.email, phone, item.password)
               );
               _that.setState({ clientData });
             });

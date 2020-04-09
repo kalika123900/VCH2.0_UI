@@ -7,18 +7,9 @@ import { NavLink } from 'react-router-dom';
 import { Field, reduxForm } from 'redux-form/immutable';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import ArrowForward from '@material-ui/icons/ArrowForward';
-import Icon from '@material-ui/core/Icon';
-import brand from 'dan-api/dummy/brand';
-import logo from 'dan-images/logo.png';
 import FlashMessage from 'react-flash-message';
-import IconButton from '@material-ui/core/IconButton';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import { TextFieldRedux, CheckboxRedux } from './ReduxFormMUI';
 import styles from './user-jss';
 
@@ -36,21 +27,9 @@ const text = value => (
     ? 'Must be a Alphabet'
     : undefined
 );
-const passwordsMatch = (value, allValues) => {
-  if (value !== allValues.get('password')) {
-    return 'Passwords dont match';
-  }
-  return undefined;
-};
 
-const minPasswordLength = minLength(8);
-const maxPasswordLength = maxLength(15);
 const minTextLength = minLength(3);
 const maxTextLength = maxLength(20);
-
-const LinkBtn = React.forwardRef(function LinkBtn(props, ref) { // eslint-disable-line
-  return <NavLink to={props.to} {...props} innerRef={ref} />; // eslint-disable-line
-});
 
 const renderField = (props) => {
   const {
@@ -175,6 +154,19 @@ class SignupForm extends React.Component {
                   required
                   validate={[required, email]}
                   className={classes.field}
+                />
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <Field
+                  name="phone"
+                  component={renderField}
+                  placeholder="Client Phone"
+                  label="Client Phone"
+                  required
+                  className={classes.field}
+                  validate={[minTextLength, maxTextLength]}
                 />
               </FormControl>
             </div>

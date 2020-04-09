@@ -73,7 +73,7 @@ class PendingCampaigns extends React.Component {
     );
 
     const data = {
-      client_id: user.id
+      company_id: user.cId,
     };
 
     getData(`${API_URL}/campaign/client/pending-campaigns`, data)
@@ -139,7 +139,7 @@ class PendingCampaigns extends React.Component {
 
     const data = {
       campaignId: this.state.cId,
-      clientId: user.id
+      company_id: user.cId,
     }
 
     if (type == "cancel") {

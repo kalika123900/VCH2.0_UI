@@ -39,7 +39,7 @@ class Step2 extends React.Component {
     );
 
     const data = {
-      client_id: user.id
+      company_id: user.cId,
     };
 
     postData(`${API_URL}/client/fetch-role`, data)
@@ -61,7 +61,7 @@ class Step2 extends React.Component {
       );
 
       const data = {
-        client_id: user.id
+        company_id: user.cId,
       };
 
       postData(`${API_URL}/client/fetch-role`, data)

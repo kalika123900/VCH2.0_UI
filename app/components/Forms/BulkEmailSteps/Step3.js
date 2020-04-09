@@ -149,7 +149,7 @@ class Step3 extends PureComponent {
       );
 
       const data = {
-        client_id: user.id
+        company_id: user.cId
       };
 
       postData(`${API_URL}/client/client-info`, data)
@@ -157,7 +157,7 @@ class Step3 extends PureComponent {
           if (res.status === 1) {
             const { data } = res;
             const { email } = data;
-            const cname = `${data.firstname} ${data.lastname}`;
+            const cname = `${data.name}`;
             this.setState({ email, cname });
           }
         })
@@ -176,7 +176,7 @@ class Step3 extends PureComponent {
           if (res.status === 1) {
             const { data } = res;
             const { email } = data;
-            const cname = `${data.firstname} ${data.lastname}`;
+            const cname = `${data.name}`;
             this.setState({ email, cname });
           }
         })

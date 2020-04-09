@@ -70,7 +70,7 @@ class ContactDetail extends React.Component {
       makeSecureDecrypt(localStorage.getItem('user'))
     );
     const data = {
-      client_id: user.id,
+      company_id: user.cId,
       user_id: MappedItem.id
     }
 
@@ -93,7 +93,7 @@ class ContactDetail extends React.Component {
       makeSecureDecrypt(localStorage.getItem('user'))
     );
     const data = {
-      client_id: user.id,
+      company_id: user.cId,
       user_id: MappedItem.id
     }
 

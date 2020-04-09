@@ -65,7 +65,7 @@ class OngoingCampaigns extends React.Component {
     );
 
     const data = {
-      client_id: user.id
+      company_id: user.cId,
     };
 
     getData(`${API_URL}/campaign/client/cancel-campaigns`, data)

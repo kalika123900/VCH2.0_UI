@@ -14,8 +14,13 @@ class Signout extends React.Component {
       );
       localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
         id: oldUser.id,
-        type: 'ADMIN',
+        name: oldUser.name,
+        email: oldUser.email,
+        username: oldUser.username,
+        phone: oldUser.phone,
+        managerType: oldUser.type,
         token: oldUser.token,
+        type: "ADMIN"
       })));
       localStorage.removeItem('oldUser');
       window.location.reload();

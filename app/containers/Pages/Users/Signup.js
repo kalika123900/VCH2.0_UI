@@ -31,6 +31,7 @@ class Signup extends React.Component {
     lastname: '',
     username: '',
     useremail: '',
+    phone: '',
     cName: '',
     cEmail: '',
     cPhone: '',
@@ -51,6 +52,7 @@ class Signup extends React.Component {
             lastname: res.data.lastname,
             useremail: res.data.email,
             username: res.data.username,
+            phone: res.data.phone,
             cName: res.data.company_name,
             cEmail: res.data.company_email,
             cPhone: res.data.company_phone,
@@ -74,10 +76,10 @@ class Signup extends React.Component {
   }
 
   submitForm(values) {
-    const { firstname, lastname, email, username, password, cName, cEmail, cPhone, cHeadquarter } = values;
+    const { firstname, lastname, email, username, password, phone, cName, cEmail, cPhone, cHeadquarter } = values;
     const { token } = this.state;
 
-    const data = { firstname, lastname, email, username, password, token, cName, cEmail, cPhone, cHeadquarter }
+    const data = { firstname, lastname, email, username, password, phone, token, cName, cEmail, cPhone, cHeadquarter }
 
     postData(`${API_URL}/client/signup`, data)
       .then((res) => {

@@ -56,7 +56,7 @@ class Step6 extends React.Component {
       );
 
       const data = {
-        client_id: user.id
+        company_id: user.cId
       };
 
       postData(`${API_URL}/client/client-info`, data)
@@ -64,7 +64,7 @@ class Step6 extends React.Component {
           if (res.status === 1) {
             const { data } = res;
             const { email } = data;
-            const cname = `${data.firstname} ${data.lastname}`;
+            const cname = `${data.name}`;
             this.setState({ email, cname });
           }
         })
@@ -93,7 +93,7 @@ class Step6 extends React.Component {
           if (res.status === 1) {
             const { data } = res;
             const { email } = data;
-            const cname = `${data.firstname} ${data.lastname}`;
+            const cname = `${data.name}`;
             this.setState({ email, cname });
           }
         })

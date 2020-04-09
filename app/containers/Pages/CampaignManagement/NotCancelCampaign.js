@@ -67,7 +67,7 @@ class NotCancelCampaign extends React.Component {
           if (res.data.length > 0) {
             const campaignData = [];
             res.data.map(item => {
-              const client_name = item.firstname + ' ' + item.lastname;
+              const client_name = item.name;
               item.campaign_masters.map(campaign => {
                 const date = formatDate(campaign.created_at);
                 const endDate = formatDate(campaign.deadline);

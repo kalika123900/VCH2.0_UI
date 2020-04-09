@@ -82,6 +82,7 @@ class SignupForm extends React.Component {
     password: '',
     passwordConfirm: '',
     username: '',
+    phone: '',
     email: '',
     cName: '',
     cEmail: '',
@@ -95,6 +96,7 @@ class SignupForm extends React.Component {
       lastname: this.props.lastname,
       username: this.props.username,
       email: this.props.useremail,
+      phone: this.props.phone,
       cName: this.props.cName,
       cEmail: this.props.cEmail,
       cPhone: this.props.cPhone,
@@ -139,7 +141,7 @@ class SignupForm extends React.Component {
       handleSubmit,
       deco
     } = this.props;
-    const { showPassword, firstname, lastname, password, passwordConfirm, username, email, cName, cEmail, cPhone, cHeadquarter } = this.state;
+    const { showPassword, firstname, lastname, password, phone, passwordConfirm, username, email, cName, cEmail, cPhone, cHeadquarter } = this.state;
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
         <div className={classes.topBar}>
@@ -209,6 +211,19 @@ class SignupForm extends React.Component {
                   label="Email"
                   required
                   validate={[required, email]}
+                  onChange={(e) => { this.handleChange(e) }}
+                />
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <TextField
+                  name="phone"
+                  value={cPhone}
+                  placeholder="Client Phone"
+                  label="Client Phone"
+                  required
+                  validate={[minTextLength, maxTextLength]}
                   onChange={(e) => { this.handleChange(e) }}
                 />
               </FormControl>

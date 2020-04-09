@@ -90,6 +90,8 @@ class ClientAccounts extends React.Component {
               _that.setState({ tokenData });
             });
           }
+        } else {
+          _that.setState({ tokenData: [] });
         }
       })
       .catch((err) => {

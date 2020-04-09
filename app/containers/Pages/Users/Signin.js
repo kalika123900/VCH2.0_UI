@@ -41,13 +41,36 @@ class Signin extends React.Component {
     postData(`${API_URL}/client/signin`, data)
       .then((res) => {
         if (res.status === 1) {
-          localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
-            id: res.data.id,
-            cId: res.data.cId,
-            type: 'CLIENT',
-            token: res.data.token
-          })));
-          window.location.reload();
+          if (res.data.type == 2) {
+            localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
+              id: res.data.id,
+              cId: res.data.cId,
+              name: res.data.name,
+              email: res.data.email,
+              role: res.data.role,
+              username: res.data.username,
+              phone: res.data.phone,
+              managerType: res.data.type,
+              type: 'CLIENT',
+              token: res.data.token
+            })));
+            window.location.reload();
+          } else {
+            localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
+              id: res.data.id,
+              cId: res.data.cId,
+              name: res.data.name,
+              email: res.data.email,
+              username: res.data.username,
+              phone: res.data.phone,
+              managerType: res.data.type,
+              role: res.data.role,
+              capabilities: res.data.capabilities,
+              type: 'CLIENT',
+              token: res.data.token
+            })));
+            window.location.reload();
+          }
         } else {
           this.setState({ errorMessage: res.errorMessage, flash: true });
         }

@@ -173,8 +173,6 @@ class CampaignEdit extends React.Component {
       campaignId: this.props.match.params.campaignId
     };
 
-    console.log(data);
-
     postJSON(`${API_URL}/campaign/update-approve-campaign`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
