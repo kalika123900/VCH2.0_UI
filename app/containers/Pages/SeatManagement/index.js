@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { SeatManagementForm } from 'dan-components'
 import SeatManagementTable from './SeatManagementTable'
+import TokenTable from './TokenTable';
 import qs from 'qs';
+import Grid from '@material-ui/core/Grid';
 import { makeSecureDecrypt } from '../../../Helpers/security';
 
 async function postData(url, data) {
@@ -28,7 +30,7 @@ class SeatManagement extends Component {
     postData(`${API_URL}/client/create-seat`, data)
       .then((res) => {
         if (res.status === 1) {
-          this.props.history.push('/client/seat-management');
+          window.location.reload();
         }
         else {
           console.log("Something not good");
@@ -42,7 +44,14 @@ class SeatManagement extends Component {
   render() {
     return (
       <div>
-        <SeatManagementForm onSubmit={(values) => this.submitForm(values)} />
+        <Grid container spacing={3} >
+          <Grid item md={6} xs={12}>
+            <SeatManagementForm onSubmit={(values) => this.submitForm(values)} />
+          </Grid>
+          <Grid item md={6} sm={12} xs={12}>
+            <TokenTable />
+          </Grid>
+        </Grid>
         <SeatManagementTable />
       </div>
     )

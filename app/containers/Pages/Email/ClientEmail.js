@@ -86,8 +86,6 @@ class ClientEmail extends React.Component {
       receiver_type: this.state.receiver_type
     }
 
-    console.log(data);
-
     postData(`${API_URL}/utils/send-email-reply`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
@@ -101,7 +99,7 @@ class ClientEmail extends React.Component {
 
   showEmail = async (category, callback) => {
     const user = JSON.parse(makeSecureDecrypt(localStorage.getItem('user')));
-    const apiData = { user_id: user.id }
+    const apiData = { company_id: user.cId }
     var response = '';
     const handlerResponse = async () => {
       try {

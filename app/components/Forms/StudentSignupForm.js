@@ -64,7 +64,6 @@ const renderField = (props) => {
   const { touched, error, warning } = meta;
   return (<Fragment>
     <TextFieldRedux
-      margin="normal"
       {...props}
     />
     {

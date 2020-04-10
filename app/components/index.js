@@ -200,3 +200,4 @@ export ErrorWrap from './Error/ErrorWrap';
 export TemplateSettings from './TemplateSettings';
 // DialogBox
 export ConfirmationDialog from './DialogBox/ConfirmationDialog';
+export CustomConfirmation from './DialogBox/CustomConfirmation';

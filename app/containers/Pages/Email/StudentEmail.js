@@ -78,16 +78,15 @@ class StudentEmail extends React.Component {
     sender_type: null,
     receiver_id: null,
     receiver_type: null,
+    mail_type: null,
     openStyle: false,
     messageType: 'error',
     notifyMessage: ''
   }
 
-
   handleCloseStyle = () => {
     this.setState({ openStyle: false })
   }
-
 
   sendEmail = (to, subject, emailContent, files) => {
     const actionSendEmail = this.props.sendEmail;
@@ -95,14 +94,13 @@ class StudentEmail extends React.Component {
       to,
       subject,
       body: emailContent,
+      type: this.state.mail_type,
       thread_id: this.state.thread_id,
       sender_id: this.state.sender_id,
       sender_type: this.state.sender_type,
       receiver_id: this.state.receiver_id,
       receiver_type: this.state.receiver_type
     }
-
-    console.log(data);
 
     postData(`${API_URL}/utils/send-email-reply`, data) // eslint-disable-line
       .then((res) => {
@@ -256,11 +254,13 @@ class StudentEmail extends React.Component {
   handleReply = (mail) => {
     const { compose } = this.props;
     const MappedMail = mail.toJS();
+    console.log(MappedMail);
     compose();
     this.setState({
       to: MappedMail.sender_type == 'client' ? MappedMail.sender_email : MappedMail.receiver_email,
       subject: 'Reply: ' + mail.get('subject'),
       thread_id: MappedMail.id,
+      mail_type: MappedMail.type,
       sender_id: MappedMail.sender_id,
       sender_type: MappedMail.sender_type,
       receiver_id: MappedMail.receiver_id,
