@@ -150,6 +150,10 @@ class StudentEmail extends React.Component {
                     response = inboxEmailsData;
                     callback(response.sort(compare));
                   }
+                  else {
+                    let response = [];
+                    callback(response)
+                  }
                 } else {
                   let response = [];
                   callback(response)
@@ -192,6 +196,10 @@ class StudentEmail extends React.Component {
                     callback(response)
                   }
                 }
+                else {
+                  let response = [];
+                  callback(response)
+                }
               });
           });
         }
@@ -214,7 +222,7 @@ class StudentEmail extends React.Component {
                         id: item.id,
                         thread: item.thread_id,
                         avatar: avatarApi[6],
-                        name: item.sender_type == 'user' ? item.receiver_name : item.sender_name,
+                        name: item.sender_type == 'user' ? `To ${item.receiver_name}` : item.sender_name,
                         date: formatDate(new Date(parseInt(item.sent_on))),
                         subject: item.subject,
                         category: 'stared',
@@ -229,6 +237,10 @@ class StudentEmail extends React.Component {
                     let response = [];
                     callback(response)
                   }
+                }
+                else {
+                  let response = [];
+                  callback(response)
                 }
               });
           });
@@ -254,18 +266,21 @@ class StudentEmail extends React.Component {
   handleReply = (mail) => {
     const { compose } = this.props;
     const MappedMail = mail.toJS();
-    console.log(MappedMail);
+
+    if (MappedMail.sender_type == 'client') {
+      this.setState({
+        to: MappedMail.sender_email,
+        subject: MappedMail.thread_id == -1 ? 'Reply: ' + mail.get('subject') : mail.get('subject'),
+        thread_id: MappedMail.thread_id == -1 ? MappedMail.id : MappedMail.thread_id,
+        mail_type: MappedMail.type,
+        sender_id: MappedMail.receiver_id,
+        sender_type: MappedMail.receiver_type,
+        receiver_id: MappedMail.sender_id,
+        receiver_type: MappedMail.sender_type
+      });
+    }
+
     compose();
-    this.setState({
-      to: MappedMail.sender_type == 'client' ? MappedMail.sender_email : MappedMail.receiver_email,
-      subject: 'Reply: ' + mail.get('subject'),
-      thread_id: MappedMail.id,
-      mail_type: MappedMail.type,
-      sender_id: MappedMail.sender_id,
-      sender_type: MappedMail.sender_type,
-      receiver_id: MappedMail.receiver_id,
-      receiver_type: MappedMail.receiver_type
-    });
   };
 
   handleCompose = () => {

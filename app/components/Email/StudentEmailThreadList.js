@@ -35,23 +35,6 @@ async function postData(url, data) {
   return await response.json();
 }
 
-const compare = (item1, item2) => {
-  if (item1.sent_on > item2.sent_on) return 1
-  else return -1
-}
-
-function formatDate(unixtimestamp) {
-  var months_arr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  var date = new Date(unixtimestamp * 1000);
-  var year = date.getFullYear();
-  var month = months_arr[date.getMonth()];
-  var day = date.getDate();
-  var hours = date.getHours();
-  var minutes = "0" + date.getMinutes();
-  var seconds = "0" + date.getSeconds();
-  return (month + ', ' + day + ' ' + year + ' ' + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2));
-}
-
 class StudentEmailThreadList extends React.Component {
   state = {
     mailData: []
@@ -68,73 +51,16 @@ class StudentEmailThreadList extends React.Component {
     postData(`${API_URL}/student/toggle-star`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
-          this.getThreadEmails()
+          this.props.getThreadEmails()
         }
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
-  remove = (mail) => {
-    const MappedMail = mail.toJS();
-    const type = MappedMail.sender_type == 'student' ? 'sender' : 'receiver';
-    const data = {
-      messageId: MappedMail.id,
-      type
-    }
-
-    postData(`${API_URL}/student/remove-email`, data) // eslint-disable-line
-      .then((res) => {
-        if (res.status === 1) {
-          this.getThreadEmails()
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  getThreadEmails = () => {
-    const data = {
-      thread_id: this.props.thread
-    };
-
-    postData(`${API_URL}/student/get-thread-emails`, data) // eslint-disable-line
-      .then((res) => {
-        if (res.status === 1) {
-          if (res.data.length > 0) {
-            let threadEmailsData = res.data.map(item => {
-              return {
-                ...item,
-                id: item.id,
-                thread: item.thread_id,
-                avatar: avatarApi[6],
-                name: item.sender_type == 'client' ? item.receiver_name : item.sender_name,
-                date: formatDate(new Date(parseInt(item.sent_on))),
-                subject: item.subject,
-                category: '',
-                content: item.body,
-                attachment: [],
-                stared: item.sender_type == 'user' ? item.sender_stared : item.receiver_stared,
-              }
-            })
-            this.setState({ mailData: threadEmailsData.sort(compare) });
-          }
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  componentDidMount() {
-    this.getThreadEmails();
-  }
 
   render() {
-    const { mailData } = this.state;
-    const { classes, openMail, keyword, reply } = this.props;
+    const { classes, openMail, keyword, reply, mailData } = this.props;
 
     const getCategory = cat => {
       switch (cat) {
@@ -201,12 +127,12 @@ class StudentEmailThreadList extends React.Component {
         <ExpansionPanel className={classes.emailList} key={mail.get('id')} onChange={() => openMail(mail)}>
           <ExpansionPanelSummary className={classes.emailSummary} expandIcon={<ExpandMoreIcon />}>
             <div className={classes.fromHeading}>
-              <Tooltip id="tooltip-mark" title="Stared">
+              {/* <Tooltip id="tooltip-mark" title="Stared">
                 <IconButton onClick={() => _that.toggleStar(mail)} className={classes.starBtn}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
-              </Tooltip>
+              </Tooltip> */}
               <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} style={{ marginRight: 20 }} />
               <Typography className={classes.heading} display="block">
-                {mail.get('category') === 'sent' && ('To ')}
+                {mail.get('sender_type') != 'client' && ('me, ')}
                 {mail.get('name')}
                 <Typography variant="caption" display="block">{mail.get('date')}</Typography>
               </Typography>
@@ -215,24 +141,27 @@ class StudentEmailThreadList extends React.Component {
               <Typography className={classes.secondaryHeading} noWrap>{mail.get('subject')}</Typography>
               {getCategory(mail.get('category'))}
             </div>
-            <div className={classes.topAction}>
-              <div className={classes.opt}>
-                <Tooltip id="tooltip-mark" title="Remove mail">
-                  <IconButton className={classes.button} aria-label="Delete" onClick={() => _that.remove(mail)}><Delete /></IconButton>
-                </Tooltip>
-              </div>
-            </div>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails className={classes.details}>
             <section>
               {mail.get('thread') == -1 ? null :
                 <div className={classes.topAction}>
                   <Typography className={classes.headMail}>
-                    <Fragment>
-                      From&nbsp;
+                    {mail.get('sender_type') == 'client' &&
+                      <Fragment>
+                        From&nbsp;
                       {mail.get('name')}
                       &nbsp;to me
+                    </Fragment>
+                    }
+                    {mail.get('sender_type') != 'client' &&
+                      <Fragment>
+                        From&nbsp;
+                        me&nbsp;
+                        to&nbsp;
+                        {mail.get('name')}
                       </Fragment>
+                    }
                   </Typography>
                 </div>
               }
@@ -247,9 +176,11 @@ class StudentEmailThreadList extends React.Component {
           </ExpansionPanelDetails>
           <Divider />
           <ExpansionPanelActions>
-            <div className={classes.action}>
-              <Button size="small" color="secondary" onClick={() => reply(mail)} >Reply</Button>
-            </div>
+            {mail.get('sender_type') !== 'user' &&
+              <div className={classes.action}>
+                <Button size="small" color="secondary" onClick={() => reply(mail)} >Reply</Button>
+              </div>
+            }
           </ExpansionPanelActions>
         </ExpansionPanel>
       );

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import avatarApi from 'dan-api/images/avatars';
 import Grid from '@material-ui/core/Grid';
 import {
   ClientEmailSidebar,
@@ -20,6 +21,7 @@ import {
   sendAction,
   closeNotifAction
 } from 'dan-actions/EmailActions';
+import qs from 'qs';
 import styles from 'dan-components/Email/email-jss';
 
 const email = value => (
@@ -28,12 +30,77 @@ const email = value => (
     : ''
 );
 
+const compare = (item1, item2) => {
+  if (item1.sent_on > item2.sent_on) return 1
+  else return -1
+}
+
+function formatDate(unixtimestamp) {
+  var months_arr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var date = new Date(unixtimestamp * 1000);
+  var year = date.getFullYear();
+  var month = months_arr[date.getMonth()];
+  var day = date.getDate();
+  var hours = date.getHours();
+  var minutes = "0" + date.getMinutes();
+  var seconds = "0" + date.getSeconds();
+  return (month + ', ' + day + ' ' + year + ' ' + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2));
+}
+
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+  return await response.json();
+}
+
+
 class ClientEmailThread extends React.Component {
   state = {
     to: '',
     subject: '',
     validMail: '',
     mobileOpen: false,
+    mailData: [],
+    thread_id: null,
+    sender_id: null,
+    sender_type: null,
+    receiver_id: null,
+    receiver_type: null,
+    mail_type: null,
+    openStyle: false,
+    messageType: 'error',
+    notifyMessage: '',
+  }
+
+  sendEmail = (to, subject, emailContent, files) => {
+    const actionSendEmail = this.props.sendEmail;
+    const data = {
+      to,
+      subject,
+      body: emailContent,
+      type: this.state.mail_type,
+      thread_id: this.state.thread_id,
+      sender_id: this.state.sender_id,
+      sender_type: this.state.sender_type,
+      receiver_id: this.state.receiver_id,
+      receiver_type: this.state.receiver_type
+    }
+
+    postData(`${API_URL}/utils/send-email-reply`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          actionSendEmail()
+          this.getThreadEmails()
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   handleChange = (event, name) => {
@@ -47,11 +114,21 @@ class ClientEmailThread extends React.Component {
 
   handleReply = (mail) => {
     const { compose } = this.props;
+    const MappedMail = mail.toJS();
+
+    if (MappedMail.sender_type == 'user') {
+      this.setState({
+        to: MappedMail.sender_email,
+        subject: MappedMail.thread_id == -1 ? 'Reply: ' + mail.get('subject') : mail.get('subject'),
+        thread_id: MappedMail.thread_id == -1 ? MappedMail.id : MappedMail.thread_id,
+        mail_type: MappedMail.type,
+        sender_id: MappedMail.receiver_id,
+        sender_type: MappedMail.receiver_type,
+        receiver_id: MappedMail.sender_id,
+        receiver_type: MappedMail.sender_type
+      });
+    }
     compose();
-    this.setState({
-      to: mail.get('name'),
-      subject: 'Reply: ' + mail.get('subject'),
-    });
   }
 
   handleCompose = () => {
@@ -70,6 +147,43 @@ class ClientEmailThread extends React.Component {
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
+
+  getThreadEmails = () => {
+    const data = {
+      thread_id: this.props.match.params.thread
+    };
+
+    postData(`${API_URL}/client/get-thread-emails`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          if (res.data.length > 0) {
+            let threadEmailsData = res.data.map(item => {
+              return {
+                ...item,
+                id: item.id,
+                thread: item.thread_id,
+                avatar: avatarApi[6],
+                name: item.sender_type == 'client' ? item.receiver_name : item.sender_name,
+                date: formatDate(new Date(parseInt(item.sent_on))),
+                subject: item.subject,
+                category: '',
+                content: item.body,
+                attachment: [],
+                stared: item.sender_type == 'client' ? item.sender_stared : item.receiver_stared,
+              }
+            })
+            this.setState({ mailData: threadEmailsData.sort(compare) });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  componentDidMount() {
+    this.getThreadEmails();
+  }
 
   render() {
     const {
@@ -114,6 +228,7 @@ class ClientEmailThread extends React.Component {
             openMail={openMail}
             keyword={keyword}
             reply={this.handleReply}
+            mailData={this.state.mailData}
           />
         </div>
         <ComposeEmail
@@ -121,7 +236,7 @@ class ClientEmailThread extends React.Component {
           subject={subject}
           compose={this.handleCompose}
           validMail={validMail}
-          sendEmail={sendEmail}
+          sendClientEmail={this.sendEmail}
           inputChange={this.handleChange}
           open={openFrm}
           closeForm={discard}

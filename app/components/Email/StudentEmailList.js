@@ -57,9 +57,9 @@ class EmailList extends React.Component {
   }
 
 
-  openThread = (mail, category) => {
+  openThread = (mail) => {
     const MapMail = mail.toJS();
-    if (category != "sent") {
+    if (MapMail.thread != -1) {
       this.props.history.push(`/student/messages/${MapMail.thread}`)
     } else {
       this.props.history.push(`/student/messages/${MapMail.id}`)
@@ -147,7 +147,7 @@ class EmailList extends React.Component {
                           <IconButton onClick={() => _that.toggleStar(mail)} className={classes.starBtn}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
                         </Tooltip>
                         <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} />
-                        <div className={classes.item} onClick={() => _that.openThread(mail, mail.get('category'))}>
+                        <div className={classes.item} onClick={() => _that.openThread(mail)}>
                           <div>
                             <Typography className={classes.heading} display="block" >
                               {mail.get('name')}
@@ -206,7 +206,7 @@ class EmailList extends React.Component {
                         </section>
                       </ExpansionPanelDetails>
                       <Divider />
-                      {mail.get('category') !== 'sent' &&
+                      {(mail.get('category') !== 'sent' && mail.get('sender_type') !== 'user') &&
                         <ExpansionPanelActions>
                           <div className={classes.action}>
                             <Button size="small" color="secondary" onClick={() => reply(mail)}>Reply</Button>

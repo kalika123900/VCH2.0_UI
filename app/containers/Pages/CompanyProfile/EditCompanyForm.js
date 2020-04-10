@@ -13,6 +13,13 @@ import FlashMessage from 'react-flash-message';
 import { makeSecureDecrypt } from '../../../Helpers/security';
 import styles from '../../../components/Forms/user-jss';
 import qs from 'qs';
+import messageStyles from 'dan-styles/Messages.scss';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -43,7 +50,10 @@ class SignupForm extends React.Component {
     cName: '',
     cEmail: '',
     cPhone: '',
-    cHeadquarter: ''
+    cHeadquarter: '',
+    openStyle: false,
+    messageType: 'error',
+    notifyMessage: ''
   };
 
   componentDidMount() {
@@ -112,16 +122,30 @@ class SignupForm extends React.Component {
       .then((res) => {
         if (res.status === 1) {
           if (this.props.userType == 'ADMIN') {
-            this.props.history.push('/admin/company-profile');
+            this.setState({ notifyMessage: 'Information update successfully' });
+            this.setState({ messageType: 'success' });
+            this.setState({ openStyle: true });
           }
           else {
-            this.props.history.push('/client');
+            this.setState({ notifyMessage: 'Information update successfully' });
+            this.setState({ messageType: 'success' });
+            this.setState({ openStyle: true });
           }
+        }
+        else {
+          this.setState({ notifyMessage: 'Something went wrong' });
+          this.setState({ messageType: 'error' });
+          this.setState({ openStyle: true });
         }
       })
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  noticeClose = event => {
+    event.preventDefault();
+    this.setState({ openStyle: false });
   }
 
   render() {
@@ -196,6 +220,44 @@ class SignupForm extends React.Component {
               </Button>
             </div>
           </form>
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={this.state.openStyle}
+            autoHideDuration={6000}
+            onClose={this.handleCloseStyle}
+          >
+            <SnackbarContent
+              className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
+              aria-describedby="client-snackbar"
+              message={(
+                <span id="client-snackbar" className={classes.message}>
+                  {
+                    (this.state.messageType == 'error') && <ErrorIcon className="success" />
+                  }
+                  {
+                    (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
+                  }
+
+                  &nbsp;
+                  {this.state.notifyMessage}
+                </span>
+              )}
+              action={[
+                <IconButton
+                  key="close"
+                  aria-label="Close"
+                  color="inherit"
+                  className={classes.close}
+                  onClick={this.noticeClose}
+                >
+                  <CloseIcon className={classes.icon} />
+                </IconButton>,
+              ]}
+            />
+          </Snackbar>
         </section>
       </Paper>
     );

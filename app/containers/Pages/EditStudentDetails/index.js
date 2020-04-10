@@ -207,6 +207,26 @@ class EditStudentDetails extends Component {
     this.setState({ tab: value });
   };
 
+  goNextTab = () => {
+    this.setState({ tab: this.state.tab + 1 });
+  }
+
+  successMsg = () => {
+    this.setState({ notifyMessage: 'Information updated' });
+    this.setState({ messageType: 'success' });
+    this.setState({ openStyle: true });
+  }
+
+  errorMsg = () => {
+    this.setState({ notifyMessage: 'Information not updated' });
+    this.setState({ messageType: 'error' });
+    this.setState({ openStyle: true });
+  }
+
+  resetTab = () => {
+    this.setState({ tab: 0 });
+  }
+
   handleEducation = () => {
     const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))
@@ -232,14 +252,11 @@ class EditStudentDetails extends Component {
       .then((res) => {
         if (res.status === 1) {
           _that.educationHandler(_that.state.data);
-          this.setState({ notifyMessage: 'Information update successfully' });
-          this.setState({ messageType: 'success' });
-          this.setState({ openStyle: true });
+          this.successMsg();
+          this.goNextTab();
         } else {
           _that.educationHandler(_that.state.data);
-          this.setState({ notifyMessage: 'Information not updated' });
-          this.setState({ messageType: 'error' });
-          this.setState({ openStyle: true });
+          this.errorMsg();
         }
       })
       .catch((err) => {
@@ -273,14 +290,11 @@ class EditStudentDetails extends Component {
       .then((res) => {
         if (res.status === 1) {
           _that.experienceHandler(_that.state.data);
-          this.setState({ notifyMessage: 'Information update successfully' });
-          this.setState({ messageType: 'success' });
-          this.setState({ openStyle: true });
+          this.successMsg();
+          this.resetTab();
         } else {
           _that.experienceHandler(_that.state.data);
-          this.setState({ notifyMessage: 'Information not updated' });
-          this.setState({ messageType: 'error' });
-          this.setState({ openStyle: true });
+          this.errorMsg();
         }
       })
       .catch((err) => {
@@ -340,6 +354,10 @@ class EditStudentDetails extends Component {
     this.setState({ openStyle: false });
   }
 
+  handleCloseStyle = () => {
+    this.setState({ openStyle: false });
+  }
+
   render() {
     const { classes, educationInfo, experienceInfo } = this.props;
     const { tab } = this.state;
@@ -395,52 +413,14 @@ class EditStudentDetails extends Component {
         </Tabs>
         <section className={classes.pageFormWrap}>
           {tab === 0 && (
-            <EditPersonalDetails />
+            <EditPersonalDetails goNextTab={this.goNextTab} successMsg={this.successMsg} errorMsg={this.errorMsg} />
           )}
           {tab === 1 && (
-            <EditSkillsInterests />
+            <EditSkillsInterests goNextTab={this.goNextTab} successMsg={this.successMsg} errorMsg={this.errorMsg} />
           )}
           {tab === 2 && (
             <Fragment>
               {EducationJSX}
-              <Snackbar
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={this.state.openStyle}
-                autoHideDuration={6000}
-                onClose={this.handleCloseStyle}
-              >
-                <SnackbarContent
-                  className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
-                  aria-describedby="client-snackbar"
-                  message={(
-                    <span id="client-snackbar" className={classes.message}>
-                      {
-                        (this.state.messageType == 'error') && <ErrorIcon className="success" />
-                      }
-                      {
-                        (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
-                      }
-
-                  &nbsp;
-                      {this.state.notifyMessage}
-                    </span>
-                  )}
-                  action={[
-                    <IconButton
-                      key="close"
-                      aria-label="Close"
-                      color="inherit"
-                      className={classes.close}
-                      onClick={this.noticeClose}
-                    >
-                      <CloseIcon className={classes.icon} />
-                    </IconButton>,
-                  ]}
-                />
-              </Snackbar>
               <div className={classes.btnArea}>
                 <Button variant="text" color="primary" onClick={e => this.addEducationField(e)}>
                   Add More
@@ -456,44 +436,6 @@ class EditStudentDetails extends Component {
           {tab === 3 && (
             <Fragment>
               {ExperienceJSX}
-              <Snackbar
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={this.state.openStyle}
-                autoHideDuration={6000}
-                onClose={this.handleCloseStyle}
-              >
-                <SnackbarContent
-                  className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
-                  aria-describedby="client-snackbar"
-                  message={(
-                    <span id="client-snackbar" className={classes.message}>
-                      {
-                        (this.state.messageType == 'error') && <ErrorIcon className="success" />
-                      }
-                      {
-                        (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
-                      }
-
-                  &nbsp;
-                      {this.state.notifyMessage}
-                    </span>
-                  )}
-                  action={[
-                    <IconButton
-                      key="close"
-                      aria-label="Close"
-                      color="inherit"
-                      className={classes.close}
-                      onClick={this.noticeClose}
-                    >
-                      <CloseIcon className={classes.icon} />
-                    </IconButton>,
-                  ]}
-                />
-              </Snackbar>
               <div className={classes.btnArea}>
                 <Button variant="text" color="primary" onClick={e => this.addExperienceField(e)}>
                   Add More
@@ -506,6 +448,44 @@ class EditStudentDetails extends Component {
               </div>
             </Fragment>
           )}
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={this.state.openStyle}
+            autoHideDuration={6000}
+            onClose={this.handleCloseStyle}
+          >
+            <SnackbarContent
+              className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
+              aria-describedby="client-snackbar"
+              message={(
+                <span id="client-snackbar" className={classes.message}>
+                  {
+                    (this.state.messageType == 'error') && <ErrorIcon className="success" />
+                  }
+                  {
+                    (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
+                  }
+
+                  &nbsp;
+                  {this.state.notifyMessage}
+                </span>
+              )}
+              action={[
+                <IconButton
+                  key="close"
+                  aria-label="Close"
+                  color="inherit"
+                  className={classes.close}
+                  onClick={this.noticeClose}
+                >
+                  <CloseIcon className={classes.icon} />
+                </IconButton>,
+              ]}
+            />
+          </Snackbar>
         </section>
       </Paper >
     );

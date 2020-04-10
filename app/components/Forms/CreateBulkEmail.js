@@ -204,7 +204,7 @@ class CreateBulkEmail extends React.Component {
           {activeStep === 3 && (
             <section>
               <Typography variant="h4" className={classes.title} gutterBottom>
-                Set Your Budget
+                Set Your Deadline
               </Typography>
               <Grid>
                 <FormControl className={(classes.formControl, classes.wrapInput)}>

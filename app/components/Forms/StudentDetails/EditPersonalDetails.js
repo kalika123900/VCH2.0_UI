@@ -100,13 +100,10 @@ class EditPersonalDetails extends React.Component {
     postData(`${API_URL}/student/create-personal-details`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
-          this.setState({ notifyMessage: 'Information update successfully' });
-          this.setState({ messageType: 'success' });
-          this.setState({ openStyle: true });
+          this.props.successMsg()
+          this.props.goNextTab();
         } else {
-          this.setState({ notifyMessage: 'Information not updated' });
-          this.setState({ messageType: 'error' });
-          this.setState({ openStyle: true });
+          this.props.errorMsg();
         }
       })
       .catch((err) => {
@@ -181,7 +178,6 @@ class EditPersonalDetails extends React.Component {
 
     return (
       <Fragment>
-
         <section className={classes.pageFormWrap}>
           <form >
             <div>
