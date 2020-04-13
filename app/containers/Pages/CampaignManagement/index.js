@@ -6,6 +6,7 @@ import PendingCampaigns from './PendingCampaigns'
 import OngoingCampaigns from './OngoingCampaigns'
 import PausedCampaigns from './PausedCampaigns';
 import { connect } from 'react-redux';
+import { makeSecureDecrypt } from 'dan-helpers/security';
 import { bindActionCreators } from 'redux';
 import { campaignRemoveMsg } from 'dan-actions/CampaignActions';
 import ClientCancelCampaigns from './ClientCancelCampaigns';
@@ -18,6 +19,18 @@ const styles = () => ({
 })
 
 class CampaignManagement extends Component {
+  constructor(props) {
+    super(props)
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    if (user.managerType != 2) {
+      if (user.capabilities == 3)
+        this.props.history.push('/client/unauthorized');
+    }
+  }
+
   componentDidMount() {
     const { removeMsg } = this.props;
     setTimeout(() => {

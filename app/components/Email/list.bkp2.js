@@ -279,7 +279,6 @@ class EmailList extends React.Component {
     };
 
     let JSX = showClientEmail(filterPage);
-    console.log(JSX)
     return (
       <main className={classes.content} >
         <Menu

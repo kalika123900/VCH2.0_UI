@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import brand from 'dan-api/dummy/brand';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { ResetForm } from 'dan-components';
+import { ResetPasswordForm } from 'dan-components';
 import qs from 'qs';
 import styles from '../../../components/Forms/user-jss';
 
@@ -25,17 +25,20 @@ class ResetPassword extends React.Component {
 
   submitForm(values) {
     const MappedValues = values.toJS();
-    const searchString = (this.props.location.search).split('?user=');
-    const type = searchString[1];
+    const searchString = (this.props.location.search).split('&');
+    const type = searchString[1].split('=');
+    const id = searchString[0].split('=');
+
     const data = {
-      email: MappedValues.email,
-      type
+      user_id: id[1],
+      password: MappedValues.password,
+      type: type[1]
     }
 
-    postData(`${API_URL}/utils/send-reset-url`, data)
+    postData(`${API_URL}/utils/reset-password`, data)
       .then((res) => {
         if (res.status == 1) {
-          this.setState({ success: true });
+          this.props.history.push(`/${type[1]}`)
         }
       })
       .catch((err) => {
@@ -59,7 +62,7 @@ class ResetPassword extends React.Component {
         </Helmet>
         <div className={classes.container}>
           <div className={classes.userFormWrap}>
-            <ResetForm onSubmit={(values) => this.submitForm(values)} success={this.state.success} />
+            <ResetPasswordForm onSubmit={(values) => this.submitForm(values)} success={this.state.success} />
           </div>
         </div>
       </div>

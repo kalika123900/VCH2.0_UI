@@ -39,7 +39,9 @@ const initialState = {
     id: null,
     company: '',
     role: '',
-    roleDescription: ''
+    roleDescription: '',
+    from: DateHelper.format(DateHelper.addDays(new Date(), -365)),
+    to: DateHelper.format(DateHelper.addDays(new Date(), 0))
   }]),
   oldExperienceInfo: List([])
 };

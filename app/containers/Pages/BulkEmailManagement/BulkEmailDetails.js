@@ -1,8 +1,21 @@
 import React, { Component } from 'react'
 import { BulkEmailPieChart, BulkEmailGraph, BulkEmailStats, BulkEmailInfo } from 'dan-components'
 import Grid from '@material-ui/core/Grid'
+import { makeSecureDecrypt } from 'dan-helpers/security';
 
 class BulkEmailDetails extends Component {
+  constructor(props) {
+    super(props)
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    if (user.managerType != 2) {
+      if (user.capabilities == 3)
+        this.props.history.push('/client/unauthorized');
+    }
+  }
+
   render() {
     return (
       <Grid>

@@ -87,6 +87,7 @@ export RegisterForm from './Forms/RegisterForm';
 export RegisterFormV2 from './Forms/RegisterFormV2';
 export RegisterFormV3 from './Forms/RegisterFormV3';
 export ResetForm from './Forms/ResetForm';
+export ResetPasswordForm from './Forms/ResetPasswordForm';
 export LockForm from './Forms/LockForm';
 export AddressForm from './Forms/AddressForm';
 export PaymentForm from './Forms/PaymentForm';

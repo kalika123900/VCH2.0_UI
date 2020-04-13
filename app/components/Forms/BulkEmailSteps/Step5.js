@@ -95,6 +95,7 @@ class Step5 extends React.Component {
       .then((res) => {
         if (res.status === 1) {
           this.props.addInfo({ ...this.props, studentList: res.data })
+          this.props.handleCreateBulkEmail(res.data.length);
         }
       })
       .catch((err) => {

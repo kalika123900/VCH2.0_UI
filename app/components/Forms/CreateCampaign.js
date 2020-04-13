@@ -18,6 +18,7 @@ import ArrowForward from '@material-ui/icons/ArrowForward';
 import { removeCampaignInfo } from 'dan-actions/CampaignActions';
 import { withRouter } from 'react-router';
 import styles from './user-jss';
+import { makeSecureDecrypt } from 'dan-helpers/security';
 import Step2 from './CampaignSteps/Step2';
 import Step3 from './CampaignSteps/Step3';
 import Step4 from './CampaignSteps/Step4';
@@ -49,7 +50,21 @@ async function postJSON(url, data) {
 class CreateCampaign extends React.Component {
   state = {
     activeStep: 0,
+    isCreateCampaign: true
   };
+
+  handleCreateCampaign = (count) => {
+    if (count > 100) {
+      const user = JSON.parse(
+        makeSecureDecrypt(localStorage.getItem('user'))
+      );
+
+      if (user.managerType != 2) {
+        if (user.capabilities == 2)
+          this.setState({ isCreateCampaign: false });
+      }
+    }
+  }
 
   handleBack = () => {
     this.setState((prevState) => ({ activeStep: prevState.activeStep - 1 }));
@@ -100,6 +115,7 @@ class CreateCampaign extends React.Component {
 
     let isDisable = true;
     let isCampaignName = true;
+    let isCreateDisable = true;
     if (heading.length > 0) {
       if (body.length > 0) {
         isDisable = false;
@@ -107,6 +123,11 @@ class CreateCampaign extends React.Component {
     }
     if (name.length > 0) {
       isCampaignName = false;
+    }
+    if (name.length > 0) {
+      if (this.state.isCreateCampaign) {
+        isCreateDisable = false;
+      }
     }
 
     return (
@@ -237,7 +258,7 @@ class CreateCampaign extends React.Component {
               </Typography>
               <Grid>
                 <FormControl className={(classes.formControl, classes.wrapInput)}>
-                  <Step6 campaignId={this.props.match.params.campaignId} />
+                  <Step6 campaignId={this.props.match.params.campaignId} handleCreateCampaign={this.handleCreateCampaign} />
                 </FormControl>
               </Grid>
               <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
@@ -291,16 +312,24 @@ class CreateCampaign extends React.Component {
                 {
                   (userType == 'CLIENT' && campaignStatus == -3)
                     ? (
-                      <Button
-                        variant="contained"
-                        fullWidth
-                        color="primary"
-                        type="submit"
-                        disabled={isCampaignName}
-                      >
-                        Create Campaign
+                      <Fragment>
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          color="primary"
+                          type="submit"
+                          disabled={isCreateDisable}
+                        >
+                          Create Campaign
                         <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
-                      </Button>
+                        </Button>
+                        {this.state.isCreateCampaign != true
+                          &&
+                          <Typography variant="caption" color="error">
+                            (You can't create campaign because it effects more than 100 students)
+                        </Typography>
+                        }
+                      </Fragment>
                     )
                     : (userType == 'CLIENT' && campaignStatus == 0)
                     && (

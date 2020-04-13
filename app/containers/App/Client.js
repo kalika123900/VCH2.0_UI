@@ -9,7 +9,7 @@ import {
   CampaignManagement, CampaignDetails, EditDetails,
   BulkEmailManagement, BulkEmailDetails, SeatManagement,
   ClientEmail, CampaignEdit, ClientSettings, NotFound, Signout,
-  ClientEmailThread, Contact, EditCompanyForm
+  ClientEmailThread, Contact, EditCompanyForm, Unauthorized
 }
   from '../pageListAsync';
 
@@ -43,6 +43,7 @@ class Client extends React.Component {
             <Route exact path="/client/signout" component={Signout} />
             <Route exact path="/client/company-profile" component={EditCompanyForm} />
             <Route exact path="/client/contacts" component={Contact} />
+            <Route exact path="/client/unauthorized" component={Unauthorized} />
             <Route component={NotFound} />
           </Switch>
         </Dashboard>

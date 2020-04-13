@@ -96,8 +96,6 @@ class BulkEmailEdit extends React.Component {
     postJSON(`${API_URL}/bulkemail/get-bulkemail-info`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
-          console.log(res.data)
-
           const subjects = stringToArray(res.data.info.subjects);
           const gender = stringToArray(res.data.info.gender);
           const selectedYear = stringToArray(res.data.info.selected_year);
@@ -191,8 +189,6 @@ class BulkEmailEdit extends React.Component {
       blackList: JSON.stringify(MapBlackList),
       bulkEmailId: this.props.match.params.bulkEmailId
     };
-
-    console.log(data);
 
     postJSON(`${API_URL}/bulkemail/update-approve-bulkemail`, data) // eslint-disable-line
       .then((res) => {

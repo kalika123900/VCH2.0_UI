@@ -4,9 +4,22 @@ import {
   CampaignStats, CampaignInfo
 }
   from 'dan-components'
+import { makeSecureDecrypt } from 'dan-helpers/security';
 import Grid from '@material-ui/core/Grid'
 
 class CampaignDetails extends Component {
+  constructor(props) {
+    super(props)
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    if (user.managerType != 2) {
+      if (user.capabilities == 3)
+        this.props.history.push('/client/unauthorized');
+    }
+  }
+
   render() {
     const campaignId = this.props.match.params.campaignId;
 

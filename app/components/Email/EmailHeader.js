@@ -31,10 +31,6 @@ const MenuProps = {
 };
 
 class EmailHeader extends React.Component {
-  constructor(props) {
-    super(props)
-    console.log(this.props)
-  }
   state = {
     cname: 'Test Development'
   }

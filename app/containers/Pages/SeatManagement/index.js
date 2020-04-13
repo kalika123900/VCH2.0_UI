@@ -19,13 +19,23 @@ async function postData(url, data) {
 }
 
 class SeatManagement extends Component {
+  constructor(props) {
+    super(props)
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+    if (user.managerType != 2) {
+      this.props.history.push('/client/unauthorized');
+    }
+  }
+
   submitForm(values) {
     const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))
     );
     const MappedValues = values.toJS();
-    const { firstname, lastname, email, username, phone } = MappedValues;
-    const data = { firstname, lastname, email, username, phone, company_id: user.cId };
+    const { firstname, lastname, email, username, phone, tier } = MappedValues;
+    const data = { firstname, lastname, email, username, phone, tier, company_id: user.cId };
 
     postData(`${API_URL}/client/create-seat`, data)
       .then((res) => {

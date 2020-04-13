@@ -57,7 +57,6 @@ class CampaignInfo extends React.Component {
     postJSON(`${API_URL}/campaign/get-campaign-info`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
-          console.log(res.data)
           const workLocation = res.data.info.work_location;
           const createdAt = formatDeadline(res.data.info.created_at);
           const deadline = formatDeadline(res.data.info.deadline);

@@ -15,6 +15,7 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import styles from './user-jss';
+import { makeSecureDecrypt } from 'dan-helpers/security';
 import { bindActionCreators } from 'redux';
 import { emailInfoRemove } from 'dan-actions/BulkEmailActions';
 import { withRouter } from 'react-router';
@@ -51,7 +52,21 @@ async function postJSON(url, data) {
 class CreateBulkEmail extends React.Component {
   state = {
     activeStep: 0,
+    isCreateBulkEmail: true
   };
+
+  handleCreateBulkEmail = (count) => {
+    if (count > 100) {
+      const user = JSON.parse(
+        makeSecureDecrypt(localStorage.getItem('user'))
+      );
+
+      if (user.managerType != 2) {
+        if (user.capabilities == 2)
+          this.setState({ isCreateBulkEmail: false });
+      }
+    }
+  }
 
   handleBack = () => {
     this.setState((prevState) => ({ activeStep: prevState.activeStep - 1 }));
@@ -92,23 +107,24 @@ class CreateBulkEmail extends React.Component {
       userType,
       heading,
       body,
-      name,
+      name
     } = this.props;
 
     const { activeStep } = this.state;
     const steps = getSteps();
 
     let isDisable = true;
-    let isCampaignName = true;
+    let isCreateDisable = true;
     if (heading.length > 0) {
       if (body.length > 0) {
         isDisable = false;
       }
     }
     if (name.length > 0) {
-      isCampaignName = false;
+      if (this.state.isCreateBulkEmail) {
+        isCreateDisable = false;
+      }
     }
-
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
         <Stepper activeStep={activeStep} alternativeLabel>
@@ -237,7 +253,7 @@ class CreateBulkEmail extends React.Component {
               </Typography>
               <Grid>
                 <FormControl className={(classes.formControl, classes.wrapInput)}>
-                  <Step5 />
+                  <Step5 handleCreateBulkEmail={this.handleCreateBulkEmail} />
                 </FormControl>
               </Grid>
               <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
@@ -298,16 +314,24 @@ class CreateBulkEmail extends React.Component {
                 {
                   userType == 'CLIENT' &&
                   (
-                    <Button
-                      variant="contained"
-                      fullWidth
-                      color="primary"
-                      type="submit"
-                      disabled={isCampaignName}
-                    >
-                      Create Bulk Email
-                      <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
-                    </Button>
+                    <Fragment>
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        color="primary"
+                        type="submit"
+                        disabled={isCreateDisable}
+                      >
+                        Create Bulk Email
+                        <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                      </Button>
+                      {this.state.isCreateBulkEmail != true
+                        &&
+                        <Typography variant="caption" color="error">
+                          (You can't create bulk email because it effects more than 100 students)
+                        </Typography>
+                      }
+                    </Fragment>
                   )
                 }
               </Grid>

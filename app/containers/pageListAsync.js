@@ -333,6 +333,14 @@ export const Token = loadable(() =>
   import('./Pages/Users/Token'), {
   fallback: <Loading />,
 });
+export const Unauthorized = loadable(() =>
+  import('./Pages/Users/Unauthorized'), {
+  fallback: <Loading />,
+});
+export const ExpiredLink = loadable(() =>
+  import('./Pages/Users/ExpiredLink'), {
+  fallback: <Loading />,
+});
 export const CreateCompany = loadable(() =>
   import('./Pages/Users/CreateCompany'), {
   fallback: <Loading />,
@@ -459,6 +467,10 @@ export const Contact = loadable(() =>
 });
 export const ResetPassword = loadable(() =>
   import('./Pages/Users/ResetPassword'), {
+  fallback: <Loading />,
+});
+export const SetPassword = loadable(() =>
+  import('./Pages/Users/SetPassword'), {
   fallback: <Loading />,
 });
 export const LockScreen = loadable(() =>

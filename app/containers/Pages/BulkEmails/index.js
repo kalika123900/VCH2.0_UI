@@ -32,6 +32,18 @@ function getStudentIds(studentList) {
 }
 
 class BulkEmails extends React.Component {
+  constructor(props) {
+    super(props)
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    if (user.managerType != 2) {
+      if (user.capabilities == 3)
+        this.props.history.push('/client/unauthorized');
+    }
+  }
+
   submitForm = () => {
     const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))

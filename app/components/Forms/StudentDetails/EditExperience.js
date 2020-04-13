@@ -7,6 +7,9 @@ import TextField from '@material-ui/core/TextField';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
 import { storeExperience } from 'dan-actions/studentProfileActions';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import Grid from '@material-ui/core/Grid';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -31,11 +34,78 @@ class EditExperience extends React.Component {
     addInfo({ ...this.props, experienceInfo: newExperienceArr });
   };
 
+
+  handleFromDateChange = currentDate => {
+    const { addInfo, experienceInfo, id } = this.props;
+    const year = currentDate.getFullYear();
+    let date = currentDate.getDate();
+    let month = currentDate.getMonth();
+
+    if (date < 10) {
+      date = '0' + date;
+    }
+    if (month < 9) {
+      month = '0' + (month + 1);
+    } else {
+      month += 1;
+    }
+
+    const dateMonthYear = year + '-' + (month) + '-' + date;
+    const MapExperienceInfo = experienceInfo.toJS();
+    const newExperienceArr = MapExperienceInfo.map((item, index) => {
+      if (index == id) {
+        return {
+          ...item,
+          from: dateMonthYear
+        };
+      }
+      else {
+        return {
+          ...item
+        }
+      }
+    })
+    addInfo({ ...this.props, experienceInfo: newExperienceArr });
+  };
+
+  handleToDateChange = currentDate => {
+    const { addInfo, experienceInfo, id } = this.props;
+    const year = currentDate.getFullYear();
+    let date = currentDate.getDate();
+    let month = currentDate.getMonth();
+
+    if (date < 10) {
+      date = '0' + date;
+    }
+    if (month < 9) {
+      month = '0' + (month + 1);
+    } else {
+      month += 1;
+    }
+
+    const dateMonthYear = year + '-' + (month) + '-' + date;
+    const MapExperienceInfo = experienceInfo.toJS();
+    const newExperienceArr = MapExperienceInfo.map((item, index) => {
+      if (index == id) {
+        return {
+          ...item,
+          to: dateMonthYear
+        };
+      }
+      else {
+        return {
+          ...item
+        }
+      }
+    })
+    addInfo({ ...this.props, experienceInfo: newExperienceArr });
+  };
+
   render() {
     const { classes, id, experienceInfo } = this.props;
 
     const MapExperienceInfo = experienceInfo.toJS();
-    const { company, role, roleDescription } = MapExperienceInfo[id];
+    const { company, role, roleDescription, from, to } = MapExperienceInfo[id];
 
     return (
       <section className={classes.pageFormWrap}>
@@ -67,6 +137,44 @@ class EditExperience extends React.Component {
               validate={[required]}
               onChange={e => this.handleChange(e, id)}
             />
+          </FormControl>
+        </div>
+        <div>
+          <FormControl className={classes.formControl}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <Grid container justify="space-around">
+                <KeyboardDatePicker
+                  margin="normal"
+                  format="dd/MM/yyyy"
+                  placeholder="Choose Start Date"
+                  value={new Date(from)}
+                  onChange={this.handleFromDateChange}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                  style={{ width: '100%' }}
+                />
+              </Grid>
+            </MuiPickersUtilsProvider>
+          </FormControl>
+        </div>
+        <div>
+          <FormControl className={classes.formControl} >
+            <MuiPickersUtilsProvider utils={DateFnsUtils} >
+              <Grid container justify="space-around" >
+                <KeyboardDatePicker
+                  margin="normal"
+                  format="dd/MM/yyyy"
+                  placeholder="Choose End Date"
+                  value={new Date(to)}
+                  onChange={this.handleToDateChange}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                  style={{ width: '100%' }}
+                />
+              </Grid>
+            </MuiPickersUtilsProvider>
           </FormControl>
         </div>
         <div>

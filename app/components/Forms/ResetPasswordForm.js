@@ -12,18 +12,60 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import brand from 'dan-api/dummy/brand';
 import logo from 'dan-images/logo.png';
+import IconButton from '@material-ui/core/IconButton';
 import { TextFieldRedux } from './ReduxFormMUI';
 import styles from './user-jss';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
-const email = value => (
-  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
-    ? 'Invalid email'
-    : undefined
-);
+const maxLength = max => value =>
+  value && value.length > max ? `Must be ${max} characters or less` : undefined
+const minLength = min => value =>
+  value && value.length < min ? `Must be ${min} characters or more` : undefined
+const minPasswordLength = minLength(8);
+const maxPasswordLength = maxLength(15);
+const passwordsMatch = (value, allValues) => {
+  if (value !== allValues.get('password')) {
+    return 'Passwords dont match';
+  }
+  return undefined;
+};
+
+const renderField = (props) => {
+
+  const { input, label, meta, ...custom } = props;
+  const { touched, error, warning } = meta;
+  return (<Fragment>
+    <TextFieldRedux
+      {...props}
+    />
+    {
+      touched &&
+      ((error && <span>{error}</span>) ||
+        (warning && <span>{warning}</span>))
+    }
+  </Fragment>
+  )
+}
 
 class ResetForm extends React.Component {
+  state = {
+    showPassword: false,
+  };
+
+  handleClickShowPassword = () => {
+    const { showPassword } = this.state;
+    this.setState({ showPassword: !showPassword });
+  };
+
+  handleMouseDownPassword = event => {
+    event.preventDefault();
+  };
+
+
   render() {
     const {
       classes,
@@ -33,6 +75,7 @@ class ResetForm extends React.Component {
       deco,
       success
     } = this.props;
+    const { showPassword } = this.state;
     return (
       <Paper className={classNames(classes.paperWrap, deco && classes.petal)}>
         <div className={classes.topBar}>
@@ -44,30 +87,53 @@ class ResetForm extends React.Component {
           ?
           <Fragment>
             <Typography variant="h4" className={classes.title} gutterBottom>
-              Reset Password
-            </Typography>
-            <Typography variant="caption" className={classes.subtitle} gutterBottom align="center">
-              Send reset password link to Your email
+              Set New Password
             </Typography>
             <section className={classes.formWrap}>
               <form onSubmit={handleSubmit}>
                 <div>
                   <FormControl className={classes.formControl}>
                     <Field
-                      name="email"
-                      component={TextFieldRedux}
-                      placeholder="Your Email"
-                      label="Your Email"
+                      name="password"
+                      component={renderField}
+                      type={showPassword ? 'text' : 'password'}
+                      label="New Password"
                       required
-                      validate={[required, email]}
+                      validate={[required, passwordsMatch, minPasswordLength, maxPasswordLength]}
+                      className={classes.field}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="Toggle password visibility"
+                              onClick={this.handleClickShowPassword}
+                              onMouseDown={this.handleMouseDownPassword}
+                            >
+                              {showPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  </FormControl>
+                </div>
+                <div>
+                  <FormControl className={classes.formControl}>
+                    <Field
+                      name="passwordConfirm"
+                      component={renderField}
+                      type="password"
+                      label="Re-type Password"
+                      required
+                      validate={[required, passwordsMatch]}
                       className={classes.field}
                     />
                   </FormControl>
                 </div>
                 <div className={classes.btnArea}>
                   <Button variant="contained" color="primary" type="submit">
-                    Send Reset Link
-                <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                    Set Password
+                   <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
                   </Button>
                 </div>
               </form>

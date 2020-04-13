@@ -9,8 +9,9 @@ import FormControl from '@material-ui/core/FormControl';
 import Paper from '@material-ui/core/Paper';
 import ArrowForward from '@material-ui/icons/ArrowForward';
 import Typography from '@material-ui/core/Typography';
-import { TextFieldRedux } from './ReduxFormMUI';
+import { TextFieldRedux, SelectRedux } from './ReduxFormMUI';
 import styles from './user-jss';
+import { Select } from '@material-ui/core';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -40,6 +41,31 @@ const renderField = (props) => {
       <TextFieldRedux
         {...props}
       />
+      {
+        touched
+        && ((error && <span>{error}</span>)
+          || (warning && <span>{warning}</span>))
+      }
+    </Fragment>
+  );
+};
+
+const renderSelect = (props) => {
+  const {
+    input, label, meta, ...custom
+  } = props;
+  const { touched, error, warning } = meta;
+
+  return (
+    <Fragment>
+      <SelectRedux
+        {...props}
+        style={{ marginTop: 15 }}
+      >
+        <option style={{ padding: 10, cursor: 'pointer' }} value={1}>Tier 1</option>
+        <option style={{ padding: 10, cursor: 'pointer' }} value={2}>Tier 2</option>
+        <option style={{ padding: 10, cursor: 'pointer' }} value={3}>Tier 3</option>
+      </SelectRedux>
       {
         touched
         && ((error && <span>{error}</span>)
@@ -128,6 +154,18 @@ class SeatManagementForm extends React.Component {
                   required
                   className={classes.field}
                   validate={[minTextLength, maxTextLength]}
+                />
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <Field
+                  name="tier"
+                  component={renderSelect}
+                  placeholder="Access Level"
+                  label="Access Level"
+                  required
+                  className={classes.field}
                 />
               </FormControl>
             </div>

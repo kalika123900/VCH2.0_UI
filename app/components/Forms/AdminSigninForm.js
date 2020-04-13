@@ -118,7 +118,7 @@ class SigninForm extends React.Component {
             </div>
             <div className={classes.optArea}>
               <FormControlLabel className={classes.label} control={<Field name="checkbox" component={CheckboxRedux} />} label="Remember" />
-              <Button size="small" component={LinkBtn} to="/reset-password" className={classes.buttonLink}>Forgot Password</Button>
+              <Button size="small" component={LinkBtn} to="/reset-password?user=admin" className={classes.buttonLink}>Forgot Password</Button>
             </div>
             <div className={classes.btnArea, classes.customMargin}>
               <Button variant="contained" fullWidth color="primary" size="large" type="submit">

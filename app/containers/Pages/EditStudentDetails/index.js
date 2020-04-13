@@ -28,6 +28,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
+import { DateHelper } from '../../../redux/helpers/dateTimeHelper';
 
 function arrayRemove(arr, index) {
   let temp = [];
@@ -38,6 +39,20 @@ function arrayRemove(arr, index) {
   });
 
   return temp;
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr);
+  const year = d.getFullYear();
+  let month = d.getMonth() + 1;
+  let date = d.getDate();
+  if (month < 10) {
+    month = '0' + month;
+  }
+  if (date < 10) {
+    date = '0' + date;
+  }
+  return (year + '-' + month + '-' + date);
 }
 
 async function postJSON(url, data) {
@@ -146,7 +161,9 @@ class EditStudentDetails extends Component {
             id: null,
             company: '',
             role: '',
-            roleDescription: ''
+            roleDescription: '',
+            from: DateHelper.format(DateHelper.addDays(new Date(), -365)),
+            to: DateHelper.format(DateHelper.addDays(new Date(), 0))
           }];
           let oldExperienceInfo = [];
 
@@ -163,7 +180,9 @@ class EditStudentDetails extends Component {
                 id: item.id,
                 company: item.company,
                 role: item.role,
-                roleDescription: item.role_description
+                roleDescription: item.role_description,
+                from: formatDate(item.from),
+                to: formatDate(item.to)
               }
             });
 
@@ -172,7 +191,9 @@ class EditStudentDetails extends Component {
                 id: item.id,
                 company: item.company,
                 role: item.role,
-                roleDescription: item.role_description
+                roleDescription: item.role_description,
+                from: formatDate(item.from),
+                to: formatDate(item.to)
               }
             });
 
@@ -286,6 +307,7 @@ class EditStudentDetails extends Component {
       user_id: user.id,
     };
     var _that = this;
+
     postJSON(`${API_URL}/student/create-experience`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
@@ -335,7 +357,9 @@ class EditStudentDetails extends Component {
       id: null,
       company: '',
       role: '',
-      roleDescription: ''
+      roleDescription: '',
+      from: DateHelper.format(DateHelper.addDays(new Date(), -365)),
+      to: DateHelper.format(DateHelper.addDays(new Date(), 0))
     }
 
     MapExperienceInfo.push(formObject);

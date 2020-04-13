@@ -142,6 +142,7 @@ class Step6 extends React.Component {
             clickThrough90 = `0${clickThrough90}`
           }
           this.setState({ impressionCount: count, clickThrough60, clickThrough90 });
+          this.props.handleCreateCampaign(count);
         }
       })
       .catch((err) => {

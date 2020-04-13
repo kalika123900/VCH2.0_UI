@@ -26,6 +26,7 @@ class Signup extends React.Component {
     isVerified: false,
     token: '',
     company_id: -1,
+    tier: -1,
     errorMessage: '',
     flash: false,
     firstname: '',
@@ -39,6 +40,7 @@ class Signup extends React.Component {
     const searchString = (this.props.location.search).split('&');
     const token = searchString[0].split('?token=');
     const company_id = searchString[1].split('cId=');
+    const tier = searchString[2].split('tier=');
     const data = {
       token: token[1]
     }
@@ -54,7 +56,8 @@ class Signup extends React.Component {
             phone: res.data.phone,
             isVerified: true,
             token: token[1],
-            company_id: company_id[1]
+            company_id: company_id[1],
+            tier: tier[1]
           })
         }
       })
@@ -73,9 +76,9 @@ class Signup extends React.Component {
 
   submitForm(values) {
     const { firstname, lastname, email, username, password, phone } = values;
-    const { token, company_id } = this.state;
+    const { token, company_id, tier } = this.state;
 
-    const data = { firstname, lastname, email, username, password, phone, token, company_id }
+    const data = { firstname, lastname, email, username, password, phone, tier, token, company_id }
 
     postData(`${API_URL}/client/staff-signup`, data)
       .then((res) => {
