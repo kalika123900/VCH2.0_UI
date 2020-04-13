@@ -17,7 +17,8 @@ import {
   EditPersonalDetails,
   EditSkillsInterests,
   EditEducation,
-  EditExperience
+  EditExperience,
+  SetNewPassword
 }
   from 'dan-components';
 import styles from '../../../components/Forms/user-jss';
@@ -87,6 +88,35 @@ class EditStudentDetails extends Component {
       messageType: 'error',
       notifyMessage: ''
     };
+  }
+
+  submitForm(values) {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+    const MappedValues = values.toJS();
+
+    const data = {
+      user_id: user.id,
+      newPassword: MappedValues.password,
+      oldPassword: MappedValues.oldPassword,
+      type: 'student'
+    }
+
+    postData(`${API_URL}/utils/set-new-password`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          this.successMsg()
+          this.resetTab();
+        } else {
+          this.setState({ notifyMessage: 'Old Password is not correct' });
+          this.setState({ messageType: 'error' });
+          this.setState({ openStyle: true });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   educationHandler = (data) => {
@@ -313,7 +343,7 @@ class EditStudentDetails extends Component {
         if (res.status === 1) {
           _that.experienceHandler(_that.state.data);
           this.successMsg();
-          this.resetTab();
+          this.goNextTab();
         } else {
           _that.experienceHandler(_that.state.data);
           this.errorMsg();
@@ -434,6 +464,7 @@ class EditStudentDetails extends Component {
           <Tab label="Skills & Interests" />
           <Tab label="Education" />
           <Tab label="Experience" />
+          <Tab label="Security" />
         </Tabs>
         <section className={classes.pageFormWrap}>
           {tab === 0 && (
@@ -471,6 +502,9 @@ class EditStudentDetails extends Component {
                 </Button>
               </div>
             </Fragment>
+          )}
+          {tab === 4 && (
+            <SetNewPassword onSubmit={(values) => this.submitForm(values)} />
           )}
           <Snackbar
             anchorOrigin={{

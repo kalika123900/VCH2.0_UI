@@ -17,8 +17,11 @@ import InfoIcon from '@material-ui/icons/Info';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import qs from 'qs';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import messageStyles from 'dan-styles/Messages.scss';
 import styles from '../../../components/Forms/user-jss';
+import { SetNewPassword } from 'dan-components';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -58,10 +61,61 @@ class EditDetailsForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      tab: 0,
       openStyle: false,
       messageType: 'error',
       notifyMessage: ''
     };
+  }
+
+  goNextTab = () => {
+    this.setState({ tab: this.state.tab + 1 });
+  }
+
+  successMsg = () => {
+    this.setState({ notifyMessage: 'Information updated' });
+    this.setState({ messageType: 'success' });
+    this.setState({ openStyle: true });
+  }
+
+  errorMsg = () => {
+    this.setState({ notifyMessage: 'Information not updated' });
+    this.setState({ messageType: 'error' });
+    this.setState({ openStyle: true });
+  }
+
+  resetTab = () => {
+    this.setState({ tab: 0 });
+  }
+
+
+  submitForm(values) {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+    const MappedValues = values.toJS();
+
+    const data = {
+      user_id: user.id,
+      newPassword: MappedValues.password,
+      oldPassword: MappedValues.oldPassword,
+      type: 'client'
+    }
+
+    postData(`${API_URL}/utils/set-new-password`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          this.successMsg()
+          this.resetTab();
+        } else {
+          this.setState({ notifyMessage: 'Old Password is not correct' });
+          this.setState({ messageType: 'error' });
+          this.setState({ openStyle: true });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   componentDidMount() {
@@ -95,6 +149,10 @@ class EditDetailsForm extends React.Component {
       });
   }
 
+  handleChangeTab = (event, value) => {
+    this.setState({ tab: value });
+  };
+
   handleClient = (e) => {
     const _that = this;
     e.preventDefault();
@@ -113,6 +171,7 @@ class EditDetailsForm extends React.Component {
           _that.setState({ notifyMessage: 'Information update successfully' });
           _that.setState({ messageType: 'success' });
           _that.setState({ openStyle: true });
+          _that.goNextTab();
         } else {
           _that.setState({ notifyMessage: res.errorMessage.toUpperCase() });
           _that.setState({ messageType: 'error' });
@@ -147,102 +206,119 @@ class EditDetailsForm extends React.Component {
       username,
       classes,
     } = this.props;
+    const { tab } = this.state;
     return (
       <Paper className={classes.fullWrap}>
+        <Tabs
+          value={tab}
+          onChange={this.handleChangeTab}
+          indicatorColor="secondary"
+          textColor="secondary"
+          centered
+          className={classes.tab}
+        >
+          <Tab label="Personal Details" />
+          <Tab label="Security" />
+        </Tabs>
         <section className={classes.pageFormWrap}>
-          <form onSubmit={(e) => this.handleClient(e)}>
-            <div>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  label="First Name"
-                  className={classes.textField}
-                  type="text"
-                  name="firstName"
-                  margin="normal"
-                  variant="outlined"
-                  value={firstName}
-                  onChange={(e) => this.handleChange(e)}
-                  validate={[required]}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  label="Last Name"
-                  className={classes.textField}
-                  type="text"
-                  name="lastName"
-                  margin="normal"
-                  variant="outlined"
-                  value={lastName}
-                  onChange={(e) => this.handleChange(e)}
-                  validate={[required]}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  label="Username"
-                  className={classes.textField}
-                  type="text"
-                  name="username"
-                  margin="normal"
-                  variant="outlined"
-                  value={username}
-                  onChange={(e) => this.handleChange(e)}
-                  validate={[required]}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  label="Email"
-                  className={classes.textField}
-                  type="email"
-                  name="userEmail"
-                  autoComplete="email"
-                  margin="normal"
-                  variant="outlined"
-                  value={userEmail}
-                  onChange={(e) => this.handleChange(e)}
-                  validate={[required, email]}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  label="Phone Number"
-                  className={classes.textField}
-                  type="phone"
-                  autoComplete="phone"
-                  name="phone"
-                  margin="normal"
-                  variant="outlined"
-                  value={phone}
-                  onChange={(e) => this.handleChange(e)}
-                  validate={[required]}
-                />
-              </FormControl>
-            </div>
-            <div className={classes.btnArea}>
-              <Button variant="contained" fullWidth color="primary" type="submit">
-                Save Changes
+          {tab === 0 && (
+            <form onSubmit={(e) => this.handleClient(e)}>
+              <div>
+                <FormControl className={classes.formControl}>
+                  <TextField
+                    label="First Name"
+                    className={classes.textField}
+                    type="text"
+                    name="firstName"
+                    margin="normal"
+                    variant="outlined"
+                    value={firstName}
+                    onChange={(e) => this.handleChange(e)}
+                    validate={[required]}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </FormControl>
+              </div>
+              <div>
+                <FormControl className={classes.formControl}>
+                  <TextField
+                    label="Last Name"
+                    className={classes.textField}
+                    type="text"
+                    name="lastName"
+                    margin="normal"
+                    variant="outlined"
+                    value={lastName}
+                    onChange={(e) => this.handleChange(e)}
+                    validate={[required]}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </FormControl>
+              </div>
+              <div>
+                <FormControl className={classes.formControl}>
+                  <TextField
+                    label="Username"
+                    className={classes.textField}
+                    type="text"
+                    name="username"
+                    margin="normal"
+                    variant="outlined"
+                    value={username}
+                    onChange={(e) => this.handleChange(e)}
+                    validate={[required]}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </FormControl>
+              </div>
+              <div>
+                <FormControl className={classes.formControl}>
+                  <TextField
+                    label="Email"
+                    className={classes.textField}
+                    type="email"
+                    name="userEmail"
+                    autoComplete="email"
+                    margin="normal"
+                    variant="outlined"
+                    value={userEmail}
+                    onChange={(e) => this.handleChange(e)}
+                    validate={[required, email]}
+                  />
+                </FormControl>
+              </div>
+              <div>
+                <FormControl className={classes.formControl}>
+                  <TextField
+                    label="Phone Number"
+                    className={classes.textField}
+                    type="phone"
+                    autoComplete="phone"
+                    name="phone"
+                    margin="normal"
+                    variant="outlined"
+                    value={phone}
+                    onChange={(e) => this.handleChange(e)}
+                    validate={[required]}
+                  />
+                </FormControl>
+              </div>
+              <div className={classes.btnArea}>
+                <Button variant="contained" fullWidth color="primary" type="submit">
+                  Save Changes
               </Button>
-            </div>
-          </form>
+              </div>
+            </form>
+          )}
+          {tab === 1 && (
+            <SetNewPassword onSubmit={(values) => this.submitForm(values)} />
+          )}
           <Snackbar
             anchorOrigin={{
               vertical: 'top',

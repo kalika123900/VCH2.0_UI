@@ -108,6 +108,7 @@ export MessageDialog from './Forms/MessageDialog';
 export SeatManagementForm from './Forms/SeatManagementForm';
 export CampaignEditForm from './Forms/CampaignEditForm';
 export EditPersonalDetails from './Forms/StudentDetails/EditPersonalDetails';
+export SetNewPassword from './Forms/StudentDetails/SetNewPassword';
 export EditSkillsInterests from './Forms/StudentDetails/EditSkillsInterests';
 export EditEducation from './Forms/StudentDetails/EditEducation';
 export EditExperience from './Forms/StudentDetails/EditExperience';
