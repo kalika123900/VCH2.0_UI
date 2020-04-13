@@ -63,7 +63,7 @@ class CancelCampaign extends React.Component {
               const client_name = item.name;
               item.campaign_masters.map(campaign => {
                 const date = formatDate(campaign.created_at);
-                const endDate = formatDate(campaign.deadline);
+                const deadline = item.deadline == null ? 'No Deadline' : formatDate(item.deadline);
                 const cancel = campaign.status === -1 ? 'Admin' : 'Client';
                 campaignData.push(
                   createData(campaign.id, campaign.campaign_name, client_name, date, endDate, cancel)
@@ -106,7 +106,7 @@ class CancelCampaign extends React.Component {
         <div className={classes.rootTable}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
-              <Typography variant="h6">Cancel Campaigns</Typography>
+              <Typography variant="h6">Completed or Cancelled Campaigns</Typography>
             </div>
             <div className={classes.spacer} />
           </Toolbar>
@@ -159,7 +159,7 @@ class CancelCampaign extends React.Component {
                 variant="body1"
                 className={classes.warnMsg}
               >
-                No Cancel campaigns !
+                No Completed or Cancelled campaigns !
               </Typography>
             )
           }

@@ -28,8 +28,8 @@ import Step6 from './CampaignSteps/Step6';
 function getSteps() {
   return [
     'Select Role',
-    'Define Your Needs',
-    'Your Ad',
+    'Choose Audience',
+    'Choose campaign content',
     'Set Your Deadline',
     'Review Settings'
   ];

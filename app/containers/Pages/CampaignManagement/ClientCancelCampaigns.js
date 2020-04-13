@@ -113,7 +113,7 @@ class OngoingCampaigns extends React.Component {
         <div className={classes.rootTable}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
-              <Typography variant="h6">Cancel Campaigns</Typography>
+              <Typography variant="h6">Completed or Cancelled Campaigns</Typography>
             </div>
           </Toolbar>
           {isCampaigns
@@ -163,7 +163,7 @@ class OngoingCampaigns extends React.Component {
                 variant="body1"
                 className={classes.warnMsg}
               >
-                No Cancel campaigns !
+                No Completed or Cancelled campaigns !
               </Typography>
             )
           }

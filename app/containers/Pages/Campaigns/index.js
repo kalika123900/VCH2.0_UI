@@ -179,7 +179,7 @@ class Campaigns extends React.Component {
 
     let customDeadline = '';
     if (choosedDeadline == '5') {
-      customDeadline = roleDeadline;
+      customDeadline = null;
     } else {
       customDeadline = deadline;
     }

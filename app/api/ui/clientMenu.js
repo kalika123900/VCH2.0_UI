@@ -74,7 +74,7 @@ module.exports = [
   },
   {
     key: 'explore',
-    name: 'Explore',
+    name: 'View All Candidates',
     link: '/client/explore',
   },
   {

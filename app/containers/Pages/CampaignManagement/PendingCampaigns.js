@@ -83,7 +83,7 @@ class PendingCampaigns extends React.Component {
             let tempData = [];
             res.data.map(item => {
               const createDate = formatDate(item.created_at);
-              const deadline = formatDate(item.deadline);
+              const deadline = item.deadline == null ? 'No Deadline' : formatDate(item.deadline);
               tempData.push(createData(item.id, item.campaign_name, createDate, deadline));
             });
             campaignData = tempData;

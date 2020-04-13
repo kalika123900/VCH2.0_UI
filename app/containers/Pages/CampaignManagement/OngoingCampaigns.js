@@ -123,7 +123,7 @@ class OngoingCampaigns extends React.Component {
             res.data.map(item => {
               item.views = '0k';
               const createDate = formatDate(item.created_at);
-              const deadline = formatDate(item.deadline);
+              const deadline = item.deadline == null ? 'No Deadline' : formatDate(item.deadline);
               tempData.push(createData(item.id, item.campaign_name, createDate, deadline, item.views));
             });
             campaignData = tempData;
@@ -168,7 +168,7 @@ class OngoingCampaigns extends React.Component {
         <div className={classes.rootTable}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
-              <Typography variant="h6">Ongoing Campaigns</Typography>
+              <Typography variant="h6">Live Campaigns</Typography>
             </div>
           </Toolbar>
           {isCampaigns
@@ -233,7 +233,7 @@ class OngoingCampaigns extends React.Component {
                 variant="body1"
                 className={classes.warnMsg}
               >
-                No Ongoing campaigns !
+                No Live campaigns !
               </Typography>
             )
           }

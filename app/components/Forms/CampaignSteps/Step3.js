@@ -119,6 +119,7 @@ class Step3 extends React.Component {
                   MenuProps={MenuProps}
                   component={Select}
                   onChange={e => this.handleReduxChange(e)}
+                  style={{ whiteSpace: 'normal' }}
                 >
                   {universityItems.map((item, index) => (
                     (item.length > 0) &&
@@ -153,7 +154,7 @@ class Step3 extends React.Component {
             <Grid style={{ textAlign: 'left' }}>
               <FormControl component="fieldset" required className={(classes.customWidth, classes.formControl)}>
                 <Typography variant="h6">
-                  Student reading these courses will be particularly targeted:
+                  Courses that the role targets
                 </Typography>
                 <Select
                   multiple
@@ -195,7 +196,7 @@ class Step3 extends React.Component {
             <Grid style={{ textAlign: 'left' }}>
               <FormControl component="fieldset" required className={(classes.customWidth, classes.formControl)}>
                 <Typography variant="h6">
-                  Students with these skills will be particularly targeted:
+                  Skills that the role targets
                 </Typography>
                 <Select
                   multiple
@@ -314,7 +315,7 @@ class Step3 extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        <Grid container spacing={3} className={classes.divider}>
+        {/* <Grid container spacing={3} className={classes.divider}>
           <Grid item md={12} xs={12}>
             <Grid style={{ textAlign: 'left' }}>
               <FormControl component="fieldset" required className={classes.formControl}>
@@ -332,7 +333,7 @@ class Step3 extends React.Component {
               </FormControl>
             </Grid>
           </Grid>
-        </Grid>
+        </Grid> */}
         <Grid container spacing={3} className={classes.divider}>
           <Grid item md={12} xs={12}>
             <Grid style={{ textAlign: 'left' }}>
@@ -370,7 +371,7 @@ class Step3 extends React.Component {
         <Grid container spacing={3} className={classes.divider}>
           <Grid item md={12} xs={12}>
             <Typography variant="h6" style={{ textAlign: 'left' }}>
-              Only students that are specifically interested in these sectors will be targeted:
+              Which sector is this role in ?
             </Typography>
             <SelectAdd
               classes={this.props.classes}
@@ -383,7 +384,7 @@ class Step3 extends React.Component {
         <Grid container spacing={3} className={classes.divider}>
           <Grid item md={12} xs={12}>
             <Typography variant="h6" style={{ textAlign: 'left' }}>
-              Students that contain these words will be ranked hire in the campaign:
+              Select keywords associated with the role to target students from
             </Typography>
             <SelectAdd
               classes={this.props.classes}

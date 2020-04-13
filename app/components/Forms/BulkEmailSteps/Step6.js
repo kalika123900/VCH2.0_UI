@@ -143,7 +143,7 @@ class Step6 extends React.Component {
     MapUniversity.map(item => {
       selectedUniversity = `${selectedUniversity}${universityItems[item]},  `;
     });
-    const customDeadline = choosedDeadline == 0 ? deadline : roleDeadline;
+    const customDeadline = choosedDeadline == 5 ? 'No deadline' : deadline;
     const title = brand.name + ' - Review Bulk Email Settings';
     const description = brand.desc;
     return (
@@ -269,8 +269,8 @@ class Step6 extends React.Component {
                 avatar={
                   <Avatar src="/images/pp_girl.svg" />
                 }
-                title={cname}
-                subheader={email}
+                title="Your Company Name"
+                subheader="team@varsitycareershub.co.uk"
                 style={{
                   padding: '0',
                   paddingBottom: ' 2%',

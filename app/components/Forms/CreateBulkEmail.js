@@ -29,8 +29,8 @@ import Step6 from './BulkEmailSteps/Step6';
 function getSteps() {
   return [
     'Select Role',
-    'Define Your Needs',
-    'Your Email',
+    'Choose Audience',
+    'Choose Bulk Email Content',
     'Set Your Deadline',
     'View Recipients',
     'Review & Submit'

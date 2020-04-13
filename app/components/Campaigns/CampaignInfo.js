@@ -13,6 +13,7 @@ import styles from '../../components/Widget/widget-jss';
 import CreateIcon from '@material-ui/icons/Create';
 import TrackChangesIcon from '@material-ui/icons/TrackChanges';
 import { Avatar, Grid } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 
 async function postJSON(url, data) {
   const response = await fetch(url, {
@@ -82,7 +83,7 @@ class CampaignInfo extends React.Component {
 
     return (
       <Fragment>
-        <PapperBlock title="Campaign Info" icon="ios-information-circle-outline" whiteBg desc="">
+        <PapperBlock title="Campaign Details" icon="ios-information-circle-outline" whiteBg desc="">
           <List dense className={classes.profileList}>
             <ListItem>
               <ListItemAvatar>
@@ -156,6 +157,9 @@ class CampaignInfo extends React.Component {
               </ListItemAvatar>
             </ListItem>
           </List>
+          <Grid style={{ textAlign: 'right' }}>
+            <Button variant="contained" color="primary">Export Campaign Details</Button>
+          </Grid>
         </PapperBlock>
       </Fragment>
     )

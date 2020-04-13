@@ -276,8 +276,8 @@ class Step4 extends PureComponent {
                       </IconButton>
                     </Fragment>
                   )}
-                  title={cname}
-                  subheader={email}
+                  title="Your Company Name"
+                  subheader="team@varsitycareershub.co.uk"
                   style={{
                     padding: '0',
                     paddingBottom: ' 2%',

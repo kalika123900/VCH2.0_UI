@@ -1,44 +1,51 @@
 export const data1 = [
   {
-    name: 'Page A',
+    name: '4 June 2020',
     uv: 4000,
     pv: 2400,
+    contacted: 2,
     amt: 2400
   },
   {
-    name: 'Page B',
+    name: '5 June 2020',
     uv: 3000,
     pv: 1398,
+    contacted: 8,
     amt: 1210
   },
   {
-    name: 'Page C',
+    name: '6 June 2020',
     uv: 2000,
     pv: 2800,
+    contacted: 1,
     amt: 490
   },
   {
-    name: 'Page D',
+    name: '7 June 2020',
     uv: 2780,
     pv: 908,
+    contacted: 12,
     amt: 2000
   },
   {
-    name: 'Page E',
+    name: '8 June 2020',
     uv: 1890,
     pv: 4800,
+    contacted: 5,
     amt: 1081
   },
   {
-    name: 'Page F',
+    name: '9 June 2020',
     uv: 2390,
     pv: 3800,
+    contacted: 9,
     amt: 3000
   },
   {
-    name: 'Page G',
+    name: '10 June 2020',
     uv: 3490,
     pv: 4300,
+    contacted: 0,
     amt: 2100
   },
 ];

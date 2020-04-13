@@ -92,11 +92,11 @@ class Step5 extends React.Component {
                   <FormControlLabel value="28" control={<Radio />} label="1 Month" />
                   <FormControlLabel value="56" control={<Radio />} label="2 Month" />
                   <FormControlLabel value="84" control={<Radio />} label="3 Month" />
-                  <FormControlLabel value="5" control={<Radio />} label="Role deadline as campaign deadline" />
+                  <FormControlLabel value="5" control={<Radio />} label="No deadline - run continuously until cancelled" />
                   <FormControlLabel value="0" control={<Radio />} label="Custom Deadline" />
                 </RadioGroup>
               </div>
-              {(choosedDeadline === '0' || choosedDeadline === '5') && (
+              {(choosedDeadline === '0') && (
                 <div style={{ textAlign: 'left' }}>
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <Grid container justify="space-around">
@@ -112,14 +112,14 @@ class Step5 extends React.Component {
                       />
                     </Grid>
                   </MuiPickersUtilsProvider>
-                  {choosedDeadline === '5' &&
+                  {/* {choosedDeadline === '5' &&
                     <Grid style={{ textAlign: "center" }}>
 
                       <Typography variant="caption" color="textSecondary">
                         (It's Your role deadline)
                       </Typography>
                     </Grid>
-                  }
+                  } */}
                 </div>
               )}
             </PapperBlock>

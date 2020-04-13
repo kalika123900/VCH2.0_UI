@@ -60,7 +60,7 @@ class Footer extends React.Component {
             <div className={classes.brand}>
               <img src={logo} alt={brand.name} />
             </div>
-            <nav>
+            {/* <nav>
               <ul>
                 {menuList.map(item => (
                   <li key={item.id.toString()}>
@@ -68,17 +68,17 @@ class Footer extends React.Component {
                   </li>
                 ))}
               </ul>
-            </nav>
+            </nav> */}
           </div>
         </div>
         <div className={classes.copyright}>
           <div className={classes.container}>
-            <p>&copy; 2019 All Right Reserved </p>
-            <span>
+            <p>&copy; 2020 All Rights Reserved </p>
+            {/* <span>
               <IconButton color="primary" className={classes.button} href={link.twitter} target="_blank"><Ionicon icon="logo-twitter" /></IconButton>
               <IconButton color="primary" className={classes.button} href={link.pinterest} target="_blank"><Ionicon icon="logo-pinterest" /></IconButton>
               <IconButton color="primary" className={classes.button} href={link.github} target="_blank"><Ionicon icon="logo-github" /></IconButton>
-            </span>
+            </span> */}
           </div>
         </div>
       </footer>

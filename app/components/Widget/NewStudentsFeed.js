@@ -20,22 +20,22 @@ class NewStudentsFeed extends React.Component {
         <List component="nav" dense className={classes.profileList}>
           <ListItem button className={classes.listPeople}>
             <Avatar className={classNames(classes.avatar, classes.orangeAvatar, classes.customMargin)}>H</Avatar>
-            <ListItemText primary="Harry Wells" secondary="2 Mutual Connection" />
+            <ListItemText primary="Harry Wells" secondary="2 Connection" />
             <Button color="secondary" size="small">View Profile</Button>
           </ListItem>
           <ListItem button className={classes.listPeople}>
             <Avatar className={classNames(classes.avatar, classes.purpleAvatar, classes.customMargin)}>J</Avatar>
-            <ListItemText primary="John Doe" secondary="8 Mutual Connection" />
+            <ListItemText primary="John Doe" secondary="8 Connection" />
             <Button color="secondary" size="small">View Profile</Button>
           </ListItem>
           <ListItem button className={classes.listPeople}>
             <Avatar className={classNames(classes.avatar, classes.pinkAvatar, classes.customMargin)}>V</Avatar>
-            <ListItemText primary="Victor Wanggai" secondary="12 Mutual Connection" />
+            <ListItemText primary="Victor Wanggai" secondary="12 Connection" />
             <Button color="secondary" size="small">View Profile</Button>
           </ListItem>
           <ListItem button className={classes.listPeople}>
             <Avatar className={classNames(classes.avatar, classes.greenAvatar, classes.customMargin)}>H</Avatar>
-            <ListItemText primary="Baron Phoenix" secondary="10 Mutual Connection" />
+            <ListItemText primary="Baron Phoenix" secondary="10 Connection" />
             <Button color="secondary" size="small">View Profile</Button>
           </ListItem>
         </List>
