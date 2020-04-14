@@ -329,6 +329,10 @@ export const StaffSignup = loadable(() =>
   import('./Pages/Users/StaffSignup'), {
   fallback: <Loading />,
 });
+export const AdminSignup = loadable(() =>
+  import('./Pages/Users/AdminSignup'), {
+  fallback: <Loading />,
+});
 export const Token = loadable(() =>
   import('./Pages/Users/Token'), {
   fallback: <Loading />,

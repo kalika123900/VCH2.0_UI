@@ -4,7 +4,7 @@ import Outer from '../Templates/Outer';
 import {
   Signin, Signup, Login,
   ResetPassword, LockScreen, ComingSoon,
-  Maintenance, AdminSignin, SetPassword,
+  Maintenance, AdminSignin, SetPassword, AdminSignup,
   NotFound, StudentSignin, StudentSignup, StaffSignup, ExpiredLink
 } from '../pageListAsync';
 
@@ -15,6 +15,7 @@ class Auth extends React.Component {
         <Switch>
           <Route exact path="/signin" component={Signin} />
           <Route exact path="/signup" component={Signup} />
+          <Route exact path="/admin-signup" component={AdminSignup} />
           <Route exact path="/staff-signup" component={StaffSignup} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/reset-password" component={ResetPassword} />

@@ -15,7 +15,6 @@ import { Button } from '@material-ui/core';
 import formatDate from '../../../Helpers/formatDate';
 import qs from 'qs';
 import { CustomConfirmation } from 'dan-components';
-import { makeSecureDecrypt } from '../../../Helpers/security';
 
 async function postData(url, data) {
   const response = await fetch(url, {
@@ -25,6 +24,14 @@ async function postData(url, data) {
     },
     body: qs.stringify(data)
   });
+  return await response.json();
+}
+
+async function getData(url) {
+  const response = await fetch(url, {
+    method: 'GET',
+  });
+
   return await response.json();
 }
 
@@ -61,15 +68,7 @@ class TokenTable extends React.Component {
   }
 
   getTokens = () => {
-    const user = JSON.parse(
-      makeSecureDecrypt(localStorage.getItem('user'))
-    );
-
-    const data = {
-      company_id: user.cId,
-    };
-
-    postData(`${API_URL}/client/get-staff-tokens`, data)
+    getData(`${API_URL}/admin/get-staff-tokens`)
       .then((res) => {
         if (res.status === 1) {
           if (res.data.length > 0) {
@@ -98,7 +97,7 @@ class TokenTable extends React.Component {
       token_id: id,
     };
 
-    postData(`${API_URL}/client/remove-staff-token`, data)
+    postData(`${API_URL}/admin/remove-staff-token`, data)
       .then((res) => {
         if (res.status === 1) {
           this.setState({ open: false });
