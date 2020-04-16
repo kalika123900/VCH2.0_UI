@@ -47,14 +47,15 @@ async function postData(url, data) {
   return await response.json();
 }
 
-function createData(id, name, username, email, phone, status) {
+function createData(id, name, username, email, phone, status, capabilities) {
   return {
     id,
     name,
     username,
     email,
     phone,
-    status
+    status,
+    capabilities
   };
 }
 
@@ -101,7 +102,7 @@ class SeatManagementTable extends React.Component {
             res.data.map(item => {
               const name = `${item.firstname} ${item.lastname}`;
               const status = item.status == 0 ? 'Deactivated' : 'Active';
-              tempData.push(createData(item.id, name, item.username, item.email, item.phone, status));
+              tempData.push(createData(item.id, name, item.username, item.email, item.phone, status, item.capabilities));
             });
             seatData = tempData;
             this.setState({ isSeatData: true });
@@ -126,16 +127,18 @@ class SeatManagementTable extends React.Component {
       company_id: user.cId
     };
 
-    postData(`${API_URL}/client/remove-seat`, data)
-      .then((res) => {
-        if (res.status === 1) {
-          this.setState({ open: false });
-          this.getStaff();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    this.setState({ open: false });
+
+    // postData(`${API_URL}/client/remove-seat`, data)
+    //   .then((res) => {
+    //     if (res.status === 1) {
+    //       this.setState({ open: false });
+    //       this.getStaff();
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   }
 
   addMember = () => {
@@ -266,6 +269,7 @@ class SeatManagementTable extends React.Component {
                     <TableCell align="left">Username</TableCell>
                     <TableCell align="left">Email</TableCell>
                     <TableCell align="left">Phone</TableCell>
+                    <TableCell align="left">Tier</TableCell>
                     <TableCell align="left">Status</TableCell>
                     <TableCell align="left">Actions</TableCell>
                   </TableRow>
@@ -277,6 +281,7 @@ class SeatManagementTable extends React.Component {
                       <TableCell align="left">{n.username}</TableCell>
                       <TableCell align="left">{n.email}</TableCell>
                       <TableCell align="left">{n.phone}</TableCell>
+                      <TableCell align="left">{`Tier ${n.capabilities}`}</TableCell>
                       <TableCell align="left">{n.status}</TableCell>
                       <TableCell align="left">
                         <Button onClick={(e) => this.handleConfirmation(n.id)}>

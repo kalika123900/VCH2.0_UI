@@ -20,6 +20,9 @@ import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
+import avatarApi from 'dan-api/images/avatars';
+import Avatar from '@material-ui/core/Avatar';
+import MaterialDropZone from 'dan-components/Forms/MaterialDropZone';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -45,6 +48,17 @@ async function postData(url, data) {
   return await response.json();
 }
 
+async function postFormData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+  return await response.json();
+}
+
 class SignupForm extends React.Component {
   state = {
     cName: '',
@@ -53,7 +67,8 @@ class SignupForm extends React.Component {
     cHeadquarter: '',
     openStyle: false,
     messageType: 'error',
-    notifyMessage: ''
+    notifyMessage: '',
+    logo: null,
   };
 
   componentDidMount() {
@@ -89,6 +104,7 @@ class SignupForm extends React.Component {
   }
 
   handleChange = (e) => {
+    console.log(e)
     this.setState({ [e.target.name]: e.target.value });
   }
 
@@ -114,11 +130,12 @@ class SignupForm extends React.Component {
         cName: this.state.cName,
         cEmail: this.state.cEmail,
         cPhone: this.state.cPhone,
-        cHeadquarter: this.state.cHeadquarter
+        cHeadquarter: this.state.cHeadquarter,
+        logo: this.state.logo
       }
     }
 
-    postData(`${API_URL}/utils/update-company-info`, data) // eslint-disable-line
+    postFormData(`${API_URL}/utils/update-company-info`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
           if (this.props.userType == 'ADMIN') {
@@ -153,14 +170,28 @@ class SignupForm extends React.Component {
       classes,
       deco
     } = this.props;
-    const { cName, cEmail, cPhone, cHeadquarter } = this.state;
+    const { cName, cEmail, cPhone, cHeadquarter, logo } = this.state;
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
         <Typography variant="h4" className={classes.title} gutterBottom>
           Edit Company Profile
         </Typography>
         <section className={classes.pageFormWrap}>
-          <form onSubmit={(e) => this.handleSubmitForm(e)}>
+          <form enctype="multipart/form-data" onSubmit={(e) => this.handleSubmitForm(e)}>
+            <div className={classes.row}>
+              <IconButton>
+                <Avatar
+                  alt="Remy Sharp"
+                  src='https://res.cloudinary.com/dxclvhyan/image/upload/c_scale,w_103,h_103/v1587025805/tqlzewb27b48mqutg4fz.jpg'
+                  className={classes.avatar}
+                  style={{
+                    width: '103px',
+                    display: 'inline-block',
+                    height: 'auto',
+                  }}
+                />
+              </IconButton>
+            </div>
             <div>
               <FormControl className={classes.formControl}>
                 <TextField
@@ -213,6 +244,19 @@ class SignupForm extends React.Component {
                 />
               </FormControl>
             </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <input
+                  name="logo"
+                  value={logo}
+                  required
+                  accept="image/*"
+                  type="file"
+                  validate={[required]}
+                  onChange={(e) => { this.handleChange(e) }}
+                />
+              </FormControl>
+            </div>
             <div className={classes.btnArea}>
               <Button variant="contained" fullWidth color="primary" type="submit">
                 Save Changes
@@ -259,7 +303,7 @@ class SignupForm extends React.Component {
             />
           </Snackbar>
         </section>
-      </Paper>
+      </Paper >
     );
   }
 }

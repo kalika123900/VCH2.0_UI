@@ -147,7 +147,7 @@ class Step6 extends React.Component {
     const title = brand.name + ' - Review Bulk Email Settings';
     const description = brand.desc;
     return (
-      <Grid>
+      <Grid style={{ maxWidth: 780 }}>
         <Helmet>
           <title>{title}</title>
           <meta name="description" content={description} />

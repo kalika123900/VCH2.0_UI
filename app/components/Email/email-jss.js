@@ -325,7 +325,6 @@ const styles = theme => ({
     margin: 5,
     padding: 15,
     display: 'flex',
-    backgroundColor: '#f3f4fa',
     cursor: 'pointer'
   }
 });

@@ -18,7 +18,7 @@ const ThemeThumb = props => {
     name
   } = props;
   return (
-    <div className={classNames(classes.thumb, theme === value ? classes.selectedTheme : '')}>
+    <div className={classNames(classes.thumb, selectedValue === value ? classes.selectedTheme : '')}>
       <Radio
         checked={selectedValue === value}
         value={value}

@@ -20,6 +20,8 @@ const styles = theme => ({
   },
   formControl: {
     minWidth: 120,
+    minWidth: '120px',
+    maxWidth: '650px',
     width: '100%'
   },
   label: {

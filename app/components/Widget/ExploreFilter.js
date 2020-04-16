@@ -13,71 +13,72 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Place from '@material-ui/icons/Place';
 import PapperBlock from '../PapperBlock/PapperBlock';
 import styles from './widget-jss';
+import messageStyles from 'dan-styles/Messages.scss';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
+import {
+  sectorsData,
+  skillMenu,
+  courses,
+  degreeGradesItems,
+  universityItems,
+} from 'dan-api/apps/profileOption';
+import TextField from '@material-ui/core/TextField';
+import Checkbox from '@material-ui/core/Checkbox';
+import ListItemText from '@material-ui/core/ListItemText';
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
 
 class ExploreFilter extends PureComponent {
   state = {
-    skill: '',
+    name: '',
+    skill: [],
     role: '',
-    university: '',
-    degree: '',
-    grade: '',
+    university: [],
+    course: [],
+    grade: [],
     experience: '',
-    interests: '',
+    interests: [],
     activity: '',
-    rating: 3,
     location: '',
-    checkedA: false,
-    sliderValue: 20,
-    marks: [
-      {
-        value: 0,
-        label: '$0',
-      },
-      {
-        value: 20,
-        label: '$20',
-      },
-      {
-        value: 40,
-        label: '$40',
-      },
-      {
-        value: 60,
-        label: '$60',
-      },
-      {
-        value: 80,
-        label: '$80'
-      },
-      {
-        value: 100,
-        label: '$100'
-      }
-    ]
   };
 
-  valueText = (value) => `$${value}`;
+  handleSubmit = () => {
+
+  }
 
   handleReset = () => {
     this.setState({
-      skill: '',
+      name: '',
+      skill: [],
       role: '',
-      university: '',
-      degree: '',
-      grade: '',
+      university: [],
+      course: [],
+      grade: [],
       experience: '',
-      interests: '',
+      interests: [],
       activity: '',
-      rating: 3,
       location: '',
-      checkedA: false,
-      sliderValue: 20,
     });
   }
 
-  handleChange = value => {
-    this.setState({ rating: value });
-  };
+  handleNameChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value })
+  }
 
   handleLocationChange = prop => event => {
     this.setState({ location: event.target.value });
@@ -87,16 +88,13 @@ class ExploreFilter extends PureComponent {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  handleCheckbox = name => event => {
-    this.setState({ [name]: event.target.checked });
-  };
-
   render() {
     const { classes } = this.props;
     const {
-      skill, rating, location, checkedA, marks, sliderValue, role, university,
-      degree, grade, experience, interests, activity
+      skill, location, role, university,
+      course, grade, experience, interests, activity, name
     } = this.state;
+
     return (
       <PapperBlock whiteBg noMargin title="Apply Filter" icon="ios-search-outline" desc="">
         <Grid container spacing={2}>
@@ -104,20 +102,35 @@ class ExploreFilter extends PureComponent {
             <FormControl className={classes.formControlTrade}>
               <InputLabel htmlFor="skill-simple">Skill</InputLabel>
               <Select
+                multiple
                 value={skill}
-                onChange={this.handleChangeSelect}
-                inputProps={{
-                  name: 'skill',
-                  id: 'skill-simple',
-                }}
+                input={<Input />}
+                name="skill"
+                MenuProps={MenuProps}
+                component={Select}
+                renderValue={selected => {
+                  const skillName = [];
+                  skillMenu.map((value, index) => {
+                    if (selected.includes(value)) {
+                      skillName.push(value);
+                    }
+                  });
+                  return skillName.join(', ');
+                }
+                }
+                onChange={e => this.handleChangeSelect(e)}
               >
-                <MenuItem value="">
-                  <em>--select skill--</em>
-                </MenuItem>
-                <MenuItem value="BNB">React</MenuItem>
-                <MenuItem value="BTC">Management</MenuItem>
-                <MenuItem value="BCN">Angular</MenuItem>
-                <MenuItem value="ADA">Node</MenuItem>
+                {skillMenu.map((item, index) => (
+                  (item.length > 0) &&
+                  <MenuItem key={index.toString()} value={item}>
+                    <TextField
+                      name="skill-checkbox"
+                      component={Checkbox}
+                      checked={skill.indexOf(item) > -1}
+                    />
+                    <ListItemText primary={item} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -136,9 +149,11 @@ class ExploreFilter extends PureComponent {
                   <em>--select role--</em>
                 </MenuItem>
                 <MenuItem value="BNB">AI Engineer</MenuItem>
-                <MenuItem value="BTC">Intern</MenuItem>
+                <MenuItem value="BTC">Technology Analyst</MenuItem>
+                <MenuItem value="BKC">Technical Project Manager</MenuItem>
+                <MenuItem value="BPC">Business Analyst</MenuItem>
                 <MenuItem value="BCN">Software Engineer</MenuItem>
-                <MenuItem value="ADA">Manager</MenuItem>
+                <MenuItem value="ADA">HR Manager</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -148,39 +163,72 @@ class ExploreFilter extends PureComponent {
             <FormControl className={classes.formControlTrade}>
               <InputLabel htmlFor="university-simple">University</InputLabel>
               <Select
+                multiple
                 value={university}
-                onChange={this.handleChangeSelect}
-                inputProps={{
-                  name: 'university',
-                  id: 'university-simple',
-                }}
+                name="university"
+                input={<Input />}
+                renderValue={selected => {
+                  const universityName = [];
+                  universityItems.map((value, index) => {
+                    if (selected.includes(value)) {
+                      universityName.push(value);
+                    }
+                  });
+                  return universityName.join(', ');
+                }
+                }
+                MenuProps={MenuProps}
+                component={Select}
+                onChange={e => this.handleChangeSelect(e)}
+                style={{ whiteSpace: 'normal' }}
               >
-                <MenuItem value="">
-                  <em>--select university--</em>
-                </MenuItem>
-                <MenuItem value="BNB">Oxford</MenuItem>
-                <MenuItem value="BTC">MIT</MenuItem>
-                <MenuItem value="BCN">RGPV</MenuItem>
+                {universityItems.map((item, index) => (
+                  (item.length > 0) &&
+                  <MenuItem key={index.toString()} value={item}>
+                    <TextField
+                      name="university-checkbox"
+                      component={Checkbox}
+                      checked={university.indexOf(item) > -1}
+                    />
+                    <ListItemText primary={item} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
           <Grid item sm={6} xs={6}>
             <FormControl className={classes.formControlTrade}>
-              <InputLabel htmlFor="degree-simple">Degree</InputLabel>
+              <InputLabel htmlFor="degree-simple">Course</InputLabel>
               <Select
-                value={degree}
-                onChange={this.handleChangeSelect}
-                inputProps={{
-                  name: 'degree',
-                  id: 'degree-simple',
-                }}
+                multiple
+                value={course}
+                name="course"
+                input={<Input />}
+                MenuProps={MenuProps}
+                component={Select}
+                renderValue={selected => {
+                  const subjectName = [];
+                  courses.map((value, index) => {
+                    if (selected.includes(value)) {
+                      subjectName.push(value);
+                    }
+                  });
+                  return subjectName.join(', ');
+                }
+                }
+                onChange={e => this.handleChangeSelect(e)}
               >
-                <MenuItem value="">
-                  <em>--select Degree--</em>
-                </MenuItem>
-                <MenuItem value="BNB">B.TECH</MenuItem>
-                <MenuItem value="BTC">MBA</MenuItem>
-                <MenuItem value="BCN">MA</MenuItem>
+                {courses.map((item, index) => (
+                  (item.length > 0) &&
+                  <MenuItem key={index.toString()} value={item}>
+                    <TextField
+                      name="subject-checkbox"
+                      component={Checkbox}
+                      checked={course.indexOf(item) > -1}
+                    />
+                    <ListItemText primary={item} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -190,19 +238,34 @@ class ExploreFilter extends PureComponent {
             <FormControl className={classes.formControlTrade}>
               <InputLabel htmlFor="grade-simple">Grade</InputLabel>
               <Select
+                multiple
                 value={grade}
-                onChange={this.handleChangeSelect}
-                inputProps={{
-                  name: 'grade',
-                  id: 'grade-simple',
-                }}
+                input={<Input />}
+                name="grade"
+                MenuProps={MenuProps}
+                component={Select}
+                renderValue={selected => {
+                  const gradeName = [];
+                  degreeGradesItems.map((value, index) => {
+                    if (selected.includes(value)) {
+                      gradeName.push(value);
+                    }
+                  });
+                  return gradeName.join(', ');
+                }
+                }
+                onChange={e => this.handleChangeSelect(e)}
               >
-                <MenuItem value="">
-                  <em>--select Grade--</em>
-                </MenuItem>
-                <MenuItem value="BNB">Atleast A+</MenuItem>
-                <MenuItem value="BTC">Above B</MenuItem>
-                <MenuItem value="BCN">Above C</MenuItem>
+                {degreeGradesItems.map((item, index) => (
+                  <MenuItem key={index.toString()} value={item}>
+                    <TextField
+                      name="grade"
+                      component={Checkbox}
+                      checked={grade.indexOf(item) > -1}
+                    />
+                    <ListItemText primary={item} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -233,19 +296,34 @@ class ExploreFilter extends PureComponent {
             <FormControl className={classes.formControlTrade}>
               <InputLabel htmlFor="interests-simple">Interests</InputLabel>
               <Select
+                multiple
                 value={interests}
-                onChange={this.handleChangeSelect}
-                inputProps={{
-                  name: 'interests',
-                  id: 'interests-simple',
-                }}
+                input={<Input />}
+                name="interests"
+                MenuProps={MenuProps}
+                component={Select}
+                renderValue={selected => {
+                  const interestsName = [];
+                  sectorsData.map((value, index) => {
+                    if (selected.includes(value)) {
+                      interestsName.push(value);
+                    }
+                  });
+                  return interestsName.join(', ');
+                }
+                }
+                onChange={e => this.handleChangeSelect(e)}
               >
-                <MenuItem value="">
-                  <em>--select interests--</em>
-                </MenuItem>
-                <MenuItem value="BNB">Programming</MenuItem>
-                <MenuItem value="BTC">Singing</MenuItem>
-                <MenuItem value="BCN">Travel</MenuItem>
+                {sectorsData.map((item, index) => (
+                  <MenuItem key={index.toString()} value={item}>
+                    <TextField
+                      name="interests"
+                      component={Checkbox}
+                      checked={interests.indexOf(item) > -1}
+                    />
+                    <ListItemText primary={item} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -288,16 +366,72 @@ class ExploreFilter extends PureComponent {
               />
             </FormControl>
           </Grid>
+          <Grid item sm={6} xs={6}>
+            <FormControl className={classes.formControlTrade}>
+              <InputLabel htmlFor="location-simple">Student Name</InputLabel>
+              <Input
+                id="name-simple"
+                value={name}
+                name="name"
+
+                onChange={e => this.handleNameChange(e)}
+                aria-describedby="standard-weight-helper-text"
+                inputProps={{
+                  'aria-label': 'name',
+                }}
+              />
+            </FormControl>
+          </Grid>
         </Grid>
         <Divider className={classes.divider} />
         <div className={classes.textRight}>
           <Button color="secondary" variant="contained" className={classes.button} onClick={(e) => { this.handleReset(); }}>
             Reset
           </Button>
-          <Button color="secondary" variant="contained" className={classes.button}>
+          <Button color="secondary" variant="contained" className={classes.button}
+            onClick={e => this.handleSubmit()}
+          >
             Filter Results
           </Button>
         </div>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={this.state.openStyle}
+          autoHideDuration={6000}
+          onClose={this.handleCloseStyle}
+        >
+          <SnackbarContent
+            className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
+            aria-describedby="client-snackbar"
+            message={(
+              <span id="client-snackbar" className={classes.message}>
+                {
+                  (this.state.messageType == 'error') && <ErrorIcon className="success" />
+                }
+                {
+                  (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
+                }
+
+                  &nbsp;
+                {this.state.notifyMessage}
+              </span>
+            )}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                className={classes.close}
+                onClick={this.noticeClose}
+              >
+                <CloseIcon className={classes.icon} />
+              </IconButton>,
+            ]}
+          />
+        </Snackbar>
       </PapperBlock>
     );
   }

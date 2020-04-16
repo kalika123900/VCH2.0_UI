@@ -21,6 +21,8 @@ const initialState = {
   roleDeadline: '',
   roleName: '',
   roleData: List([]),
+  languages: List([]),
+  qualificationType: List([]),
   university: List([]),
   subjects: List([]),
   skills: List([]),
@@ -53,6 +55,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
 
     case EMAIL_STEP2_INFO:
       return state.withMutations((mutableState) => {
+        const languages = fromJS(action.data.languages);
+        const qualificationType = fromJS(action.data.qualificationType);
         const university = fromJS(action.data.university);
         const keywords = fromJS(action.data.keywords);
         const subjects = fromJS(action.data.subjects);
@@ -63,6 +67,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const minGrade = fromJS(action.data.minGrade);
         const selectedYear = fromJS(action.data.selectedYear);
         mutableState
+          .set('qualificationType', qualificationType)
+          .set('languages', languages)
           .set('university', university)
           .set('subjects', subjects)
           .set('skills', skills)
@@ -160,6 +166,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
     case EMAIL_INFO_REMOVE:
       return state.withMutations((mutableState) => {
         mutableState
+          .set('qualificationType', List([]))
+          .set('languages', List([]))
           .set('roleName', '')
           .set('roleDeadline', '')
           .set('roleData', List([]))

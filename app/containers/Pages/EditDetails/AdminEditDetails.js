@@ -22,7 +22,6 @@ import Tab from '@material-ui/core/Tab';
 import messageStyles from 'dan-styles/Messages.scss';
 import styles from '../../../components/Forms/user-jss';
 import { SetNewPassword } from 'dan-components';
-import { ThemeSetting } from 'dan-components';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -210,7 +209,6 @@ class EditDetailsForm extends React.Component {
     const { tab } = this.state;
     return (
       <Paper className={classes.fullWrap}>
-        <ThemeSetting />
         <Tabs
           value={tab}
           onChange={this.handleChangeTab}
@@ -384,7 +382,6 @@ const mapStateToProps = state => ({
   userEmail: state.getIn([reducerClient, 'userEmail']),
   phone: state.getIn([reducerClient, 'phone']),
   username: state.getIn([reducerClient, 'username']),
-
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -396,6 +393,5 @@ const StepMapped = connect(
   mapStateToProps,
   mapDispatchToProps
 )(EditDetailsForm);
-
 
 export default withStyles(styles)(StepMapped);

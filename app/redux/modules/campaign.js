@@ -19,6 +19,8 @@ const initialState = {
   roleDeadline: '',
   roleName: '',
   roleData: List([]),
+  languages: List([]),
+  qualificationType: List([]),
   university: List([]),
   subjects: List([]),
   skills: List([]),
@@ -52,6 +54,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
     case STORE_STEP3_INFO:
       return state.withMutations((mutableState) => {
         const university = fromJS(action.data.university);
+        const languages = fromJS(action.data.languages);
+        const qualificationType = fromJS(action.data.qualificationType);
         const keywords = fromJS(action.data.keywords);
         const subjects = fromJS(action.data.subjects);
         const skills = fromJS(action.data.skills);
@@ -61,6 +65,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const minGrade = fromJS(action.data.minGrade);
         const selectedYear = fromJS(action.data.selectedYear);
         mutableState
+          .set('qualificationType', qualificationType)
+          .set('languages', languages)
           .set('university', university)
           .set('subjects', subjects)
           .set('skills', skills)
@@ -151,6 +157,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('roleData', List([]))
           .set('campaignStatus', -3)
           .set('role', -1)
+          .set('qualificationType', List([]))
+          .set('languages', List([]))
           .set('university', List([]))
           .set('subjects', List([]))
           .set('skills', List([]))

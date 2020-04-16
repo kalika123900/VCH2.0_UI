@@ -2,15 +2,15 @@ import React, { Fragment } from 'react';
 import { Helmet } from 'react-helmet';
 import brand from 'dan-api/dummy/brand';
 import PropTypes from 'prop-types';
-import imgApi from 'dan-api/images/photos';
+import imgApi from 'dan-api/images/university';
 import avatarApi from 'dan-api/images/avatars';
 import { withStyles } from '@material-ui/core/styles';
 import styles from 'dan-components/Forms/user-jss';
 import Grid from '@material-ui/core/Grid';
 import { Pagination, ExploreFilter, StudentCard } from 'dan-components';
-// import datas from 'dan-api/apps/connectionData';
 import Button from '@material-ui/core/Button';
 import qs from 'qs';
+import { universityItems } from 'dan-api/apps/profileOption'
 
 const customStyles = {
   root: {
@@ -97,6 +97,10 @@ class Explore extends React.Component {
     }
   }
 
+  handleContacts = () => {
+    this.props.history.push('/client/contacts')
+  }
+
   render() {
     const title = brand.name + ' - Explore';
     const description = brand.desc;
@@ -108,19 +112,19 @@ class Explore extends React.Component {
     const currentContent = datas.slice(indexOfFirstTodo, indexOfLastTodo);
 
     const renderContent = currentContent.map((data, index) => (
-      <Grid item md={3} sm={6} xs={12} key={index.toString()}>
+      < Grid item md={3} sm={6} xs={12} key={index.toString()} >
         <StudentCard
           user_id={data.id}
           email={data.email}
-          cover={imgApi[0]}
-          avatar={avatarApi[6]}
+          cover={imgApi[universityItems.indexOf(data.university_qualification)]}
+          avatar={data.gender == "Male" ? avatarApi[7] : avatarApi[1]}
           name={`${data.firstname} ${data.lastname}`}
-          title={'Computer Science'}
+          title={data.subject}
           isVerified={false}
           btnText="See Profile"
-          university={'Oxford University'}
+          university={data.university_qualification}
         />
-      </Grid>
+      </Grid >
     ));
 
     const pageNumbers = [];
@@ -140,10 +144,17 @@ class Explore extends React.Component {
         </Helmet>
         {isStudent &&
           <Fragment>
-            <Grid>
-              <Button variant="contained" color="primary" onClick={(e) => this.handleFilter(e)}>
-                {this.state.btnText}
-              </Button>
+            <Grid style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Grid>
+                <Button variant="contained" color="primary" onClick={(e) => this.handleFilter(e)}>
+                  {this.state.btnText}
+                </Button>
+              </Grid>
+              <Grid>
+                <Button variant="contained" color="secondary" onClick={(e) => this.handleContacts(e)}>
+                  Contacts
+                </Button>
+              </Grid>
             </Grid>
             <Grid style={{ width: '100%', marginBottom: 20 }}>
               {this.state.showFilter && <ExploreFilter />}

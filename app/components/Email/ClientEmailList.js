@@ -125,7 +125,8 @@ class EmailList extends React.Component {
                 return (
                   type == 'inbox' ?
                     <Grid className={classes.emailList} key={mail.get('id')}>
-                      <div className={classes.fromHeading} style={{ background: '#f3f4fa', margin: 10 }}>
+                      <Divider />
+                      <div className={classes.fromHeading} style={{ margin: 5 }}>
                         <Tooltip id="tooltip-mark" title="Stared">
                           <IconButton onClick={() => _that.toggleStar(mail)} className={classes.starBtn}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
                         </Tooltip>

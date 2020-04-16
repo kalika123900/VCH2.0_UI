@@ -14,12 +14,33 @@ import {
   CHANGE_DIRECTION,
   LOAD_PAGE
 } from '../../actions/actionConstants';
+import { makeSecureDecrypt } from '../../Helpers/security';
+
+const getMode = () => {
+  if (localStorage.hasOwnProperty('user')) {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+    return user.mode;
+  }
+  return 'light';
+}
+
+const getTheme = () => {
+  if (localStorage.hasOwnProperty('user')) {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+    return user.theme;
+  }
+  return 'blueTheme';
+}
 
 const initialState = {
   /* Settings for Themes and layout */
-  theme: 'blueTheme',
+  theme: getTheme(),
   direction: 'ltr',
-  type: 'light', // light or dark
+  type: getMode(), // light or dark
   gradient: false, // true or false
   decoration: false, // true or false
   bgPosition: 'header', // half, header, full

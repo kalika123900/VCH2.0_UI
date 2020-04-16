@@ -205,7 +205,7 @@ class StudentCard extends React.Component {
               {name}
               {isVerified && <VerifiedUser className={classes.verified} />}
             </Typography>
-            <Typography className={classes.subheading} gutterBottom>
+            <Typography className={classes.subheading, classes.customSubheading} gutterBottom>
               <span className={Type.regular}>{title}</span>
             </Typography>
             <Typography variant="subtitle1" className={classes.subheading} gutterBottom>

@@ -26,7 +26,9 @@ import {
   years,
   degreeGradesItems,
   genderItems,
-  universityItems
+  universityItems,
+  qualificationOption,
+  languageOption
 } from 'dan-api/apps/profileOption';
 import SelectAdd from '../../SelectAdd/SelectAdd';
 import styles from '../CampaignSteps/step-jss';
@@ -74,7 +76,9 @@ class Step2 extends React.Component {
       selectedYear,
       ethnicity,
       experience,
-      minGrade
+      minGrade,
+      qualificationType,
+      languages
     } = this.props;
 
     const genderCheckboxes = genderItems.map((item, index) => (
@@ -132,6 +136,92 @@ class Step2 extends React.Component {
                         <ListItemText primary={item} />
                       </MenuItem>
                     )
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} className={classes.divider}>
+          <Grid item md={12} xs={12}>
+            <Grid style={{ textAlign: 'left' }}>
+              <FormControl component="fieldset" required className={(classes.customWidth, classes.formControl)}>
+                <Typography variant="h6">
+                  Select the ideal qualifications that candidates will have acquired
+                </Typography>
+                <Select
+                  multiple
+                  value={qualificationType.toJS()}
+                  name="qualificationType"
+                  input={<Input />}
+                  renderValue={selected => {
+                    const qualificationTypeName = [];
+                    qualificationOption.map((value, index) => {
+                      if (selected.includes(value)) {
+                        qualificationTypeName.push(value);
+                      }
+                    });
+                    return qualificationTypeName.join(', ');
+                  }
+                  }
+                  MenuProps={MenuProps}
+                  component={Select}
+                  onChange={e => this.handleReduxChange(e)}
+                  style={{ whiteSpace: 'normal' }}
+                >
+                  {qualificationOption.map((item, index) => (
+                    (item.length > 0) &&
+                    <MenuItem key={index.toString()} value={item}>
+                      <TextField
+                        name="qualificationType-checkbox"
+                        component={Checkbox}
+                        checked={qualificationType.indexOf(item) > -1}
+                      />
+                      <ListItemText primary={item} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} className={classes.divider}>
+          <Grid item md={12} xs={12}>
+            <Grid style={{ textAlign: 'left' }}>
+              <FormControl component="fieldset" required className={(classes.customWidth, classes.formControl)}>
+                <Typography variant="h6">
+                  Select which languages are candidates required to speak
+                </Typography>
+                <Select
+                  multiple
+                  value={languages.toJS()}
+                  name="languages"
+                  input={<Input />}
+                  renderValue={selected => {
+                    const languagesName = [];
+                    languageOption.map((value, index) => {
+                      if (selected.includes(value)) {
+                        languagesName.push(value);
+                      }
+                    });
+                    return languagesName.join(', ');
+                  }
+                  }
+                  MenuProps={MenuProps}
+                  component={Select}
+                  onChange={e => this.handleReduxChange(e)}
+                  style={{ whiteSpace: 'normal' }}
+                >
+                  {languageOption.map((item, index) => (
+                    (item.length > 0) &&
+                    <MenuItem key={index.toString()} value={item}>
+                      <TextField
+                        name="languageOption-checkbox"
+                        component={Checkbox}
+                        checked={languages.indexOf(item) > -1}
+                      />
+                      <ListItemText primary={item} />
+                    </MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -421,6 +511,8 @@ const reducerBulkEmail = 'bulkEmail';
 const mapStateToProps = state => ({
   university: state.getIn([reducerBulkEmail, 'university']),
   subjects: state.getIn([reducerBulkEmail, 'subjects']),
+  languages: state.getIn([reducerBulkEmail, 'languages']),
+  qualificationType: state.getIn([reducerBulkEmail, 'qualificationType']),
   skills: state.getIn([reducerBulkEmail, 'skills']),
   keywords: state.getIn([reducerBulkEmail, 'keywords']),
   gender: state.getIn([reducerBulkEmail, 'gender']),

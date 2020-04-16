@@ -147,7 +147,7 @@ const styles = theme => ({
   },
   absIconGrid: {
     display: 'flex',
-    marginTop: '-32%'
+    marginTop: '-30%'
   },
   absItem: {
     justifyContent: 'flex-start',
@@ -424,6 +424,15 @@ const styles = theme => ({
   iosIcon: {
     width: 50,
     height: 50
+  },
+  customSubheading: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    '&:hover': {
+      textOverflow: 'clip',
+      whiteSpace: 'normal'
+    }
   }
 });
 

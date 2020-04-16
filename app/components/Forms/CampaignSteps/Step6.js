@@ -195,7 +195,7 @@ class Step6 extends React.Component {
     const title = brand.name + ' - Review Campaign Settings';
     const description = brand.desc;
     return (
-      <Grid>
+      <Grid style={{ maxWidth: 780 }}>
         <Helmet>
           <title>{title}</title>
           <meta name="description" content={description} />
@@ -205,7 +205,7 @@ class Step6 extends React.Component {
           <meta property="twitter:description" content={description} />
         </Helmet>
         {/* section 1 */}
-        <Grid container spacing={3} className={classes.root}>
+        <Grid container spacing={3} className={classes.root} >
           <Grid item md={12} xs={12}>
             <Typography variant="h6" className={classes.sec_1_heading}>
               Give this campaign a name
