@@ -110,7 +110,8 @@ class CustomOption extends PureComponent {
 class Step3 extends PureComponent {
   state = {
     cname: '',
-    email: ''
+    email: '',
+    logo: ''
   }
 
   constructor(props) {
@@ -156,9 +157,9 @@ class Step3 extends PureComponent {
         .then((res) => {
           if (res.status === 1) {
             const { data } = res;
-            const { email } = data;
+            const { email, logo } = data;
             const cname = `${data.name}`;
-            this.setState({ email, cname });
+            this.setState({ email, cname, logo });
           }
         })
         .catch((err) => {
@@ -175,9 +176,9 @@ class Step3 extends PureComponent {
         .then((res) => {
           if (res.status === 1) {
             const { data } = res;
-            const { email } = data;
+            const { email, logo } = data;
             const cname = `${data.name}`;
-            this.setState({ email, cname });
+            this.setState({ email, cname, logo });
           }
         })
         .catch((err) => {
@@ -206,7 +207,7 @@ class Step3 extends PureComponent {
 
   render() {
     const {
-      editorState, headingEditor, cname, email
+      editorState, headingEditor, cname, email, logo
     } = this.state;
     const { classes, heading } = this.props;
     return (
@@ -260,7 +261,7 @@ class Step3 extends PureComponent {
               <Grid>
                 <CardHeader
                   avatar={
-                    <Avatar src="/images/pp_girl.svg" />
+                    <Avatar src={logo} />
                   }
                   action={(
                     <Fragment>
@@ -278,8 +279,8 @@ class Step3 extends PureComponent {
                       </IconButton>
                     </Fragment>
                   )}
-                  title="Your Company Name"
-                  subheader="team@varsitycareershub.co.uk"
+                  title={cname}
+                  subheader={email}
                   style={{
                     padding: '0',
                     paddingBottom: ' 2%',

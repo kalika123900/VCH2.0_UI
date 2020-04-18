@@ -26,6 +26,10 @@ import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
+import avatarApi from 'dan-api/images/avatars';
+import Avatar from '@material-ui/core/Avatar';
+import { withRouter } from 'react-router-dom'
+import CloudUpload from '@material-ui/icons/CloudUpload';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -61,6 +65,14 @@ function formatDeadline(dateStr) {
   return (year + '-' + month + '-' + date);
 }
 
+async function postFormData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    body: data
+  });
+  return await response.json();
+}
+
 async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
@@ -78,8 +90,79 @@ class EditPersonalDetails extends React.Component {
     this.state = {
       openStyle: false,
       messageType: 'error',
-      notifyMessage: ''
+      notifyMessage: '',
+      profile: null,
+      cv: null
     };
+  }
+
+  handleFileChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.files[0],
+    });
+  }
+
+  handleChangeProfile = () => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    var data = new FormData();
+
+    data.append('profile', this.state.profile);
+    data.append('user_id', user.id);
+
+    postFormData(`${API_URL}/student/update-profile`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({ profile: null });
+          this.getPersonalDetails();
+          this.props.successMsg();
+        } else {
+          this.setState({ profile: null });
+          this.props.errorMsg();
+        }
+      })
+      .catch((err) => {
+        this.setState({ profile: null });
+        console.log(err);
+      });
+  }
+
+  handleUploadCV = () => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    var data = new FormData();
+
+    data.append('cv', this.state.cv);
+    data.append('user_id', user.id);
+
+    postFormData(`${API_URL}/student/upload-cv`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({ cv: null });
+          this.getPersonalDetails();
+          this.props.successMsg();
+        } else {
+          this.setState({ cv: null });
+          this.props.errorMsg();
+        }
+      })
+      .catch((err) => {
+        this.setState({ cv: null });
+        console.log(err);
+      });
+  }
+
+  componentDidUpdate() {
+    if (this.state.profile != null) {
+      this.handleChangeProfile()
+    }
+    if (this.state.cv != null) {
+      this.handleUploadCV()
+    }
   }
 
   handleSubmit = () => {
@@ -93,7 +176,6 @@ class EditPersonalDetails extends React.Component {
       gender: this.props.gender,
       ethnicity: this.props.ethnicity,
       nationality: this.props.nationality,
-      resume: '',
       user_id: user.id
     };
 
@@ -111,7 +193,7 @@ class EditPersonalDetails extends React.Component {
       });
   }
 
-  componentDidMount() {
+  getPersonalDetails = () => {
     const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))
     );
@@ -133,7 +215,8 @@ class EditPersonalDetails extends React.Component {
             gender: res.data.gender,
             ethnicity: res.data.ethnicity,
             nationality: res.data.nationality,
-            resume: [],
+            avatar: res.data.profile,
+            resume: res.data.resume,
             dob,
           };
           this.props.addInfo(studentProfileData);
@@ -144,6 +227,10 @@ class EditPersonalDetails extends React.Component {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  componentDidMount() {
+    this.getPersonalDetails();
   }
 
   handleDOB = date => {
@@ -161,8 +248,13 @@ class EditPersonalDetails extends React.Component {
     this.setState({ openStyle: false });
   }
 
+  showResume = () => {
+    this.props.history.push('/student/cv-preview')
+  }
+
   render() {
     const {
+      avatar,
       classes,
       firstName,
       lastName,
@@ -170,16 +262,45 @@ class EditPersonalDetails extends React.Component {
       phoneNumber,
       dob,
       nationality,
-      resume,
       ethnicity,
       gender,
+      resume,
       warnMsg,
     } = this.props;
+    const { profile, cv } = this.state;
 
     return (
       <Fragment>
         <section className={classes.pageFormWrap}>
           <form >
+            <div className={classes.row} style={{ textAlign: 'center' }}>
+              <IconButton>
+                <Avatar
+                  alt="profile"
+                  src={(avatar == '' || avatar == null) ? avatarApi[7] : avatar}
+                  className={classes.avatar}
+                  style={{
+                    width: '103px',
+                    display: 'inline-block',
+                    height: 'auto',
+                  }}
+                />
+              </IconButton>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <FormControl className={classes.formControl}>
+                <label htmlFor="profile" className={classes.customFileUpload}>
+                  {profile == null ? 'Change Profile Picture' : profile.name}
+                </label>
+                <input
+                  id="profile"
+                  name="profile"
+                  type="file"
+                  onChange={this.handleFileChange}
+                  style={{ display: 'none' }}
+                />
+              </FormControl>
+            </div>
             <div>
               <FormControl className={classes.formControl}>
                 <TextField
@@ -190,8 +311,9 @@ class EditPersonalDetails extends React.Component {
                   name="firstName"
                   margin="normal"
                   variant="outlined"
-                  validate={[required]}
-                  onChange={e => this.handleChange(e)}
+                  // validate={[required]}
+                  // onChange={e => this.handleChange(e)}
+                  readOnly
                 />
               </FormControl>
             </div>
@@ -205,8 +327,9 @@ class EditPersonalDetails extends React.Component {
                   value={lastName}
                   margin="normal"
                   variant="outlined"
-                  validate={[required]}
-                  onChange={e => this.handleChange(e)}
+                  // validate={[required]}
+                  // onChange={e => this.handleChange(e)}
+                  readOnly
                 />
               </FormControl>
             </div>
@@ -221,8 +344,9 @@ class EditPersonalDetails extends React.Component {
                   autoComplete="email"
                   margin="normal"
                   variant="outlined"
-                  validate={[required, emailValidator]}
-                  onChange={e => this.handleChange(e)}
+                  // validate={[required, emailValidator]}
+                  // onChange={e => this.handleChange(e)}
+                  readOnly
                 />
               </FormControl>
             </div>
@@ -325,15 +449,45 @@ class EditPersonalDetails extends React.Component {
                 </Select>
               </FormControl>
             </div>
-            <div>
+            {(resume != '' && resume != null) &&
+              <div style={{ textAlign: 'center' }}>
+                <Button
+                  className={classes.button}
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => this.showResume()}
+                >
+                  Click to view uploaded CV
+                <span className={classes.rightIcon}>
+                    <CloudUpload />
+                  </span>
+                </Button>
+              </div>
+            }
+            <div style={{ textAlign: 'center' }}>
+              <FormControl className={classes.formControl}>
+                <label htmlFor="cv" className={classes.customFileUpload}>
+                  {cv == null ? 'Upload Your Resume' : cv.name}
+                </label>
+                <input
+                  id="cv"
+                  name="cv"
+                  type="file"
+                  onChange={this.handleFileChange}
+                  style={{ display: 'none' }}
+                />
+              </FormControl>
+            </div>
+            {/* <div>
               <MaterialDropZone
-                files={resume.toJS()}
+                files={MappedResume}
                 showPreviews
                 maxSize={5000000}
                 filesLimit={1}
+                acceptedFiles={['application/pdf']}
                 text="Drag and drop file(s) here to upload CV"
               />
-            </div>
+            </div> */}
             <div className={classes.btnArea} style={{ marginTop: '35px' }}>
               <Button variant="contained" fullWidth color="primary" onClick={() => this.handleSubmit()}>
                 Save Changes
@@ -396,7 +550,6 @@ EditPersonalDetails.propTypes = {
   gender: PropTypes.string.isRequired,
   ethnicity: PropTypes.string.isRequired,
   nationality: PropTypes.string.isRequired,
-  resume: PropTypes.object.isRequired,
   warnMsg: PropTypes.string.isRequired,
   addInfo: PropTypes.func.isRequired,
   addMsg: PropTypes.func.isRequired
@@ -413,6 +566,7 @@ const mapStateToProps = state => ({
   ethnicity: state.getIn([reducerStudent, 'ethnicity']),
   nationality: state.getIn([reducerStudent, 'nationality']),
   resume: state.getIn([reducerStudent, 'resume']),
+  avatar: state.getIn([reducerStudent, 'avatar']),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -426,4 +580,4 @@ const StepMapped = connect(
   mapDispatchToProps
 )(EditPersonalDetails);
 
-export default withStyles(styles)(StepMapped);
+export default withStyles(styles)(withRouter(StepMapped));

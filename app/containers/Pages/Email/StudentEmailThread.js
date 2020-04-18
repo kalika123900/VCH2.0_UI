@@ -90,7 +90,11 @@ class StudentEmailThread extends React.Component {
                 ...item,
                 id: item.id,
                 thread: item.thread_id,
-                avatar: avatarApi[6],
+                avatar: item.sender_type == 'client'
+                  ?
+                  (item.sender_avatar != null && item.sender_avatar !== '') ? item.sender_avatar : avatarApi[0]
+                  :
+                  (item.receiver_avatar != null && item.receiver_avatar !== '') ? item.receiver_avatar : avatarApi[0],
                 name: item.sender_type == 'client' ? item.sender_name : item.receiver_name,
                 date: formatDate(new Date(parseInt(item.sent_on))),
                 subject: item.subject,

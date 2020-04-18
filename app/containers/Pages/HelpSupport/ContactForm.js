@@ -29,7 +29,7 @@ class ContactForm extends Component {
       submitting,
     } = this.props;
     return (
-      <PapperBlock title="Contact Us" whiteBg icon="ios-call-outline" desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed urna in justo euismod condimentum.">
+      <PapperBlock title="Contact Us" whiteBg icon="ios-call-outline" desc="Let us know your query and we will get back to you within 24 hours. Our usual response time is under 4 hours.">
         <form onSubmit={handleSubmit}>
           <div>
             <Field

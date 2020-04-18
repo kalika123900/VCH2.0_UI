@@ -35,7 +35,8 @@ class Signup extends React.Component {
     cName: '',
     cEmail: '',
     cPhone: '',
-    cHeadquarter: ''
+    cHeadquarter: '',
+    cLogo: ''
   }
 
   verifyToken = () => {
@@ -57,6 +58,7 @@ class Signup extends React.Component {
             cEmail: res.data.company_email,
             cPhone: res.data.company_phone,
             cHeadquarter: res.data.company_headquarter,
+            cLogo: res.data.logo,
             isVerified: true,
             token: searchString[1]
           })
@@ -77,9 +79,8 @@ class Signup extends React.Component {
 
   submitForm(values) {
     const { firstname, lastname, email, username, password, phone, cName, cEmail, cPhone, cHeadquarter } = values;
-    const { token } = this.state;
-
-    const data = { firstname, lastname, email, username, password, phone, token, cName, cEmail, cPhone, cHeadquarter }
+    const { token, cLogo } = this.state;
+    const data = { firstname, lastname, email, username, password, phone, token, cName, cEmail, cPhone, cHeadquarter, cLogo }
 
     postData(`${API_URL}/client/signup`, data)
       .then((res) => {
@@ -98,7 +99,7 @@ class Signup extends React.Component {
     const title = brand.name + ' - Signup';
     const description = brand.desc;
     const { classes } = this.props;
-    const { errorMessage, flash, firstname, lastname, username, phone, useremail, isVerified, cName, cEmail, cPhone, cHeadquarter } = this.state;
+    const { errorMessage, flash, firstname, lastname, username, phone, useremail, isVerified, cName, cEmail, cPhone, cHeadquarter, cLogo } = this.state;
     return (
       <div className={classes.rootFull}>
         <Helmet>
@@ -122,6 +123,7 @@ class Signup extends React.Component {
                 cEmail={cEmail}
                 cPhone={cPhone}
                 cHeadquarter={cHeadquarter}
+                cLogo={cLogo}
                 handleSubmit={(values) => this.submitForm(values)}
                 handleFlash={this.handleFlash}
                 errorMessage={errorMessage}

@@ -43,6 +43,7 @@ class ClientJobProfile extends React.Component {
     name: '',
     phone: '',
     headquarter: '',
+    logo: '',
     email: '',
     role_name: '',
     role_link: '',
@@ -60,6 +61,7 @@ class ClientJobProfile extends React.Component {
             this.setState({ phone: res.data[0].phone })
             this.setState({ email: res.data[0].email })
             this.setState({ headquarter: res.data[0].headquarter })
+            this.setState({ logo: res.data[0].logo })
           }
         }
       })
@@ -88,7 +90,7 @@ class ClientJobProfile extends React.Component {
   };
 
   render() {
-    const { tab, name, phone, email, headquarter, role_name, role_link, role_deadline } = this.state;
+    const { tab, name, phone, email, headquarter, role_name, role_link, role_deadline, logo } = this.state;
     const { classes } = this.props;
     return (
       <Fragment>
@@ -96,9 +98,9 @@ class ClientJobProfile extends React.Component {
           <Grid item md={4} xs={12}>
             <PapperBlock title="Company Info" icon="ios-contact-outline" whiteBg noMargin desc="">
               <Grid className={classes.companyTitle}>
-                {/* <Avatar alt="avatar" src={avatarApi[0]} className={classes.avatarBig}
+                <Avatar alt="avatar" src={(logo == '' || logo == null) ? avatarApi[0] : logo} className={classes.avatarBig}
                   className={classes.customAvatar}
-                /> */}
+                />
                 <Typography variant="h6" color="secondary">{name}</Typography>
               </Grid>
               <List dense className={classes.profileList}>

@@ -22,6 +22,8 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { TextFieldRedux, CheckboxRedux } from './ReduxFormMUI';
 import styles from './user-jss';
+import avatarApi from 'dan-api/images/avatars';
+import Avatar from '@material-ui/core/Avatar';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -87,7 +89,8 @@ class SignupForm extends React.Component {
     cName: '',
     cEmail: '',
     cPhone: '',
-    cHeadquarter: ''
+    cHeadquarter: '',
+    cLogo: ''
   };
 
   componentDidMount() {
@@ -101,6 +104,7 @@ class SignupForm extends React.Component {
       cEmail: this.props.cEmail,
       cPhone: this.props.cPhone,
       cHeadquarter: this.props.cHeadquarter,
+      cLogo: this.props.cLogo
     })
   }
 
@@ -141,7 +145,7 @@ class SignupForm extends React.Component {
       handleSubmit,
       deco
     } = this.props;
-    const { showPassword, firstname, lastname, password, phone, passwordConfirm, username, email, cName, cEmail, cPhone, cHeadquarter } = this.state;
+    const { showPassword, firstname, lastname, password, phone, passwordConfirm, username, email, cName, cEmail, cPhone, cHeadquarter, cLogo } = this.state;
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
         <div className={classes.topBar}>
@@ -159,17 +163,88 @@ class SignupForm extends React.Component {
         <section className={classes.pageFormWrap}>
           {this.props.flash && this.Message()}
           <form onSubmit={(e) => this.handleSubmitForm(e)}>
+            <div className={classes.row}>
+              <IconButton>
+                <Avatar
+                  alt="company logo"
+                  src={(cLogo == '' || cLogo == null) ? avatarApi[7] : cLogo}
+                  className={classes.avatar}
+                  style={{
+                    width: '103px',
+                    display: 'inline-block',
+                    height: 'auto',
+                  }}
+                />
+              </IconButton>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <TextField
+                  name="cName"
+                  value={cName}
+                  placeholder="Company Name"
+                  label="Company Name"
+                  required
+                  // validate={[minTextLength, maxTextLength]}
+                  // onChange={(e) => { this.handleChange(e) }}
+                  readOnly
+                />
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <TextField
+                  name="cPhone"
+                  value={cPhone}
+                  placeholder="Company Phone"
+                  label="Company Phone"
+                  required
+                  // validate={[minTextLength, maxTextLength]}
+                  // onChange={(e) => { this.handleChange(e) }}
+                  readOnly
+                />
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <TextField
+                  name="cEmail"
+                  value={cEmail}
+                  placeholder="Company Email"
+                  label="Company Email"
+                  required
+                  // validate={[required, email]}
+                  // onChange={(e) => { this.handleChange(e) }}
+                  readOnly
+                />
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <TextField
+                  name="cHeadquarter"
+                  value={cHeadquarter}
+                  placeholder="Company Headquarter"
+                  label="Company Headquarter"
+                  required
+                  // validate={[required]}
+                  // onChange={(e) => { this.handleChange(e) }}
+                  readOnly
+                />
+              </FormControl>
+            </div>
             <div>
               <FormControl className={classes.formControl}>
                 <TextField
                   name="firstname"
                   value={firstname}
                   // defaultValue={this.props.firstname}
-                  placeholder="First Name"
-                  label="First Name"
+                  placeholder="Your First Name"
+                  label="Your First Name"
                   required
-                  validate={[minTextLength, maxTextLength, text]}
-                  onChange={(e) => { this.handleChange(e) }}
+                  // validate={[minTextLength, maxTextLength, text]}
+                  // onChange={(e) => { this.handleChange(e) }}
+                  readOnly
                 />
               </FormControl>
             </div>
@@ -179,11 +254,12 @@ class SignupForm extends React.Component {
                   name="lastname"
                   value={lastname}
                   // defaultValue={this.props.lastname}
-                  placeholder="Last Name"
-                  label="Last Name"
+                  placeholder="Your Last Name"
+                  label="Your Last Name"
                   required
-                  validate={[minTextLength, maxTextLength, text]}
-                  onChange={(e) => { this.handleChange(e) }}
+                  // validate={[minTextLength, maxTextLength, text]}
+                  // onChange={(e) => { this.handleChange(e) }}
+                  readOnly
                 />
               </FormControl>
             </div>
@@ -196,8 +272,9 @@ class SignupForm extends React.Component {
                   placeholder="Username"
                   label="Username"
                   required
-                  onChange={(e) => { this.handleChange(e) }}
-                  validate={[minTextLength, maxTextLength]}
+                  // onChange={(e) => { this.handleChange(e) }}
+                  // validate={[minTextLength, maxTextLength]}
+                  readOnly
                 />
               </FormControl>
             </div>
@@ -210,8 +287,9 @@ class SignupForm extends React.Component {
                   placeholder="Email"
                   label="Email"
                   required
-                  validate={[required, email]}
-                  onChange={(e) => { this.handleChange(e) }}
+                  // validate={[required, email]}
+                  // onChange={(e) => { this.handleChange(e) }}
+                  readOnly
                 />
               </FormControl>
             </div>
@@ -223,60 +301,9 @@ class SignupForm extends React.Component {
                   placeholder="Client Phone"
                   label="Client Phone"
                   required
-                  validate={[minTextLength, maxTextLength]}
-                  onChange={(e) => { this.handleChange(e) }}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  name="cName"
-                  value={cName}
-                  placeholder="Company Name"
-                  label="Company Name"
-                  required
-                  validate={[minTextLength, maxTextLength]}
-                  onChange={(e) => { this.handleChange(e) }}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  name="cPhone"
-                  value={cPhone}
-                  placeholder="Company Phone"
-                  label="Company Phone"
-                  required
-                  validate={[minTextLength, maxTextLength]}
-                  onChange={(e) => { this.handleChange(e) }}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  name="cEmail"
-                  value={cEmail}
-                  placeholder="Company Email"
-                  label="Company Email"
-                  required
-                  validate={[required, email]}
-                  onChange={(e) => { this.handleChange(e) }}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  name="cHeadquarter"
-                  value={cHeadquarter}
-                  placeholder="Company Headquarter"
-                  label="Company Headquarter"
-                  required
-                  validate={[required]}
-                  onChange={(e) => { this.handleChange(e) }}
+                  // validate={[minTextLength, maxTextLength]}
+                  // onChange={(e) => { this.handleChange(e) }}
+                  readOnly
                 />
               </FormControl>
             </div>

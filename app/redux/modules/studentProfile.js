@@ -10,6 +10,7 @@ import {
 import { DateHelper } from '../helpers/dateTimeHelper';
 
 const initialState = {
+  avatar: '',
   warnMsg: '',
   firstName: '',
   lastName: '',
@@ -52,7 +53,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
   switch (action.type) {
     case STORE_PROFILE_DETAILS:
       return state.withMutations((mutableState) => {
-        const MapResume = fromJS(action.data.resume);
+        const profile = fromJS(action.data.profile);
+        const resumeFile = fromJS(action.data.resumeFile);
         mutableState
           .set('firstName', action.data.firstName)
           .set('lastName', action.data.lastName)
@@ -62,7 +64,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('gender', action.data.gender)
           .set('ethnicity', action.data.ethnicity)
           .set('nationality', action.data.nationality)
-          .set('resume', MapResume)
+          .set('resume', action.data.resume)
+          .set('avatar', action.data.avatar)
       });
 
     case STORE_SKILL_INTERESTS:

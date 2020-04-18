@@ -19,11 +19,46 @@ async function postData(url, data) {
   return await response.json();
 }
 
+async function postFormData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    body: data
+  });
+  return await response.json();
+}
+
 class Token extends React.Component {
   state = {
     errorMessage: '',
-    flash: false
+    flash: false,
+    cLogo: '',
+    logo: null
   }
+
+  handleFileChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.files[0],
+    })
+  }
+
+  handleChangeLogo = () => {
+    var data = new FormData();
+
+    data.append('logo', this.state.logo);
+
+    postFormData(`${API_URL}/admin/add-company-logo`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({ cLogo: res.result.url });
+          this.setState({ logo: null });
+        }
+      })
+      .catch((err) => {
+        this.setState({ logo: null });
+        console.log(err);
+      });
+  }
+
 
   handleFlash = () => {
     this.setState({ errorMessage: '', flash: false });
@@ -32,7 +67,8 @@ class Token extends React.Component {
   submitForm(values) {
     const MappedValues = values.toJS();
     const { firstname, lastname, email, username, phone, cName, cEmail, cPhone, cHeadquarter } = MappedValues;
-    const data = { firstname, lastname, email, username, phone, cName, cEmail, cPhone, cHeadquarter };
+    const cLogo = this.state.cLogo;
+    const data = { firstname, lastname, email, username, phone, cName, cEmail, cPhone, cHeadquarter, cLogo };
 
     postData(`${API_URL}/admin/create-token`, data)
       .then((res) => {
@@ -47,11 +83,18 @@ class Token extends React.Component {
       });
   }
 
+  componentDidUpdate() {
+    if (this.state.logo != null) {
+      this.handleChangeLogo()
+    }
+  }
+
   render() {
     const title = brand.name + ' - Token';
     const description = brand.desc;
     const { classes } = this.props;
-    const { errorMessage, flash } = this.state;
+    const { errorMessage, flash, logo, cLogo } = this.state;
+
     return (
       <div className={classes.rootFull}>
         <Helmet>
@@ -69,6 +112,9 @@ class Token extends React.Component {
               handleFlash={this.handleFlash}
               errorMessage={errorMessage}
               flash={flash}
+              handleFileChange={this.handleFileChange}
+              logo={logo}
+              cLogo={cLogo}
             />
           </div>
         </div>

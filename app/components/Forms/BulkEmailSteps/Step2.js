@@ -406,11 +406,11 @@ class Step2 extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        {/* <Grid container spacing={3} className={classes.divider}>
+        <Grid container spacing={3} className={classes.divider}>
           <Grid item md={12} xs={12}>
             <Grid style={{ textAlign: 'left' }}>
               <FormControl component="fieldset" required className={classes.formControl}>
-                <Typography variant="h6">Would you like to target any ethnic groups?</Typography>
+                <Typography variant="h6">Which groups would you like to target?</Typography>
                 <RadioGroup
                   aria-label="ethnicity"
                   name="ethnicity"
@@ -419,12 +419,12 @@ class Step2 extends React.Component {
                   onChange={(e) => this.handleReduxChange(e)}
                 >
                   <FormControlLabel value="Bame" control={<Radio />} label="BAME" />
-                  <FormControlLabel value="Not Preferable" control={<Radio />} label="Not Preferable" />
+                  <FormControlLabel value="Not Preferable" control={<Radio />} label="No preference" />
                 </RadioGroup>
               </FormControl>
             </Grid>
           </Grid>
-        </Grid> */}
+        </Grid>
         <Grid container spacing={3} className={classes.divider}>
           <Grid item md={12} xs={12}>
             <Grid style={{ textAlign: 'left' }}>

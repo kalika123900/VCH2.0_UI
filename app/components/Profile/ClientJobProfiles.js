@@ -54,7 +54,7 @@ class ClientProfiles extends React.Component {
                 data={data}
                 id={data.id}
                 cover={imgApi[0]}
-                avatar={avatarApi[0]}
+                avatar={(data.logo == '' || data.logo == null) ? avatarApi[0] : data.logo}
                 name={data.name}
                 role={data.role_name}
                 roleDesc={data.role_descriptors}

@@ -263,7 +263,9 @@ const mapStateToProps = state => ({
   skills: state.getIn([reducerRole, 'skills']),
   roleDeadline: state.getIn([reducerRole, 'roleDeadline']),
   roleDescriptors: state.getIn([reducerRole, 'roleDescriptors']),
-  roleLink: state.getIn([reducerRole, 'roleLink'])
+  roleLink: state.getIn([reducerRole, 'roleLink']),
+  languages: state.getIn([reducerCampaign, 'languages']),
+  qualificationType: state.getIn([reducerCampaign, 'qualificationType']),
 });
 
 const mapDispatchToProps = dispatch => ({

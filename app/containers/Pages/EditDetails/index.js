@@ -23,6 +23,8 @@ import messageStyles from 'dan-styles/Messages.scss';
 import styles from '../../../components/Forms/user-jss';
 import { SetNewPassword } from 'dan-components';
 import { ThemeSetting } from 'dan-components';
+import avatarApi from 'dan-api/images/avatars';
+import Avatar from '@material-ui/core/Avatar';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -47,6 +49,14 @@ async function postJSON(url, data) {
   return await response.json();
 }
 
+async function postFormData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    body: data
+  });
+  return await response.json();
+}
+
 async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
@@ -65,7 +75,9 @@ class EditDetailsForm extends React.Component {
       tab: 0,
       openStyle: false,
       messageType: 'error',
-      notifyMessage: ''
+      notifyMessage: '',
+      avatar: '',
+      profile: null
     };
   }
 
@@ -88,7 +100,6 @@ class EditDetailsForm extends React.Component {
   resetTab = () => {
     this.setState({ tab: 0 });
   }
-
 
   submitForm(values) {
     const user = JSON.parse(
@@ -119,7 +130,7 @@ class EditDetailsForm extends React.Component {
       });
   }
 
-  componentDidMount() {
+  getAccountInfo = () => {
     const _that = this;
     const data = {
       client_id: user.id
@@ -140,6 +151,7 @@ class EditDetailsForm extends React.Component {
             phone,
             username,
           };
+          this.setState({ avatar: res.data.profile });
           _that.props.clientInit(clientProfileData);
         } else {
           console.log('something not good ');
@@ -150,13 +162,63 @@ class EditDetailsForm extends React.Component {
       });
   }
 
+  handleChangeProfile = () => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    var data = new FormData();
+
+    data.append('profile', this.state.profile);
+    data.append('client_id', user.id);
+
+    postFormData(`${API_URL}/client/update-profile`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({ profile: null });
+          this.getAccountInfo();
+          this.successMsg();
+        } else {
+          this.setState({ profile: null });
+          this.errorMsg();
+        }
+      })
+      .catch((err) => {
+        this.setState({ profile: null });
+        console.log(err);
+      });
+
+  }
+
+  componentDidMount() {
+    this.getAccountInfo();
+  }
+
+  componentDidUpdate() {
+    if (this.state.profile != null) {
+      this.handleChangeProfile()
+    }
+  }
+
+  handleFileChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.files[0],
+    })
+  };
+
   handleChangeTab = (event, value) => {
     this.setState({ tab: value });
   };
 
   handleClient = (e) => {
-    const _that = this;
     e.preventDefault();
+
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const _that = this;
+
     const {
       userEmail,
       phone,
@@ -198,6 +260,10 @@ class EditDetailsForm extends React.Component {
     this.setState({ openStyle: false });
   }
 
+  handleCloseStyle = () => {
+    this.setState({ openStyle: false });
+  }
+
   render() {
     const {
       firstName,
@@ -207,7 +273,7 @@ class EditDetailsForm extends React.Component {
       username,
       classes,
     } = this.props;
-    const { tab } = this.state;
+    const { tab, avatar, profile } = this.state;
     return (
       <Paper className={classes.fullWrap}>
         <ThemeSetting />
@@ -225,6 +291,34 @@ class EditDetailsForm extends React.Component {
         <section className={classes.pageFormWrap}>
           {tab === 0 && (
             <form onSubmit={(e) => this.handleClient(e)}>
+              <div className={classes.row}>
+                <IconButton>
+                  <Avatar
+                    alt="profile"
+                    src={(avatar == '' || avatar == null) ? avatarApi[7] : avatar}
+                    className={classes.avatar}
+                    style={{
+                      width: '103px',
+                      display: 'inline-block',
+                      height: 'auto',
+                    }}
+                  />
+                </IconButton>
+              </div>
+              <div>
+                <FormControl className={classes.formControl}>
+                  <label for="profile" className={classes.customFileUpload}>
+                    {profile == null ? 'Change Profile' : profile.name}
+                  </label>
+                  <input
+                    id="profile"
+                    name="profile"
+                    type="file"
+                    onChange={this.handleFileChange}
+                    style={{ display: 'none' }}
+                  />
+                </FormControl>
+              </div>
               <div>
                 <FormControl className={classes.formControl}>
                   <TextField

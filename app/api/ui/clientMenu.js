@@ -29,6 +29,11 @@ module.exports = [
         link: '/client/seat-management',
       },
       {
+        key: 'help-support',
+        name: 'Help & Support',
+        link: '/help-support',
+      },
+      {
         key: 'signout',
         name: 'Sign Out',
         link: '/client/signout',

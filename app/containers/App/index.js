@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import NotFound from 'containers/Pages/Standalone/NotFoundDedicated';
-import { Footer, HeaderLanding } from 'dan-components';
+import { Footer, HeaderLanding, HelpSupportHeader } from 'dan-components';
 import { studentLoggedIn } from 'dan-actions/StudentActions';
 import { adminLoggedIn } from 'dan-actions/AdminActions';
 import { clientLoggedIn } from 'dan-actions/ClientActions';
@@ -43,7 +43,10 @@ class App extends React.Component {
           props.authClient();
           break;
       }
-      if (user.type.toLowerCase() != urlArray[1].toLowerCase()) {
+      if (urlArray[1].toLowerCase() == 'help-support') {
+        props.history.push('/help-support');
+      }
+      else if (user.type.toLowerCase() != urlArray[1].toLowerCase()) {
         props.history.push('/' + user.type.toLowerCase());
       }
     }
@@ -73,7 +76,7 @@ class App extends React.Component {
                   path="/help-support"
                   render={(props) => (
                     <Fragment>
-                      <HeaderLanding />
+                      <HelpSupportHeader />
                       <HelpSupport {...props} changeMode={changeMode} />
                       <Footer />
                     </Fragment>

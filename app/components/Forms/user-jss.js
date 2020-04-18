@@ -669,6 +669,27 @@ const styles = theme => ({
   warnMsg: {
     textAlign: 'center',
     color: 'green'
+  },
+  customFileUpload: {
+    border: '1px solid #ccc',
+    display: 'inline-block',
+    padding: '6px 12px',
+    cursor: 'pointer',
+    marginTop: 19,
+    borderRadius: 10,
+    fontWeight: 500,
+    color: '#3f51b5',
+    backgroundColor: 'whitesmoke'
+  },
+  rightIcon: {
+    marginLeft: theme.spacing(1),
+    '& svg': {
+      fill: theme.palette.common.white
+    }
+  },
+  button: {
+    marginTop: 20,
+    height: 50
   }
 });
 

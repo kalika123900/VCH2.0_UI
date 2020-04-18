@@ -35,6 +35,24 @@ const styles = theme => ({
   },
   divider: {
     margin: theme.spacing(3, 0)
+  },
+  question: {
+    padding: '10px',
+    margin: '5px',
+    cursor: 'pointer',
+    fontWeight: 600
+  },
+  customMargin: {
+    marginTop: 15
+  },
+  answer: {
+    padding: '10px',
+    margin: '5px',
+  },
+  questionAnswer: {
+    fontWeight: 600,
+    marginBottom: 10,
+    fontSize: '1.1rem'
   }
 });
 

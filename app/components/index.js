@@ -13,6 +13,7 @@ export Contact from './LandingPage/Contact';
 export Feature from './LandingPage/Feature';
 export Footer from './LandingPage/Footer';
 export HeaderLanding from './LandingPage/Header';
+export HelpSupportHeader from './LandingPage/HelpSupportHeader';
 export Pricing from './LandingPage/Pricing';
 export Showcase from './LandingPage/Showcase';
 export ShowcaseSlider from './LandingPage/ShowcaseSlider';

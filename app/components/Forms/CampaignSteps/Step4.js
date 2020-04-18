@@ -110,7 +110,8 @@ class CustomOption extends PureComponent {
 class Step4 extends PureComponent {
   state = {
     cname: '',
-    email: ''
+    email: '',
+    logo: ''
   }
 
   constructor(props) {
@@ -159,7 +160,8 @@ class Step4 extends PureComponent {
             let { data } = res;
             let email = data.email;
             let cname = `${data.name}`;
-            this.setState({ email, cname });
+            let logo = data.logo;
+            this.setState({ email, cname, logo });
           }
         })
         .catch((err) => {
@@ -178,7 +180,8 @@ class Step4 extends PureComponent {
             let { data } = res;
             let email = data.email;
             let cname = `${data.name}`;
-            this.setState({ email, cname });
+            let logo = data.logo;
+            this.setState({ email, cname, logo });
           }
         })
         .catch((err) => {
@@ -205,7 +208,7 @@ class Step4 extends PureComponent {
   };
 
   render() {
-    const { editorState, headingEditor, cname, email } = this.state;
+    const { editorState, headingEditor, cname, email, logo } = this.state;
     const { classes, heading } = this.props;
     return (
       <Fragment>
@@ -258,7 +261,7 @@ class Step4 extends PureComponent {
               <Grid>
                 <CardHeader
                   avatar={
-                    <Avatar src="/images/pp_girl.svg" />
+                    <Avatar src={logo} />
                   }
                   action={(
                     <Fragment>
@@ -276,8 +279,8 @@ class Step4 extends PureComponent {
                       </IconButton>
                     </Fragment>
                   )}
-                  title="Your Company Name"
-                  subheader="team@varsitycareershub.co.uk"
+                  title={cname}
+                  subheader={email}
                   style={{
                     padding: '0',
                     paddingBottom: ' 2%',

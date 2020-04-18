@@ -13,6 +13,9 @@ import ArrowForward from '@material-ui/icons/ArrowForward';
 import FlashMessage from 'react-flash-message';
 import { TextFieldRedux, CheckboxRedux } from './ReduxFormMUI';
 import styles from './user-jss';
+import avatarApi from 'dan-api/images/avatars';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -40,7 +43,6 @@ const renderField = (props) => {
   return (
     <Fragment>
       <TextFieldRedux
-        margin="normal"
         {...props}
       />
       {
@@ -55,21 +57,8 @@ const renderField = (props) => {
 // eslint-disable-next-line
 class SignupForm extends React.Component {
   state = {
-    showPassword: false,
+    showPassword: false
   };
-
-  Message = () => {
-    setTimeout(() => {
-      this.props.handleFlash();
-    }, 4000);
-    return (
-      <FlashMessage duration={4000}>
-        <Typography variant="subtitle1" color="error">
-          {this.props.errorMessage}
-        </Typography>
-      </FlashMessage>
-    );
-  }
 
   handleClickShowPassword = () => {
     const { showPassword } = this.state;
@@ -80,32 +69,110 @@ class SignupForm extends React.Component {
     event.preventDefault();
   };
 
+  componentDidUpdate() {
+    if (this.state.logo != null) {
+      this.handleChangeLogo()
+    }
+  }
+
   render() {
     const {
       classes,
       handleSubmit,
       pristine,
       submitting,
-      deco
+      deco,
+      cLogo,
+      logo
     } = this.props;
     const { showPassword } = this.state;
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
-        {/* <div className={classes.topBar}>
-          <NavLink to="/" className={classes.brand}>
-            <img style={{ width: '70px' }} src={logo} alt={brand.name} />
-          </NavLink>
-          <Button size="small" className={classes.buttonLink} component={LinkBtn} to="/signin">
-            <Icon className={classes.icon}>arrow_forward</Icon>
-            Already have account ?
-          </Button>
-        </div> */}
         <Typography variant="h4" className={classes.title} gutterBottom>
           Create Client Token
         </Typography>
         <section className={classes.pageFormWrap}>
-          {this.props.flash && this.Message()}
           <form onSubmit={handleSubmit}>
+            <div className={classes.row}>
+              <IconButton>
+                <Avatar
+                  alt="company logo"
+                  src={(cLogo == '' || cLogo == null) ? avatarApi[7] : cLogo}
+                  className={classes.avatar}
+                  style={{
+                    width: '103px',
+                    display: 'inline-block',
+                    height: 'auto',
+                  }}
+                />
+              </IconButton>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <label for="company-logo" className={classes.customFileUpload}>
+                  {logo == null ? 'Choose Company Logo' : logo.name}
+                </label>
+                <input
+                  id="company-logo"
+                  name="logo"
+                  type="file"
+                  onChange={this.props.handleFileChange}
+                  style={{ display: 'none' }}
+                />
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <Field
+                  name="cName"
+                  component={renderField}
+                  placeholder="Company Name"
+                  label="Company Name"
+                  required
+                  className={classes.field}
+                  validate={[minTextLength, maxTextLength]}
+                />
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <Field
+                  name="cPhone"
+                  component={renderField}
+                  placeholder="Company Phone"
+                  label="Company Phone"
+                  required
+                  className={classes.field}
+                  validate={[minTextLength, maxTextLength]}
+                />
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <Field
+                  name="cEmail"
+                  component={renderField}
+                  placeholder="Company Email"
+                  label="Company Email"
+                  required
+                  validate={[required, email]}
+                  className={classes.field}
+                />
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <Field
+                  name="cHeadquarter"
+                  component={renderField}
+                  placeholder="Company Headquarter"
+                  label="Company Headquarter"
+                  required
+                  validate={[required]}
+                  className={classes.field}
+                />
+              </FormControl>
+            </div>
             <div>
               <FormControl className={classes.formControl}>
                 <Field
@@ -171,67 +238,6 @@ class SignupForm extends React.Component {
                 />
               </FormControl>
             </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <Field
-                  name="cName"
-                  component={renderField}
-                  placeholder="Company Name"
-                  label="Company Name"
-                  required
-                  className={classes.field}
-                  validate={[minTextLength, maxTextLength]}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <Field
-                  name="cPhone"
-                  component={renderField}
-                  placeholder="Company Phone"
-                  label="Company Phone"
-                  required
-                  className={classes.field}
-                  validate={[minTextLength, maxTextLength]}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <Field
-                  name="cEmail"
-                  component={renderField}
-                  placeholder="Company Email"
-                  label="Company Email"
-                  required
-                  validate={[required, email]}
-                  className={classes.field}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <Field
-                  name="cHeadquarter"
-                  component={renderField}
-                  placeholder="Company Headquarter"
-                  label="Company Headquarter"
-                  required
-                  validate={[required]}
-                  className={classes.field}
-                />
-              </FormControl>
-            </div>
-            {/* <div>
-              <FormControlLabel
-                control={(
-                  <Field name="checkbox" component={CheckboxRedux} required className={classes.agree} />
-                )}
-                label="Agree with"
-              />
-              <a href="#" className={classes.link}>Terms &amp; Condition</a>
-            </div> */}
             <div className={classes.btnArea}>
               <Button variant="contained" fullWidth color="primary" type="submit">
                 Create

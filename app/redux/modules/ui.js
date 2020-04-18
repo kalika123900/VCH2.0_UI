@@ -21,7 +21,11 @@ const getMode = () => {
     const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))
     );
-    return user.mode;
+    if (user.type == 'CLIENT') {
+      return user.mode;
+    } else {
+      return 'light';
+    }
   }
   return 'light';
 }
@@ -31,7 +35,11 @@ const getTheme = () => {
     const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))
     );
-    return user.theme;
+    if (user.type == 'CLIENT') {
+      return user.theme;
+    } else {
+      return 'blueTheme';
+    }
   }
   return 'blueTheme';
 }

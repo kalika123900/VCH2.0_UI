@@ -198,7 +198,9 @@ const styles = theme => ({
   },
   customAvatar: {
     display: 'inline-block',
-    marginRight: 10
+    marginRight: 10,
+    width: 103,
+    height: 'auto'
   },
   customHeading: {
     display: "inline-block",

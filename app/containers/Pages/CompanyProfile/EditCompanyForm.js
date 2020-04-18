@@ -51,10 +51,7 @@ async function postData(url, data) {
 async function postFormData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: qs.stringify(data)
+    body: data
   });
   return await response.json();
 }
@@ -65,13 +62,14 @@ class SignupForm extends React.Component {
     cEmail: '',
     cPhone: '',
     cHeadquarter: '',
+    cAvatar: '',
     openStyle: false,
     messageType: 'error',
     notifyMessage: '',
     logo: null,
   };
 
-  componentDidMount() {
+  getCompanyInfo = () => {
     var data = {};
     if (this.props.userType == 'ADMIN') {
       data = {
@@ -95,6 +93,7 @@ class SignupForm extends React.Component {
             cEmail: res.data.email,
             cPhone: res.data.phone,
             cHeadquarter: res.data.headquarter,
+            cAvatar: res.data.logo
           })
         }
       })
@@ -103,9 +102,62 @@ class SignupForm extends React.Component {
       });
   }
 
+  handleChangeLogo = () => {
+    var data = new FormData();
+
+    if (this.props.userType == 'ADMIN') {
+      data.append('logo', this.state.logo);
+      data.append('company_id', this.props.match.params.cId);
+    }
+    else {
+      const user = JSON.parse(
+        makeSecureDecrypt(localStorage.getItem('user'))
+      );
+      data.append('logo', this.state.logo);
+      data.append('company_id', user.cId);
+    }
+
+    postFormData(`${API_URL}/utils/company-logo`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({ logo: null });
+          this.setState({
+            notifyMessage: 'Company logo updated',
+            messageType: 'success',
+            openStyle: true,
+          });
+          this.getCompanyInfo();
+        }
+        else {
+          this.setState({ logo: null });
+          this.setState({ notifyMessage: 'Company logo not updated' });
+          this.setState({ messageType: 'error' });
+          this.setState({ openStyle: true });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  componentDidMount() {
+    this.getCompanyInfo();
+  }
+
   handleChange = (e) => {
-    console.log(e)
     this.setState({ [e.target.name]: e.target.value });
+  }
+
+  handleFileChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.files[0],
+    })
+  }
+
+  componentDidUpdate() {
+    if (this.state.logo != null) {
+      this.handleChangeLogo()
+    }
   }
 
   handleSubmitForm = (e) => {
@@ -125,17 +177,17 @@ class SignupForm extends React.Component {
       const user = JSON.parse(
         makeSecureDecrypt(localStorage.getItem('user'))
       );
+
       data = {
         company_id: user.cId,
         cName: this.state.cName,
         cEmail: this.state.cEmail,
         cPhone: this.state.cPhone,
         cHeadquarter: this.state.cHeadquarter,
-        logo: this.state.logo
       }
     }
 
-    postFormData(`${API_URL}/utils/update-company-info`, data) // eslint-disable-line
+    postData(`${API_URL}/utils/update-company-info`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
           if (this.props.userType == 'ADMIN') {
@@ -170,19 +222,19 @@ class SignupForm extends React.Component {
       classes,
       deco
     } = this.props;
-    const { cName, cEmail, cPhone, cHeadquarter, logo } = this.state;
+    const { cName, cEmail, cPhone, cHeadquarter, cAvatar, logo } = this.state;
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
         <Typography variant="h4" className={classes.title} gutterBottom>
           Edit Company Profile
         </Typography>
         <section className={classes.pageFormWrap}>
-          <form enctype="multipart/form-data" onSubmit={(e) => this.handleSubmitForm(e)}>
+          <form onSubmit={(e) => this.handleSubmitForm(e)}>
             <div className={classes.row}>
               <IconButton>
                 <Avatar
-                  alt="Remy Sharp"
-                  src='https://res.cloudinary.com/dxclvhyan/image/upload/c_scale,w_103,h_103/v1587025805/tqlzewb27b48mqutg4fz.jpg'
+                  alt="company logo"
+                  src={(cAvatar == '' || cAvatar == null) ? avatarApi[7] : cAvatar}
                   className={classes.avatar}
                   style={{
                     width: '103px',
@@ -191,6 +243,20 @@ class SignupForm extends React.Component {
                   }}
                 />
               </IconButton>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <label for="company-logo" className={classes.customFileUpload}>
+                  {logo == null ? 'Change Company Logo' : logo.name}
+                </label>
+                <input
+                  id="company-logo"
+                  name="logo"
+                  type="file"
+                  onChange={this.handleFileChange}
+                  style={{ display: 'none' }}
+                />
+              </FormControl>
             </div>
             <div>
               <FormControl className={classes.formControl}>
@@ -240,20 +306,7 @@ class SignupForm extends React.Component {
                   label="Company Headquarter"
                   required
                   validate={[required]}
-                  onChange={(e) => { this.handleChange(e) }}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <input
-                  name="logo"
-                  value={logo}
-                  required
-                  accept="image/*"
-                  type="file"
-                  validate={[required]}
-                  onChange={(e) => { this.handleChange(e) }}
+                  onChange={() => { this.handleChange() }}
                 />
               </FormControl>
             </div>
