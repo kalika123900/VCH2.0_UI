@@ -21,7 +21,7 @@ class CampaignDetails extends Component {
   }
 
   render() {
-    const campaignId = this.props.match.params.campaignId;
+    const campaignId = atob(this.props.match.params.campaignId);
 
     return (
       <Grid>

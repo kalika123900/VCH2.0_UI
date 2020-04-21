@@ -90,7 +90,7 @@ class BulkEmailEdit extends React.Component {
   componentWillMount() {
     const _that = this;
     const data = {
-      bulkEmailId: this.props.match.params.bulkEmailId
+      bulkEmailId: atob(this.props.match.params.bulkEmailId)
     };
 
     postJSON(`${API_URL}/bulkemail/get-bulkemail-info`, data) // eslint-disable-line
@@ -187,7 +187,7 @@ class BulkEmailEdit extends React.Component {
       gender: MapGender,
       studentList: JSON.stringify(MapStudentList),
       blackList: JSON.stringify(MapBlackList),
-      bulkEmailId: this.props.match.params.bulkEmailId
+      bulkEmailId: atob(this.props.match.params.bulkEmailId)
     };
 
     postJSON(`${API_URL}/bulkemail/update-approve-bulkemail`, data) // eslint-disable-line

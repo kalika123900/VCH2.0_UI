@@ -45,7 +45,7 @@ class BulkEmailTable extends React.Component {
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to={`/admin/bulkemail-review/${this.state.bulkEmailId}`} />
+      return <Redirect to={`/admin/bulkemail-review/${btoa(this.state.bulkEmailId)}`} />
     }
   }
 

@@ -91,7 +91,7 @@ class ClientEmailThreadList extends React.Component {
         <ExpansionPanel className={classes.emailList} key={mail.get('id')} onChange={() => openMail(mail)}>
           <ExpansionPanelSummary className={classes.emailSummary} expandIcon={<ExpandMoreIcon />}>
             <div className={classes.fromHeading}>
-              <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} style={{ marginRight: 20 }} />
+              <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} />
               <div className={classes.item}>
                 <div>
                   <Typography className={classes.heading} display="block">

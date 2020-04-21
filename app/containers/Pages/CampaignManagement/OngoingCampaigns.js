@@ -147,7 +147,7 @@ class OngoingCampaigns extends React.Component {
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to={`/client/campaign-details/${this.state.cId}`} />;
+      return <Redirect to={`/client/campaign-details/${btoa(this.state.cId)}`} />;
     }
   }
 

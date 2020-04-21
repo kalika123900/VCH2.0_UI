@@ -119,7 +119,7 @@ class PendingCampaigns extends React.Component {
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to={`/client/edit-campaign/${this.state.cId}`} />;
+      return <Redirect to={`/client/edit-campaign/${btoa(this.state.cId)}`} />;
     }
   }
 

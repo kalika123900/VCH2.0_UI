@@ -84,7 +84,7 @@ class CampaignEdit extends React.Component {
   componentWillMount() {
     const _that = this;
     const data = {
-      campaignId: this.props.match.params.campaignId
+      campaignId: atob(this.props.match.params.campaignId)
     };
 
     postJSON(`${API_URL}/campaign/get-campaign-info`, data) // eslint-disable-line
@@ -170,7 +170,7 @@ class CampaignEdit extends React.Component {
       keywords: MapKeywords,
       skills: MapSkills,
       gender: MapGender,
-      campaignId: this.props.match.params.campaignId
+      campaignId: atob(this.props.match.params.campaignId)
     };
 
     postJSON(`${API_URL}/campaign/update-approve-campaign`, data) // eslint-disable-line

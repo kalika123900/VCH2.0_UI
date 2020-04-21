@@ -77,7 +77,7 @@ class CreateCampaign extends React.Component {
   handleReject = () => {
     const { removeInfo } = this.props;
     const data = {
-      campaignId: this.props.match.params.campaignId
+      campaignId: atob(this.props.match.params.campaignId)
     };
 
     postJSON(`${API_URL}/campaign/reject-campaign`, data) // eslint-disable-line
@@ -199,7 +199,10 @@ class CreateCampaign extends React.Component {
               </Typography>
               <Grid>
                 <FormControl className={(classes.formControl, classes.wrapInput)}>
-                  <Step4 campaignId={this.props.match.params.campaignId} />
+                  {userType == 'ADMIN' ?
+                    <Step4 campaignId={atob(this.props.match.params.campaignId)} />
+                    : <Step4 />
+                  }
                 </FormControl>
               </Grid>
               <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
@@ -258,7 +261,11 @@ class CreateCampaign extends React.Component {
               </Typography>
               <Grid>
                 <FormControl className={(classes.formControl, classes.wrapInput)}>
-                  <Step6 campaignId={this.props.match.params.campaignId} handleCreateCampaign={this.handleCreateCampaign} />
+                  {userType == 'ADMIN' ?
+                    <Step6 campaignId={atob(this.props.match.params.campaignId)} handleCreateCampaign={this.handleCreateCampaign} />
+                    :
+                    <Step6 handleCreateCampaign={this.handleCreateCampaign} />
+                  }
                 </FormControl>
               </Grid>
               <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>

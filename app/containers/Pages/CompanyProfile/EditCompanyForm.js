@@ -73,7 +73,7 @@ class SignupForm extends React.Component {
     var data = {};
     if (this.props.userType == 'ADMIN') {
       data = {
-        company_id: this.props.match.params.cId
+        company_id: atob(this.props.match.params.cId)
       }
     } else {
       const user = JSON.parse(
@@ -107,7 +107,7 @@ class SignupForm extends React.Component {
 
     if (this.props.userType == 'ADMIN') {
       data.append('logo', this.state.logo);
-      data.append('company_id', this.props.match.params.cId);
+      data.append('company_id', atob(this.props.match.params.cId));
     }
     else {
       const user = JSON.parse(
@@ -167,7 +167,7 @@ class SignupForm extends React.Component {
 
     if (this.props.userType == 'ADMIN') {
       data = {
-        company_id: this.props.match.params.cId,
+        company_id: atob(this.props.match.params.cId),
         cName: this.state.cName,
         cEmail: this.state.cEmail,
         cPhone: this.state.cPhone,
@@ -234,7 +234,7 @@ class SignupForm extends React.Component {
               <IconButton>
                 <Avatar
                   alt="company logo"
-                  src={(cAvatar == '' || cAvatar == null) ? avatarApi[7] : cAvatar}
+                  src={(cAvatar == '' || cAvatar == null) ? avatarApi[0] : cAvatar}
                   className={classes.avatar}
                   style={{
                     width: '103px',

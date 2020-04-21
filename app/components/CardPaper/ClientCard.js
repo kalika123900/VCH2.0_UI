@@ -28,7 +28,7 @@ const combinedStyles = CombineStyles(customStyles, styles);
 
 class ClientCard extends React.Component {
   handleRedirect = (obj) => {
-    this.props.history.push(`/student/opportunities/${obj}`);
+    this.props.history.push(`/student/opportunities/${btoa(obj)}`);
   }
 
   render() {

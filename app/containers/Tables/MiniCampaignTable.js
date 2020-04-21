@@ -116,7 +116,7 @@ class MiniCampaignTable extends React.Component {
 
   renderDetailsRedirect = () => {
     if (this.state.redirectDetails) {
-      return <Redirect to={`/client/campaign-details/${this.state.cId}`} />;
+      return <Redirect to={`/client/campaign-details/${btoa(this.state.cId)}`} />;
     }
   }
 

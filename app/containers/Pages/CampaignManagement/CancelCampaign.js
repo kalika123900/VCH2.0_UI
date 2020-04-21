@@ -91,7 +91,7 @@ class CancelCampaign extends React.Component {
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to={`/admin/campaign-review/${this.state.campaignId}`} />;
+      return <Redirect to={`/admin/campaign-review/${btoa(this.state.campaignId)}`} />;
     }
   }
 

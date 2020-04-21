@@ -78,7 +78,7 @@ class StudentEmailThread extends React.Component {
 
   getThreadEmails = () => {
     const data = {
-      thread_id: this.props.match.params.thread
+      thread_id: atob(this.props.match.params.thread)
     };
 
     postData(`${API_URL}/student/get-thread-emails`, data) // eslint-disable-line

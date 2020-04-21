@@ -23,6 +23,7 @@ import { CombineStyles } from 'dan-helpers';
 import { genderItems, universityItems } from 'dan-api/apps/profileOption';
 import styles from '../CampaignSteps/step-jss';
 import { makeSecureDecrypt } from '../../../Helpers/security';
+import avatarApi from 'dan-api/images/avatars';
 
 const showdown = require('showdown');
 const converter = new showdown.Converter();
@@ -45,7 +46,8 @@ class Step6 extends React.Component {
     email: '',
     cname: '',
     user: null,
-    usedName: []
+    usedName: [],
+    logo: avatarApi[0]
   }
 
   componentDidMount() {
@@ -63,9 +65,9 @@ class Step6 extends React.Component {
         .then((res) => {
           if (res.status === 1) {
             const { data } = res;
-            const { email } = data;
+            const { email, logo } = data;
             const cname = `${data.name}`;
-            this.setState({ email, cname });
+            this.setState({ email, cname, logo });
           }
         })
         .catch((err) => {
@@ -132,7 +134,7 @@ class Step6 extends React.Component {
     } = this.props;
 
     const Mapgender = gender.toJS();
-    const { email, cname } = this.state;
+    const { email, cname, logo } = this.state;
     const MapUniversity = university.toJS();
 
     let selectedGender = '';
@@ -267,10 +269,10 @@ class Step6 extends React.Component {
             <Grid>
               <CardHeader
                 avatar={
-                  <Avatar src="/images/pp_girl.svg" />
+                  <Avatar src={(logo != null && logo != '') ? logo : avatarApi[0]} />
                 }
-                title="Your Company Name"
-                subheader="team@varsitycareershub.co.uk"
+                title={cname}
+                subheader={email}
                 style={{
                   padding: '0',
                   paddingBottom: ' 2%',

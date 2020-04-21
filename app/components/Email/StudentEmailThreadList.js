@@ -130,16 +130,20 @@ class StudentEmailThreadList extends React.Component {
               {/* <Tooltip id="tooltip-mark" title="Stared">
                 <IconButton onClick={() => _that.toggleStar(mail)} className={classes.starBtn}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
               </Tooltip> */}
-              <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} style={{ marginRight: 20 }} />
-              <Typography className={classes.heading} display="block">
-                {mail.get('sender_type') != 'client' && ('me, ')}
-                {mail.get('name')}
-                <Typography variant="caption" display="block">{mail.get('date')}</Typography>
-              </Typography>
-            </div>
-            <div className={classes.column}>
-              <Typography className={classes.secondaryHeading} noWrap>{mail.get('subject')}</Typography>
-              {getCategory(mail.get('category'))}
+              <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} />
+              <div className={classes.item}>
+                <div>
+                  <Typography className={classes.heading} display="block">
+                    {mail.get('sender_type') != 'client' && ('me, ')}
+                    {mail.get('name')}
+                    <Typography variant="caption" display="block">{mail.get('date')}</Typography>
+                  </Typography>
+                </div>
+                <div className={classes.column}>
+                  <Typography className={classes.secondaryHeading} noWrap>{mail.get('subject')}</Typography>
+                  {getCategory(mail.get('category'))}
+                </div>
+              </div>
             </div>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails className={classes.details}>

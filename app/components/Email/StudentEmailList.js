@@ -60,9 +60,9 @@ class EmailList extends React.Component {
   openThread = (mail) => {
     const MapMail = mail.toJS();
     if (MapMail.thread != -1) {
-      this.props.history.push(`/student/messages/${MapMail.thread}`)
+      this.props.history.push(`/student/messages/${btoa(MapMail.thread)}`)
     } else {
-      this.props.history.push(`/student/messages/${MapMail.id}`)
+      this.props.history.push(`/student/messages/${btoa(MapMail.id)}`)
     }
   };
 

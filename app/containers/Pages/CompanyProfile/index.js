@@ -60,7 +60,7 @@ class CompanyProfile extends React.Component {
   }
 
   showCompany = (id) => {
-    this.props.history.push(`/admin/company-profile/${id}`)
+    this.props.history.push(`/admin/company-profile/${btoa(id)}`)
   }
 
   handleChangePage = (event, page) => {

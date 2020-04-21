@@ -92,11 +92,11 @@ class Campaigns extends React.Component {
 
   componentDidMount() {
     const _that = this;
-    const { campaignId } = this.props.match.params;
+    const campaignId = this.props.match.params.campaignId;
 
     if (campaignId !== undefined) {
       const data = {
-        campaignId
+        campaignId: atob(campaignId)
       };
       postJSON(`${API_URL}/campaign/get-campaign-info`, data) // eslint-disable-line
         .then((res) => {
@@ -196,7 +196,7 @@ class Campaigns extends React.Component {
         skills: MapSkills,
         gender: MapGender,
         company_id: user.cId,
-        campaignId: this.props.match.params.campaignId
+        campaignId: atob(this.props.match.params.campaignId)
       };
 
       postJSON(`${API_URL}/campaign/client/update-campaign`, data) // eslint-disable-line

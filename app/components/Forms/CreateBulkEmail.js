@@ -79,7 +79,7 @@ class CreateBulkEmail extends React.Component {
   handleReject = () => {
     const { removeInfo } = this.props;
     const data = {
-      bulkEmailId: this.props.match.params.bulkEmailId
+      bulkEmailId: atob(this.props.match.params.bulkEmailId)
     };
 
     postJSON(`${API_URL}/bulkemail/reject-bulkemail`, data) // eslint-disable-line
@@ -194,7 +194,10 @@ class CreateBulkEmail extends React.Component {
               </Typography>
               <Grid>
                 <FormControl className={(classes.formControl, classes.wrapInput)}>
-                  <Step3 bulkEmailId={this.props.match.params.bulkEmailId} />
+                  {userType == 'ADMIN' ?
+                    <Step3 bulkEmailId={atob(this.props.match.params.bulkEmailId)} />
+                    : <Step3 />
+                  }
                 </FormControl>
               </Grid>
               <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
@@ -282,7 +285,10 @@ class CreateBulkEmail extends React.Component {
               </Typography>
               <Grid>
                 <FormControl className={(classes.formControl, classes.wrapInput)}>
-                  <Step6 bulkEmailId={this.props.match.params.bulkEmailId} />
+                  {userType == 'ADMIN' ?
+                    <Step6 bulkEmailId={atob(this.props.match.params.bulkEmailId)} />
+                    : <Step6 />
+                  }
                 </FormControl>
               </Grid>
               <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>

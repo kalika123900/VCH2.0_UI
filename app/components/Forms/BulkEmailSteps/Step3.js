@@ -25,6 +25,8 @@ import styles from 'dan-components/Email/email-jss';
 import draftToHtml from 'draftjs-to-html';
 import cmStyles from '../CampaignSteps/step-jss';
 import { makeSecureDecrypt } from '../../../Helpers/security';
+import avatarApi from 'dan-api/images/avatars';
+
 const showdown = require('showdown');
 const converter = new showdown.Converter();
 
@@ -111,7 +113,7 @@ class Step3 extends PureComponent {
   state = {
     cname: '',
     email: '',
-    logo: ''
+    logo: avatarApi[0]
   }
 
   constructor(props) {
@@ -261,7 +263,7 @@ class Step3 extends PureComponent {
               <Grid>
                 <CardHeader
                   avatar={
-                    <Avatar src={logo} />
+                    <Avatar src={(logo != null && logo != '') ? logo : avatarApi[0]} />
                   }
                   action={(
                     <Fragment>
