@@ -54,7 +54,7 @@ class Footer extends React.Component {
     const { classes } = this.props;
     return (
       <footer className={classes.footer}>
-        <DecorationStyled />
+        {/* <DecorationStyled /> */}
         <div className={classes.container}>
           <div className={classes.spaceContainer}>
             <div className={classes.brand}>
