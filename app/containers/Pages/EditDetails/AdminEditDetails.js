@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import Paper from '@material-ui/core/Paper';
-import { clientProfileDetails, clientProfileInit } from 'dan-actions/clientProfileActions';
+import { adminProfileDetails, adminProfileInit } from 'dan-actions/adminProfileActions';
 import TextField from '@material-ui/core/TextField';
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -99,7 +99,7 @@ class EditDetailsForm extends React.Component {
       user_id: user.id,
       newPassword: MappedValues.password,
       oldPassword: MappedValues.oldPassword,
-      type: 'client'
+      type: 'admin'
     }
 
     postData(`${API_URL}/utils/set-new-password`, data)
@@ -121,10 +121,10 @@ class EditDetailsForm extends React.Component {
   componentDidMount() {
     const _that = this;
     const data = {
-      client_id: user.id
+      id: user.id
     };
 
-    postData(`${API_URL}/client/get-account-info`, data) // eslint-disable-line
+    postData(`${API_URL}/admin/get-account-info`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
           const firstName = res.data.firstname;
@@ -139,7 +139,7 @@ class EditDetailsForm extends React.Component {
             phone,
             username,
           };
-          _that.props.clientInit(clientProfileData);
+          _that.props.adminInit(clientProfileData);
         } else {
           console.log('something not good ');
         }
@@ -157,15 +157,22 @@ class EditDetailsForm extends React.Component {
     const _that = this;
     e.preventDefault();
     const {
+      firstName,
+      lastName,
+      username,
       userEmail,
       phone,
     } = this.props;
+
     const data = {
+      firstName,
+      lastName,
+      username,
       email: userEmail,
       phone,
-      client_id: user.id,
+      id: user.id,
     };
-    postJSON(`${API_URL}/client/update-account-info`, data) // eslint-disable-line
+    postJSON(`${API_URL}/admin/update-account-info`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
           _that.setState({ notifyMessage: 'Information update successfully' });
@@ -235,9 +242,9 @@ class EditDetailsForm extends React.Component {
                     value={firstName}
                     onChange={(e) => this.handleChange(e)}
                     validate={[required]}
-                    InputProps={{
-                      readOnly: true,
-                    }}
+                  // InputProps={{
+                  //   readOnly: true,
+                  // }}
                   />
                 </FormControl>
               </div>
@@ -253,9 +260,9 @@ class EditDetailsForm extends React.Component {
                     value={lastName}
                     onChange={(e) => this.handleChange(e)}
                     validate={[required]}
-                    InputProps={{
-                      readOnly: true,
-                    }}
+                  // InputProps={{
+                  //   readOnly: true,
+                  // }}
                   />
                 </FormControl>
               </div>
@@ -271,9 +278,9 @@ class EditDetailsForm extends React.Component {
                     value={username}
                     onChange={(e) => this.handleChange(e)}
                     validate={[required]}
-                    InputProps={{
-                      readOnly: true,
-                    }}
+                  // InputProps={{
+                  //   readOnly: true,
+                  // }}
                   />
                 </FormControl>
               </div>
@@ -363,7 +370,7 @@ class EditDetailsForm extends React.Component {
   }
 }
 
-const reducerClient = 'clientEditProfile';
+const reducerAdmin = 'adminEditProfile';
 
 EditDetailsForm.propTypes = {
   classes: PropTypes.object.isRequired,
@@ -377,16 +384,16 @@ EditDetailsForm.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  firstName: state.getIn([reducerClient, 'firstName']),
-  lastName: state.getIn([reducerClient, 'lastName']),
-  userEmail: state.getIn([reducerClient, 'userEmail']),
-  phone: state.getIn([reducerClient, 'phone']),
-  username: state.getIn([reducerClient, 'username']),
+  firstName: state.getIn([reducerAdmin, 'firstName']),
+  lastName: state.getIn([reducerAdmin, 'lastName']),
+  userEmail: state.getIn([reducerAdmin, 'userEmail']),
+  phone: state.getIn([reducerAdmin, 'phone']),
+  username: state.getIn([reducerAdmin, 'username']),
 });
 
 const mapDispatchToProps = dispatch => ({
-  addInfo: bindActionCreators(clientProfileDetails, dispatch),
-  clientInit: bindActionCreators(clientProfileInit, dispatch)
+  addInfo: bindActionCreators(adminProfileDetails, dispatch),
+  adminInit: bindActionCreators(adminProfileInit, dispatch)
 });
 
 const StepMapped = connect(

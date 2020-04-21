@@ -29,6 +29,7 @@ import bulkEmail from './modules/bulkEmail';
 import Auth from './modules/Auth';
 import studentProfile from './modules/studentProfile';
 import clientEditProfile from './modules/clientEditProfile';
+import adminEditProfile from './modules/adminEditProfile';
 
 /**
  * Branching reducers to use one reducer for many components
@@ -70,6 +71,7 @@ export default function createReducer(injectedReducers = {}) {
     Auth,
     studentProfile,
     clientEditProfile,
+    adminEditProfile,
     treeTableArrow: branchReducer(treeTable, 'treeTableArrow'),
     treeTablePM: branchReducer(treeTable, 'treeTablePM'),
     crudTableDemo: branchReducer(crudTable, 'crudTableDemo'),

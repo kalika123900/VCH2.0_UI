@@ -6,6 +6,12 @@ module.exports = [
     link: '/admin',
   },
   {
+    key: 'edit-details',
+    name: 'Edit Details',
+    icon: 'ios-home-outline',
+    link: '/admin/edit-details',
+  },
+  {
     key: 'campaign-management',
     name: 'Campaign Management',
     icon: 'ios-contact-outline',

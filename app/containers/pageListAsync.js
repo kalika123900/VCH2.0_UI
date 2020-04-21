@@ -397,6 +397,10 @@ export const EditDetails = loadable(() =>
   import('./Pages/EditDetails'), {
   fallback: <Loading />,
 });
+export const AdminEditDetails = loadable(() =>
+  import('./Pages/EditDetails/AdminEditDetails'), {
+  fallback: <Loading />,
+});
 export const Explore = loadable(() =>
   import('./Pages/Explore'), {
   fallback: <Loading />,
