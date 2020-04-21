@@ -60,7 +60,6 @@ const renderField = (props) => {
   return (
     <Fragment>
       <TextFieldRedux
-        margin="normal"
         {...props}
       />
       {
