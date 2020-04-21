@@ -142,7 +142,8 @@ class EmailList extends React.Component {
                 return (
                   type == 'inbox' ?
                     <Grid className={classes.emailList} key={mail.get('id')}>
-                      <div className={classes.fromHeading} style={{ background: '#f3f4fa', margin: 10 }}>
+                      <Divider />
+                      <div className={classes.fromHeading} style={{ margin: 5 }}>
                         <Tooltip id="tooltip-mark" title="Stared">
                           <IconButton onClick={() => _that.toggleStar(mail)} className={classes.starBtn}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
                         </Tooltip>
@@ -175,16 +176,20 @@ class EmailList extends React.Component {
                           <Tooltip id="tooltip-mark" title="Stared">
                             <IconButton onClick={() => _that.toggleStar(mail)} className={classes.starBtn}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
                           </Tooltip>
-                          <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} style={{ marginRight: 20 }} />
-                          <Typography className={classes.heading} display="block">
-                            {mail.get('category') === 'sent' && ('To ')}
-                            {mail.get('name')}
-                            <Typography variant="caption" display="block">{mail.get('date')}</Typography>
-                          </Typography>
-                        </div>
-                        <div className={classes.column}>
-                          <Typography className={classes.secondaryHeading} noWrap>{mail.get('subject')}</Typography>
-                          {_that.getCategory(mail.get('category'))}
+                          <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} />
+                          <div className={classes.item}>
+                            <div>
+                              <Typography className={classes.heading} display="block">
+                                {mail.get('category') === 'sent' && ('To ')}
+                                {mail.get('name')}
+                                <Typography variant="caption" display="block">{mail.get('date')}</Typography>
+                              </Typography>
+                            </div>
+                            <div className={classes.column}>
+                              <Typography className={classes.secondaryHeading} noWrap>{mail.get('subject')}</Typography>
+                              {_that.getCategory(mail.get('category'))}
+                            </div>
+                          </div>
                         </div>
                         <div className={classes.topAction}>
                           <div className={classes.opt}>
@@ -206,7 +211,8 @@ class EmailList extends React.Component {
                         </section>
                       </ExpansionPanelDetails>
                       <Divider />
-                      {(mail.get('category') !== 'sent' && mail.get('sender_type') !== 'user') &&
+                      {
+                        (mail.get('category') !== 'sent' && mail.get('sender_type') !== 'user') &&
                         <ExpansionPanelActions>
                           <div className={classes.action}>
                             <Button size="small" color="secondary" onClick={() => reply(mail)}>Reply</Button>

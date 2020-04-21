@@ -155,20 +155,24 @@ class EmailList extends React.Component {
                     :
                     < ExpansionPanel className={classes.emailList} key={mail.get('id')} onChange={() => openMail(mail)}>
                       <ExpansionPanelSummary className={classes.emailSummary} expandIcon={<ExpandMoreIcon />}>
-                        <div className={classes.fromHeading}>
+                        <div className={classes.fromHeading} >
                           <Tooltip id="tooltip-mark" title="Stared">
                             <IconButton onClick={() => _that.toggleStar(mail)} className={classes.starBtn}>{mail.get('stared') ? (<Star className={classes.iconOrange} />) : (<StarBorder />)}</IconButton>
                           </Tooltip>
-                          <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} style={{ marginRight: 20 }} />
-                          <Typography className={classes.heading} display="block">
-                            {mail.get('category') === 'sent' && ('To ')}
-                            {mail.get('name')}
-                            <Typography variant="caption" display="block">{mail.get('date')}</Typography>
-                          </Typography>
-                        </div>
-                        <div className={classes.column}>
-                          <Typography className={classes.secondaryHeading} noWrap>{mail.get('subject')}</Typography>
-                          {_that.getCategory(mail.get('category'))}
+                          <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} />
+                          <div className={classes.item}>
+                            <div>
+                              <Typography className={classes.heading} display="block">
+                                {mail.get('category') === 'sent' && ('To ')}
+                                {mail.get('name')}
+                                <Typography variant="caption" display="block">{mail.get('date')}</Typography>
+                              </Typography>
+                            </div>
+                            <div className={classes.column}>
+                              <Typography className={classes.secondaryHeading} noWrap>{mail.get('subject')}</Typography>
+                              {_that.getCategory(mail.get('category'))}
+                            </div>
+                          </div>
                         </div>
                         <div className={classes.topAction}>
                           <div className={classes.opt}>

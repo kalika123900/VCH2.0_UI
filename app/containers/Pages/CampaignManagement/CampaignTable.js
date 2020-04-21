@@ -119,7 +119,7 @@ class CampaignTable extends React.Component {
       <Fragment>
         {this.renderRedirect()}
         {this.addNewCampaign()}
-        <div className={classes.rootTable}>
+        <div className={classes.rootTable} style={{ wordBreak: 'normal' }}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
               <Typography variant="h6">Ongoing Campaigns</Typography>

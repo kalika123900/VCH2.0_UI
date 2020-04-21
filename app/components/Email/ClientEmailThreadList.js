@@ -92,15 +92,19 @@ class ClientEmailThreadList extends React.Component {
           <ExpansionPanelSummary className={classes.emailSummary} expandIcon={<ExpandMoreIcon />}>
             <div className={classes.fromHeading}>
               <Avatar alt="avatar" src={mail.get('avatar')} className={classes.avatar} style={{ marginRight: 20 }} />
-              <Typography className={classes.heading} display="block">
-                {mail.get('sender_type') != 'user' && ('me, ')}
-                {mail.get('name')}
-                <Typography variant="caption" display="block">{mail.get('date')}</Typography>
-              </Typography>
-            </div>
-            <div className={classes.column}>
-              <Typography className={classes.secondaryHeading} noWrap>{mail.get('subject')}</Typography>
-              {getCategory(mail.get('category'))}
+              <div className={classes.item}>
+                <div>
+                  <Typography className={classes.heading} display="block">
+                    {mail.get('sender_type') != 'user' && ('me, ')}
+                    {mail.get('name')}
+                    <Typography variant="caption" display="block">{mail.get('date')}</Typography>
+                  </Typography>
+                </div>
+                <div className={classes.column}>
+                  <Typography className={classes.secondaryHeading} noWrap>{mail.get('subject')}</Typography>
+                  {getCategory(mail.get('category'))}
+                </div>
+              </div>
             </div>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails className={classes.details}>

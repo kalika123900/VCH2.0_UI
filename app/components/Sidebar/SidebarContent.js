@@ -84,10 +84,10 @@ class SidebarContent extends React.Component {
               />
               <div>
                 <h4>{dummy.user.name}</h4>
-                <Button size="small" onClick={openMenuStatus}>
+                {/* <Button size="small" onClick={openMenuStatus}>
                   <i className={classNames(classes.dotStatus, setStatus(status))} />
                   {status}
-                </Button>
+                </Button> */}
                 <Menu
                   id="status-menu"
                   anchorEl={anchorEl}

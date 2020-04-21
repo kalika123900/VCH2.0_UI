@@ -154,7 +154,7 @@ class PausedCampaigns extends React.Component {
           type={type}
         />
         {this.renderRedirect()}
-        <div className={classes.rootTable}>
+        <div className={classes.rootTable} style={{ wordBreak: 'normal' }}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
               <Typography variant="h6">Paused Campaigns</Typography>

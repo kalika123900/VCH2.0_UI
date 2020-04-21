@@ -56,7 +56,7 @@ class MainMenu extends React.Component {
                   <Ionicon icon={item.icon} />
                 </ListItemIcon>
               )}
-              <ListItemText classes={{ primary: classes.primary }} variant="inset" primary={item.name} />
+              <ListItemText classes={{ primary: classes.primary }} variant="inset" className={classes.insetcustom} primary={item.name} />
               {open.indexOf(item.key) > -1 ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
             <Collapse
@@ -99,7 +99,7 @@ class MainMenu extends React.Component {
           to={item.link}
           onClick={() => this.handleClick()}
         > <Ionicon icon={item.icon} />
-          <ListItemText classes={{ primary: classes.primary }} className={classes.insetcustom} primary={item.name} />
+          <ListItemText classes={{ primary: classes.primary }} primary={item.name} />
           {item.badge && (
             <Chip color="primary" label={item.badge} className={classes.badge} />
           )}

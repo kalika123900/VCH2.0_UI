@@ -59,7 +59,7 @@ class EditClientDetails extends React.Component {
     return (
       <Fragment>
         <EditClientDialog open={open} handleClose={this.handleClose} />
-        <div className={classes.rootTable} >
+        <div className={classes.rootTable} style={{ wordBreak: 'normal' }}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
               <Typography variant="h6">Our Clients</Typography>

@@ -121,7 +121,7 @@ class NotCancelCampaign extends React.Component {
         <Grid style={{ width: '100%' }}>
           {this.state.showFilter && <CampaignFilter />}
         </Grid>
-        <div className={classes.rootTable}>
+        <div className={classes.rootTable} style={{ wordBreak: 'normal' }}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
               <Typography variant="h6">Campaigns</Typography>

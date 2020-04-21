@@ -79,7 +79,7 @@ class Step5 extends React.Component {
           <meta property="twitter:title" content={title} />
           <meta property="twitter:description" content={description} />
         </Helmet>
-        <Grid container spacing={3} className={classes.root}>
+        <Grid container spacing={3} className={classes.root} style={{ padding: 13 }}>
           <Grid item md={6} xs={12}>
             <PapperBlock title="Set Your Own Deadline" icon="ios-time-outline" whiteBg desc="You can choose your suitable timeline">
               <div style={{ textAlign: 'left' }}>

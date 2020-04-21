@@ -236,11 +236,11 @@ class Step6 extends React.Component {
               Estimated performance
             </Typography>
             <Typography variant="subtitle1">
-              <RemoveRedEye />
+              <RemoveRedEye style={{ marginRight: 10 }} />
               {this.state.impressionCount} candidates targeted initially
             </Typography>
             <Typography variant="subtitle1">
-              <Reply />
+              <Reply style={{ marginRight: 10 }} />
               {`${this.state.clickThrough60} - ${this.state.clickThrough90}`} expected total click-throughs
             </Typography>
           </Grid>

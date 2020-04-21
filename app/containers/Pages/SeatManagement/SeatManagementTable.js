@@ -242,7 +242,7 @@ class SeatManagementTable extends React.Component {
             </DialogContent>
           </Dialog>
         </Grid>
-        <div className={classes.rootTable} >
+        <div className={classes.rootTable} style={{ wordBreak: 'normal' }} >
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
               <Typography variant="h6">Created Seats</Typography>

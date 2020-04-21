@@ -47,7 +47,7 @@ class Settings extends React.Component {
         <Grid
           container
           spacing={2}
-          direction={isWidthUp('md', width) ? 'row' : 'column-reverse'}
+          direction={isWidthUp('md', width) ? 'row' : 'column'}
           style={{ marginTop: "5%" }}
         >
           <Grid item md={6} xs={12}  >

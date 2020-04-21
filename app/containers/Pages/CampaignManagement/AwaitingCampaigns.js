@@ -102,7 +102,7 @@ class AwaitingCampaigns extends React.Component {
     return (
       <Fragment>
         {this.renderRedirect()}
-        <div className={classes.rootTable}>
+        <div className={classes.rootTable} style={{ wordBreak: 'normal' }}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
               <Typography variant="h6">Recent Awaiting Campaigns</Typography>

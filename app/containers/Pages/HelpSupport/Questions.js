@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 import { Divider } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 class Qna extends React.Component {
   state = {

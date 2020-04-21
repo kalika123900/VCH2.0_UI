@@ -194,6 +194,7 @@ const styles = theme => ({
     },
   },
   fromHeading: {
+    width: '100%',
     overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
@@ -208,7 +209,7 @@ const styles = theme => ({
     display: 'flex',
     marginLeft: 'auto',
     alignItems: 'center',
-    padding: '0 20px',
+    // padding: '0 20px',
     borderRadius: theme.rounded.medium,
   },
   category: {
@@ -242,7 +243,19 @@ const styles = theme => ({
   sendIcon: {
     marginLeft: 10
   },
-  item: {},
+  '@media (max-width: 720px)': {
+    item: {
+      flexDirection: 'column'
+    },
+    column: {
+      marginLeft: 0
+    },
+    flex: {
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'row'
+    }
+  },
   preview: {
     display: 'flex',
     marginBottom: 20,
@@ -256,7 +269,7 @@ const styles = theme => ({
     padding: 0,
     '& > div': {
       [theme.breakpoints.down('sm')]: {
-        flexDirection: 'column'
+        // flexDirection: 'column'
       },
     }
   },

@@ -126,7 +126,7 @@ class ClientAccounts extends React.Component {
 
     return (
       <Fragment>
-        <div className={classes.rootTable}>
+        <div className={classes.rootTable} style={{ wordBreak: 'normal' }}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
               <Typography variant="h6">Your Generated Tokens</Typography>

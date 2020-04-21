@@ -53,7 +53,7 @@ class ChartInfographic extends PureComponent {
               <LanguageIcon className={classes.counterIcon} />
             </CounterWidget>
           </Grid>
-          <Grid item md={3} xs={2}>
+          <Grid item md={3} xs={6}>
             <CounterWidget
               color={colorfull[5]}
               start={0}

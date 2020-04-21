@@ -123,7 +123,7 @@ class SeatManagementTable extends React.Component {
           handleClose={this.handleClose}
           handleAction={this.handleAction}
         />
-        <div className={classes.rootTable} >
+        <div className={classes.rootTable} style={{ wordBreak: 'normal' }}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
               <Typography variant="h6">Created Seats</Typography>

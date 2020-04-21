@@ -60,14 +60,16 @@ class DetailSettings extends React.Component {
         <Grid item md={8} xs={12}>
           <List>
             <ListItem>
-              <ListItemText primary="Bi-weekly Emails" secondary="Send me bi-weekly updates about my campaign via email" />
-              <ListItemSecondaryAction>
-                <Switch
-                  name="bi-weekly-emails"
-                  onChange={(e) => this.handleToggle(e)}
-                  checked={switchData.indexOf('bi-weekly-emails') !== -1}
-                />
-              </ListItemSecondaryAction>
+              <Grid>
+                <ListItemText primary="Bi-weekly Emails" secondary="Send me bi-weekly updates about my campaign via email" />
+                <ListItemSecondaryAction>
+                  <Switch
+                    name="bi-weekly-emails"
+                    onChange={(e) => this.handleToggle(e)}
+                    checked={switchData.indexOf('bi-weekly-emails') !== -1}
+                  />
+                </ListItemSecondaryAction>
+              </Grid>
             </ListItem>
             <Divider />
             <ListItem>
