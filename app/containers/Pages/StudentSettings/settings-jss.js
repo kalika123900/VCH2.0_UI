@@ -155,6 +155,20 @@ const styles = theme => ({
   },
   boxHeading: {
     margin: 10
+  },
+  listContainer: {
+
+  },
+  listItem: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
+  '@media (max-width: 820px)': {
+    listItem: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-start'
+    }
   }
 });
 

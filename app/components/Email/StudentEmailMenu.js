@@ -45,7 +45,7 @@ class EmailMenu extends React.Component {
             <ListItemIcon>
               <StarIcon />
             </ListItemIcon>
-            <ListItemText primary="Stared" />
+            <ListItemText primary="Starred" />
           </ListItem>
           <ListItem button className={selected === 'sent' ? classes.selected : ''} onClick={() => this.gotoPage('sent')}>
             <ListItemIcon>

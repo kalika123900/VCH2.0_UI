@@ -34,8 +34,8 @@ const LinkBtn = React.forwardRef(function LinkBtn(props, ref) { // eslint-disabl
 class StudentSigninForm extends React.Component {
   constructor(props) {
     super(props);
-
   }
+
   state = {
     showPassword: false,
     code: '',
@@ -70,25 +70,6 @@ class StudentSigninForm extends React.Component {
     if (data.provider == 'facebook') {
       this.props.handleOauth(data)
     }
-    else {
-      try {
-        console.log(data)
-        // let response = await fetch('https://api.linkedin.com/v2/people/~:(first-name)', {
-        //   method: 'GET',
-        //   headers: {
-        //     Connection: 'Keep-Alive',
-        //     Authorization: 'Bearer ${data.token}'
-        //   },
-        // });
-        // let responseJson = await response.json();
-
-        // if (responseJson !== null) {
-        //   console.log('Got user info: ' + responseJson.email);
-        // }
-      } catch (error) {
-        console.log('Error in retrieving userinfo from Auth0: ' + error.message);
-      }
-    }
   }
 
   handleFailure = (data) => {
@@ -102,8 +83,7 @@ class StudentSigninForm extends React.Component {
       pristine,
       submitting,
       deco,
-      flash,
-      handleOauth
+      flash
     } = this.props;
     const { showPassword } = this.state;
 

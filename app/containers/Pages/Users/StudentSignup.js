@@ -4,14 +4,74 @@ import brand from 'dan-api/dummy/brand';
 import PropTypes from 'prop-types';
 import qs from 'qs';
 import { withStyles } from '@material-ui/core/styles';
-
 import { StudentSignupForm } from 'dan-components';
 import styles from 'dan-components/Forms/user-jss';
+import messageStyles from 'dan-styles/Messages.scss';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
+import { makeSecureEncrypt } from '../../../Helpers/security';
+
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+
+  return await response.json();
+}
 
 class StudentSignup extends React.Component {
   state = {
     errorMessage: '',
-    flash: false
+    flash: false,
+    openStyle: false,
+    messageType: 'error',
+    notifyMessage: ''
+  }
+
+  handleCloseStyle = () => {
+    this.setState({ openStyle: false });
+  }
+
+  noticeClose = event => {
+    event.preventDefault();
+    this.setState({ openStyle: false });
+  }
+
+  handleOauth = (data) => {
+    const apiData = {
+      name: data.name,
+      email: data.email,
+      profile: data.picture,
+      user_id: data.id,
+      type: data.provider
+    }
+
+    postData(`${API_URL}/student/oauth`, apiData)
+      .then((res) => {
+        if (res.status === 1) {
+          localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
+            id: res.data.id,
+            type: 'STUDENT',
+            token: res.data.token
+          })));
+          window.location.reload();
+        } else {
+          this.setState({ notifyMessage: res.errorMessage });
+          this.setState({ messageType: 'error' });
+          this.setState({ openStyle: true });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   handleFlash = () => {
@@ -19,31 +79,29 @@ class StudentSignup extends React.Component {
   }
 
   submitForm(values) {
-    const { entries } = values._root;
-    const data = { auth_via: 'form' };
-
-    entries.forEach((item) => {
-      data[item[0]] = item[1];
-    });
-
-    async function postData(url, data) {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: qs.stringify(data)
-      });
-
-      return await response.json();
+    const MappedValues = values.toJS();
+    const data = {
+      auth_via: 'form',
+      firstname: MappedValues.firstname,
+      lastname: MappedValues.lastname,
+      email: MappedValues.email,
+      password: MappedValues.password
     }
 
     postData(`${API_URL}/student/signup`, data)
       .then((res) => {
         if (res.status === 1) {
-          this.props.history.push('/student-signin');
+          this.setState({ notifyMessage: "Verify your email to activate your account" });
+          this.setState({ messageType: 'success' });
+          this.setState({ openStyle: true });
+
+          setTimeout(() => {
+            this.props.history.push('/student-signin');
+          }, 4000)
         } else {
-          this.setState({ errorMessage: res.errorMessage, flash: true });
+          this.setState({ notifyMessage: res.errorMessage });
+          this.setState({ messageType: 'error' });
+          this.setState({ openStyle: true });
         }
       })
       .catch((err) => {
@@ -73,9 +131,48 @@ class StudentSignup extends React.Component {
               handleFlash={this.handleFlash}
               errorMessage={errorMessage}
               flash={flash}
+              handleOauth={this.handleOauth}
             />
           </div>
         </div>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={this.state.openStyle}
+          autoHideDuration={6000}
+          onClose={this.handleCloseStyle}
+        >
+          <SnackbarContent
+            className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
+            aria-describedby="client-snackbar"
+            message={(
+              <span id="client-snackbar" className={classes.message}>
+                {
+                  (this.state.messageType == 'error') && <ErrorIcon className="success" />
+                }
+                {
+                  (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
+                }
+
+                  &nbsp;
+                {this.state.notifyMessage}
+              </span>
+            )}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                className={classes.close}
+                onClick={this.noticeClose}
+              >
+                <CloseIcon className={classes.icon} />
+              </IconButton>,
+            ]}
+          />
+        </Snackbar>
       </div>
     );
   }

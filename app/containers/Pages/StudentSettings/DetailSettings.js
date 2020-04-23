@@ -107,12 +107,14 @@ class DetailSettings extends React.Component {
               </ListItemSecondaryAction>
             </ListItem>
           </List>
-          <Grid className={classes.customButtonGrid}>
-            <Typography variant="h6" color="error" className={classes.boxHeading}>Danger Zone</Typography>
-            <List>
-              <ListItem>
-                <ListItemText primary="Disable Account" secondary="You can temporary deactivate your account while you login again" />
-                <ListItemSecondaryAction>
+          <Grid >
+            {/* <Typography variant="h6" color="error" className={classes.boxHeading}>Danger Zone</Typography> */}
+            <List className={classes.listContainer}>
+              <ListItem className={classes.listItem}>
+                <Grid style={{ margin: '5px 5px 5px 5px' }}>
+                  <ListItemText primary="Disable Account" secondary="You can temporary deactivate your account while you login again" />
+                </Grid>
+                <Grid>
                   <Button
                     variant="contained"
                     startIcon={<NotInterestedIcon />}
@@ -120,12 +122,14 @@ class DetailSettings extends React.Component {
                   >
                     Disable Account
                   </Button>
-                </ListItemSecondaryAction>
+                </Grid>
               </ListItem>
               <Divider />
-              <ListItem>
-                <ListItemText primary="Delete Account" secondary="You can delete your account and remove all your data from a platform" />
-                <ListItemSecondaryAction style={{ width: '23%' }} >
+              <ListItem className={classes.listItem}>
+                <Grid style={{ margin: '5px 5px 5px 5px' }}>
+                  <ListItemText primary="Delete Account" secondary="You can delete your account and remove all your data from a platform" />
+                </Grid>
+                <Grid>
                   <Button
                     variant="contained"
                     color="secondary"
@@ -135,7 +139,7 @@ class DetailSettings extends React.Component {
                   >
                     Delete Account
                   </Button>
-                </ListItemSecondaryAction>
+                </Grid>
               </ListItem>
             </List>
           </Grid>

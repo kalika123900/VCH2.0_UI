@@ -192,8 +192,8 @@ class EditStudentDetails extends Component {
             company: '',
             role: '',
             roleDescription: '',
-            from: DateHelper.format(DateHelper.addDays(new Date(), -365)),
-            to: DateHelper.format(DateHelper.addDays(new Date(), 0))
+            from: null,
+            to: null
           }];
           let oldExperienceInfo = [];
 
@@ -388,8 +388,8 @@ class EditStudentDetails extends Component {
       company: '',
       role: '',
       roleDescription: '',
-      from: DateHelper.format(DateHelper.addDays(new Date(), -365)),
-      to: DateHelper.format(DateHelper.addDays(new Date(), 0))
+      from: null,
+      to: null
     }
 
     MapExperienceInfo.push(formObject);

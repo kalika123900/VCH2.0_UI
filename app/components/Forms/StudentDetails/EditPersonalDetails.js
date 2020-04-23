@@ -16,7 +16,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { storeProfileDetails, warnMsgInit, warnMsgRemove } from 'dan-actions/studentProfileActions';
-import { genderItems, ethnicityItems, nationalityItems } from 'dan-api/apps/profileOption';
+import { genderItems, ethnicityItems, nationalityItems, languageOption } from 'dan-api/apps/profileOption';
 import qs from 'qs';
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import messageStyles from 'dan-styles/Messages.scss';
@@ -176,6 +176,7 @@ class EditPersonalDetails extends React.Component {
       gender: this.props.gender,
       ethnicity: this.props.ethnicity,
       nationality: this.props.nationality,
+      language: this.props.language,
       user_id: user.id
     };
 
@@ -217,6 +218,7 @@ class EditPersonalDetails extends React.Component {
             nationality: res.data.nationality,
             avatar: res.data.profile,
             resume: res.data.resume,
+            language: res.data.language,
             dob,
           };
           this.props.addInfo(studentProfileData);
@@ -265,6 +267,7 @@ class EditPersonalDetails extends React.Component {
       ethnicity,
       gender,
       resume,
+      language,
       warnMsg,
     } = this.props;
     const { profile, cv } = this.state;
@@ -420,6 +423,30 @@ class EditPersonalDetails extends React.Component {
                   MenuProps={MenuProps}
                 >
                   {ethnicityItems.map((item, index) => (
+                    item.length > 0 &&
+                    <MenuItem key={index} value={item}>
+                      <ListItemText primary={item} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <InputLabel
+                  htmlFor="select-language"
+                >
+                  Language
+              </InputLabel>
+                <Select
+                  placeholder="select-language"
+                  value={language}
+                  name="language"
+                  onChange={e => this.handleChange(e)}
+                  MenuProps={MenuProps}
+                >
+                  {languageOption.map((item, index) => (
+                    item.length > 0 &&
                     <MenuItem key={index} value={item}>
                       <ListItemText primary={item} />
                     </MenuItem>
@@ -478,16 +505,6 @@ class EditPersonalDetails extends React.Component {
                 />
               </FormControl>
             </div>
-            {/* <div>
-              <MaterialDropZone
-                files={MappedResume}
-                showPreviews
-                maxSize={5000000}
-                filesLimit={1}
-                acceptedFiles={['application/pdf']}
-                text="Drag and drop file(s) here to upload CV"
-              />
-            </div> */}
             <div className={classes.btnArea} style={{ marginTop: '35px' }}>
               <Button variant="contained" fullWidth color="primary" onClick={() => this.handleSubmit()}>
                 Save Changes
@@ -566,6 +583,7 @@ const mapStateToProps = state => ({
   ethnicity: state.getIn([reducerStudent, 'ethnicity']),
   nationality: state.getIn([reducerStudent, 'nationality']),
   resume: state.getIn([reducerStudent, 'resume']),
+  language: state.getIn([reducerStudent, 'language']),
   avatar: state.getIn([reducerStudent, 'avatar']),
 });
 

@@ -10,6 +10,7 @@ import { storeExperience } from 'dan-actions/studentProfileActions';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import Grid from '@material-ui/core/Grid';
+import { Typography } from '@material-ui/core';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -20,15 +21,20 @@ class EditExperience extends React.Component {
     const MapExperienceInfo = experienceInfo.toJS();
     const newExperienceArr = MapExperienceInfo.map((item, index) => {
       if (index == id) {
-        return {
+        let tempObj = {
           ...item,
           [event.target.name]: event.target.value
         };
+
+        if (tempObj.roleDescription.length <= 150) {
+          return tempObj;
+        }
+        else {
+          return { ...item }
+        }
       }
       else {
-        return {
-          ...item
-        }
+        return { ...item }
       }
     })
     addInfo({ ...this.props, experienceInfo: newExperienceArr });
@@ -147,7 +153,7 @@ class EditExperience extends React.Component {
                   margin="normal"
                   format="dd/MM/yyyy"
                   placeholder="Choose Start Date"
-                  value={new Date(from)}
+                  value={from != null ? new Date(from) : null}
                   onChange={this.handleFromDateChange}
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
@@ -166,7 +172,7 @@ class EditExperience extends React.Component {
                   margin="normal"
                   format="dd/MM/yyyy"
                   placeholder="Choose End Date"
-                  value={new Date(to)}
+                  value={to != null ? new Date(to) : null}
                   onChange={this.handleToDateChange}
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
@@ -191,6 +197,7 @@ class EditExperience extends React.Component {
               validate={[required]}
               onChange={e => this.handleChange(e, id)}
             />
+            <Typography variant="caption" style={{ textAlign: 'right' }}>({150 - roleDescription.length}/150)</Typography>
           </FormControl>
         </div>
       </section >

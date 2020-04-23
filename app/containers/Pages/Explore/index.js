@@ -117,7 +117,7 @@ class Explore extends React.Component {
           user_id={data.id}
           email={data.email}
           cover={imgApi[universityItems.indexOf(data.university_qualification)]}
-          avatar={data.gender == "Men" ? avatarApi[7] : avatarApi[6]}
+          avatar={data.gender == "Male" ? avatarApi[7] : avatarApi[6]}
           name={`${data.firstname} ${data.lastname}`}
           title={data.subject}
           isVerified={false}

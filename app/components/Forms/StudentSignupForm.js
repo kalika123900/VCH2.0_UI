@@ -24,6 +24,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Grid from '@material-ui/core/Grid';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
+import OpenAuth from './Openauth';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -94,6 +95,17 @@ class StudentSignupForm extends React.Component {
     )
   }
 
+  handleSuccess = async (data) => {
+    if (data.provider == 'facebook') {
+      this.props.handleOauth(data)
+    }
+  }
+
+  handleFailure = (data) => {
+    console.log(data);
+  }
+
+
   handleClickShowPassword = () => {
     const { showPassword } = this.state;
     this.setState({ showPassword: !showPassword });
@@ -138,7 +150,7 @@ class StudentSignupForm extends React.Component {
                   label="First Name"
                   required
                   className={classes.field}
-                  validate={[minTextLength, maxTextLength, text]}
+                  validate={[minTextLength, maxTextLength]}
                 />
               </FormControl>
             </div>
@@ -149,19 +161,6 @@ class StudentSignupForm extends React.Component {
                   component={renderField}
                   placeholder="Last Name"
                   label="Last Name"
-                  required
-                  className={classes.field}
-                  validate={[minTextLength, maxTextLength, text]}
-                />
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <Field
-                  name="username"
-                  component={renderField}
-                  placeholder="Username"
-                  label="Username"
                   required
                   className={classes.field}
                   validate={[minTextLength, maxTextLength]}
@@ -245,38 +244,16 @@ class StudentSignupForm extends React.Component {
         <div className={classes.lineCont}>
           <span className={classes.circleArea}> OR </span>
         </div>
-        <Grid >
+        <Grid>
           <div className={classes.btnArea}>
-            {/* <LinkedIn
-              clientId="81lx5we2omq9xh"
-              onFailure={this.handleFailure}
-              onSuccess={this.handleSuccess}
-              redirectUri="/linkedin"
-            >
-              Log in with LinkedIn
-            </LinkedIn> */}
-            <Button variant="contained" fullWidth size="small" style={{
-              background: "#2d72b0",
-              color: " white",
-            }}>
-              <LinkedInIcon style={{ marginRight: "10px" }} />
-              Continue with LinkedIn
-              </Button>
+            <OpenAuth type="linkedin" />
           </div>
           <div className={classes.btnArea}>
-            {/* <FacebookLogin
-              appId=""
-              autoLoad={false}
-              fields="name,email,picture"
-              callback={this.responseFacebook}
-            /> */}
-            <Button variant="contained" fullWidth size="small" style={{
-              background: "#44629e",
-              color: " white",
-            }}>
-              <FacebookIcon style={{ marginRight: "10px" }} />
-              Continue with Facebook
-              </Button>
+            <OpenAuth
+              handleSuccess={this.handleSuccess}
+              handleFailure={this.handleFailure}
+              type="facebook"
+            />
           </div>
         </Grid>
       </Paper>

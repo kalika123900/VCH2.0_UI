@@ -164,45 +164,45 @@ class ClientJobProfile extends React.Component {
                   </Typography>
                 </Grid>
                 <Divider />
-                <Typography variant="h6" color="primary" className={classes.subHeading}>About {name} :</Typography>
+                <Typography variant="h6" color="primary" className={classes.subHeading}>About {name}:</Typography>
                 <Grid className={classes.content}>
                   <Grid className={classes.makeFlex}>
-                    <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin} >Job Type :</Typography>
+                    <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin} >Job Type:</Typography>
                     <Typography variant="subtitle2">Full Time</Typography>
                   </Grid>
                   <Grid className={classes.makeFlex}>
-                    <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin}>Experience level :</Typography>
+                    <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin}>Experience level:</Typography>
                     <Typography variant="subtitle2">Mid-Level, Senior</Typography>
                   </Grid>
                   <Grid className={classes.makeFlex}>
-                    <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin}>Role :</Typography>
+                    <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin}>Role:</Typography>
                     <Typography variant="subtitle2">{role_name}</Typography>
                   </Grid>
                 </Grid>
-                <Typography variant="h6" color="primary" className={classes.subHeading}>Technologies :</Typography>
+                <Typography variant="h6" color="primary" className={classes.subHeading}>Technologies:</Typography>
                 <Grid className={classes.content}>
                   <Typography variant="subtitle2">C/C++</Typography>
                   <Typography variant="subtitle2">Oracle Database</Typography>
                   <Typography variant="subtitle2">Linux</Typography>
                 </Grid>
                 <Grid className={classes.subHeading}>
-                  <Typography variant="h6" color="primary" className={classes.customMargin}>Location : </Typography>
+                  <Typography variant="h6" color="primary" className={classes.customMargin}>Location: </Typography>
                   <Grid className={classes.content}>
                     <Typography variant="subtitle2">London</Typography>
                   </Grid>
                 </Grid>
-                <Typography variant="h6" color="primary" className={classes.subHeading}>Job description :</Typography>
+                <Typography variant="h6" color="primary" className={classes.subHeading}>Job description:</Typography>
                 <Grid className={classes.content}>
                   <Typography variant="subtitle2" color="textSecondary" >{role_description}</Typography>
                 </Grid>
                 <Grid className={classes.subHeading}>
-                  <Typography variant="h6" color="primary" className={classes.customMargin}>Last Date : </Typography>
+                  <Typography variant="h6" color="primary" className={classes.customMargin}>Last Date: </Typography>
                   <Grid className={classes.content}>
                     <Typography variant="subtitle2">{role_deadline}</Typography>
                   </Grid>
                 </Grid>
                 <Grid>
-                  <Typography variant="h6" color="primary" className={classes.subHeading}>Apply here</Typography>
+                  <Typography variant="h6" color="primary" className={classes.subHeading}>Apply here:</Typography>
                   <Grid className={classes.content}>
                     <Typography variant="body1" color="secondary">
                       <a href='https://www.google.com'>{role_link}</a>

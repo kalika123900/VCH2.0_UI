@@ -16,10 +16,30 @@ import Typography from '@material-ui/core/Typography';
 import Place from '@material-ui/icons/Place';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import TextField from '@material-ui/core/TextField';
+import ListItemText from '@material-ui/core/ListItemText';
+import {
+  sectorsData,
+  skillMenu,
+  courses,
+  degreeGradesItems,
+  universityItems,
+} from 'dan-api/apps/profileOption';
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 class ClientFilter extends PureComponent {
   state = {
-    skill: '',
+    skill: [],
     location: '',
     intern: false,
     fullTime: false,
@@ -29,11 +49,12 @@ class ClientFilter extends PureComponent {
     remote: false,
     freeIntern: false,
     paidIntern: false,
+    interests: []
   };
 
   handleReset = () => {
     this.setState({
-      skill: '',
+      skill: [],
       location: '',
       intern: false,
       fullTime: false,
@@ -42,7 +63,8 @@ class ClientFilter extends PureComponent {
       remote: false,
       allJobs: false,
       paidIntern: false,
-      freeIntern: false
+      freeIntern: false,
+      interests: []
     })
   }
 
@@ -50,7 +72,7 @@ class ClientFilter extends PureComponent {
     this.setState({ location: event.target.value })
   };
 
-  handleChangeSkill = event => {
+  handleChangeSelect = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
@@ -62,7 +84,7 @@ class ClientFilter extends PureComponent {
     const { classes } = this.props;
     const
       {
-        skill, location, intern, fullTime,
+        skill, location, intern, fullTime, interests,
         partTime, remote, allJobs, freeIntern, paidIntern
       } = this.state;
 
@@ -73,24 +95,35 @@ class ClientFilter extends PureComponent {
             <FormControl className={classes.formControlTrade}>
               <InputLabel htmlFor="skill-simple">Skill</InputLabel>
               <Select
+                multiple
                 value={skill}
-                onChange={this.handleChangeSkill}
-                inputProps={{
-                  name: 'skill',
-                  id: 'skill-simple',
-                }}
+                input={<Input />}
+                name="skill"
+                MenuProps={MenuProps}
+                component={Select}
+                renderValue={selected => {
+                  const skillName = [];
+                  skillMenu.map((value, index) => {
+                    if (selected.includes(value)) {
+                      skillName.push(value);
+                    }
+                  });
+                  return skillName.join(', ');
+                }
+                }
+                onChange={e => this.handleChangeSelect(e)}
               >
-                <MenuItem value="">
-                  <em>--select skill--</em>
-                </MenuItem>
-                <MenuItem value="node">Node.js</MenuItem>
-                <MenuItem value="react">React</MenuItem>
-                <MenuItem value="angular">Angular</MenuItem>
-                <MenuItem value="c">C/C++</MenuItem>
-                <MenuItem value="java">Java</MenuItem>
-                <MenuItem value="android">Android</MenuItem>
-                <MenuItem value="ios">ios</MenuItem>
-                <MenuItem value="django">Django</MenuItem>
+                {skillMenu.map((item, index) => (
+                  (item.length > 0) &&
+                  <MenuItem key={index.toString()} value={item}>
+                    <TextField
+                      name="skill-checkbox"
+                      component={Checkbox}
+                      checked={skill.indexOf(item) > -1}
+                    />
+                    <ListItemText primary={item} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -112,6 +145,45 @@ class ClientFilter extends PureComponent {
           </Grid>
         </Grid>
         <Grid container spacing={2}>
+          <Grid item sm={6} xs={6}>
+            {/* <Typography variant="button" className={classes.divider}>Industry</Typography> */}
+            <Grid>
+              <FormControl className={classes.formControlTrade}>
+                <InputLabel htmlFor="sector-simple">Industry</InputLabel>
+                <Select
+                  id="sector-simple"
+                  multiple
+                  value={interests}
+                  input={<Input />}
+                  name="interests"
+                  MenuProps={MenuProps}
+                  component={Select}
+                  renderValue={selected => {
+                    const interestsName = [];
+                    sectorsData.map((value, index) => {
+                      if (selected.includes(value)) {
+                        interestsName.push(value);
+                      }
+                    });
+                    return interestsName.join(', ');
+                  }
+                  }
+                  onChange={e => this.handleChangeSelect(e)}
+                >
+                  {sectorsData.map((item, index) => (
+                    <MenuItem key={index.toString()} value={item}>
+                      <TextField
+                        name="interests"
+                        component={Checkbox}
+                        checked={interests.indexOf(item) > -1}
+                      />
+                      <ListItemText primary={item} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
           <Grid item sm={6} xs={6}>
             <Typography variant="button" className={classes.divider}>Work Type</Typography>
             <Grid>
@@ -164,31 +236,6 @@ class ClientFilter extends PureComponent {
                   />
                 )}
                 label="Remote Job"
-              />
-            </Grid>
-          </Grid>
-          <Grid item sm={6} xs={6}>
-            <Typography variant="button" className={classes.divider}>Intership Type</Typography>
-            <Grid>
-              <FormControlLabel
-                control={(
-                  <Checkbox
-                    checked={freeIntern}
-                    onChange={this.handleCheckbox('freeIntern')}
-                    value="freeIntern"
-                  />
-                )}
-                label="Free"
-              />
-              <FormControlLabel
-                control={(
-                  <Checkbox
-                    checked={paidIntern}
-                    onChange={this.handleCheckbox('paidIntern')}
-                    value="paidIntern"
-                  />
-                )}
-                label="Paid"
               />
             </Grid>
           </Grid>

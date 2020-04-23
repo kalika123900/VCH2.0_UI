@@ -186,7 +186,7 @@ class EditSkillsInterests extends React.Component {
               <InputLabel
                 htmlFor="select-industries"
               >
-                Interested Industries
+                Which Industries are you interested in?
               </InputLabel>
               <Select
                 multiple
@@ -225,7 +225,7 @@ class EditSkillsInterests extends React.Component {
               <InputLabel
                 htmlFor="select-companies"
               >
-                Interested Companies
+                Which companies are you interested in?
               </InputLabel>
               <Select
                 multiple
@@ -264,7 +264,7 @@ class EditSkillsInterests extends React.Component {
               <InputLabel
                 htmlFor="select-Skills"
               >
-                Interested Skills
+                What are your best skills?
                 </InputLabel>
               <Select
                 multiple

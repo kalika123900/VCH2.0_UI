@@ -3,10 +3,9 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
 import FacebookIcon from '@material-ui/icons/Facebook';
-import qs from 'qs';
 
 const LINKEDIN_STATE = 'ivhdRLo4m4HNZkdG';
-const LINKEDIN_RIDERECT = 'http://localhost:5000/student/oauth/callback';
+const LINKEDIN_RIDERECT = 'http://backend.vch2beta.ml/student/oauth/callback';
 const LINKEDIN_CLIENT_ID = '86hjqcfyyu993o';
 const LINKEDIN_URL = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${LINKEDIN_RIDERECT}&state=${LINKEDIN_STATE}&scope=r_liteprofile%20r_emailaddress`;
 
