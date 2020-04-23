@@ -8,10 +8,67 @@ import styles from 'dan-components/Forms/user-jss';
 import qs from 'qs';
 import { makeSecureEncrypt } from '../../../Helpers/security';
 
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+
+  return await response.json();
+}
+
 class StudentSignin extends React.Component {
+  constructor(props) {
+    super(props)
+    if (this.props.location.search) {
+      var response = this.props.location.search.split('?')
+      if (response.length == 2) {
+        var res = JSON.parse(atob(response[1]))
+        if (res.status === 1) {
+          localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
+            id: res.data.id,
+            type: 'STUDENT',
+            token: res.data.token
+          })));
+          window.location.reload();
+        }
+      }
+    }
+  }
+
   state = {
     errorMessage: '',
     flash: false
+  }
+
+  handleOauth = (data) => {
+    const apiData = {
+      name: data.name,
+      email: data.email,
+      profile: data.picture,
+      user_id: data.id,
+      type: data.provider
+    }
+
+    postData(`${API_URL}/student/oauth`, apiData)
+      .then((res) => {
+        if (res.status === 1) {
+          localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
+            id: res.data.id,
+            type: 'STUDENT',
+            token: res.data.token
+          })));
+          window.location.reload();
+        } else {
+          this.setState({ errorMessage: res.errorMessage, flash: true });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   handleFlash = () => {
@@ -25,18 +82,6 @@ class StudentSignin extends React.Component {
     entries.forEach((item) => {
       data[item[0]] = item[1];
     });
-
-    async function postData(url, data) {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: qs.stringify(data)
-      });
-
-      return await response.json();
-    }
 
     postData(`${API_URL}/student/signin`, data)
       .then((res) => {
@@ -80,6 +125,7 @@ class StudentSignin extends React.Component {
                 handleFlash={this.handleFlash}
                 errorMessage={errorMessage}
                 flash={flash}
+                handleOauth={this.handleOauth}
               />
             </div>
           </div>

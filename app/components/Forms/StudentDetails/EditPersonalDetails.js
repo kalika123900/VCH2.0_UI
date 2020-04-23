@@ -205,7 +205,7 @@ class EditPersonalDetails extends React.Component {
     postData(`${API_URL}/student/get-personal-details`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
-          const dob = formatDeadline(res.data.dob);
+          const dob = res.data.dob == null ? null : formatDeadline(res.data.dob);
 
           const studentProfileData = {
             firstName: res.data.firstname,

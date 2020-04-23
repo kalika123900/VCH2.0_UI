@@ -23,6 +23,7 @@ import FlashMessage from 'react-flash-message';
 import styles from './user-jss';
 import { TextFieldRedux, CheckboxRedux } from './ReduxFormMUI';
 import OpenAuth from './Openauth';
+
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
 const LinkBtn = React.forwardRef(function LinkBtn(props, ref) { // eslint-disable-line
@@ -64,9 +65,32 @@ class StudentSigninForm extends React.Component {
   handleMouseDownPassword = event => {
     event.preventDefault();
   };
-  handleSuccess = (data) => {
-    console.log(data);
+
+  handleSuccess = async (data) => {
+    if (data.provider == 'facebook') {
+      this.props.handleOauth(data)
+    }
+    else {
+      try {
+        console.log(data)
+        // let response = await fetch('https://api.linkedin.com/v2/people/~:(first-name)', {
+        //   method: 'GET',
+        //   headers: {
+        //     Connection: 'Keep-Alive',
+        //     Authorization: 'Bearer ${data.token}'
+        //   },
+        // });
+        // let responseJson = await response.json();
+
+        // if (responseJson !== null) {
+        //   console.log('Got user info: ' + responseJson.email);
+        // }
+      } catch (error) {
+        console.log('Error in retrieving userinfo from Auth0: ' + error.message);
+      }
+    }
   }
+
   handleFailure = (data) => {
     console.log(data);
   }
@@ -79,11 +103,13 @@ class StudentSigninForm extends React.Component {
       submitting,
       deco,
       flash,
+      handleOauth
     } = this.props;
     const { showPassword } = this.state;
+
     return (
-      <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
-        <div className={classes.topBar}>
+      <Paper className={classNames(classes.fullWrap, deco && classes.petal)} style={{ padding: '0 0 0 0' }}>
+        <div className={classNames(classes.customTopBar, classes.topBar)}>
           <NavLink to="/" className={classes.brand}>
             <img style={{ width: '70px' }} src={logo} alt={brand.name} />
           </NavLink>
@@ -157,7 +183,11 @@ class StudentSigninForm extends React.Component {
             <OpenAuth receiveProviderToken={this.handleSuccess} failToReceiveProviderToken={this.handleFailure} type="linkedin" />
           </div>
           <div className={classes.btnArea}>
-            <OpenAuth type="facebook" />
+            <OpenAuth
+              handleSuccess={this.handleSuccess}
+              handleFailure={this.handleFailure}
+              type="facebook"
+            />
           </div>
         </Grid>
       </Paper>

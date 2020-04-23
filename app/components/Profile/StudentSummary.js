@@ -50,7 +50,7 @@ class StudentSummary extends React.Component {
             name: `${res.data.firstname} ${res.data.lastname}`,
             email: res.data.email,
             phone: res.data.phone,
-            dob: formatDate(res.data.dob)
+            dob: res.data.dob == null ? 'Not avilable' : formatDate(res.data.dob)
           })
         }
       })

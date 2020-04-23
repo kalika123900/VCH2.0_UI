@@ -16,7 +16,7 @@ const initialState = {
   lastName: '',
   email: '',
   phoneNumber: '',
-  dob: DateHelper.format(DateHelper.addDays(new Date(), -6580)),
+  dob: null,
   gender: '',
   ethnicity: '',
   nationality: '',

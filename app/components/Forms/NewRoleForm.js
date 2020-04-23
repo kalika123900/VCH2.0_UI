@@ -58,6 +58,9 @@ class NewRoleForm extends React.Component {
     if (event.target.name === 'roleLink') {
       addInfo({ ...this.props, roleLink: event.target.value });
     }
+    if (event.target.name === 'roleDesc') {
+      addInfo({ ...this.props, roleDesc: event.target.value });
+    }
   };
 
   handleDateChange = currentDate => {
@@ -87,7 +90,8 @@ class NewRoleForm extends React.Component {
       skills,
       roleDeadline,
       roleName,
-      roleLink
+      roleLink,
+      roleDesc
     } = this.props;
 
     const MapSkills = skills.toJS();
@@ -195,6 +199,24 @@ class NewRoleForm extends React.Component {
           </div>
           <div>
             <FormControl className={classes.formControl}>
+              <Typography variant="h6">Please provide role description</Typography>
+              <TextField
+                id="outlined-multiline-static"
+                label="Role Description"
+                name="roleDesc"
+                value={roleDesc}
+                onChange={e => this.handleReduxChange(e)}
+                className={classes.textField}
+                multiline
+                rows={6}
+                margin="normal"
+                variant="outlined"
+              />
+              {/* <Typography variant="caption">(Make sure it is the link to the actual page so that we can scan the page for key information)</Typography> */}
+            </FormControl>
+          </div>
+          <div>
+            <FormControl className={classes.formControl}>
               <Typography variant="h6">What is the role page link?</Typography>
               <TextField
                 id="outlined-link"
@@ -242,6 +264,7 @@ const mapStateToProps = state => ({
   roleDeadline: state.getIn([reducerRole, 'roleDeadline']),
   roleDescriptors: state.getIn([reducerRole, 'roleDescriptors']),
   roleLink: state.getIn([reducerRole, 'roleLink']),
+  roleDesc: state.getIn([reducerRole, 'roleDesc']),
 });
 
 const mapDispatchToProps = dispatch => ({

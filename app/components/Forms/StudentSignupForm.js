@@ -113,8 +113,8 @@ class StudentSignupForm extends React.Component {
     } = this.props;
     const { showPassword } = this.state;
     return (
-      <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
-        <div className={classes.topBar}>
+      <Paper className={classNames(classes.fullWrap, deco && classes.petal)} style={{ padding: '0 0 0 0' }}>
+        <div className={classNames(classes.customTopBar, classes.topBar)}>
           <NavLink to="/" className={classes.brand}>
             <img style={{ width: "70px" }} src={logo} alt={brand.name} />
           </NavLink>

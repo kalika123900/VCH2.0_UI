@@ -77,6 +77,7 @@ class ClientJobProfile extends React.Component {
             this.setState({ role_name: res.data[0].role_name })
             this.setState({ role_link: res.data[0].role_link })
             this.setState({ role_deadline: role_deadline[0] })
+            this.setState({ role_description: res.data[0].role_description })
           }
         }
       })
@@ -90,7 +91,7 @@ class ClientJobProfile extends React.Component {
   };
 
   render() {
-    const { tab, name, phone, email, headquarter, role_name, role_link, role_deadline, logo } = this.state;
+    const { tab, name, phone, email, headquarter, role_name, role_link, role_deadline, logo, role_description } = this.state;
     const { classes } = this.props;
     return (
       <Fragment>
@@ -192,7 +193,7 @@ class ClientJobProfile extends React.Component {
                 </Grid>
                 <Typography variant="h6" color="primary" className={classes.subHeading}>Job description :</Typography>
                 <Grid className={classes.content}>
-                  <Typography variant="subtitle2" color="textSecondary" >Cupidatat fugiat sit esse adipisicing non quis consectetur ut reprehenderit incididunt veniam proident sint excepteur. Amet sit quis ullamco nisi ad id voluptate in ea officia aute tempor dolore. Incididunt deserunt nisi cupidatat deserunt elit in mollit ex qui nisi ad exercitation esse. Adipisicing magna dolor ea deserunt mollit exercitation magna do. Consectetur qui ad adipisicing occaecat culpa non.</Typography>
+                  <Typography variant="subtitle2" color="textSecondary" >{role_description}</Typography>
                 </Grid>
                 <Grid className={classes.subHeading}>
                   <Typography variant="h6" color="primary" className={classes.customMargin}>Last Date : </Typography>

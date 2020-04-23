@@ -7,14 +7,10 @@ import qs from 'qs';
 
 const LINKEDIN_STATE = 'ivhdRLo4m4HNZkdG';
 const LINKEDIN_RIDERECT = 'http://localhost:5000/student/oauth/callback';
-const LINKEDIN_CLIENT_ID = '86hjqcfyyu993o';
-const LINKEDIN_URL = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${LINKEDIN_RIDERECT}&state=${LINKEDIN_STATE}&scope=r_liteprofile%20r_emailaddress`;
+const LINKEDIN_CLIENT_ID = '860owxn99jokqf';
+const LINKEDIN_URL = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${LINKEDIN_RIDERECT}&state=${LINKEDIN_STATE}&scope=r_liteprofile%20r_emailaddress%20w_member_social`;
 
 class openAuth extends PureComponent {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     (function (d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
@@ -35,7 +31,7 @@ class openAuth extends PureComponent {
   };
 
   signInWithLinkedin = () => {
-    window.open(LINKEDIN_URL, '_self', 'width=600,height=600');
+    window.open(LINKEDIN_URL, '_blank', 'width=600,height=600')
   };
 
   facebookLogin = () => {

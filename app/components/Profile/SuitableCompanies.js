@@ -1,6 +1,7 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -11,12 +12,19 @@ import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import PapperBlock from '../PapperBlock/PapperBlock';
 import styles from './profile-jss';
+import qs from 'qs';
+import { makeSecureDecrypt } from '../../Helpers/security';
+import { Typography } from '@material-ui/core';
+import avatarApi from 'dan-api/images/avatars';
 
-async function getData(url) {
+async function postData(url, data) {
   const response = await fetch(url, {
-    method: 'GET',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
   });
-
   return await response.json();
 }
 
@@ -25,8 +33,20 @@ class SuitableCompanies extends React.Component {
     data: []
   }
 
+  handleRedirect = () => {
+    this.props.history.push('/student/opportunities');
+  }
+
   componentDidMount() {
-    getData(`${API_URL}/student/top-companies`)
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const data = {
+      user_id: user.id
+    }
+
+    postData(`${API_URL}/student/suitable-companies`, data)
       .then((res) => {
         if (res.status === 1) {
           this.setState({ data: res.data });
@@ -42,16 +62,24 @@ class SuitableCompanies extends React.Component {
     const { data } = this.state;
 
     const companies = data.map(item => (
-      <ListItem button key={item.id}>
-        <Avatar className={classNames(classes.avatar, classes.orangeAvatar)}>{item.name[0]}</Avatar>
-        <ListItemText primary={item.name} />
+      <ListItem button key={item.id} onClick={this.handleRedirect}>
+        <Avatar className={classes.avatar} src={(data.logo != null && data.logo != '') ? data.logo : avatarApi[0]} />
+        <ListItemText primary={item.name} secondary={item.email} />
       </ListItem>
     ));
 
     return (
       <PapperBlock title="Suitable Companies" icon="ios-contacts-outline" whiteBg desc="">
         <List dense className={classes.profileList}>
-          {companies}
+          {companies.length > 0
+            ? companies
+            :
+            <Grid container justify="center">
+              <Typography variant="subtitle1">
+                Did not find best match for you :(
+              </Typography>
+            </Grid>
+          }
         </List>
         <Divider className={classes.divider} />
         {/* <Grid container justify="center">
@@ -68,4 +96,4 @@ SuitableCompanies.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(SuitableCompanies);
+export default withStyles(styles)(withRouter(SuitableCompanies));

@@ -41,6 +41,7 @@ class AddRole extends React.Component {
     const {
       roleName,
       roleLink,
+      roleDesc,
       courses,
       skills,
       roleDeadline,
@@ -55,6 +56,7 @@ class AddRole extends React.Component {
     const MapRoleDescriptors = roleDescriptors.toJS();
 
     const data = {
+      roleDesc,
       roleName,
       roleLink,
       courses: MapCourses,
@@ -126,6 +128,7 @@ const mapStateToProps = state => ({
   roleDeadline: state.getIn([reducerRole, 'roleDeadline']),
   roleDescriptors: state.getIn([reducerRole, 'roleDescriptors']),
   roleLink: state.getIn([reducerRole, 'roleLink']),
+  roleDesc: state.getIn([reducerRole, 'roleDesc']),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -138,4 +141,3 @@ const AddRoleMapped = connect(
 )(AddRole);
 
 export default withStyles(styles)(AddRoleMapped);
-

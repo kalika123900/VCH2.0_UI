@@ -690,6 +690,12 @@ const styles = theme => ({
   button: {
     marginTop: 20,
     height: 50
+  },
+  customTopBar: {
+    backgroundColor: '#3f51b5',
+    width: '100%',
+    marginBottom: 46,
+    padding: 17
   }
 });
 
