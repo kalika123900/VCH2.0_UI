@@ -9,13 +9,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
   storeEducation,
-  storeExperience
+  storeExperience,
+  storeLanguage
 } from 'dan-actions/studentProfileActions';
 import qs from 'qs';
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import {
   EditPersonalDetails,
   EditSkillsInterests,
+  EditLanguage,
   EditEducation,
   EditExperience,
   SetNewPassword
@@ -183,6 +185,58 @@ class EditStudentDetails extends Component {
       });
   }
 
+  languageHandler = (data) => {
+    postData(`${API_URL}/student/get-language`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          let languageInfo = [{
+            language: '',
+            competency: '',
+            id: null
+          }];
+          let oldLanguageInfo = [];
+
+          if (res.data.length == 0) {
+            const studentLanguageData = {
+              languageInfo,
+              oldLanguageInfo,
+            };
+
+            this.props.addLanguageInfo(studentLanguageData);
+          }
+          else {
+            languageInfo = res.data.map((item, index) => {
+              return {
+                language: item.language,
+                competency: item.competency,
+                id: item.id
+              }
+            });
+
+            oldLanguageInfo = res.data.map((item, index) => {
+              return {
+                language: item.language,
+                competency: item.competency,
+                id: item.id
+              }
+            });
+
+            const studentLanguageData = {
+              languageInfo,
+              oldLanguageInfo,
+            };
+
+            this.props.addLanguageInfo(studentLanguageData);
+          }
+        } else {
+          console.log('something not good ');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   experienceHandler = (data) => {
     postData(`${API_URL}/student/get-experience`, data) // eslint-disable-line
       .then((res) => {
@@ -250,6 +304,7 @@ class EditStudentDetails extends Component {
     const data = { user_id: user.id };
     this.setState({ data: data });
 
+    this.languageHandler(data);
     this.educationHandler(data);
     this.experienceHandler(data);
   }
@@ -354,6 +409,68 @@ class EditStudentDetails extends Component {
       });
   }
 
+  handleLanguage = () => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const { languageInfo, oldLanguageInfo } = this.props;
+    const MapLanguageInfo = languageInfo.toJS();
+    var MapOldLanguageInfo = [];
+
+    if (typeof oldLanguageInfo == 'undefined') {
+      MapOldLanguageInfo = [];
+    }
+    else {
+      MapOldLanguageInfo = oldLanguageInfo.toJS();
+    }
+
+    const data = {
+      languageNew: MapLanguageInfo,
+      languageOld: MapOldLanguageInfo,
+      user_id: user.id,
+    };
+    var _that = this;
+
+    postJSON(`${API_URL}/student/create-language`, data) // eslint-disable-line
+      .then((res) => {
+        console.log(res)
+        if (res.status === 1) {
+          _that.languageHandler(_that.state.data);
+          this.successMsg();
+          this.goNextTab();
+        } else {
+          _that.languageHandler(_that.state.data);
+          this.errorMsg();
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+        _that.languageHandler(_that.state.data);
+      });
+  }
+
+  addLanguageField = (e) => {
+    const { languageInfo, addLanguageInfo } = this.props;
+    const MapLanguageInfo = languageInfo.toJS();
+
+    const formObject = {
+      id: null,
+      language: '',
+      competency: ''
+    }
+
+    MapLanguageInfo.push(formObject);
+    addLanguageInfo({ ...this.props, languageInfo: MapLanguageInfo });
+  }
+
+  removeLanguageField = (index) => {
+    const { languageInfo, addLanguageInfo } = this.props;
+    const MapLanguageInfo = languageInfo.toJS();
+    const newLanguageArr = arrayRemove(MapLanguageInfo, index);
+    addLanguageInfo({ ...this.props, languageInfo: newLanguageArr });
+  }
+
   addEducationField = (e) => {
     const { educationInfo, addEducationInfo } = this.props;
     const MapEducationInfo = educationInfo.toJS();
@@ -413,11 +530,12 @@ class EditStudentDetails extends Component {
   }
 
   render() {
-    const { classes, educationInfo, experienceInfo } = this.props;
+    const { classes, educationInfo, experienceInfo, languageInfo } = this.props;
     const { tab } = this.state;
 
     const MapEducationInfo = educationInfo.toJS();
     const MapExperienceInfo = experienceInfo.toJS();
+    const MapLanguageInfo = languageInfo.toJS();
 
     const EducationJSX = MapEducationInfo.map((item, index) => {
       if (index != 0) {
@@ -434,6 +552,23 @@ class EditStudentDetails extends Component {
         return <EditEducation id={index} key={index.toString()} />
       }
     });
+
+    const LanguageJSX = MapLanguageInfo.map((item, index) => {
+      if (index != 0) {
+        return <Fragment key={index.toString()}>
+          <div className={classes.btnArea}>
+            <Button variant="text" color="secondary" onClick={e => this.removeLanguageField(index)}>
+              Remove
+            </Button>
+          </div>
+          <EditLanguage id={index} />
+        </Fragment>
+      }
+      else {
+        return <EditLanguage id={index} key={index.toString()} />
+      }
+    });
+
 
     const ExperienceJSX = MapExperienceInfo.map((item, index) => {
       if (index != 0) {
@@ -461,6 +596,7 @@ class EditStudentDetails extends Component {
           className={classes.tab}
         >
           <Tab label="Personal Details" />
+          <Tab label="Languages" />
           <Tab label="Skills & Interests" />
           <Tab label="Education" />
           <Tab label="Experience" />
@@ -471,9 +607,24 @@ class EditStudentDetails extends Component {
             <EditPersonalDetails goNextTab={this.goNextTab} successMsg={this.successMsg} errorMsg={this.errorMsg} />
           )}
           {tab === 1 && (
-            <EditSkillsInterests goNextTab={this.goNextTab} successMsg={this.successMsg} errorMsg={this.errorMsg} />
+            <Fragment>
+              {LanguageJSX}
+              <div className={classes.btnArea}>
+                <Button variant="text" color="primary" onClick={e => this.addLanguageField(e)}>
+                  Add More
+                </Button>
+              </div>
+              <div className={classes.btnArea} style={{ marginTop: '35px' }}>
+                <Button variant="contained" fullWidth color="primary" onClick={() => this.handleLanguage()}>
+                  Save Changes
+                </Button>
+              </div>
+            </Fragment>
           )}
           {tab === 2 && (
+            <EditSkillsInterests goNextTab={this.goNextTab} successMsg={this.successMsg} errorMsg={this.errorMsg} />
+          )}
+          {tab === 3 && (
             <Fragment>
               {EducationJSX}
               <div className={classes.btnArea}>
@@ -488,7 +639,7 @@ class EditStudentDetails extends Component {
               </div>
             </Fragment>
           )}
-          {tab === 3 && (
+          {tab === 4 && (
             <Fragment>
               {ExperienceJSX}
               <div className={classes.btnArea}>
@@ -503,7 +654,7 @@ class EditStudentDetails extends Component {
               </div>
             </Fragment>
           )}
-          {tab === 4 && (
+          {tab === 5 && (
             <SetNewPassword onSubmit={(values) => this.submitForm(values)} />
           )}
           <Snackbar
@@ -556,6 +707,8 @@ EditStudentDetails.propTypes = {
   classes: PropTypes.object.isRequired,
   educationInfo: PropTypes.object.isRequired,
   oldEducationInfo: PropTypes.object.isRequired,
+  languageInfo: PropTypes.object.isRequired,
+  oldLanguageInfo: PropTypes.object.isRequired,
   experienceInfo: PropTypes.object.isRequired,
   oldExperienceInfo: PropTypes.object.isRequired,
   addEducationInfo: PropTypes.func.isRequired,
@@ -566,12 +719,15 @@ const mapStateToProps = state => ({
   educationInfo: state.getIn([reducerStudent, 'educationInfo']),
   oldEducationInfo: state.getIn([reducerStudent, 'oldEducationInfo']),
   experienceInfo: state.getIn([reducerStudent, 'experienceInfo']),
-  oldExperienceInfo: state.getIn([reducerStudent, 'oldExperienceInfo'])
+  oldExperienceInfo: state.getIn([reducerStudent, 'oldExperienceInfo']),
+  languageInfo: state.getIn([reducerStudent, 'languageInfo']),
+  oldLanguageInfo: state.getIn([reducerStudent, 'oldLanguageInfo'])
 });
 
 const mapDispatchToProps = dispatch => ({
   addEducationInfo: bindActionCreators(storeEducation, dispatch),
-  addExperienceInfo: bindActionCreators(storeExperience, dispatch)
+  addExperienceInfo: bindActionCreators(storeExperience, dispatch),
+  addLanguageInfo: bindActionCreators(storeLanguage, dispatch)
 });
 
 const EditStudentDetailsMapped = connect(

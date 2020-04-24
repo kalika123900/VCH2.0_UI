@@ -137,8 +137,12 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const selectedYear = fromJS(action.data.selectedYear);
         const blackList = fromJS(action.data.blackList);
         const studentList = fromJS(action.data.studentList);
+        const languages = fromJS(action.data.languages);
+        const qualificationType = fromJS(action.data.qualificationType);
 
         mutableState
+          .set('qualificationType', qualificationType)
+          .set('languages', languages)
           .set('roleName', action.data.roleName)
           .set('roleDeadline', action.data.roleDeadline)
           .set('roleData', roleData)

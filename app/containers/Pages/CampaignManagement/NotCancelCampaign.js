@@ -69,8 +69,8 @@ class NotCancelCampaign extends React.Component {
             res.data.map(item => {
               const client_name = item.name;
               item.campaign_masters.map(campaign => {
-                const date = formatDate(campaign.created_at);
-                const endDate = formatDate(campaign.deadline);
+                const date = campaign.created_at == null ? 'Not avilable' : formatDate(campaign.created_at);
+                const endDate = campaign.deadline == null ? 'No Deadline' : formatDate(campaign.deadline);
                 const status = campaign.status === 1 ? 'Ongoing' : campaign.status === 0 ? 'Pending' : 'Paused';
                 campaignData.push(
                   createData(campaign.id, campaign.campaign_name, client_name, date, endDate, status)

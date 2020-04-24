@@ -70,15 +70,24 @@ function getIdsItem(arr, data) {
   })
 }
 
-function alterDeadline(campaignTime) {
-  let timestamp1 = new Date(campaignTime);
-  let timestamp2 = new Date()
-  let diff_in_days = parseInt((timestamp2 - timestamp1) / (1000 * 3600 * 24));
+function alterDeadline(createdAt, initialDeadline, deadline) {
+  if (initialDeadline == deadline) {
+    if (initialDeadline != null) {
+      let timestamp1 = new Date(createdAt);
+      let timestamp2 = new Date()
+      let diff_in_days = parseInt((timestamp2 - timestamp1) / (1000 * 3600 * 24));
 
-  return DateHelper.format(DateHelper.addDays(new Date(campaignTime), diff_in_days));
-}
+      return DateHelper.format(DateHelper.addDays(new Date(initialDeadline), diff_in_days));
+    } else {
+      return null;
+    }
+  } else {
+    return deadline;
+  }
+};
 
 var createdAt = null;
+var initialDeadline = null;
 
 class CampaignEdit extends React.Component {
   componentWillMount() {
@@ -95,17 +104,22 @@ class CampaignEdit extends React.Component {
           const selectedYear = stringToArray(res.data.info.selected_year);
           const interestedSectors = stringToArray(res.data.info.interested_sectors);
           const minGrade = stringToArray(res.data.info.min_grade);
-          const deadline = formatDeadline(res.data.info.deadline);
+          const deadline = res.data.info.deadline == null ? null : formatDeadline(res.data.info.deadline);
           const keywords = getIdsItem(res.data.keywords, keywordsData);
           const university = getIdsItem(res.data.university, universityItems);
           const skills = getIdsItem(res.data.skills, skillMenu);
           const workLocation = stringToArray(res.data.info.work_location);
+          const languages = stringToArray(res.data.info.languages);
+          const qualificationType = stringToArray(res.data.info.qualification_type);
           const experience = boolNumberToString(res.data.info.experience);
           let roleData = [];
           roleData.push(res.data.info.roleData);
           createdAt = res.data.info.created_at;
+          initialDeadline = res.data.info.deadline == null ? null : formatDeadline(res.data.info.deadline);
 
           const campaignData = {
+            languages,
+            qualificationType,
             roleName: roleData[0].role_name,
             roleData: roleData,
             campaignStatus: res.data.info.status,
@@ -147,21 +161,28 @@ class CampaignEdit extends React.Component {
       keywords,
       gender,
       history,
-      removeInfo
+      removeInfo,
+      deadline,
+      languages,
+      qualificationType
     } = this.props;
 
     const MapInterestedSectors = interestedSectors.toJS();
     const MapSubjects = subjects.toJS();
     const MapGender = gender.toJS();
     const MapWorkLocation = workLocation.toJS();
-    const MapDeadline = alterDeadline(createdAt);
+    const MapDeadline = alterDeadline(createdAt, initialDeadline, deadline);
 
     const MapSkills = getIds(skills.toJS(), skillMenu);
     const MapKeywords = getIds(keywords.toJS(), keywordsData);
     const MapUniversity = getIds(university.toJS(), universityItems);
+    const MapLanguages = languages.toJS();
+    const MapQualificationType = qualificationType.toJS();
 
     const data = {
       ...this.props,
+      languages: MapLanguages,
+      qualificationType: MapQualificationType,
       deadline: MapDeadline,
       workLocation: MapWorkLocation,
       interestedSectors: MapInterestedSectors,
@@ -233,6 +254,8 @@ CampaignEdit.propTypes = {
 const reducerCampaign = 'campaign';
 
 const mapStateToProps = state => ({
+  languages: state.getIn([reducerCampaign, 'languages']),
+  qualificationType: state.getIn([reducerCampaign, 'qualificationType']),
   campaignStatus: state.getIn([reducerCampaign, 'campaignStatus']),
   name: state.getIn([reducerCampaign, 'name']),
   role: state.getIn([reducerCampaign, 'role']),

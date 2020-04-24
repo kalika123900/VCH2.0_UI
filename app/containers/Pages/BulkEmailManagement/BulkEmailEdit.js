@@ -76,15 +76,24 @@ function getStudentIds(studentList) {
   })
 }
 
-function alterDeadline(campaignTime) {
-  let timestamp1 = new Date(campaignTime);
-  let timestamp2 = new Date()
-  let diff_in_days = parseInt((timestamp2 - timestamp1) / (1000 * 3600 * 24));
+function alterDeadline(createdAt, initialDeadline, deadline) {
+  if (initialDeadline == deadline) {
+    if (initialDeadline != null) {
+      let timestamp1 = new Date(createdAt);
+      let timestamp2 = new Date()
+      let diff_in_days = parseInt((timestamp2 - timestamp1) / (1000 * 3600 * 24));
 
-  return DateHelper.format(DateHelper.addDays(new Date(campaignTime), diff_in_days));
-}
+      return DateHelper.format(DateHelper.addDays(new Date(initialDeadline), diff_in_days));
+    } else {
+      return null;
+    }
+  } else {
+    return deadline;
+  }
+};
 
 var createdAt = null;
+var initialDeadline = null;
 
 class BulkEmailEdit extends React.Component {
   componentWillMount() {
@@ -101,22 +110,27 @@ class BulkEmailEdit extends React.Component {
           const selectedYear = stringToArray(res.data.info.selected_year);
           const interestedSectors = stringToArray(res.data.info.sectors);
           const minGrade = stringToArray(res.data.info.min_grade);
-          const deadline = formatDeadline(res.data.info.deadline);
+          const deadline = res.data.info.deadline == null ? null : formatDeadline(res.data.info.deadline);
           const keywords = getIdsItem(JSON.parse(res.data.info.keywords), keywordsData);
           const university = getIdsItem(JSON.parse(res.data.info.university), universityItems);
           const skills = getIdsItem(JSON.parse(res.data.info.skills), skillMenu);
           const workLocation = stringToArray(res.data.info.location);
           const experience = boolNumberToString(res.data.info.experience);
           const blackList = JSON.parse(res.data.info.black_list);
+          const languages = stringToArray(res.data.info.languages);
+          const qualificationType = stringToArray(res.data.info.qualification_type);
 
           let roleData = [];
           roleData.push(res.data.info.roleData);
           createdAt = res.data.info.created_at;
 
           const roleDeadline = formatDeadline(roleData[0].role_deadline);
+          initialDeadline = res.data.info.deadline == null ? null : formatDeadline(res.data.info.deadline);
 
           const bulkEmailData = {
             ...this.props,
+            languages,
+            qualificationType,
             roleDeadline,
             roleName: roleData[0].role_name,
             roleData: roleData,
@@ -162,22 +176,30 @@ class BulkEmailEdit extends React.Component {
       removeInfo,
       studentList,
       blackList,
+      deadline,
+      languages,
+      qualificationType
     } = this.props;
 
     const MapWorkLocation = workLocation.toJS();
     const MapInterestedSectors = interestedSectors.toJS();
     const MapSubjects = subjects.toJS();
     const MapGender = gender.toJS();
-    const MapDeadline = alterDeadline(createdAt);
+    const MapDeadline = alterDeadline(createdAt, initialDeadline, deadline);
     const MapSkills = getIds(skills.toJS(), skillMenu);
     const MapKeywords = getIds(keywords.toJS(), keywordsData);
     const MapUniversity = getIds(university.toJS(), universityItems);
     const MapStudentList = getStudentIds(studentList.toJS());
     const MapBlackList = blackList.toJS();
+    const MapLanguages = languages.toJS();
+    const MapQualificationType = qualificationType.toJS();
+
 
     const data = {
       ...this.props,
       deadline: MapDeadline,
+      languages: MapLanguages,
+      qualificationType: MapQualificationType,
       workLocation: MapWorkLocation,
       interestedSectors: MapInterestedSectors,
       subjects: MapSubjects,
@@ -250,6 +272,8 @@ BulkEmailEdit.propTypes = {
 const reducerBulkEmail = 'bulkEmail';
 
 const mapStateToProps = state => ({
+  languages: state.getIn([reducerBulkEmail, 'languages']),
+  qualificationType: state.getIn([reducerBulkEmail, 'qualificationType']),
   name: state.getIn([reducerBulkEmail, 'name']),
   role: state.getIn([reducerBulkEmail, 'role']),
   roleDeadline: state.getIn([reducerBulkEmail, 'roleDeadline']),

@@ -417,8 +417,8 @@ class Step3 extends React.Component {
                   value={ethnicity}
                   onChange={(e) => this.handleReduxChange(e)}
                 >
-                  <FormControlLabel value="Bame" control={<Radio />} label="BAME" />
-                  <FormControlLabel value="Not Preferable" control={<Radio />} label="No preference" />
+                  <FormControlLabel value="BAME" control={<Radio />} label="BAME" />
+                  <FormControlLabel value="No preference" control={<Radio />} label="No preference" />
                 </RadioGroup>
               </FormControl>
             </Grid>

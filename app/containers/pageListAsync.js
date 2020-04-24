@@ -73,6 +73,10 @@ export const Demographics = loadable(() =>
   import('./Widgets/Demographics'), {
   fallback: <Loading />,
 });
+export const StudentDemographics = loadable(() =>
+  import('./Widgets/StudentDemographics'), {
+  fallback: <Loading />,
+});
 // export const StudentSignupFeed = loadable(() =>
 //   import('./Widgets/StudentSignupFeed'), {
 //   fallback: <Loading />,

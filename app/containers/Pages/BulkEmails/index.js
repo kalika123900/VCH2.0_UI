@@ -63,7 +63,9 @@ class BulkEmails extends React.Component {
       deadline,
       studentList,
       blackList,
-      choosedDeadline
+      choosedDeadline,
+      languages,
+      qualificationType
     } = this.props;
 
     const MapWorkLocation = workLocation.toJS();
@@ -75,6 +77,8 @@ class BulkEmails extends React.Component {
     const MapUniversity = getIds(university.toJS(), universityItems);
     const MapStudentList = getStudentIds(studentList.toJS());
     const MapBlackList = blackList.toJS();
+    const MapLanguages = languages.toJS();
+    const MapQualificationType = qualificationType.toJS();
 
     let customDeadline = '';
     if (choosedDeadline == '5') {
@@ -85,6 +89,8 @@ class BulkEmails extends React.Component {
 
     const data = {
       ...this.props,
+      languages: MapLanguages,
+      qualificationType: MapQualificationType,
       deadline: customDeadline,
       workLocation: MapWorkLocation,
       interestedSectors: MapInterestedSectors,
@@ -159,6 +165,8 @@ BulkEmails.propTypes = {
 const reducerBulkEmail = 'bulkEmail';
 
 const mapStateToProps = state => ({
+  languages: state.getIn([reducerBulkEmail, 'languages']),
+  qualificationType: state.getIn([reducerBulkEmail, 'qualificationType']),
   name: state.getIn([reducerBulkEmail, 'name']),
   role: state.getIn([reducerBulkEmail, 'role']),
   roleDeadline: state.getIn([reducerBulkEmail, 'roleDeadline']),

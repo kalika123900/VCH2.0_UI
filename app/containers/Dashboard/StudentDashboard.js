@@ -9,6 +9,7 @@ import data from 'dan-api/apps/timelineData';
 import { fetchAction } from 'dan-actions/SocmedActions';
 import styles from 'dan-components/SocialMedia/jss/cover-jss';
 import { Student } from 'dan-components';
+import StudentDemographics from '../Widgets/StudentDemographics';
 
 class StudentDashboard extends PureComponent {
   componentDidMount() {
@@ -30,6 +31,7 @@ class StudentDashboard extends PureComponent {
           <meta property="twitter:title" content={title} />
           <meta property="twitter:description" content={description} />
         </Helmet>
+        <StudentDemographics />
         <Student data={dataProps} />
       </div>
     );

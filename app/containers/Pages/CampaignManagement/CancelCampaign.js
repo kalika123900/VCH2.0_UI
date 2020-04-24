@@ -66,7 +66,7 @@ class CancelCampaign extends React.Component {
                 const deadline = item.deadline == null ? 'No Deadline' : formatDate(item.deadline);
                 const cancel = campaign.status === -1 ? 'Admin' : 'Client';
                 campaignData.push(
-                  createData(campaign.id, campaign.campaign_name, client_name, date, endDate, cancel)
+                  createData(campaign.id, campaign.campaign_name, client_name, date, deadline, cancel)
                 );
               });
               _that.setState({ campaignData });

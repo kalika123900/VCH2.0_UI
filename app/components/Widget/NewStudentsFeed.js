@@ -1,6 +1,7 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
@@ -13,6 +14,9 @@ import PapperBlock from '../PapperBlock/PapperBlock';
 import styles from 'dan-components/SocialMedia/jss/socialMedia-jss.js';
 
 class NewStudentsFeed extends React.Component {
+  handleRedirect = () => {
+    this.props.history.push('/client/explore')
+  }
   render() {
     const { classes } = this.props;
     return (
@@ -41,9 +45,9 @@ class NewStudentsFeed extends React.Component {
         </List>
         <Divider className={classes.divider} />
         <Grid container justify="center">
-          <Button color="secondary" className={classes.button}>
+          <Button color="secondary" className={classes.button} onClick={this.handleRedirect}>
             See All
-            </Button>
+          </Button>
         </Grid>
       </PapperBlock>
     );
@@ -54,4 +58,4 @@ NewStudentsFeed.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(NewStudentsFeed);
+export default withStyles(styles)(withRouter(NewStudentsFeed));

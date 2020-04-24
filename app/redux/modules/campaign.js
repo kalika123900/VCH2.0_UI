@@ -114,6 +114,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
 
     case CAMPAIGN_INFO_INIT:
       return state.withMutations((mutableState) => {
+        const languages = fromJS(action.data.languages);
+        const qualificationType = fromJS(action.data.qualificationType);
         const university = fromJS(action.data.university);
         const keywords = fromJS(action.data.keywords);
         const subjects = fromJS(action.data.subjects);
@@ -126,6 +128,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const selectedYear = fromJS(action.data.selectedYear);
 
         mutableState
+          .set('qualificationType', qualificationType)
+          .set('languages', languages)
           .set('campaignStatus', action.data.campaignStatus)
           .set('roleDeadline', action.data.roleDeadline)
           .set('roleName', action.data.roleName)

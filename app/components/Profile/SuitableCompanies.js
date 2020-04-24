@@ -82,11 +82,11 @@ class SuitableCompanies extends React.Component {
           }
         </List>
         <Divider className={classes.divider} />
-        {/* <Grid container justify="center">
-          <Button color="secondary" className={classes.button}>
-            See All
+        <Grid container justify="center">
+          <Button color="secondary" className={classes.button} onClick={this.handleRedirect}>
+            See More
           </Button>
-        </Grid> */}
+        </Grid>
       </PapperBlock>
     );
   }

@@ -5,7 +5,8 @@ import {
   STORE_EDUCATION,
   STORE_EXPERIENCE,
   WARN_MSG_INIT,
-  WARN_MSG_REMOVE
+  WARN_MSG_REMOVE,
+  STORE_LANGUAGE
 } from 'dan-actions/actionConstants';
 import { DateHelper } from '../helpers/dateTimeHelper';
 
@@ -19,7 +20,6 @@ const initialState = {
   dob: null,
   gender: '',
   ethnicity: '',
-  language: '',
   nationality: '',
   keywords: List([]),
   intrestedIndustries: List([]),
@@ -45,7 +45,13 @@ const initialState = {
     from: null,
     to: null
   }]),
-  oldExperienceInfo: List([])
+  oldExperienceInfo: List([]),
+  languageInfo: List([{
+    id: null,
+    language: '',
+    competency: ''
+  }]),
+  oldLanguageInfo: List([])
 };
 
 const initialImmutableState = fromJS(initialState);
@@ -66,8 +72,16 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('ethnicity', action.data.ethnicity)
           .set('nationality', action.data.nationality)
           .set('resume', action.data.resume)
-          .set('language', action.data.language)
           .set('avatar', action.data.avatar)
+      });
+
+    case STORE_LANGUAGE:
+      return state.withMutations((mutableState) => {
+        const languageInfo = fromJS(action.data.languageInfo)
+        const oldLanguageInfo = fromJS(action.data.oldLanguageInfo)
+        mutableState
+          .set('languageInfo', languageInfo)
+          .set('oldLanguageInfo', oldLanguageInfo)
       });
 
     case STORE_SKILL_INTERESTS:

@@ -114,6 +114,7 @@ export EditPersonalDetails from './Forms/StudentDetails/EditPersonalDetails';
 export SetNewPassword from './Forms/StudentDetails/SetNewPassword';
 export EditSkillsInterests from './Forms/StudentDetails/EditSkillsInterests';
 export EditEducation from './Forms/StudentDetails/EditEducation';
+export EditLanguage from './Forms/StudentDetails/EditLanguage';
 export EditExperience from './Forms/StudentDetails/EditExperience';
 export AdminSeatCreation from './Forms/AdminSeatCreation';
 export EditClientDialog from './Forms/EditClientDialog';

@@ -81,8 +81,8 @@ class MiniCampaignTable extends React.Component {
             let tempData = [];
             res.data.map(item => {
               item.views = '0k';
-              const createDate = formatDate(item.created_at);
-              const deadline = formatDate(item.deadline);
+              const createDate = item.created_at == null ? 'Not avilable' : formatDate(item.created_at);
+              const deadline = item.deadline == null ? 'No Deadline' : formatDate(item.deadline);
               tempData.push(createData(item.id, item.campaign_name, createDate, deadline, item.views));
             });
             campaignData = tempData;

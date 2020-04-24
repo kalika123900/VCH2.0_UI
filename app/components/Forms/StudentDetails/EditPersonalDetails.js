@@ -176,7 +176,6 @@ class EditPersonalDetails extends React.Component {
       gender: this.props.gender,
       ethnicity: this.props.ethnicity,
       nationality: this.props.nationality,
-      language: this.props.language,
       user_id: user.id
     };
 
@@ -218,7 +217,6 @@ class EditPersonalDetails extends React.Component {
             nationality: res.data.nationality,
             avatar: res.data.profile,
             resume: res.data.resume,
-            language: res.data.language,
             dob,
           };
           this.props.addInfo(studentProfileData);
@@ -266,9 +264,7 @@ class EditPersonalDetails extends React.Component {
       nationality,
       ethnicity,
       gender,
-      resume,
-      language,
-      warnMsg,
+      resume
     } = this.props;
     const { profile, cv } = this.state;
 
@@ -434,29 +430,6 @@ class EditPersonalDetails extends React.Component {
             <div>
               <FormControl className={classes.formControl}>
                 <InputLabel
-                  htmlFor="select-language"
-                >
-                  Language
-              </InputLabel>
-                <Select
-                  placeholder="select-language"
-                  value={language}
-                  name="language"
-                  onChange={e => this.handleChange(e)}
-                  MenuProps={MenuProps}
-                >
-                  {languageOption.map((item, index) => (
-                    item.length > 0 &&
-                    <MenuItem key={index} value={item}>
-                      <ListItemText primary={item} />
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-            <div>
-              <FormControl className={classes.formControl}>
-                <InputLabel
                   htmlFor="select-nationality"
                 >
                   Nationality
@@ -583,7 +556,6 @@ const mapStateToProps = state => ({
   ethnicity: state.getIn([reducerStudent, 'ethnicity']),
   nationality: state.getIn([reducerStudent, 'nationality']),
   resume: state.getIn([reducerStudent, 'resume']),
-  language: state.getIn([reducerStudent, 'language']),
   avatar: state.getIn([reducerStudent, 'avatar']),
 });
 

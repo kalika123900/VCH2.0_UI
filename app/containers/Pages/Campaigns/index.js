@@ -110,6 +110,8 @@ class Campaigns extends React.Component {
             const keywords = getIdsItem(res.data.keywords, keywordsData);
             const university = getIdsItem(res.data.university, universityItems);
             const skills = getIdsItem(res.data.skills, skillMenu);
+            const languages = stringToArray(res.data.info.languages);
+            const qualificationType = stringToArray(res.data.info.qualification_type);
             const workLocation = stringToArray(res.data.info.work_location);
             const experience = boolNumberToString(res.data.info.experience);
             const roleData = [];
@@ -117,6 +119,8 @@ class Campaigns extends React.Component {
             const roleDeadline = formatDeadline(roleData[0].role_deadline);
 
             const campaignData = {
+              languages,
+              qualificationType,
               roleDeadline,
               roleName: roleData[0].role_name,
               name: res.data.info.campaign_name,
@@ -165,13 +169,17 @@ class Campaigns extends React.Component {
       removeInfo,
       roleDeadline,
       deadline,
-      choosedDeadline
+      choosedDeadline,
+      languages,
+      qualificationType
     } = this.props;
 
     const MapWorkLocation = workLocation.toJS();
     const MapInterestedSectors = interestedSectors.toJS();
     const MapSubjects = subjects.toJS();
     const MapGender = gender.toJS();
+    const MapLanguages = languages.toJS();
+    const MapQualificationType = qualificationType.toJS();
 
     const MapSkills = getIds(skills.toJS(), skillMenu);
     const MapKeywords = getIds(keywords.toJS(), keywordsData);
@@ -187,6 +195,8 @@ class Campaigns extends React.Component {
     if (this.state.isCampaignExist) {
       const data = {
         ...this.props,
+        languages: MapLanguages,
+        qualificationType: MapQualificationType,
         deadline: customDeadline,
         workLocation: MapWorkLocation,
         interestedSectors: MapInterestedSectors,
@@ -215,6 +225,8 @@ class Campaigns extends React.Component {
     } else {
       const data = {
         ...this.props,
+        languages: MapLanguages,
+        qualificationType: MapQualificationType,
         deadline: customDeadline,
         workLocation: MapWorkLocation,
         interestedSectors: MapInterestedSectors,
@@ -293,6 +305,8 @@ Campaigns.propTypes = {
 const reducerCampaign = 'campaign';
 
 const mapStateToProps = state => ({
+  languages: state.getIn([reducerCampaign, 'languages']),
+  qualificationType: state.getIn([reducerCampaign, 'qualificationType']),
   name: state.getIn([reducerCampaign, 'name']),
   role: state.getIn([reducerCampaign, 'role']),
   roleDeadline: state.getIn([reducerCampaign, 'roleDeadline']),

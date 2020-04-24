@@ -5,6 +5,11 @@ export const storeProfileDetails = (data) => ({
   data
 });
 
+export const storeLanguage = (data) => ({
+  type: types.STORE_LANGUAGE,
+  data
+});
+
 export const storeSkillInterests = (data) => ({
   type: types.STORE_SKILL_INTERESTS,
   data
