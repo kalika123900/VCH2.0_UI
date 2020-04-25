@@ -171,6 +171,8 @@ class EditPersonalDetails extends React.Component {
     );
 
     const data = {
+      firstname: this.props.firstName,
+      lastname: this.props.lastName,
       phone: this.props.phoneNumber,
       dob: this.props.dob,
       gender: this.props.gender,
@@ -310,8 +312,8 @@ class EditPersonalDetails extends React.Component {
                   name="firstName"
                   margin="normal"
                   variant="outlined"
-                  // validate={[required]}
-                  // onChange={e => this.handleChange(e)}
+                  validate={[required]}
+                  onChange={e => this.handleChange(e)}
                   readOnly
                 />
               </FormControl>
@@ -326,8 +328,8 @@ class EditPersonalDetails extends React.Component {
                   value={lastName}
                   margin="normal"
                   variant="outlined"
-                  // validate={[required]}
-                  // onChange={e => this.handleChange(e)}
+                  validate={[required]}
+                  onChange={e => this.handleChange(e)}
                   readOnly
                 />
               </FormControl>

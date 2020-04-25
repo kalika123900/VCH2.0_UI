@@ -26,7 +26,7 @@ class EditExperience extends React.Component {
           [event.target.name]: event.target.value
         };
 
-        if (tempObj.roleDescription.length <= 150) {
+        if (tempObj.roleDescription.length <= 600) {
           return tempObj;
         }
         else {
@@ -197,7 +197,7 @@ class EditExperience extends React.Component {
               validate={[required]}
               onChange={e => this.handleChange(e, id)}
             />
-            <Typography variant="caption" style={{ textAlign: 'right' }}>({150 - roleDescription.length}/150)</Typography>
+            <Typography variant="caption" style={{ textAlign: 'right' }}>({600 - roleDescription.length}/600)</Typography>
           </FormControl>
         </div>
       </section >
