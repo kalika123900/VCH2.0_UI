@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import CardHeader from '@material-ui/core/CardHeader';
+import Slider from '@material-ui/core/Slider';
 import RemoveRedEye from '@material-ui/icons/RemoveRedEye';
 import Avatar from '@material-ui/core/Avatar';
 import Reply from '@material-ui/icons/Reply';
@@ -41,13 +42,46 @@ async function postData(url, data) {
   return await response.json();
 }
 
+const PrettoSlider = withStyles({
+  root: {
+    color: '#52af77',
+    height: 8,
+  },
+  thumb: {
+    height: 24,
+    width: 24,
+    backgroundColor: '#fff',
+    border: '2px solid currentColor',
+    marginTop: -8,
+    marginLeft: -12,
+    '&:focus,&:hover,&$active': {
+      boxShadow: 'inherit',
+    },
+  },
+  active: {},
+  valueLabel: {
+    left: 'calc(-50% + 4px)',
+  },
+  track: {
+    height: 8,
+    borderRadius: 4,
+  },
+  rail: {
+    height: 8,
+    borderRadius: 4,
+  },
+})(Slider);
+
 class Step6 extends React.Component {
   state = {
     email: '',
     cname: '',
     user: null,
     usedName: [],
-    logo: avatarApi[0]
+    logo: avatarApi[0],
+    impressionCount: 0,
+    clickThrough60: 0,
+    clickThrough90: 0,
   }
 
   componentDidMount() {
@@ -105,16 +139,21 @@ class Step6 extends React.Component {
     }
   }
 
+  handleSliderChange = (e, newValue) => {
+    const { addInfo } = this.props;
+    addInfo({ ...this.props, audience: newValue });
+  };
+
   handleChange = (e) => {
     const { usedName } = this.state;
     const { addInfo, addMsg, removeMsg } = this.props;
 
     if (usedName.indexOf((e.target.value).toLowerCase()) === -1) {
-      addInfo(e.target.value);
+      addInfo({ ...this.props, name: e.target.value });
       removeMsg();
     } else {
-      addMsg({ warnMsg: 'Campaign Name already in use' });
-      addInfo(e.target.value);
+      addMsg({ warnMsg: 'Bulk Email Name already in use' });
+      addInfo({ ...this.props, name: e.target.value });
     }
   };
 
@@ -130,7 +169,8 @@ class Step6 extends React.Component {
       gender,
       warnMsg,
       choosedDeadline,
-      roleName
+      roleName,
+      audience
     } = this.props;
 
     const Mapgender = gender.toJS();
@@ -184,21 +224,34 @@ class Step6 extends React.Component {
           </Grid>
         </Grid>
         {/* section 2 */}
-        {/* <Grid container spacing={3} style={{ marginBottom: '10px' }} className={(classes.root, classes.sec_2_root)}>
+        <Grid container spacing={3} style={{ marginBottom: '10px' }} className={(classes.root, classes.sec_2_root)}>
+          <Grid item md={12} xs={12}>
+            <Typography variant="h6" >Choose audience size of your bulk email</Typography>
+            <PrettoSlider
+              valueLabelDisplay="auto"
+              aria-label="Pretto slider"
+              value={audience}
+              min={1}
+              step={1}
+              max={25}
+              onChange={(e, value) => this.handleSliderChange(e, value)}
+            />
+            <Typography variant="caption">(slider value represents x% count of total audience)</Typography>
+          </Grid>
           <Grid item md={12} xs={12}>
             <Typography variant="h6">
               Estimated performance
             </Typography>
             <Typography variant="subtitle1">
-              <RemoveRedEye />
-              43,544 - 72,640 candidates targeted initially
+              <RemoveRedEye style={{ marginRight: 10 }} />
+              {this.state.impressionCount} candidates targeted initially
             </Typography>
             <Typography variant="subtitle1">
-              <Reply />
-              1,115 - 1,860 expected total click-throughs
+              <Reply style={{ marginRight: 10 }} />
+              {`${this.state.clickThrough60} - ${this.state.clickThrough90}`} expected total click-throughs
             </Typography>
           </Grid>
-        </Grid> */}
+        </Grid>
         {/* section 3 */}
         <Grid container spacing={3} className={classes.root}>
           <Grid item md={12} xs={12}>
@@ -324,6 +377,7 @@ const reducerBulkEmail = 'bulkEmail';
 const reducerA = 'Auth';
 
 const mapStateToProps = state => ({
+  audience: state.getIn([reducerBulkEmail, 'audience']),
   warnMsg: state.getIn([reducerBulkEmail, 'warnMsg']),
   roleName: state.getIn([reducerBulkEmail, 'roleName']),
   campaignStatus: state.getIn([reducerBulkEmail, 'campaignStatus']),

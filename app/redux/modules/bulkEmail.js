@@ -38,7 +38,8 @@ const initialState = {
   body: '',
   deadline: DateHelper.format(DateHelper.addDays(new Date(), 5)),
   choosedDeadline: '5',
-  name: ''
+  name: '',
+  audience: 10
 };
 
 const initialImmutableState = fromJS(initialState);
@@ -108,7 +109,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
     case EMAIL_STEP6_INFO:
       return state.withMutations((mutableState) => {
         mutableState
-          .set('name', action.data)
+          .set('name', action.data.name)
+          .set('audience', action.data.audience)
       });
 
     case EMAIL_INIT_MSG:
@@ -141,6 +143,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const qualificationType = fromJS(action.data.qualificationType);
 
         mutableState
+          .set('audience', action.data.audience)
           .set('qualificationType', qualificationType)
           .set('languages', languages)
           .set('roleName', action.data.roleName)
@@ -194,6 +197,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('name', '')
           .set('blackList', List([]))
           .set('studentList', List([]))
+          .set('audience', 10)
       });
 
     default:

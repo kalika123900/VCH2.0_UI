@@ -8,6 +8,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import Slider from '@material-ui/core/Slider';
 import CardHeader from '@material-ui/core/CardHeader';
 import RemoveRedEye from '@material-ui/icons/RemoveRedEye';
 import Avatar from '@material-ui/core/Avatar';
@@ -53,6 +54,36 @@ async function postData(url, data) {
 function getIds(arr, data) {
   return arr.map(item => data.indexOf(item));
 }
+
+const PrettoSlider = withStyles({
+  root: {
+    color: '#52af77',
+    height: 8,
+  },
+  thumb: {
+    height: 24,
+    width: 24,
+    backgroundColor: '#fff',
+    border: '2px solid currentColor',
+    marginTop: -8,
+    marginLeft: -12,
+    '&:focus,&:hover,&$active': {
+      boxShadow: 'inherit',
+    },
+  },
+  active: {},
+  valueLabel: {
+    left: 'calc(-50% + 4px)',
+  },
+  track: {
+    height: 8,
+    borderRadius: 4,
+  },
+  rail: {
+    height: 8,
+    borderRadius: 4,
+  },
+})(Slider);
 
 class Step6 extends React.Component {
   state = {
@@ -157,12 +188,17 @@ class Step6 extends React.Component {
     const { addInfo, addMsg, removeMsg } = this.props;
 
     if (usedName.indexOf((e.target.value).toLowerCase()) === -1) {
-      addInfo(e.target.value);
+      addInfo({ ...this.props, name: e.target.value });
       removeMsg();
     } else {
       addMsg({ warnMsg: 'Campaign Name already in use' });
-      addInfo(e.target.value);
+      addInfo({ ...this.props, name: e.target.value });
     }
+  };
+
+  handleSliderChange = (e, newValue) => {
+    const { addInfo } = this.props;
+    addInfo({ ...this.props, audience: newValue });
   };
 
   render() {
@@ -177,7 +213,8 @@ class Step6 extends React.Component {
       gender,
       warnMsg,
       choosedDeadline,
-      roleName
+      roleName,
+      audience
     } = this.props;
 
     const Mapgender = gender.toJS();
@@ -234,6 +271,19 @@ class Step6 extends React.Component {
         {/* section 2 */}
         <Grid container spacing={3} style={{ marginBottom: '10px' }} className={(classes.root, classes.sec_2_root)}>
           <Grid item md={12} xs={12}>
+            <Typography variant="h6" >Choose audience size of your campaign</Typography>
+            <PrettoSlider
+              valueLabelDisplay="auto"
+              aria-label="Pretto slider"
+              value={audience}
+              min={1}
+              step={1}
+              max={25}
+              onChange={(e, value) => this.handleSliderChange(e, value)}
+            />
+            <Typography variant="caption">(slider value represents x% count of total audience)</Typography>
+          </Grid>
+          <Grid item md={12} xs={12}>
             <Typography variant="h6">
               Estimated performance
             </Typography>
@@ -246,7 +296,7 @@ class Step6 extends React.Component {
               {`${this.state.clickThrough60} - ${this.state.clickThrough90}`} expected total click-throughs
             </Typography>
           </Grid>
-        </Grid>
+        </Grid >
         {/* section 3 */}
         <Grid container spacing={3} className={classes.root}>
           <Grid item md={12} xs={12}>
@@ -373,6 +423,7 @@ const reducerA = 'Auth';
 
 const mapStateToProps = state => ({
   warnMsg: state.getIn([reducerCampaign, 'warnMsg']),
+  audience: state.getIn([reducerCampaign, 'audience']),
   roleName: state.getIn([reducerCampaign, 'roleName']),
   campaignStatus: state.getIn([reducerCampaign, 'campaignStatus']),
   name: state.getIn([reducerCampaign, 'name']),

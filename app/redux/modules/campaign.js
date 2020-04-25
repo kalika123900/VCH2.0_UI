@@ -36,7 +36,8 @@ const initialState = {
   body: '',
   deadline: DateHelper.format(DateHelper.addDays(new Date(), 5)),
   choosedDeadline: '5',
-  name: ''
+  name: '',
+  audience: 10
 };
 
 const initialImmutableState = fromJS(initialState);
@@ -97,7 +98,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
     case STORE_STEP6_INFO:
       return state.withMutations((mutableState) => {
         mutableState
-          .set('name', action.data);
+          .set('name', action.data.name)
+          .set('audience', action.data.audience)
       });
 
     case CAMPAIGN_INIT_MSG:
@@ -128,6 +130,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const selectedYear = fromJS(action.data.selectedYear);
 
         mutableState
+          .set('audience', action.data.audience)
           .set('qualificationType', qualificationType)
           .set('languages', languages)
           .set('campaignStatus', action.data.campaignStatus)
@@ -178,7 +181,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('body', '')
           .set('deadline', DateHelper.format(DateHelper.addDays(new Date(), 5)))
           .set('choosedDeadline', '0')
-          .set('name', '');
+          .set('name', '')
+          .set('audience', 10)
       });
 
     default:
