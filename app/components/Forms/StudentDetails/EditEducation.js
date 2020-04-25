@@ -11,8 +11,12 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { storeEducation } from 'dan-actions/studentProfileActions';
 import ListItemText from '@material-ui/core/ListItemText';
+import Input from '@material-ui/core/Input';
+import Checkbox from '@material-ui/core/Checkbox';
+import { Typography } from '@material-ui/core';
 import {
   degreeGradesItems,
+  qualificationOption,
   institutionTypeItems,
   schoolQualificationTypeItems,
   aLevelScotishSubjectItems,
@@ -44,6 +48,35 @@ class EditEducation extends React.Component {
     const MapEducationInfo = educationInfo.toJS();
     const newEducationArr = MapEducationInfo.map((item, index) => {
       if (index == id) {
+        if (event.target.name == 'type') {
+          if (event.target.value == 'Secondary School') {
+            return {
+              ...item,
+              subject: [],
+              [event.target.name]: event.target.value
+            };
+          } else {
+            return {
+              ...item,
+              subject: '',
+              [event.target.name]: event.target.value
+            };
+          }
+        } else if (event.target.name == 'qualification_type') {
+          if (event.target.value == 'Other') {
+            return {
+              ...item,
+              subject: '',
+              [event.target.name]: event.target.value
+            }
+          } else {
+            return {
+              ...item,
+              subject: [],
+              [event.target.name]: event.target.value
+            }
+          }
+        }
         return {
           ...item,
           [event.target.name]: event.target.value
@@ -63,31 +96,33 @@ class EditEducation extends React.Component {
     const MapEducationInfo = educationInfo.toJS();
     const {
       type,
-      university_qualification,
+      qualification_type,
+      university_name,
+      institute_name,
       subject,
       from,
       to,
       score
     } = MapEducationInfo[id];
 
-    let universityQualificationData = [];
+    let qualificationTypeItems = [];
     let subjectData = [];
     let scoreData = [];
 
     if (type == 'University') {
-      universityQualificationData = universityItems;
+      qualificationTypeItems = qualificationOption;
       subjectData = courses;
       scoreData = degreeGradesItems;
     }
     else if (type == 'Secondary School') {
-      universityQualificationData = schoolQualificationTypeItems;
-      if (university_qualification == 'A-level') {
+      qualificationTypeItems = schoolQualificationTypeItems;
+      if (qualification_type == 'A-level') {
         subjectData = aLevelScotishSubjectItems
         scoreData = aLevelGradesItems
-      } else if (university_qualification == 'International Baccalaureate') {
+      } else if (qualification_type == 'International Baccalaureate') {
         subjectData = ibSubjectsItems
         scoreData = ibScoreItems
-      } else if (university_qualification == 'Scottish Highers/Advanced Highers') {
+      } else if (qualification_type == 'Scottish Highers/Advanced Highers') {
         subjectData = aLevelScotishSubjectItems
         scoreData = scottishGradesItems
       }
@@ -98,12 +133,12 @@ class EditEducation extends React.Component {
         <div>
           <FormControl className={classes.formControl}>
             <InputLabel
-              htmlFor="Qualification Type"
+              htmlFor="Institution Type"
             >
-              Qualification Type
+              Institution Type
             </InputLabel>
             <Select
-              placeholder="Qualification Type"
+              placeholder="Institution Type"
               value={type}
               name="type"
               onChange={e => this.handleChange(e, id)}
@@ -120,18 +155,19 @@ class EditEducation extends React.Component {
         <div>
           <FormControl className={classes.formControl}>
             <InputLabel
-              htmlFor="Qualification From"
+              htmlFor="Qualification Type"
             >
-              Qualification From
+              Qualification Type
             </InputLabel>
             <Select
-              placeholder="Qualification From"
-              value={university_qualification}
-              name="university_qualification"
+              placeholder="Qualification Type"
+              value={qualification_type}
+              name='qualification_type'
               onChange={e => this.handleChange(e, id)}
               MenuProps={MenuProps}
             >
-              {universityQualificationData.map((item, index) => (
+              {qualificationTypeItems.map((item, index) => (
+                item.length > 0 &&
                 <MenuItem key={index} value={item}>
                   <ListItemText primary={item} />
                 </MenuItem>
@@ -139,7 +175,48 @@ class EditEducation extends React.Component {
             </Select>
           </FormControl>
         </div>
-        {subjectData.length == 0 ?
+        {type == 'University' &&
+          <div>
+            <FormControl className={classes.formControl}>
+              <InputLabel
+                htmlFor="University Name"
+              >
+                University Name
+              </InputLabel>
+              <Select
+                placeholder="University Name"
+                value={university_name}
+                name="university_name"
+                onChange={e => this.handleChange(e, id)}
+                MenuProps={MenuProps}
+              >
+                {universityItems.map((item, index) => (
+                  item.length > 0 &&
+                  <MenuItem key={index} value={item}>
+                    <ListItemText primary={item} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+        }
+        {type == 'Secondary School' &&
+          <div>
+            <FormControl className={classes.formControl}>
+              <TextField
+                label="Institution Name"
+                className={classes.textField}
+                type="text"
+                value={institute_name}
+                name="institute_name"
+                margin="normal"
+                variant="outlined"
+                onChange={e => this.handleChange(e, id)}
+              />
+            </FormControl>
+          </div>
+        }
+        {(type != 'University' && qualification_type == 'Other') ?
           <div>
             <FormControl className={classes.formControl}>
               <TextField
@@ -152,31 +229,74 @@ class EditEducation extends React.Component {
                 variant="outlined"
                 onChange={e => this.handleChange(e, id)}
               />
+              <Typography variant="caption" >(Mention all your subjects here and seperate them by comma)</Typography>
             </FormControl>
           </div>
           :
-          <div>
-            <FormControl className={classes.formControl}>
-              <InputLabel
-                htmlFor="Subject"
-              >
-                Subject
-            </InputLabel>
-              <Select
-                placeholder="Subject"
-                value={subject}
-                name="subject"
-                onChange={e => this.handleChange(e, id)}
-                MenuProps={MenuProps}
-              >
-                {subjectData.map((item, index) => (
-                  <MenuItem key={index} value={item}>
-                    <ListItemText primary={item} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </div>
+          type == 'University'
+            ?
+            <div>
+              <FormControl className={classes.formControl}>
+                <InputLabel
+                  htmlFor="Subject"
+                >
+                  Subject
+              </InputLabel>
+                <Select
+                  placeholder="Subject"
+                  value={subject}
+                  name="subject"
+                  onChange={e => this.handleChange(e, id)}
+                  MenuProps={MenuProps}
+                >
+                  {subjectData.map((item, index) => (
+                    <MenuItem key={index} value={item}>
+                      <ListItemText primary={item} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+            :
+            <div>
+              <FormControl className={classes.formControl}>
+                <InputLabel
+                  htmlFor="Subject"
+                >
+                  Subject
+                </InputLabel>
+                <Select
+                  multiple
+                  value={subject}
+                  input={<Input />}
+                  name="subject"
+                  MenuProps={MenuProps}
+                  component={Select}
+                  renderValue={selected => {
+                    const subjectName = [];
+                    subjectData.map((value, index) => {
+                      if (selected.includes(value)) {
+                        subjectName.push(value);
+                      }
+                    });
+                    return subjectName.join(', ');
+                  }
+                  }
+                  onChange={e => this.handleChange(e, id)}
+                >
+                  {subjectData.map((item, index) => (
+                    <MenuItem key={index.toString()} value={item}>
+                      <TextField
+                        name="selectedSubject"
+                        component={Checkbox}
+                        checked={subject.indexOf(item) > -1}
+                      />
+                      <ListItemText primary={item} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
         }
         <div>
           <FormControl className={classes.formControl}>

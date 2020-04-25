@@ -30,7 +30,9 @@ const initialState = {
   educationInfo: List([{
     id: null,
     type: '',
-    university_qualification: '',
+    qualification_type: '',
+    university_name: null,
+    institute_name: null,
     subject: '',
     from: '',
     to: '',

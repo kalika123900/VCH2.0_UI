@@ -44,6 +44,23 @@ function arrayRemove(arr, index) {
   return temp;
 }
 
+function stringToArray(string) {
+  const splitArray = string.split(',');
+
+  const data = [];
+  splitArray.map(item => {
+    if (isNaN(item)) {
+      data.push(item);
+    } else if (item > 1000) {
+      data.push(item);
+    } else if (typeof item === 'string' && item.length > 0) {
+      data.push(item);
+    }
+  });
+
+  return data;
+}
+
 function formatDate(dateStr) {
   const d = new Date(dateStr);
   const year = d.getFullYear();
@@ -126,13 +143,15 @@ class EditStudentDetails extends Component {
       .then((res) => {
         if (res.status === 1) {
           let educationInfo = [{
-            university_qualification: '',
+            id: null,
+            type: '',
+            qualification_type: '',
+            university_name: null,
+            institute_name: null,
+            subject: '',
             from: '',
             to: '',
-            score: '',
-            subject: '',
-            type: '',
-            id: null
+            score: ''
           }];
           let oldEducationInfo = [];
 
@@ -147,25 +166,29 @@ class EditStudentDetails extends Component {
           else {
             educationInfo = res.data.map((item, index) => {
               return {
-                university_qualification: item.university_qualification,
+                id: item.id,
+                type: item.type,
+                qualification_type: item.qualification_type,
+                university_name: item.university_name,
+                institute_name: item.institute_name,
+                subject: (item.type == 'Secondary School' && item.qualification_type != 'Other') ? stringToArray(item.subject) : item.subject,
                 from: item.education_from,
                 to: item.education_to,
                 score: item.score,
-                subject: item.subject,
-                type: item.type,
-                id: item.id
               }
             });
 
             oldEducationInfo = res.data.map((item, index) => {
               return {
-                university_qualification: item.university_qualification,
+                id: item.id,
+                type: item.type,
+                qualification_type: item.qualification_type,
+                university_name: item.university_name,
+                institute_name: item.institute_name,
+                subject: item.subject,
                 from: item.education_from,
                 to: item.education_to,
                 score: item.score,
-                subject: item.subject,
-                type: item.type,
-                id: item.id
               }
             });
 
@@ -349,11 +372,35 @@ class EditStudentDetails extends Component {
     }
 
     const data = {
-      educationNew: MapEducationInfo,
+      educationNew: MapEducationInfo.map(item => {
+        if (item.type == 'Secondary School') {
+          if (item.qualification_type == 'Other') {
+            return {
+              ...item,
+              subject: item.subject.replace(/\s*,\s*/g, ",").trim()
+            }
+          } else {
+            let subjectString = item.subject.reduce((str1, str2) => {
+              if (str1.length > 0) {
+                return str1 + `,${str2}`
+              }
+              else {
+                return str1 + `${str2}`
+              }
+            });
+            return {
+              ...item,
+              subject: subjectString
+            }
+          }
+        }
+        return item
+      }),
       educationOld: MapOldEducationInfo,
       user_id: user.id,
     };
     var _that = this;
+
     postJSON(`${API_URL}/student/create-education`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
@@ -478,7 +525,9 @@ class EditStudentDetails extends Component {
     const formObject = {
       id: null,
       type: '',
-      university_qualification: '',
+      qualification_type: '',
+      university_name: null,
+      institute_name: null,
       subject: '',
       from: '',
       to: '',

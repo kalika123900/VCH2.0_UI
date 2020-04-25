@@ -7,15 +7,34 @@ import { withStyles } from '@material-ui/core/styles';
 import { AdminSigninForm } from 'dan-components';
 import styles from 'dan-components/Forms/user-jss';
 import { makeSecureEncrypt } from '../../../Helpers/security';
+import messageStyles from 'dan-styles/Messages.scss';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 
 class AdminSignin extends React.Component {
   state = {
     errorMessage: '',
-    flash: false
+    flash: false,
+    openStyle: false,
+    messageType: 'error',
+    notifyMessage: ''
   }
 
   handleFlash = () => {
     this.setState({ errorMessage: '', flash: false });
+  }
+
+  handleCloseStyle = () => {
+    this.setState({ openStyle: false });
+  }
+
+  noticeClose = event => {
+    event.preventDefault();
+    this.setState({ openStyle: false });
   }
 
   submitForm = (values) => {
@@ -53,7 +72,9 @@ class AdminSignin extends React.Component {
           })));
           window.location.reload();
         } else {
-          this.setState({ errorMessage: res.errorMessage, flash: true });
+          this.setState({ notifyMessage: res.errorMessage });
+          this.setState({ messageType: 'error' });
+          this.setState({ openStyle: true });
         }
       })
       .catch((err) => {
@@ -86,6 +107,44 @@ class AdminSignin extends React.Component {
             />
           </div>
         </div>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={this.state.openStyle}
+          autoHideDuration={6000}
+          onClose={this.handleCloseStyle}
+        >
+          <SnackbarContent
+            className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
+            aria-describedby="client-snackbar"
+            message={(
+              <span id="client-snackbar" className={classes.message}>
+                {
+                  (this.state.messageType == 'error') && <ErrorIcon className="success" />
+                }
+                {
+                  (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
+                }
+
+                  &nbsp;
+                {this.state.notifyMessage}
+              </span>
+            )}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                className={classes.close}
+                onClick={this.noticeClose}
+              >
+                <CloseIcon className={classes.icon} />
+              </IconButton>,
+            ]}
+          />
+        </Snackbar>
       </div>
     );
   }
