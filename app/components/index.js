@@ -142,7 +142,12 @@ export Albums from './Profile/Albums';
 export Connection from './Profile/Connection';
 export Favorites from './Profile/Favorites';
 export ExploreStudents from './Profile/ExploreStudents';
-export StudentProfile from './Profile/StudentProfile';
+export StudentSkills from './Profile/StudentSkills';
+export StudentQualification from './Profile/StudentQualification';
+export StudentIndustries from './Profile/StudentIndustries';
+export StudentExperience from './Profile/StudentExperience';
+export StudentCompanies from './Profile/StudentCompanies';
+export StudentSummary from './Profile/StudentSummary';
 export ClientJobProfiles from './Profile/ClientJobProfiles';
 export ClientJobDescription from './Profile/ClientJobDescription';
 // Card

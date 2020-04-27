@@ -101,12 +101,23 @@ async function postData(url, data) {
 class EditStudentDetails extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      tab: 0,
-      openStyle: false,
-      messageType: 'error',
-      notifyMessage: ''
-    };
+    const searchString = this.props.location.search.split('?tab=')
+
+    if (searchString != "" && atob(searchString[1])) {
+      this.state = {
+        tab: parseInt(atob(searchString[1])),
+        openStyle: false,
+        messageType: 'error',
+        notifyMessage: ''
+      };
+    } else {
+      this.state = {
+        tab: 0,
+        openStyle: false,
+        messageType: 'error',
+        notifyMessage: ''
+      };
+    }
   }
 
   submitForm(values) {

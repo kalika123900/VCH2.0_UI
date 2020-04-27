@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -11,6 +12,9 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import PapperBlock from '../PapperBlock/PapperBlock';
 import EmailIcon from '@material-ui/icons/Email';
 import styles from './profile-jss';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import EditIcon from '@material-ui/icons/Edit';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import qs from 'qs';
 import { makeSecureDecrypt } from '../../Helpers/security';
@@ -33,6 +37,10 @@ class StudentSummary extends React.Component {
     email: '',
     dob: '',
     phone: ''
+  }
+
+  handleRedirect = () => {
+    this.props.history.push(`/student/edit-details?tab=${btoa(0)}`)
   }
 
   componentDidMount() {
@@ -65,40 +73,45 @@ class StudentSummary extends React.Component {
 
     return (
       <PapperBlock title="Account Summary" icon="ios-contact-outline" whiteBg noMargin desc="">
-        <List dense className={classes.profileList}>
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar>
-                <AccountCircleIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="Name" secondary={name} />
-          </ListItem>
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar>
-                <DateRange />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="Born" secondary={dob} />
-          </ListItem>
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar>
-                <LocalPhone />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="Phone" secondary={phone} />
-          </ListItem>
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar>
-                <EmailIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="Email" secondary={email} />
-          </ListItem>
-        </List>
+        <Grid style={{ textAlign: "right" }}>
+          <Button color="primary" onClick={this.handleRedirect}><EditIcon />Edit</Button>
+        </Grid>
+        <Grid>
+          <List dense className={classes.profileList}>
+            <ListItem>
+              <ListItemAvatar>
+                <Avatar>
+                  <AccountCircleIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="Name" secondary={name} />
+            </ListItem>
+            <ListItem>
+              <ListItemAvatar>
+                <Avatar>
+                  <DateRange />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="Born" secondary={dob} />
+            </ListItem>
+            <ListItem>
+              <ListItemAvatar>
+                <Avatar>
+                  <LocalPhone />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="Phone" secondary={phone} />
+            </ListItem>
+            <ListItem>
+              <ListItemAvatar>
+                <Avatar>
+                  <EmailIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="Email" secondary={email} />
+            </ListItem>
+          </List>
+        </Grid>
       </PapperBlock>
     );
   }
@@ -108,4 +121,4 @@ StudentSummary.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(StudentSummary);
+export default withStyles(styles)(withRouter(StudentSummary));
