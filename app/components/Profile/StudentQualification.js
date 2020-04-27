@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
@@ -37,12 +38,20 @@ class StudentSummary extends React.Component {
   }
 
   componentDidMount() {
-    const user = JSON.parse(
-      makeSecureDecrypt(localStorage.getItem('user'))
-    );
+    var data = {};
+    if (this.props.userType == 'STUDENT') {
+      const user = JSON.parse(
+        makeSecureDecrypt(localStorage.getItem('user'))
+      );
 
-    const data = {
-      user_id: user.id
+      data = {
+        user_id: user.id
+      }
+    }
+    if (this.props.userType == 'CLIENT') {
+      data = {
+        user_id: this.props.user_id
+      }
     }
 
     postData(`${API_URL}/student/get-education`, data)
@@ -57,7 +66,7 @@ class StudentSummary extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, userType } = this.props;
 
     const JSX = this.state.education.map((item, index) => {
       return <ListItem key={index.toString()}>
@@ -83,12 +92,17 @@ class StudentSummary extends React.Component {
 
     return (
       <PapperBlock title="Qualifications" icon="ios-aperture-outline" whiteBg desc="">
-        <Grid style={{ textAlign: "right" }}>
-          <Button color="primary" onClick={this.handleRedirect}><EditIcon />Edit</Button>
-        </Grid>
+        {userType == 'STUDENT' &&
+          <Grid style={{ textAlign: "right" }}>
+            <Button color="primary" onClick={this.handleRedirect}><EditIcon />Edit</Button>
+          </Grid>
+        }
         <Grid container className={classes.colList}>
           <Grid >
-            {JSX}
+            {JSX.length > 0
+              ? JSX
+              : <Typography variant="body1" color="textSecondary">Qualifications are not mentioned :(</Typography>
+            }
           </Grid>
         </Grid>
       </PapperBlock>
@@ -99,5 +113,14 @@ class StudentSummary extends React.Component {
 StudentSummary.propTypes = {
   classes: PropTypes.object.isRequired
 };
+const reducerA = 'Auth';
 
-export default withStyles(styles)(withRouter(StudentSummary));
+const mapStateToProps = state => ({
+  userType: state.getIn([reducerA, 'userType'])
+});
+
+const StudentSummaryMapped = connect(
+  mapStateToProps
+)(StudentSummary);
+
+export default withStyles(styles)(withRouter(StudentSummaryMapped));

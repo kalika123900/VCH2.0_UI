@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
@@ -9,6 +10,7 @@ import Avatar from '@material-ui/core/Avatar';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import PapperBlock from '../PapperBlock/PapperBlock';
 import styles from './profile-jss';
+import { Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
@@ -18,7 +20,7 @@ class StudentSummary extends React.Component {
     this.props.history.push(`/student/edit-details?tab=${btoa(2)}`)
   }
   render() {
-    const { classes, industries } = this.props;
+    const { classes, industries, userType } = this.props;
 
     const JSX = industries.map((item, index) => {
       return <Grid item md={6} key={index.toString()}>
@@ -35,11 +37,16 @@ class StudentSummary extends React.Component {
 
     return (
       <PapperBlock title="Interested Industries" icon="ios-aperture-outline" whiteBg desc="">
-        <Grid style={{ textAlign: "right" }}>
-          <Button color="primary" onClick={this.handleRedirect}><EditIcon />Edit</Button>
-        </Grid>
+        {userType == 'STUDENT' &&
+          <Grid style={{ textAlign: "right" }}>
+            <Button color="primary" onClick={this.handleRedirect}><EditIcon />Edit</Button>
+          </Grid>
+        }
         <Grid container className={classes.colList}>
-          {JSX}
+          {JSX.length > 0
+            ? JSX
+            : <Typography variant="body1" color="textSecondary">Interested Industries are not mentioned :(</Typography>
+          }
         </Grid>
         {/* <Grid style={{ marginTop: '20px' }}>
           <Button variant="text" color="primary">See All</Button>
@@ -52,5 +59,14 @@ class StudentSummary extends React.Component {
 StudentSummary.propTypes = {
   classes: PropTypes.object.isRequired
 };
+const reducerA = 'Auth';
 
-export default withStyles(styles)(withRouter(StudentSummary));
+const mapStateToProps = state => ({
+  userType: state.getIn([reducerA, 'userType'])
+});
+
+const StudentSummaryMapped = connect(
+  mapStateToProps
+)(StudentSummary);
+
+export default withStyles(styles)(withRouter(StudentSummaryMapped));

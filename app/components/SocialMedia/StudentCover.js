@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import avatarApi from 'dan-api/images/avatars';
 import bgCover from 'dan-images/petal_bg.svg';
@@ -41,13 +42,22 @@ class StudentCover extends React.Component {
   };
 
   componentDidMount() {
-    const user = JSON.parse(
-      makeSecureDecrypt(localStorage.getItem('user'))
-    );
+    var data = {};
+    if (this.props.userType == 'STUDENT') {
+      const user = JSON.parse(
+        makeSecureDecrypt(localStorage.getItem('user'))
+      );
 
-    const data = {
-      user_id: user.id
+      data = {
+        user_id: user.id
+      }
     }
+    if (this.props.userType == 'CLIENT') {
+      data = {
+        user_id: this.props.user_id
+      }
+    }
+
     postData(`${API_URL}/student/get-personal-details`, data)
       .then((res) => {
         if (res.status === 1) {
@@ -77,40 +87,42 @@ class StudentCover extends React.Component {
 
   render() {
     const {
-      classes, } = this.props;
+      classes, userType } = this.props;
     const { anchorElOpt, name, profile, gender } = this.state;
 
     return (
       <div className={classes.cover} style={{ backgroundImage: `url(${bgCover})` }}>
-        <div className={classes.opt}>
-          <IconButton
-            aria-label="More"
-            aria-owns={anchorElOpt ? 'long-menu' : null}
-            aria-haspopup="true"
-            className={classes.button}
-            onClick={this.handleClickOpt}
-          >
-            <MoreVertIcon />
-          </IconButton>
-          <Menu
-            id="long-menu"
-            anchorEl={anchorElOpt}
-            open={Boolean(anchorElOpt)}
-            onClose={this.handleCloseOpt}
-            PaperProps={{
-              style: {
-                maxHeight: ITEM_HEIGHT * 4.5,
-                width: 200,
-              },
-            }}
-          >
-            {optionsOpt.map(option => (
-              <MenuItem key={option} selected={option === 'Edit Profile'} onClick={this.handleRedirect}>
-                {option}
-              </MenuItem>
-            ))}
-          </Menu>
-        </div>
+        {userType == 'STUDENT' &&
+          <div className={classes.opt}>
+            <IconButton
+              aria-label="More"
+              aria-owns={anchorElOpt ? 'long-menu' : null}
+              aria-haspopup="true"
+              className={classes.button}
+              onClick={this.handleClickOpt}
+            >
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              id="long-menu"
+              anchorEl={anchorElOpt}
+              open={Boolean(anchorElOpt)}
+              onClose={this.handleCloseOpt}
+              PaperProps={{
+                style: {
+                  maxHeight: ITEM_HEIGHT * 4.5,
+                  width: 200,
+                },
+              }}
+            >
+              {optionsOpt.map(option => (
+                <MenuItem key={option} selected={option === 'Edit Profile'} onClick={this.handleRedirect}>
+                  {option}
+                </MenuItem>
+              ))}
+            </Menu>
+          </div>
+        }
         <div className={classes.content}>
           <Avatar alt={name} src={(profile == null || profile == '') ? avatarApi[7] : profile} className={classes.avatar} />
           <Typography variant="h4" className={classes.name} gutterBottom>
@@ -127,4 +139,14 @@ StudentCover.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(withRouter(StudentCover));
+const reducerA = 'Auth';
+
+const mapStateToProps = state => ({
+  userType: state.getIn([reducerA, 'userType'])
+});
+
+const StudentCoverMapped = connect(
+  mapStateToProps
+)(StudentCover);
+
+export default withStyles(styles)(withRouter(StudentCoverMapped));

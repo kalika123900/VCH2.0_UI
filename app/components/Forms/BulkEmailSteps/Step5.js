@@ -131,12 +131,12 @@ class Step5 extends React.Component {
       <Grid className={classes.posRelative} item md={3} sm={6} xs={12} key={index.toString()} >
         <RecipientStudentCard
           cover={imgApi[0]}
-          avatar={avatarApi[6]}
+          avatar={data.gender == "Male" ? avatarApi[7] : avatarApi[6]}
           name={`${data.firstname} ${data.lastname}`}
           title=''
           isVerified={false}
           btnText="See Profile"
-          university={data.university_qualification}
+          university={data.university_name}
         />
         <Button className={classes.removePos} onClick={(e) => this.handleRemove(data.id)}> <RemoveCircle /></Button>
       </Grid>

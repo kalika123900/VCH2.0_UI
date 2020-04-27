@@ -178,7 +178,7 @@ class StudentCard extends React.Component {
     return (
       <Fragment>
         <MessageDialog open={this.state.open} handleClose={this.handleClose} sendMessage={this.handleDirectMessage} />
-        <StudentProfileDialog open={this.state.profile} handleClose={this.handleProfileClose} />
+        <StudentProfileDialog user_id={user_id} open={this.state.profile} handleClose={this.handleProfileClose} />
         <Card className={classes.cardSocmed}>
           <CardMedia
             className={classes.mediaProfile}

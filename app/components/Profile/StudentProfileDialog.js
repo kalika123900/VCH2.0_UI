@@ -11,7 +11,8 @@ import StudentClientView from './StudentClientView';
 class StudentProfileDialog extends React.Component {
   render() {
     const {
-      classes
+      classes,
+      user_id
     } = this.props;
     const { open, handleClose } = this.props;
     return (
@@ -23,7 +24,7 @@ class StudentProfileDialog extends React.Component {
             aria-labelledby="form-dialog-title"
             fullWidth={true}
           >
-            <StudentClientView />
+            <StudentClientView user_id={user_id} />
             <DialogActions>
               <Button onClick={handleClose} color="primary">
                 Close

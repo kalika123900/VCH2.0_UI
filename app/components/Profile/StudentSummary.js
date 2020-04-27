@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -14,6 +15,7 @@ import EmailIcon from '@material-ui/icons/Email';
 import styles from './profile-jss';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import { Typography } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import qs from 'qs';
@@ -40,17 +42,26 @@ class StudentSummary extends React.Component {
   }
 
   handleRedirect = () => {
-    this.props.history.push(`/student/edit-details?tab=${btoa(0)}`)
+    this.props.history.push(`/student/edit-details`)
   }
 
   componentDidMount() {
-    const user = JSON.parse(
-      makeSecureDecrypt(localStorage.getItem('user'))
-    );
+    var data = {};
+    if (this.props.userType == 'STUDENT') {
+      const user = JSON.parse(
+        makeSecureDecrypt(localStorage.getItem('user'))
+      );
 
-    const data = {
-      user_id: user.id
+      data = {
+        user_id: user.id
+      }
     }
+    if (this.props.userType == 'CLIENT') {
+      data = {
+        user_id: this.props.user_id
+      }
+    }
+
     postData(`${API_URL}/student/get-personal-details`, data)
       .then((res) => {
         if (res.status === 1) {
@@ -69,13 +80,15 @@ class StudentSummary extends React.Component {
 
   render() {
     const { name, email, phone, dob } = this.state;
-    const { classes } = this.props;
+    const { classes, userType } = this.props;
 
     return (
       <PapperBlock title="Account Summary" icon="ios-contact-outline" whiteBg noMargin desc="">
-        <Grid style={{ textAlign: "right" }}>
-          <Button color="primary" onClick={this.handleRedirect}><EditIcon />Edit</Button>
-        </Grid>
+        {userType == 'STUDENT' &&
+          <Grid style={{ textAlign: "right" }}>
+            <Button color="primary" onClick={this.handleRedirect}><EditIcon />Edit</Button>
+          </Grid>
+        }
         <Grid>
           <List dense className={classes.profileList}>
             <ListItem>
@@ -121,4 +134,14 @@ StudentSummary.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(withRouter(StudentSummary));
+const reducerA = 'Auth';
+
+const mapStateToProps = state => ({
+  userType: state.getIn([reducerA, 'userType'])
+});
+
+const StudentSummaryMapped = connect(
+  mapStateToProps
+)(StudentSummary);
+
+export default withStyles(styles)(withRouter(StudentSummaryMapped));
