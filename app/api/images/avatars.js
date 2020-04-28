@@ -1,5 +1,5 @@
 const avatars = [
-  '/images/avatars/logo.svg',
+  '/images/avatars/urban.svg',
   '/images/avatars/pp_girl.svg',
   '/images/avatars/pp_girl.svg',
   '/images/avatars/pp_girl2.svg',

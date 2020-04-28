@@ -22,31 +22,30 @@ class Student extends React.Component {
         direction="row"
         spacing={3}
       >
-        <Grid item md={7} xs={12}>
-          <div>
-            <StudentTimeline dataTimeline={data} />
-          </div>
-        </Grid>
-        <Grid item md={5} xs={12}>
+        <Grid item md={6} xs={12}>
           {/* Profile Progress */}
           <Divider className={classes.divider} />
           <ProfileProgress />
 
+          <SuitableCompanies />
+          {/* <StudentTimeline dataTimeline={data} /> */}
+        </Grid>
+        <Grid item md={6} xs={12}>
           {/* Student Me */}
           <Divider className={classes.divider} />
           <StudentSummary />
 
           {/* My Suitable Companies */}
-          <Divider className={classes.divider} />
-          <SuitableCompanies />
+          {/* <Divider className={classes.divider} />
+          <SuitableCompanies /> */}
 
           {/* My Top Companies */}
-          <Divider className={classes.divider} />
-          <TopCompanies />
+          {/* <Divider className={classes.divider} />
+          <TopCompanies /> */}
 
           {/* Contacted Graph */}
-          <Divider className={classes.divider} />
-          <ContactedGraph />
+          {/* <Divider className={classes.divider} />
+          <ContactedGraph /> */}
         </Grid>
       </Grid>
     );

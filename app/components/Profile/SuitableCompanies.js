@@ -75,7 +75,7 @@ class SuitableCompanies extends React.Component {
             ? companies
             :
             <Grid container justify="center">
-              <Typography variant="subtitle1">
+              <Typography variant="subtitle1" color="textSecondary">
                 Did not find best match for you :(
               </Typography>
             </Grid>
