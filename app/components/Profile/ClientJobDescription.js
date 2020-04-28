@@ -47,7 +47,8 @@ class ClientJobProfile extends React.Component {
     email: '',
     role_name: '',
     role_link: '',
-    role_deadline: ''
+    role_deadline: '',
+    skills: []
   }
 
   componentDidMount() {
@@ -74,6 +75,7 @@ class ClientJobProfile extends React.Component {
         if (res.status === 1) {
           if (res.data.length > 0) {
             const role_deadline = res.data[0].role_deadline.split('T')
+            this.setState({ skills: res.data[0].skills.split(',') })
             this.setState({ role_name: res.data[0].role_name })
             this.setState({ role_link: res.data[0].role_link })
             this.setState({ role_deadline: role_deadline[0] })
@@ -91,8 +93,13 @@ class ClientJobProfile extends React.Component {
   };
 
   render() {
-    const { tab, name, phone, email, headquarter, role_name, role_link, role_deadline, logo, role_description } = this.state;
+    const { tab, name, phone, email, headquarter, role_name, role_link, role_deadline, logo, role_description, skills } = this.state;
     const { classes } = this.props;
+
+    const skillsJSX = skills.map((item, index) => {
+      return <Typography variant="subtitle2" key={index.toString()}>{item}</Typography>
+    });
+
     return (
       <Fragment>
         <Grid container spacing={3} >
@@ -179,11 +186,9 @@ class ClientJobProfile extends React.Component {
                     <Typography variant="subtitle2">{role_name}</Typography>
                   </Grid>
                 </Grid>
-                <Typography variant="h6" color="primary" className={classes.subHeading}>Technologies:</Typography>
+                <Typography variant="h6" color="primary" className={classes.subHeading}>Skills:</Typography>
                 <Grid className={classes.content}>
-                  <Typography variant="subtitle2">C/C++</Typography>
-                  <Typography variant="subtitle2">Oracle Database</Typography>
-                  <Typography variant="subtitle2">Linux</Typography>
+                  {skillsJSX}
                 </Grid>
                 <Grid className={classes.subHeading}>
                   <Typography variant="h6" color="primary" className={classes.customMargin}>Location: </Typography>

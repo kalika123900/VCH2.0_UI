@@ -51,7 +51,7 @@ class AddRole extends React.Component {
       onSuccess
     } = this.props;
 
-    const MapSkills = getIds(skills.toJS(), skillMenu);
+    const MapSkills = skills.toJS();
     const MapCourses = courses.toJS();
     const MapRoleDescriptors = roleDescriptors.toJS();
 
