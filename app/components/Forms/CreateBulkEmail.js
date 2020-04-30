@@ -22,7 +22,7 @@ import { withRouter } from 'react-router';
 import Step1 from './BulkEmailSteps/Step1';
 import Step2 from './BulkEmailSteps/Step2';
 import Step3 from './BulkEmailSteps/Step3';
-import Step4 from './BulkEmailSteps/Step4';
+// import Step4 from './BulkEmailSteps/Step4';
 import Step5 from './BulkEmailSteps/Step5';
 import Step6 from './BulkEmailSteps/Step6';
 
@@ -31,7 +31,7 @@ function getSteps() {
     'Select Role',
     'Choose Audience',
     'Choose Bulk Email Content',
-    'Set Your Deadline',
+    // 'Set Your Deadline',
     'View Recipients',
     'Review & Submit'
   ];
@@ -220,7 +220,7 @@ class CreateBulkEmail extends React.Component {
               </Grid>
             </section>
           )}
-          {activeStep === 3 && (
+          {/* {activeStep === 3 && (
             <section>
               <Typography variant="h4" className={classes.title} gutterBottom>
                 Set Your Deadline
@@ -248,8 +248,8 @@ class CreateBulkEmail extends React.Component {
                 </Button>
               </Grid>
             </section>
-          )}
-          {activeStep === 4 && (
+          )} */}
+          {activeStep === 3 && (
             <section>
               <Typography variant="h4" className={classes.title} gutterBottom>
                 Review your Bulk Email settings
@@ -278,7 +278,7 @@ class CreateBulkEmail extends React.Component {
               </Grid>
             </section>
           )}
-          {activeStep === 5 && (
+          {activeStep === 4 && (
             <section>
               <Typography variant="h4" className={classes.title} gutterBottom>
                 Review your Bulk Email settings

@@ -42,36 +42,6 @@ async function postData(url, data) {
   return await response.json();
 }
 
-const PrettoSlider = withStyles({
-  root: {
-    color: '#52af77',
-    height: 8,
-  },
-  thumb: {
-    height: 24,
-    width: 24,
-    backgroundColor: '#fff',
-    border: '2px solid currentColor',
-    marginTop: -8,
-    marginLeft: -12,
-    '&:focus,&:hover,&$active': {
-      boxShadow: 'inherit',
-    },
-  },
-  active: {},
-  valueLabel: {
-    left: 'calc(-50% + 4px)',
-  },
-  track: {
-    height: 8,
-    borderRadius: 4,
-  },
-  rail: {
-    height: 8,
-    borderRadius: 4,
-  },
-})(Slider);
-
 class Step6 extends React.Component {
   state = {
     email: '',
@@ -161,14 +131,11 @@ class Step6 extends React.Component {
     const {
       classes,
       name,
-      roleDeadline,
-      deadline,
       heading,
       body,
       university,
       gender,
       warnMsg,
-      choosedDeadline,
       roleName,
       audience
     } = this.props;
@@ -185,7 +152,6 @@ class Step6 extends React.Component {
     MapUniversity.map(item => {
       selectedUniversity = `${selectedUniversity}${universityItems[item]},  `;
     });
-    const customDeadline = choosedDeadline == 5 ? 'No deadline' : deadline;
     const title = brand.name + ' - Review Bulk Email Settings';
     const description = brand.desc;
     return (
@@ -199,7 +165,7 @@ class Step6 extends React.Component {
           <meta property="twitter:description" content={description} />
         </Helmet>
         {/* section 1 */}
-        <Grid container spacing={3} className={classes.root}>
+        <Grid container spacing={3} className={classes.root} style={{ boxShadow: 'none' }}>
           <Grid item md={12} xs={12}>
             <Typography variant="h6" className={classes.sec_1_heading}>
               Give this Bulk Email a name
@@ -224,7 +190,7 @@ class Step6 extends React.Component {
           </Grid>
         </Grid>
         {/* section 2 */}
-        <Grid container spacing={3} style={{ marginBottom: '10px' }} className={(classes.root, classes.sec_2_root)}>
+        {/* <Grid container spacing={3} style={{ marginBottom: '10px' }} className={(classes.root, classes.sec_2_root)}>
           <Grid item md={12} xs={12}>
             <Typography variant="h6" >Choose audience size of your bulk email</Typography>
             <PrettoSlider
@@ -251,18 +217,18 @@ class Step6 extends React.Component {
               {`${this.state.clickThrough60} - ${this.state.clickThrough90}`} expected total click-throughs
             </Typography>
           </Grid>
-        </Grid>
+        </Grid> */}
         {/* section 3 */}
-        <Grid container spacing={3} className={classes.root}>
+        <Grid container spacing={3} className={classes.root} style={{ boxShadow: 'none' }}>
           <Grid item md={12} xs={12}>
-            <Grid className={classes.sec_3_grid2}>
+            {/* <Grid className={classes.sec_3_grid2}>
               <Typography variant="h6">
                 Bulk Email Deadline
               </Typography>
               <Typography variant="body1" color="textSecondary">
                 {customDeadline}
               </Typography>
-            </Grid>
+            </Grid> */}
             <Grid className={classes.sec_3_grid3}>
               <Typography variant="h6">
                 Promoting Role
@@ -271,9 +237,7 @@ class Step6 extends React.Component {
                 {roleName}
               </Typography>
             </Grid>
-          </Grid>
-          <Grid item md={12} xs={12}>
-            <Grid className={classes.sec_3_grid4} style={{ marginTop: 0 }}>
+            <Grid className={classes.sec_3_grid4} >
               <Typography variant="h6">
                 Precise Genders
               </Typography>
@@ -363,7 +327,6 @@ class Step6 extends React.Component {
 Step6.propTypes = {
   classes: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,
-  deadline: PropTypes.string.isRequired,
   gender: PropTypes.object.isRequired,
   heading: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
@@ -383,9 +346,6 @@ const mapStateToProps = state => ({
   campaignStatus: state.getIn([reducerBulkEmail, 'campaignStatus']),
   name: state.getIn([reducerBulkEmail, 'name']),
   gender: state.getIn([reducerBulkEmail, 'gender']),
-  choosedDeadline: state.getIn([reducerBulkEmail, 'choosedDeadline']),
-  roleDeadline: state.getIn([reducerBulkEmail, 'roleDeadline']),
-  deadline: state.getIn([reducerBulkEmail, 'deadline']),
   university: state.getIn([reducerBulkEmail, 'university']),
   role: state.getIn([reducerBulkEmail, 'role']),
   keywords: state.getIn([reducerBulkEmail, 'keywords']),

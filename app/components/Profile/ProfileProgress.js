@@ -1,6 +1,7 @@
 import React, { useReducer } from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -8,6 +9,7 @@ import Avatar from '@material-ui/core/Avatar';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Chip from '@material-ui/core/Chip';
 import Check from '@material-ui/icons/Check';
+import EditIcon from '@material-ui/icons/Edit';
 import Type from 'dan-styles/Typography.scss';
 import styles from './profile-jss';
 import qs from 'qs';
@@ -28,6 +30,10 @@ class ProfileProgress extends React.Component {
   state = {
     strength: 0,
     strengthString: ''
+  }
+
+  handleRedirect = () => {
+    this.props.history.push('/student/edit-details')
   }
 
   componentDidMount() {
@@ -63,19 +69,25 @@ class ProfileProgress extends React.Component {
       <div className={classes.progressRoot}>
         <Paper className={classes.styledPaper} elevation={4}>
           <Typography className={classes.title} variant="h5" component="h3">
-            <span className={Type.light}>Profile Strength: </span>
-            <span className={Type.bold}>{this.state.strengthString}</span>
+            <span className={Type.light}>Profile Completeness: </span>
+            <span className={Type.bold}>{`${this.state.strength}%`}</span>
           </Typography>
-          <Grid container justify="center">
+          {this.state.strength != 100 &&
+            <Typography className={classes.title} component="h3" style={{ marginTop: 10 }}>
+              Your profile is incomplete. Employers are 5x more likely to contact you if you're profile is complete!
+            </Typography>
+          }
+          <Grid container justify="center" onClick={this.handleRedirect} >
             <Chip
               avatar={(
                 <Avatar>
                   <Check />
                 </Avatar>
               )}
-              label={`${this.state.strength}% Progress`}
+              label={`Complete your profile`}
               className={classes.chip}
               color="primary"
+              style={{ cursor: 'pointer' }}
             />
           </Grid>
           <LinearProgress variant="determinate" className={classes.progress} value={this.state.strength} />
@@ -89,4 +101,4 @@ ProfileProgress.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(ProfileProgress);
+export default withStyles(styles)(withRouter(ProfileProgress));

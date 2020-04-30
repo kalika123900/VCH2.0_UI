@@ -26,6 +26,13 @@ import TimerIcon from '@material-ui/icons/Timer';
 
 const colors = [red[300], blue[300], cyan[300], lime[300]];
 
+function addZero(number) {
+  if (number < 10)
+    return `0${number}`;
+  else
+    return number;
+}
+
 class ChartInfographic extends PureComponent {
   state = {
     deadline: new Date("Aug 1, 2020 00:00:00").getTime(),
@@ -38,10 +45,10 @@ class ChartInfographic extends PureComponent {
     setInterval(function () {
       var now = new Date().getTime();
       var t = deadline - now;
-      var days = Math.floor(t / (1000 * 60 * 60 * 24));
-      var hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
-      var seconds = Math.floor((t % (1000 * 60)) / 1000);
+      var days = addZero(Math.floor(t / (1000 * 60 * 60 * 24)));
+      var hours = addZero(Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+      var minutes = addZero(Math.floor((t % (1000 * 60 * 60)) / (1000 * 60)));
+      var seconds = addZero(Math.floor((t % (1000 * 60)) / 1000));
       _that.setState({ timer: `${days}:${hours}:${minutes}:${seconds}` })
     }, 1000);
   }

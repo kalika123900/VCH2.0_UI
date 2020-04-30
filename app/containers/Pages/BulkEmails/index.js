@@ -59,11 +59,8 @@ class BulkEmails extends React.Component {
       gender,
       history,
       removeInfo,
-      roleDeadline,
-      deadline,
       studentList,
       blackList,
-      choosedDeadline,
       languages,
       qualificationType
     } = this.props;
@@ -80,18 +77,10 @@ class BulkEmails extends React.Component {
     const MapLanguages = languages.toJS();
     const MapQualificationType = qualificationType.toJS();
 
-    let customDeadline = '';
-    if (choosedDeadline == '5') {
-      customDeadline = null;
-    } else {
-      customDeadline = deadline;
-    }
-
     const data = {
       ...this.props,
       languages: MapLanguages,
       qualificationType: MapQualificationType,
-      deadline: customDeadline,
       workLocation: MapWorkLocation,
       interestedSectors: MapInterestedSectors,
       subjects: MapSubjects,
@@ -145,8 +134,6 @@ BulkEmails.propTypes = {
   gender: PropTypes.object.isRequired,
   university: PropTypes.object.isRequired,
   keywords: PropTypes.object.isRequired,
-  deadline: PropTypes.string.isRequired,
-  choosedDeadline: PropTypes.string.isRequired,
   selectedYear: PropTypes.object.isRequired,
   ethnicity: PropTypes.string.isRequired,
   interestedSectors: PropTypes.object.isRequired,
@@ -169,12 +156,9 @@ const mapStateToProps = state => ({
   qualificationType: state.getIn([reducerBulkEmail, 'qualificationType']),
   name: state.getIn([reducerBulkEmail, 'name']),
   role: state.getIn([reducerBulkEmail, 'role']),
-  roleDeadline: state.getIn([reducerBulkEmail, 'roleDeadline']),
   gender: state.getIn([reducerBulkEmail, 'gender']),
   university: state.getIn([reducerBulkEmail, 'university']),
   keywords: state.getIn([reducerBulkEmail, 'keywords']),
-  deadline: state.getIn([reducerBulkEmail, 'deadline']),
-  choosedDeadline: state.getIn([reducerBulkEmail, 'choosedDeadline']),
   selectedYear: state.getIn([reducerBulkEmail, 'selectedYear']),
   ethnicity: state.getIn([reducerBulkEmail, 'ethnicity']),
   interestedSectors: state.getIn([reducerBulkEmail, 'interestedSectors']),

@@ -21,12 +21,11 @@ import qs from 'qs';
 import { makeSecureDecrypt } from '../../Helpers/security';
 import formatDate from '../../Helpers/formatDate';
 
-function createData(id, bulkEmail, created_at, deadline, views) {
+function createData(id, bulkEmail, created_at, views) {
   return {
     id,
     bulkEmail,
     created_at,
-    deadline,
     views
   };
 }
@@ -93,8 +92,7 @@ class MiniBulkEmailTable extends React.Component {
             res.data.map(item => {
               item.views = '0k';
               const createDate = item.created_at == null ? 'Not avilable' : formatDate(item.created_at);
-              const deadline = item.deadline == null ? 'No Deadline' : formatDate(item.deadline);
-              tempData.push(createData(item.id, item.name, createDate, deadline, item.views));
+              tempData.push(createData(item.id, item.name, createDate, item.views));
             });
             bulkEmailData = tempData;
             this.setState({ isBulkEmails: true });
@@ -136,7 +134,6 @@ class MiniBulkEmailTable extends React.Component {
                   <TableRow>
                     <TableCell padding="default">Email Name</TableCell>
                     <TableCell align="left">Created At</TableCell>
-                    <TableCell align="left">Deadline</TableCell>
                     <TableCell align="left">Views</TableCell>
                   </TableRow>
                 </TableHead>
@@ -145,7 +142,6 @@ class MiniBulkEmailTable extends React.Component {
                     <TableRow key={n.id}>
                       <TableCell padding="default">{n.bulkEmail}</TableCell>
                       <TableCell align="left">{n.created_at}</TableCell>
-                      <TableCell align="left">{n.deadline}</TableCell>
                       <TableCell align="left">{n.views}</TableCell>
                     </TableRow>
                   ))}

@@ -6,7 +6,6 @@ import { bindActionCreators } from 'redux';
 import brand from 'dan-api/dummy/brand';
 import { CreateBulkEmail } from 'dan-components';
 import { emailInfoRemove, emailInfoInit } from 'dan-actions/BulkEmailActions';
-import { DateHelper } from '../../../redux/helpers/dateTimeHelper';
 import { universityItems, keywordsData, skillMenu } from 'dan-api/apps/profileOption';
 
 async function postJSON(url, data) {
@@ -44,20 +43,6 @@ function boolNumberToString(num) {
   return num === 0 ? 'no' : 'yes';
 }
 
-function formatDeadline(dateStr) {
-  const d = new Date(dateStr)
-  const year = d.getFullYear()
-  let month = d.getMonth() + 1;
-  let date = d.getDate();
-  if (month < 10) {
-    month = `0` + month;
-  }
-  if (date < 10) {
-    date = `0` + date;
-  }
-  return (year + '-' + month + '-' + date);
-}
-
 function getIds(arr, data) {
   return arr.map(item => {
     return data.indexOf(item);
@@ -76,24 +61,7 @@ function getStudentIds(studentList) {
   })
 }
 
-function alterDeadline(createdAt, initialDeadline, deadline) {
-  if (initialDeadline == deadline) {
-    if (initialDeadline != null) {
-      let timestamp1 = new Date(createdAt);
-      let timestamp2 = new Date()
-      let diff_in_days = parseInt((timestamp2 - timestamp1) / (1000 * 3600 * 24));
-
-      return DateHelper.format(DateHelper.addDays(new Date(initialDeadline), diff_in_days));
-    } else {
-      return null;
-    }
-  } else {
-    return deadline;
-  }
-};
-
 var createdAt = null;
-var initialDeadline = null;
 
 class BulkEmailEdit extends React.Component {
   componentWillMount() {
@@ -110,7 +78,6 @@ class BulkEmailEdit extends React.Component {
           const selectedYear = stringToArray(res.data.info.selected_year);
           const interestedSectors = stringToArray(res.data.info.sectors);
           const minGrade = stringToArray(res.data.info.min_grade);
-          const deadline = res.data.info.deadline == null ? null : formatDeadline(res.data.info.deadline);
           const keywords = getIdsItem(JSON.parse(res.data.info.keywords), keywordsData);
           const university = getIdsItem(JSON.parse(res.data.info.university), universityItems);
           const skills = getIdsItem(JSON.parse(res.data.info.skills), skillMenu);
@@ -124,14 +91,10 @@ class BulkEmailEdit extends React.Component {
           roleData.push(res.data.info.roleData);
           createdAt = res.data.info.created_at;
 
-          const roleDeadline = formatDeadline(roleData[0].role_deadline);
-          initialDeadline = res.data.info.deadline == null ? null : formatDeadline(res.data.info.deadline);
-
           const bulkEmailData = {
             ...this.props,
             languages,
             qualificationType,
-            roleDeadline,
             roleName: roleData[0].role_name,
             roleData: roleData,
             name: res.data.info.name,
@@ -139,7 +102,6 @@ class BulkEmailEdit extends React.Component {
             gender,
             university,
             keywords,
-            deadline,
             selectedYear,
             ethnicity: res.data.info.ethnicity,
             interestedSectors,
@@ -150,7 +112,6 @@ class BulkEmailEdit extends React.Component {
             skills,
             heading: res.data.info.heading,
             body: res.data.info.body,
-            choosedDeadline: res.data.info.deadline_choice,
             blackList
           };
           _that.props.bulkEmailInit(bulkEmailData);
@@ -176,7 +137,6 @@ class BulkEmailEdit extends React.Component {
       removeInfo,
       studentList,
       blackList,
-      deadline,
       languages,
       qualificationType
     } = this.props;
@@ -185,7 +145,6 @@ class BulkEmailEdit extends React.Component {
     const MapInterestedSectors = interestedSectors.toJS();
     const MapSubjects = subjects.toJS();
     const MapGender = gender.toJS();
-    const MapDeadline = alterDeadline(createdAt, initialDeadline, deadline);
     const MapSkills = getIds(skills.toJS(), skillMenu);
     const MapKeywords = getIds(keywords.toJS(), keywordsData);
     const MapUniversity = getIds(university.toJS(), universityItems);
@@ -197,7 +156,6 @@ class BulkEmailEdit extends React.Component {
 
     const data = {
       ...this.props,
-      deadline: MapDeadline,
       languages: MapLanguages,
       qualificationType: MapQualificationType,
       workLocation: MapWorkLocation,
@@ -252,8 +210,6 @@ BulkEmailEdit.propTypes = {
   gender: PropTypes.object.isRequired,
   university: PropTypes.object.isRequired,
   keywords: PropTypes.object.isRequired,
-  deadline: PropTypes.string.isRequired,
-  choosedDeadline: PropTypes.string.isRequired,
   selectedYear: PropTypes.object.isRequired,
   ethnicity: PropTypes.string.isRequired,
   interestedSectors: PropTypes.object.isRequired,
@@ -276,12 +232,9 @@ const mapStateToProps = state => ({
   qualificationType: state.getIn([reducerBulkEmail, 'qualificationType']),
   name: state.getIn([reducerBulkEmail, 'name']),
   role: state.getIn([reducerBulkEmail, 'role']),
-  roleDeadline: state.getIn([reducerBulkEmail, 'roleDeadline']),
   gender: state.getIn([reducerBulkEmail, 'gender']),
   university: state.getIn([reducerBulkEmail, 'university']),
   keywords: state.getIn([reducerBulkEmail, 'keywords']),
-  deadline: state.getIn([reducerBulkEmail, 'deadline']),
-  choosedDeadline: state.getIn([reducerBulkEmail, 'choosedDeadline']),
   selectedYear: state.getIn([reducerBulkEmail, 'selectedYear']),
   ethnicity: state.getIn([reducerBulkEmail, 'ethnicity']),
   interestedSectors: state.getIn([reducerBulkEmail, 'interestedSectors']),

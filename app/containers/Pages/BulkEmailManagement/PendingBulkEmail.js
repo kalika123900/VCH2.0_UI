@@ -22,12 +22,11 @@ import qs from 'qs';
 import { makeSecureDecrypt } from '../../../Helpers/security';
 import formatDate from '../../../Helpers/formatDate';
 
-function createData(id, bulkEmail, created_at, deadline) {
+function createData(id, bulkEmail, created_at) {
   return {
     id,
     bulkEmail,
-    created_at,
-    deadline
+    created_at
   };
 }
 
@@ -77,8 +76,7 @@ class PendingCampaigns extends React.Component {
             let tempData = [];
             res.data.map(item => {
               const createDate = formatDate(item.created_at);
-              const deadline = item.deadline == null ? 'No Deadline' : formatDate(item.deadline);
-              tempData.push(createData(item.id, item.name, createDate, deadline));
+              tempData.push(createData(item.id, item.name, createDate));
             });
             bulkEmailData = tempData;
             this.setState({ isBulkEmails: true });
@@ -132,7 +130,6 @@ class PendingCampaigns extends React.Component {
                   <TableRow>
                     <TableCell padding="default">Email Name</TableCell>
                     <TableCell align="left">Create Date</TableCell>
-                    <TableCell align="left">Deadline</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -140,7 +137,6 @@ class PendingCampaigns extends React.Component {
                     <TableRow key={n.id}>
                       <TableCell padding="default">{n.bulkEmail}</TableCell>
                       <TableCell align="left">{n.created_at}</TableCell>
-                      <TableCell align="left">{n.deadline}</TableCell>
                       {/* <TableCell align="left">
                         <Button
                           color="secondary"

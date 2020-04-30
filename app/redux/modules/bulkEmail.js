@@ -18,7 +18,7 @@ const initialState = {
   blackList: List([]),
   warnMsg: '',
   role: -1,
-  roleDeadline: '',
+  // roleDeadline: '',
   roleName: '',
   roleData: List([]),
   languages: List([]),
@@ -36,8 +36,8 @@ const initialState = {
   minGrade: List([]),
   heading: '',
   body: '',
-  deadline: DateHelper.format(DateHelper.addDays(new Date(), 5)),
-  choosedDeadline: '5',
+  // deadline: DateHelper.format(DateHelper.addDays(new Date(), 5)),
+  // choosedDeadline: '5',
   name: '',
   audience: 10
 };
@@ -51,7 +51,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
         mutableState
           .set('role', action.data.role)
           .set('roleName', action.data.roleName)
-          .set('roleDeadline', action.data.roleDeadline)
+        // .set('roleDeadline', action.data.roleDeadline)
       });
 
     case EMAIL_STEP2_INFO:
@@ -90,12 +90,12 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('body', action.data.body);
       });
 
-    case EMAIL_STEP4_INFO:
-      return state.withMutations((mutableState) => {
-        mutableState
-          .set('deadline', action.data.deadline)
-          .set('choosedDeadline', action.data.choosedDeadline);
-      });
+    // case EMAIL_STEP4_INFO:
+    //   return state.withMutations((mutableState) => {
+    //     mutableState
+    //       .set('deadline', action.data.deadline)
+    //       .set('choosedDeadline', action.data.choosedDeadline);
+    //   });
 
     case EMAIL_STEP5_INFO:
       return state.withMutations((mutableState) => {
@@ -147,7 +147,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('qualificationType', qualificationType)
           .set('languages', languages)
           .set('roleName', action.data.roleName)
-          .set('roleDeadline', action.data.roleDeadline)
+          // .set('roleDeadline', action.data.roleDeadline)
           .set('roleData', roleData)
           .set('role', action.data.role)
           .set('university', university)
@@ -163,8 +163,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('minGrade', minGrade)
           .set('heading', action.data.heading)
           .set('body', action.data.body)
-          .set('deadline', action.data.deadline)
-          .set('choosedDeadline', action.data.choosedDeadline)
+          // .set('deadline', action.data.deadline)
+          // .set('choosedDeadline', action.data.choosedDeadline)
           .set('name', action.data.name)
           .set('blackList', blackList)
           .set('studentList', studentList)
@@ -176,7 +176,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('qualificationType', List([]))
           .set('languages', List([]))
           .set('roleName', '')
-          .set('roleDeadline', '')
+          // .set('roleDeadline', '')
           .set('roleData', List([]))
           .set('role', -1)
           .set('university', List([]))
@@ -192,8 +192,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('minGrade', List([]))
           .set('heading', '')
           .set('body', '')
-          .set('deadline', DateHelper.format(DateHelper.addDays(new Date(), 5)))
-          .set('choosedDeadline', '0')
+          // .set('deadline', DateHelper.format(DateHelper.addDays(new Date(), 5)))
+          // .set('choosedDeadline', '0')
           .set('name', '')
           .set('blackList', List([]))
           .set('studentList', List([]))
