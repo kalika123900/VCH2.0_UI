@@ -1,14 +1,325 @@
-import React, { Component } from 'react'
-import { ClientJobDescription } from 'dan-components'
+import React, { Fragment } from 'react';
+import Grid from '@material-ui/core/Grid';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Avatar from '@material-ui/core/Avatar';
+import LocalPhone from '@material-ui/icons/LocalPhone';
+import LocationOn from '@material-ui/icons/LocationOn';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import PapperBlock from 'dan-components/PapperBlock/PapperBlock';
+import styles from 'dan-components/Profile/profile-jss';
+import qs from 'qs';
+import imgApi from 'dan-api/images/photos';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import avatarApi from 'dan-api/images/avatars';
+import EmailIcon from '@material-ui/icons/Email';
+import { Typography, Divider, Button } from '@material-ui/core';
+import { ProductCard } from 'dan-components';
+import formatDate from 'dan-helpers/formatDate';
 
-export default class JobDescription extends Component {
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+  return await response.json();
+}
+
+class ClientJobProfile extends React.Component {
+  state = {
+    tab: 0,
+    name: '',
+    phone: '',
+    headquarter: '',
+    logo: '',
+    email: '',
+    label: 'All Jobs',
+    jobs: [],
+    jobInfoIndex: 0
+  }
+
+  componentDidMount() {
+    const cId = atob(this.props.match.params.id)
+    const data = {
+      company_id: cId
+    }
+
+    postData(`${API_URL}/student/get-company-info`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          if (res.data.length > 0) {
+            this.setState({ name: res.data[0].name })
+            this.setState({ phone: res.data[0].phone })
+            this.setState({ email: res.data[0].email })
+            this.setState({ headquarter: res.data[0].headquarter })
+            this.setState({ logo: res.data[0].logo })
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    postData(`${API_URL}/student/company-jobs`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({ jobs: res.data });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  handleChangeTab = (event, value) => {
+    this.setState({ tab: value });
+  };
+
+  openJobDesc = (index) => {
+    this.setState({ jobInfoIndex: index, label: 'About this job' });
+  }
+
+  openAllJobs = () => {
+    this.setState({ jobInfoIndex: 0, label: 'All Jobs' });
+  }
 
   render() {
-    const parseData = JSON.parse(atob(this.props.match.params.id))
+    const { tab, name, phone, email, headquarter, logo, jobs, jobInfoIndex } = this.state;
+    const { classes } = this.props;
+
+    const jobsJSX = jobs.map((item, index) => {
+      return <ProductCard
+        index={index}
+        key={index.toString()}
+        role_name={item.role_name}
+        role_description={item.role_description}
+        role_deadline={formatDate(item.role_deadline)}
+        openJobDesc={this.openJobDesc}
+      />
+    })
+
     return (
-      <div>
-        <ClientJobDescription data={parseData} />
-      </div>
-    )
+      <Fragment>
+        <Grid container spacing={3} >
+          <Grid item md={4} xs={12}>
+            <PapperBlock title="Company Info" icon="ios-contact-outline" whiteBg noMargin desc="">
+              <Grid className={classes.companyTitle}>
+                <Avatar alt="avatar" src={(logo == '' || logo == null) ? avatarApi[0] : logo} className={classes.avatarBig}
+                  className={classes.customAvatar}
+                />
+                <Typography variant="h6" color="secondary">{name}</Typography>
+              </Grid>
+              <List dense className={classes.profileList}>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <LocalPhone />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary="Contact" secondary={phone} />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <EmailIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary="Company Email" secondary={email} />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <LocationOn />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary="Headquarter" secondary={headquarter} />
+                </ListItem>
+              </List>
+            </PapperBlock>
+          </Grid>
+          <Grid item md={8} sm={12} xs={12}>
+            <Tabs
+              value={tab}
+              onChange={this.handleChangeTab}
+              indicatorColor="secondary"
+              textColor="secondary"
+              centered
+              className={classes.tab}
+            >
+              <Tab label={this.state.label} />
+              <Tab label="Cover letter" />
+              <Tab label="CV tips" />
+              <Tab label="Others like this" />
+            </Tabs>
+            {tab === 0 && (
+              this.state.label == 'All Jobs' ?
+                <PapperBlock title="All Jobs" icon="ios-aperture-outline" whiteBg desc="">
+                  <Grid
+                    container
+                    alignItems="flex-start"
+                    justify="center"
+                    direction="row"
+                    spacing={2}
+                  >
+                    {jobsJSX}
+                  </Grid>
+                </PapperBlock>
+
+                :
+                this.state.label == 'About this job' &&
+                <PapperBlock title="Job Info" icon="ios-aperture-outline" whiteBg desc="">
+                  <Grid style={{ textAlign: 'right', marginTop: -15 }}>
+                    <Button variant="contained" onClick={this.openAllJobs}>See all jobs</Button>
+                  </Grid>
+                  <Grid className={classes.jobTitle}>
+                    <Typography variant="h4" color="secondary">
+                      {jobs.length > 0 && jobs[jobInfoIndex].role_name}
+                    </Typography>
+                  </Grid>
+                  <Divider />
+                  <Typography variant="h6" color="primary" className={classes.subHeading}>About {name}:</Typography>
+                  <Grid className={classes.content}>
+                    <Grid className={classes.makeFlex}>
+                      <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin} >Job Type:</Typography>
+                      <Typography variant="subtitle2">Full Time</Typography>
+                    </Grid>
+                    <Grid className={classes.makeFlex}>
+                      <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin}>Experience level:</Typography>
+                      <Typography variant="subtitle2">Mid-Level, Senior</Typography>
+                    </Grid>
+                    <Grid className={classes.makeFlex}>
+                      <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin}>Role:</Typography>
+                      <Typography variant="subtitle2">{jobs.length > 0 && jobs[jobInfoIndex].role_name}</Typography>
+                    </Grid>
+                  </Grid>
+                  <Typography variant="h6" color="primary" className={classes.subHeading}>Required Skills:</Typography>
+                  <Grid className={classes.content}>
+                    {jobs.length > 0 && (jobs[jobInfoIndex].skills.split(',')).map((item, index) => {
+                      return <Typography variant="subtitle2" key={index.toString()}>{item}</Typography>
+                    })
+                    }
+                  </Grid>
+                  <Grid className={classes.subHeading}>
+                    <Typography variant="h6" color="primary" className={classes.customMargin}>Location: </Typography>
+                    <Grid className={classes.content}>
+                      <Typography variant="subtitle2">London</Typography>
+                    </Grid>
+                  </Grid>
+                  <Typography variant="h6" color="primary" className={classes.subHeading}>Job description:</Typography>
+                  <Grid className={classes.content}>
+                    <Typography variant="subtitle2" color="textSecondary" >{jobs.length > 0 && jobs[jobInfoIndex].role_description}</Typography>
+                  </Grid>
+                  <Grid className={classes.subHeading}>
+                    <Typography variant="h6" color="primary" className={classes.customMargin}>Last Date: </Typography>
+                    <Grid className={classes.content}>
+                      <Typography variant="subtitle2">{jobs.length > 0 && formatDate(jobs[jobInfoIndex].role_deadline)}</Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid>
+                    <Typography variant="h6" color="primary" className={classes.subHeading}>Apply here:</Typography>
+                    <Grid className={classes.content}>
+                      <Typography variant="body1" color="secondary">
+                        <a href='https://www.google.com'>{jobs.length > 0 && jobs[jobInfoIndex].role_link}</a>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </PapperBlock>
+            )}
+            {tab === 1 && (
+              <Fragment>
+                <Typography variant="body1" style={{ padding: 20 }}>
+                  The standard Lorem Ipsum passage, used since the 1500s
+                </Typography>
+                <Typography variant="caption" style={{ padding: 20 }}>
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                </Typography>
+                <Typography variant="body1" style={{ padding: 20 }}>
+                  The standard Lorem Ipsum passage, used since the 1500s
+                </Typography>
+                <Typography variant="caption" style={{ padding: 20 }}>
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                </Typography>
+                <Typography variant="body1" style={{ padding: 20 }}>
+                  The standard Lorem Ipsum passage, used since the 1500s
+                </Typography>
+                <Typography variant="caption" style={{ padding: 20 }}>
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                </Typography>
+              </Fragment>
+            )}
+            {tab === 2 && (
+              <Fragment >
+                <Typography variant="body1" style={{ padding: 20 }}>
+                  The standard Lorem Ipsum passage, used since the 1500s
+                </Typography>
+                <Typography variant="caption" style={{ padding: 20 }}>
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                </Typography>
+                <Typography variant="body1" style={{ padding: 20 }}>
+                  The standard Lorem Ipsum passage, used since the 1500s
+                </Typography>
+                <Typography variant="caption" style={{ padding: 20 }}>
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                </Typography>
+                <Typography variant="body1" style={{ padding: 20 }}>
+                  The standard Lorem Ipsum passage, used since the 1500s
+                </Typography>
+                <Typography variant="caption" style={{ padding: 20 }}>
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                </Typography>
+              </Fragment>
+            )}
+            {tab === 3 && (
+              <Fragment >
+
+              </Fragment>
+            )}
+          </Grid>
+        </Grid>
+      </Fragment>
+    );
   }
 }
+
+ClientJobProfile.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(ClientJobProfile);

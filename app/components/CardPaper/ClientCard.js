@@ -2,18 +2,15 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Type from 'dan-styles/Typography.scss';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
-import VerifiedUser from '@material-ui/icons/VerifiedUser';
 import Divider from '@material-ui/core/Divider';
 import styles from './cardStyle-jss';
 import { CombineStyles } from 'dan-helpers';
 import { withRouter } from 'react-router-dom';
-import WorkOutlineOutlinedIcon from '@material-ui/icons/WorkOutlineOutlined';
 
 const customStyles = {
   customBottomNavLabel: {
@@ -27,8 +24,8 @@ const customStyles = {
 const combinedStyles = CombineStyles(customStyles, styles);
 
 class ClientCard extends React.Component {
-  handleRedirect = (obj) => {
-    this.props.history.push(`/student/opportunities/${btoa(obj)}`);
+  handleRedirect = (id) => {
+    this.props.history.push(`/student/opportunities/${btoa(id)}`);
   }
 
   render() {
@@ -38,13 +35,9 @@ class ClientCard extends React.Component {
       cover,
       avatar,
       name,
-      role,
-      roleDesc,
-      isVerified,
       btnText,
       data
     } = this.props;
-    const dataObj = JSON.stringify({ role_id: data.id, company_id: data.company_id });
 
     return (
       <Fragment>
@@ -54,24 +47,23 @@ class ClientCard extends React.Component {
             image={cover}
             title="cover"
           />
-          <CardContent className={classes.contentProfile}>
+          <CardContent className={classes.contentProfile} >
             <Avatar alt="avatar" src={avatar} className={classes.avatarBig} />
             <Typography variant="h6" className={classes.name} gutterBottom>
               {name}
-              {isVerified && <VerifiedUser className={classes.verified} />}
             </Typography>
             <Typography color="secondary" className={classes.subheading} gutterBottom>
-              <WorkOutlineOutlinedIcon style={{ marginRight: "10px", paddingBottom: "2px" }} />
-              <span >{role}</span>
+
+
             </Typography>
             <Typography color="textSecondary" variant="body2" className={classes.subheading} gutterBottom>
-              <span className={Type.regular}>{roleDesc}</span>
+
             </Typography>
             <Button className={classes.buttonProfile}
               size="small" variant="outlined"
               color="primary"
-              style={{ margin: "10px" }}
-              onClick={() => this.handleRedirect(dataObj)}
+              style={{ margin: "10px 10px 25px 10px" }}
+              onClick={() => this.handleRedirect(id)}
             >
               {btnText}
             </Button>
