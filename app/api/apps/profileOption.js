@@ -23,3 +23,29 @@ export const skillMenu = ['', 'Cloud Computing', 'Artificial Intelligence', 'Ana
 export const languageOption = ["", "English", "French", "Spanish", "Arabic", "Mandarin", "Russian", "Portuguese", "German", "Japanese", "Hindi", "Malay", "Persian", "Swahili", "Tamil", "Italian", "Dutch", "Bengali", "Turkish", "Vietnamese", "Polish", "Javanese", "Punjabi", "Thai", "Korean"]
 export const qualificationOption = ["", "Bachelor's", "Integrated Master's", "Postgraduate Master's", "MBA", "Doctoral"]
 export const competencyOption = ["", 'Native', 'Basic', 'Intermediate', 'Fluent', 'Professional Standard'];
+export const society = ["Oxfest Disraeli Society for Constitutional Affairs(Oxford) Planet Pledge",
+  "Oxford University Hockey Club",
+  "LSESU Pakistan Society",
+  "LSESU Political Risk and Investment Society",
+  "LSESU Trading Society",
+  "UCL History Society",
+  "Aggression Sessions(Durham)",
+  "Durham University Accounting and Finance Society",
+  "Imperial Indian National Student Association",
+  "Durham University Ski and Snowboard Society",
+  "Hatfield College Rugby Club",
+  "Durham Swiss Society",
+  "Durham University Economics Society",
+  "Durham University: Collingwood Charity Fashion Show",
+  "Oxford Universities Quidditch Society",
+  "University Cross Country Club",
+  "Oxford University Netball Club",
+  "Oxford University LGBTQ + Society",
+  "Oxford Women * In Law Student Society",
+  "Oxford University Hong Kong Society",
+  "Oxford University Taiwanese Students Society",
+  "Oxford University Bulgarian Society",
+  "Oxford University Geological Society"];
+
+export const experienceType = ["Fresher", "Begineer", "Intermediate", "Expert"];
+export const jobType = ["Internship", "Permanent", "Grad Scheme"];

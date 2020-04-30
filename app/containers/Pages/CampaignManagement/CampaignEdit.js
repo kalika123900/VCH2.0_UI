@@ -104,6 +104,7 @@ class CampaignEdit extends React.Component {
           const selectedYear = stringToArray(res.data.info.selected_year);
           const interestedSectors = stringToArray(res.data.info.interested_sectors);
           const minGrade = stringToArray(res.data.info.min_grade);
+          const societies = stringToArray(res.data.info.societies);
           const deadline = res.data.info.deadline == null ? null : formatDeadline(res.data.info.deadline);
           const keywords = getIdsItem(res.data.keywords, keywordsData);
           const university = getIdsItem(res.data.university, universityItems);
@@ -127,6 +128,7 @@ class CampaignEdit extends React.Component {
             role: res.data.info.role,
             gender,
             university,
+            societies,
             keywords,
             deadline,
             selectedYear,
@@ -274,6 +276,7 @@ const mapStateToProps = state => ({
   skills: state.getIn([reducerCampaign, 'skills']),
   heading: state.getIn([reducerCampaign, 'heading']),
   body: state.getIn([reducerCampaign, 'body']),
+  societies: state.getIn([reducerCampaign, 'societies']),
 });
 
 const mapDispatchToProps = dispatch => ({

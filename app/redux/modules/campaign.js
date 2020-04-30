@@ -37,7 +37,8 @@ const initialState = {
   deadline: DateHelper.format(DateHelper.addDays(new Date(), 5)),
   choosedDeadline: '5',
   name: '',
-  audience: 10
+  audience: 10,
+  societies: List([])
 };
 
 const initialImmutableState = fromJS(initialState);
@@ -65,6 +66,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const workLocation = fromJS(action.data.workLocation);
         const minGrade = fromJS(action.data.minGrade);
         const selectedYear = fromJS(action.data.selectedYear);
+        const societies = fromJS(action.data.societies)
         mutableState
           .set('qualificationType', qualificationType)
           .set('languages', languages)
@@ -78,7 +80,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('interestedSectors', interestedSectors)
           .set('workLocation', workLocation)
           .set('experience', action.data.experience)
-          .set('minGrade', minGrade);
+          .set('minGrade', minGrade)
+          .set('societies', societies)
       });
 
     case STORE_STEP4_INFO:
@@ -128,6 +131,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
         const roleData = fromJS(action.data.roleData);
         const minGrade = fromJS(action.data.minGrade);
         const selectedYear = fromJS(action.data.selectedYear);
+        const societies = fromJS(action.data.societies);
 
         mutableState
           .set('audience', action.data.audience)
@@ -153,7 +157,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('body', action.data.body)
           .set('deadline', action.data.deadline)
           .set('choosedDeadline', action.data.choosedDeadline)
-          .set('name', action.data.name);
+          .set('name', action.data.name)
+          .set('societies', societies)
       });
 
     case REMOVE_CAMPAIGN_INFO:
@@ -183,6 +188,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('choosedDeadline', '0')
           .set('name', '')
           .set('audience', 10)
+          .set('societies', List([]))
       });
 
     default:

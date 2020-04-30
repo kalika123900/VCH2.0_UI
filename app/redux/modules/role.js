@@ -12,7 +12,9 @@ const initialState = {
   roleDescriptors: List([]),
   roleDeadline: DateHelper.format(DateHelper.addDays(new Date(), 28)),
   roleLink: '',
-  roleDesc: ''
+  roleDesc: '',
+  experienceLevel: '',
+  roleType: ''
 };
 
 const initialImmutableState = fromJS(initialState);
@@ -32,6 +34,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('roleDescriptors', roleDescriptors)
           .set('roleLink', action.data.roleLink)
           .set('roleDesc', action.data.roleDesc)
+          .set('experienceLevel', action.data.experienceLevel)
+          .set('roleType', action.data.roleType)
       });
     case REMOVE_ROLE_INFO:
       return state.withMutations((mutableState) => {
@@ -43,6 +47,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('roleDescriptors', List([]))
           .set('roleLink', '')
           .set('roleDesc', '')
+          .set('experienceLevel', '')
+          .set('roleType', '')
       });
     default:
       return state;

@@ -48,7 +48,9 @@ class AddRole extends React.Component {
       roleDescriptors,
       removeInfo,
       handleClose,
-      onSuccess
+      onSuccess,
+      experienceLevel,
+      roleType
     } = this.props;
 
     const MapSkills = skills.toJS();
@@ -56,6 +58,8 @@ class AddRole extends React.Component {
     const MapRoleDescriptors = roleDescriptors.toJS();
 
     const data = {
+      experienceLevel,
+      roleType,
       roleDesc,
       roleName,
       roleLink,
@@ -129,6 +133,8 @@ const mapStateToProps = state => ({
   roleDescriptors: state.getIn([reducerRole, 'roleDescriptors']),
   roleLink: state.getIn([reducerRole, 'roleLink']),
   roleDesc: state.getIn([reducerRole, 'roleDesc']),
+  roleType: state.getIn([reducerRole, 'roleType']),
+  experienceLevel: state.getIn([reducerRole, 'experienceLevel']),
 });
 
 const mapDispatchToProps = dispatch => ({

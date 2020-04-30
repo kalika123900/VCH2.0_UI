@@ -18,7 +18,7 @@ import TextField from '@material-ui/core/TextField';
 import { connect } from 'react-redux';
 import styles from './user-jss';
 import { storeRoleInfo } from 'dan-actions/RoleActions';
-import { skillMenu, courses } from 'dan-api/apps/profileOption';
+import { skillMenu, courses, experienceType, jobType } from 'dan-api/apps/profileOption';
 import {
   descriptorMenu
 } from '../Forms/CampaignSteps/constantData';
@@ -61,6 +61,12 @@ class NewRoleForm extends React.Component {
     if (event.target.name === 'roleDesc') {
       addInfo({ ...this.props, roleDesc: event.target.value });
     }
+    if (event.target.name === 'roleType') {
+      addInfo({ ...this.props, roleType: event.target.value });
+    }
+    if (event.target.name === 'experienceLevel') {
+      addInfo({ ...this.props, experienceLevel: event.target.value });
+    }
   };
 
   handleDateChange = currentDate => {
@@ -91,7 +97,9 @@ class NewRoleForm extends React.Component {
       roleDeadline,
       roleName,
       roleLink,
-      roleDesc
+      roleDesc,
+      experienceLevel,
+      roleType
     } = this.props;
 
     const MapSkills = skills.toJS();
@@ -164,6 +172,50 @@ class NewRoleForm extends React.Component {
                 label="Courses"
                 type="courses"
               />
+            </FormControl>
+          </div>
+          <div>
+            <FormControl className={classes.formControl}>
+              <InputLabel
+                htmlFor="select-role-type"
+              >
+                What is your Role Type?
+              </InputLabel>
+              <Select
+                placeholder="Role Type"
+                value={roleType}
+                name="roleType"
+                onChange={e => this.handleReduxChange(e)}
+                MenuProps={MenuProps}
+              >
+                {jobType.map((item, index) => (
+                  <MenuItem key={index} value={item}>
+                    <ListItemText primary={item} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+          <div>
+            <FormControl className={classes.formControl}>
+              <InputLabel
+                htmlFor="select-experience-level"
+              >
+                Which type of experience required?
+              </InputLabel>
+              <Select
+                placeholder="Experience Level"
+                value={experienceLevel}
+                name="experienceLevel"
+                onChange={e => this.handleReduxChange(e)}
+                MenuProps={MenuProps}
+              >
+                {experienceType.map((item, index) => (
+                  <MenuItem key={index} value={item}>
+                    <ListItemText primary={item} />
+                  </MenuItem>
+                ))}
+              </Select>
             </FormControl>
           </div>
           <div>
@@ -265,6 +317,8 @@ const mapStateToProps = state => ({
   roleDescriptors: state.getIn([reducerRole, 'roleDescriptors']),
   roleLink: state.getIn([reducerRole, 'roleLink']),
   roleDesc: state.getIn([reducerRole, 'roleDesc']),
+  roleType: state.getIn([reducerRole, 'roleType']),
+  experienceLevel: state.getIn([reducerRole, 'experienceLevel']),
 });
 
 const mapDispatchToProps = dispatch => ({

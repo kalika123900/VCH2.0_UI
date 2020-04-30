@@ -106,6 +106,7 @@ class Campaigns extends React.Component {
             const selectedYear = stringToArray(res.data.info.selected_year);
             const interestedSectors = stringToArray(res.data.info.interested_sectors);
             const minGrade = stringToArray(res.data.info.min_grade);
+            const societies = stringToArray(res.data.info.societies);
             const deadline = formatDeadline(res.data.info.deadline);
             const keywords = getIdsItem(res.data.keywords, keywordsData);
             const university = getIdsItem(res.data.university, universityItems);
@@ -139,6 +140,7 @@ class Campaigns extends React.Component {
               minGrade,
               subjects,
               skills,
+              societies,
               heading: res.data.info.heading,
               body: res.data.info.body,
               choosedDeadline: res.data.info.deadline_choice,
@@ -167,7 +169,6 @@ class Campaigns extends React.Component {
       history,
       addMsg,
       removeInfo,
-      roleDeadline,
       deadline,
       choosedDeadline,
       languages,
@@ -325,6 +326,7 @@ const mapStateToProps = state => ({
   skills: state.getIn([reducerCampaign, 'skills']),
   heading: state.getIn([reducerCampaign, 'heading']),
   body: state.getIn([reducerCampaign, 'body']),
+  societies: state.getIn([reducerCampaign, 'societies']),
 });
 
 const mapDispatchToProps = dispatch => ({

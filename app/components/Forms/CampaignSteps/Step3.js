@@ -29,7 +29,8 @@ import {
   genderItems,
   universityItems,
   qualificationOption,
-  languageOption
+  languageOption,
+  society
 } from 'dan-api/apps/profileOption';
 import styles from './step-jss';
 
@@ -78,7 +79,8 @@ class Step3 extends React.Component {
       experience,
       minGrade,
       qualificationType,
-      languages
+      languages,
+      societies
     } = this.props;
 
     const genderCheckboxes = genderItems.map((item, index) => (
@@ -218,6 +220,48 @@ class Step3 extends React.Component {
                         name="languageOption-checkbox"
                         component={Checkbox}
                         checked={languages.indexOf(item) > -1}
+                      />
+                      <ListItemText primary={item} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} className={classes.divider}>
+          <Grid item md={12} xs={12}>
+            <Grid style={{ textAlign: 'left' }}>
+              <FormControl component="fieldset" required className={(classes.customWidth, classes.formControl)}>
+                <Typography variant="h6">
+                  Select which Societies are candidates required to relate
+                </Typography>
+                <Select
+                  multiple
+                  value={societies.toJS()}
+                  name="societies"
+                  input={<Input />}
+                  renderValue={selected => {
+                    const societiesName = [];
+                    society.map((value, index) => {
+                      if (selected.includes(value)) {
+                        societiesName.push(value);
+                      }
+                    });
+                    return societiesName.join(', ');
+                  }
+                  }
+                  MenuProps={MenuProps}
+                  component={Select}
+                  onChange={e => this.handleReduxChange(e)}
+                  style={{ whiteSpace: 'normal' }}
+                >
+                  {society.map((item, index) => (
+                    <MenuItem key={index.toString()} value={item}>
+                      <TextField
+                        name="society-checkbox"
+                        component={Checkbox}
+                        checked={societies.indexOf(item) > -1}
                       />
                       <ListItemText primary={item} />
                     </MenuItem>
@@ -521,6 +565,7 @@ const mapStateToProps = state => ({
   workLocation: state.getIn([reducerCampaign, 'workLocation']),
   experience: state.getIn([reducerCampaign, 'experience']),
   minGrade: state.getIn([reducerCampaign, 'minGrade']),
+  societies: state.getIn([reducerCampaign, 'societies']),
 });
 
 const mapDispatchToProps = dispatch => ({
