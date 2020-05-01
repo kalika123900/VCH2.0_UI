@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import FormControl from '@material-ui/core/FormControl';
 import styles from '../user-jss';
+import Input from '@material-ui/core/Input';
 import Grid from '@material-ui/core/Grid';
+import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -16,7 +18,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { storeProfileDetails, warnMsgInit, warnMsgRemove } from 'dan-actions/studentProfileActions';
-import { genderItems, ethnicityItems, nationalityItems, languageOption } from 'dan-api/apps/profileOption';
+import { genderItems, ethnicityItems, nationalityItems, society } from 'dan-api/apps/profileOption';
 import qs from 'qs';
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import messageStyles from 'dan-styles/Messages.scss';
@@ -73,6 +75,18 @@ async function postFormData(url, data) {
   return await response.json();
 }
 
+async function postJSON(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  });
+
+  return await response.json();
+}
+
 async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
@@ -82,6 +96,26 @@ async function postData(url, data) {
     body: qs.stringify(data)
   });
   return await response.json();
+}
+
+function stringToArray(string) {
+  if (string && string.length > 0) {
+    const splitArray = string.split(',');
+
+    const data = [];
+    splitArray.map(item => {
+      if (isNaN(item)) {
+        data.push(item);
+      } else if (item > 1000) {
+        data.push(item);
+      } else if (typeof item === 'string' && item.length > 0) {
+        data.push(item);
+      }
+    });
+
+    return data;
+  }
+  return [];
 }
 
 class EditPersonalDetails extends React.Component {
@@ -170,6 +204,8 @@ class EditPersonalDetails extends React.Component {
       makeSecureDecrypt(localStorage.getItem('user'))
     );
 
+    const MappedSociety = this.props.studentSociety.toJS();
+
     const data = {
       firstname: this.props.firstName,
       lastname: this.props.lastName,
@@ -177,11 +213,12 @@ class EditPersonalDetails extends React.Component {
       dob: this.props.dob,
       gender: this.props.gender,
       ethnicity: this.props.ethnicity,
+      society: MappedSociety,
       nationality: this.props.nationality,
       user_id: user.id
     };
 
-    postData(`${API_URL}/student/create-personal-details`, data) // eslint-disable-line
+    postJSON(`${API_URL}/student/create-personal-details`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
           this.props.successMsg()
@@ -214,6 +251,7 @@ class EditPersonalDetails extends React.Component {
             lastName: res.data.lastname,
             email: res.data.email,
             phoneNumber: res.data.phone,
+            studentSociety: stringToArray(res.data.society),
             gender: res.data.gender,
             ethnicity: res.data.ethnicity,
             nationality: res.data.nationality,
@@ -266,10 +304,11 @@ class EditPersonalDetails extends React.Component {
       nationality,
       ethnicity,
       gender,
-      resume
+      resume,
+      studentSociety
     } = this.props;
     const { profile, cv } = this.state;
-
+    const MappedSociety = studentSociety.toJS();
     return (
       <Fragment>
         <section className={classes.pageFormWrap}>
@@ -430,6 +469,46 @@ class EditPersonalDetails extends React.Component {
             <div>
               <FormControl className={classes.formControl}>
                 <InputLabel
+                  htmlFor="select-society"
+                >
+                  Society
+                </InputLabel>
+                <Select
+                  multiple
+                  value={MappedSociety}
+                  input={<Input />}
+                  placeholder="select-society"
+                  name="studentSociety"
+                  MenuProps={MenuProps}
+                  component={Select}
+                  renderValue={selected => {
+                    const societyName = [];
+                    society.map((value, index) => {
+                      if (selected.includes(value)) {
+                        societyName.push(value);
+                      }
+                    });
+                    return societyName.join(', ');
+                  }
+                  }
+                  onChange={e => this.handleChange(e)}
+                >
+                  {society.map((item, index) => (
+                    <MenuItem key={index.toString()} value={item}>
+                      <TextField
+                        name="select-society"
+                        component={Checkbox}
+                        checked={MappedSociety.indexOf(item) > -1}
+                      />
+                      <ListItemText primary={item} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <InputLabel
                   htmlFor="select-nationality"
                 >
                   Nationality
@@ -536,7 +615,6 @@ EditPersonalDetails.propTypes = {
   lastName: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
   phoneNumber: PropTypes.string.isRequired,
-  dob: PropTypes.string.isRequired,
   gender: PropTypes.string.isRequired,
   ethnicity: PropTypes.string.isRequired,
   nationality: PropTypes.string.isRequired,
@@ -555,6 +633,7 @@ const mapStateToProps = state => ({
   gender: state.getIn([reducerStudent, 'gender']),
   ethnicity: state.getIn([reducerStudent, 'ethnicity']),
   nationality: state.getIn([reducerStudent, 'nationality']),
+  studentSociety: state.getIn([reducerStudent, 'studentSociety']),
   resume: state.getIn([reducerStudent, 'resume']),
   avatar: state.getIn([reducerStudent, 'avatar']),
 });

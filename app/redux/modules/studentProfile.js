@@ -8,7 +8,6 @@ import {
   WARN_MSG_REMOVE,
   STORE_LANGUAGE
 } from 'dan-actions/actionConstants';
-import { DateHelper } from '../helpers/dateTimeHelper';
 
 const initialState = {
   avatar: '',
@@ -27,6 +26,7 @@ const initialState = {
   skills: List([]),
   oldSkills: List([]),
   resume: List([]),
+  studentSociety: List([]),
   educationInfo: List([{
     id: null,
     type: '',
@@ -62,8 +62,8 @@ export default function reducer(state = initialImmutableState, action = {}) {
   switch (action.type) {
     case STORE_PROFILE_DETAILS:
       return state.withMutations((mutableState) => {
-        const profile = fromJS(action.data.profile);
-        const resumeFile = fromJS(action.data.resumeFile);
+        const studentSociety = fromJS(action.data.studentSociety);
+
         mutableState
           .set('firstName', action.data.firstName)
           .set('lastName', action.data.lastName)
@@ -75,6 +75,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('nationality', action.data.nationality)
           .set('resume', action.data.resume)
           .set('avatar', action.data.avatar)
+          .set('studentSociety', studentSociety)
       });
 
     case STORE_LANGUAGE:
