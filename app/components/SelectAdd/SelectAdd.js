@@ -75,21 +75,18 @@ class SelectAdd extends Component {
       this.setState({ dataValue: newValue });
       if (this.props.type === 'location') {
         addInfo({ ...this.props, workLocation: newValue });
-        // addBulkEmailInfo({ ...this.props, workLocation: newValue });
       }
       if (this.props.type === 'roleDescriptors') {
-        addRoleInfo({ ...this.props, roleDescriptors: newValue });
+        addRoleInfo({ ...this.props, skills: this.props.roleSkills, roleDescriptors: newValue });
       }
       if (this.props.type === 'sectors') {
         addInfo({ ...this.props, interestedSectors: newValue });
-        // addBulkEmailInfo({ ...this.props, interestedSectors: newValue });
       }
       if (this.props.type === 'courses') {
-        addRoleInfo({ ...this.props, courses: newValue });
+        addRoleInfo({ ...this.props, skills: this.props.roleSkills, courses: newValue });
       }
       if (this.props.type === 'keywords') {
         addInfo({ ...this.props, keywords: newValue });
-        // addBulkEmailInfo({ ...this.props, keywords: newValue });
       }
       // }
     }
@@ -97,21 +94,18 @@ class SelectAdd extends Component {
       this.setState({ dataValue: '' });
       if (this.props.type === 'location') {
         addInfo({ ...this.props, workLocation: newValue });
-        // addBulkEmailInfo({ ...this.props, workLocation: newValue });
       }
       if (this.props.type === 'roleDescriptors') {
-        addRoleInfo({ ...this.props, roleDescriptors: newValue });
+        addRoleInfo({ ...this.props, skills: this.props.roleSkills, roleDescriptors: newValue });
       }
       if (this.props.type === 'sectors') {
         addInfo({ ...this.props, interestedSectors: newValue });
-        // addBulkEmailInfo({ ...this.props, interestedSectors: newValue });
       }
       if (this.props.type === 'courses') {
-        addRoleInfo({ ...this.props, courses: newValue });
+        addRoleInfo({ ...this.props, skills: this.props.roleSkills, courses: newValue });
       }
       if (this.props.type === 'keywords') {
         addInfo({ ...this.props, keywords: newValue });
-        // addBulkEmailInfo({ ...this.props, keywords: newValue });
       }
     }
   }
@@ -243,7 +237,6 @@ SelectAdd.propTypes = {
 };
 
 const reducerCampaign = 'campaign';
-const reducerBulkEmail = 'bulkEmail';
 const reducerRole = 'role';
 
 const mapStateToProps = state => ({
@@ -260,7 +253,7 @@ const mapStateToProps = state => ({
   minGrade: state.getIn([reducerCampaign, 'minGrade']),
   roleName: state.getIn([reducerRole, 'roleName']),
   courses: state.getIn([reducerRole, 'courses']),
-  skills: state.getIn([reducerRole, 'skills']),
+  roleSkills: state.getIn([reducerRole, 'skills']),
   roleDeadline: state.getIn([reducerRole, 'roleDeadline']),
   roleDescriptors: state.getIn([reducerRole, 'roleDescriptors']),
   roleLink: state.getIn([reducerRole, 'roleLink']),

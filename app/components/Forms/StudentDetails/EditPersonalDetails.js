@@ -251,7 +251,7 @@ class EditPersonalDetails extends React.Component {
   }
 
   showResume = () => {
-    this.props.history.push('/student/cv-preview')
+    window.open(this.props.resume);
   }
 
   render() {
@@ -345,8 +345,6 @@ class EditPersonalDetails extends React.Component {
                   autoComplete="email"
                   margin="normal"
                   variant="outlined"
-                  // validate={[required, emailValidator]}
-                  // onChange={e => this.handleChange(e)}
                   readOnly
                 />
               </FormControl>

@@ -33,10 +33,6 @@ class Student extends React.Component {
             <Route exact path='/student/opportunities' component={JobProfiles} />
             <Route exact path='/student/opportunities/:id' component={JobDescription} />
             <Route exact path="/student/signout" component={Signout} />
-            <Route exact path='/student/cv-preview' component={() => {
-              window.location.href = this.props.resume;
-              return null;
-            }} />
             <Route component={NotFound} />
           </Switch>
         </Dashboard>
@@ -53,11 +49,9 @@ Student.propTypes = {
 };
 
 const reducerAuth = 'studentAuth';
-const reducerStudent = 'studentProfile';
 
 const mapStateToProps = state => ({
-  isLoggedIn: state.getIn([reducerAuth, 'isLoggedIn']),
-  resume: state.getIn([reducerStudent, 'resume']),
+  isLoggedIn: state.getIn([reducerAuth, 'isLoggedIn'])
 });
 
 const StudentMapped = connect(
