@@ -18,7 +18,8 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100%'
+    height: '100%',
+    background: theme.palette.type === 'dark' ? theme.palette.primary.dark : theme.palette.primary.main
   },
   title: {
     color: '#FFF'

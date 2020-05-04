@@ -25,6 +25,11 @@ export const storeStep6Info = (data) => ({
   data
 });
 
+export const storeFollowUps = (data) => ({
+  type: types.STORE_FOLLOW_UPS,
+  data
+});
+
 export const campaignInfoInit = (data) => ({
   type: types.CAMPAIGN_INFO_INIT,
   data

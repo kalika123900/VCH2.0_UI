@@ -5,6 +5,7 @@ import {
   STORE_STEP4_INFO,
   STORE_STEP5_INFO,
   STORE_STEP6_INFO,
+  STORE_FOLLOW_UPS,
   CAMPAIGN_INFO_INIT,
   CAMPAIGN_INIT_MSG,
   CAMPAIGN_REMOVE_MSG,
@@ -13,6 +14,7 @@ import {
 import { DateHelper } from '../helpers/dateTimeHelper';
 
 const initialState = {
+  followUps: List([]),
   warnMsg: '',
   campaignStatus: -3,
   role: -1,
@@ -111,6 +113,12 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('warnMsg', action.data.warnMsg);
       });
 
+    case STORE_FOLLOW_UPS:
+      return state.withMutations((mutableState) => {
+        mutableState
+          .set('followUps', action.data.followUps);
+      });
+
     case CAMPAIGN_REMOVE_MSG:
       return state.withMutations((mutableState) => {
         mutableState
@@ -166,6 +174,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
         mutableState
           .set('roleName', '')
           .set('roleDeadline', '')
+          .set('followUps', List([]))
           .set('roleData', List([]))
           .set('campaignStatus', -3)
           .set('role', -1)

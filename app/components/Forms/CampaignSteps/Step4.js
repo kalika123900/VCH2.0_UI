@@ -240,6 +240,7 @@ class Step4 extends PureComponent {
                 toolbarClassName={classes.toolbarEditor}
                 onEditorStateChange={this.onEditorStateChange}
                 toolbarCustomButtons={[<CustomOption />]}
+                style={{ maxHeight: 220 }}
               />
             </Grid>
           </Grid>

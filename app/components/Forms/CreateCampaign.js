@@ -19,6 +19,7 @@ import { removeCampaignInfo } from 'dan-actions/CampaignActions';
 import { withRouter } from 'react-router';
 import styles from './user-jss';
 import { makeSecureDecrypt } from 'dan-helpers/security';
+import CreateFollowUps from './CampaignSteps/CreateFollowUps';
 import Step2 from './CampaignSteps/Step2';
 import Step3 from './CampaignSteps/Step3';
 import Step4 from './CampaignSteps/Step4';
@@ -33,6 +34,27 @@ function getSteps() {
     'Set Your Deadline',
     'Review Settings'
   ];
+}
+
+function adminGetSteps() {
+  return [
+    'Select Role',
+    'Choose Audience',
+    'Choose campaign content',
+    'Set Your Deadline',
+    'Create follow up emails',
+    'Review Settings'
+  ];
+}
+
+function daysDifference(timestamp) {
+  timestamp = Math.round((new Date(timestamp).getTime() / 1000));
+  const date = new Date();
+  const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  const currentDate = Math.round((new Date(dateString).getTime() / 1000));
+  const timeDiff = timestamp - currentDate;
+
+  return Math.floor(timeDiff / (60 * 60 * 24));
 }
 
 async function postJSON(url, data) {
@@ -107,11 +129,12 @@ class CreateCampaign extends React.Component {
       body,
       name,
       warnMsg,
+      deadline,
       campaignStatus
     } = this.props;
 
     const { activeStep } = this.state;
-    const steps = getSteps();
+    const steps = userType == 'ADMIN' ? adminGetSteps() : getSteps();
 
     let isDisable = true;
     let isCampaignName = true;
@@ -245,8 +268,12 @@ class CreateCampaign extends React.Component {
                 <Button
                   variant="contained"
                   fullWidth
+                  disabled={(daysDifference(deadline) < 7) ? true : false}
                   color="primary"
-                  onClick={() => this.handleNext()}
+                  onClick={() => {
+                    userType == 'ADMIN' ? this.setState((prevState) => ({ activeStep: prevState.activeStep + 1 }))
+                      : this.setState((prevState) => ({ activeStep: prevState.activeStep + 2 }))
+                  }}
                 >
                   Next
                   <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} />
@@ -254,7 +281,37 @@ class CreateCampaign extends React.Component {
               </Grid>
             </section>
           )}
-          {activeStep === 4 && (
+          {(activeStep === 4 && userType == 'ADMIN') && (
+            <section>
+              <Typography variant="h4" className={classes.title} gutterBottom>
+                Let’s write Follow Up emails for this campaign
+              </Typography>
+              <Grid>
+                <FormControl className={(classes.formControl, classes.wrapInput)}>
+                  <CreateFollowUps campaignId={atob(this.props.match.params.campaignId)} />
+                </FormControl>
+              </Grid>
+              <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
+                <Button variant="contained" fullWidth onClick={() => this.handleBack()}>
+                  Back
+                  <ArrowBack className={classNames(classes.rightIcon, classes.iconSmall)} />
+                </Button>
+              </Grid>
+              <Grid className={(classes.btnArea, classes.pageFormWrap)}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  color="primary"
+                  onClick={() => this.handleNext()}
+                  disabled={isDisable}
+                >
+                  Next
+                  <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} />
+                </Button>
+              </Grid>
+            </section>
+          )}
+          {activeStep === 5 && (
             <section>
               <Typography variant="h4" className={classes.title} gutterBottom>
                 Review your campaign settings
@@ -269,7 +326,12 @@ class CreateCampaign extends React.Component {
                 </FormControl>
               </Grid>
               <Grid className={(classes.btnArea, classes.customMargin, classes.pageFormWrap)}>
-                <Button variant="contained" fullWidth onClick={() => this.handleBack()}>
+                <Button variant="contained" fullWidth
+                  onClick={() => {
+                    userType == 'ADMIN' ? this.setState((prevState) => ({ activeStep: prevState.activeStep - 1 }))
+                      : this.setState((prevState) => ({ activeStep: prevState.activeStep - 2 }))
+                  }}
+                >
                   Back
                   <ArrowBack className={classNames(classes.rightIcon, classes.iconSmall)} />
                 </Button>
@@ -356,7 +418,7 @@ class CreateCampaign extends React.Component {
             </section>
           )}
         </form>
-      </Paper>
+      </Paper >
     );
   }
 }
@@ -397,6 +459,7 @@ const CreateCampaignMapped = connect(
     name: state.getIn([reducerCampaign, 'name']),
     heading: state.getIn([reducerCampaign, 'heading']),
     body: state.getIn([reducerCampaign, 'body']),
+    deadline: state.getIn([reducerCampaign, 'deadline']),
     campaignStatus: state.getIn([reducerCampaign, 'campaignStatus']),
   }),
   mapDispatchToProps

@@ -291,6 +291,7 @@ const styles = theme => ({
   textEditor: {
     background: theme.palette.background.paper,
     minHeight: 200,
+    maxHeight: 200,
     border: `1px solid ${theme.palette.divider}`,
     padding: '0 10px',
     color: theme.palette.text.primary
@@ -312,6 +313,8 @@ const styles = theme => ({
     }
   },
   textPreview: {
+    maxHeight: 250,
+    overflow: 'auto',
     width: '100%',
     resize: 'none',
     height: 305,

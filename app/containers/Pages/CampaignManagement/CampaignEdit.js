@@ -22,22 +22,25 @@ async function postJSON(url, data) {
 }
 
 function stringToArray(string) {
-  const splitArray = string.split(',');
+  if (string && string.length > 0) {
+    const splitArray = string.split(',');
 
-  const data = [];
-  splitArray.map(item => {
-    if (isNaN(item)) {
-      data.push(item);
-    }
-    else if (item > 1000) {
-      data.push(item);
-    }
-    else if (typeof item == 'string' && item.length > 0) {
-      data.push(item);
-    }
-  });
+    const data = [];
+    splitArray.map(item => {
+      if (isNaN(item)) {
+        data.push(item);
+      }
+      else if (item > 1000) {
+        data.push(item);
+      }
+      else if (typeof item == 'string' && item.length > 0) {
+        data.push(item);
+      }
+    });
 
-  return data;
+    return data;
+  }
+  return [];
 }
 
 function boolNumberToString(num) {
@@ -119,6 +122,7 @@ class CampaignEdit extends React.Component {
           initialDeadline = res.data.info.deadline == null ? null : formatDeadline(res.data.info.deadline);
 
           const campaignData = {
+            audience: 10,
             languages,
             qualificationType,
             roleName: roleData[0].role_name,
@@ -166,11 +170,13 @@ class CampaignEdit extends React.Component {
       removeInfo,
       deadline,
       languages,
+      followUps,
       qualificationType
     } = this.props;
 
     const MapInterestedSectors = interestedSectors.toJS();
     const MapSubjects = subjects.toJS();
+    const MapFollowUps = followUps.toJS();
     const MapGender = gender.toJS();
     const MapWorkLocation = workLocation.toJS();
     const MapDeadline = alterDeadline(createdAt, initialDeadline, deadline);
@@ -193,6 +199,7 @@ class CampaignEdit extends React.Component {
       keywords: MapKeywords,
       skills: MapSkills,
       gender: MapGender,
+      followUps: MapFollowUps,
       campaignId: atob(this.props.match.params.campaignId)
     };
 
@@ -277,6 +284,7 @@ const mapStateToProps = state => ({
   heading: state.getIn([reducerCampaign, 'heading']),
   body: state.getIn([reducerCampaign, 'body']),
   societies: state.getIn([reducerCampaign, 'societies']),
+  followUps: state.getIn([reducerCampaign, 'followUps']),
 });
 
 const mapDispatchToProps = dispatch => ({
