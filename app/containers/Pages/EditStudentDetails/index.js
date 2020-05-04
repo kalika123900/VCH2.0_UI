@@ -185,7 +185,7 @@ class EditStudentDetails extends Component {
                 subject: (item.type == 'Secondary School' && item.qualification_type != 'Other') ? stringToArray(item.subject) : item.subject,
                 from: item.education_from,
                 to: item.education_to,
-                score: item.score,
+                score: (item.type == 'Secondary School') ? stringToArray(item.score) : item.score,
               }
             });
 
@@ -385,9 +385,18 @@ class EditStudentDetails extends Component {
     const data = {
       educationNew: MapEducationInfo.map(item => {
         if (item.type == 'Secondary School') {
+          let scoreString = item.score.reduce((str1, str2) => {
+            if (str1.length > 0) {
+              return str1 + `,${str2}`
+            }
+            else {
+              return str1 + `${str2}`
+            }
+          });
           if (item.qualification_type == 'Other') {
             return {
               ...item,
+              score: scoreString,
               subject: item.subject.replace(/\s*,\s*/g, ",").trim()
             }
           } else {
@@ -401,6 +410,7 @@ class EditStudentDetails extends Component {
             });
             return {
               ...item,
+              score: scoreString,
               subject: subjectString
             }
           }

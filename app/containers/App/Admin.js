@@ -5,6 +5,7 @@ import { Switch, Route } from 'react-router-dom';
 import { Footer } from 'dan-components';
 import NotFound from 'containers/Pages/Standalone/NotFoundDedicated';
 import Dashboard from '../Templates/AdminDashboard';
+import EditScheduledCampaign from '../../containers/Tables/EditScheduledCampaign';
 import {
   AdminDashboard, AdminSeatManagement, AdminCampaignManagement, CampaignEdit,
   ClientAccounts, ClientProfiles, StudentReview, Campaigns, Signout, BulkEmailEdit,
@@ -39,6 +40,7 @@ class Admin extends React.Component {
             <Route exact path="/admin/company-profile/:cId" component={EditCompanyForm} />
             <Route exact path="/admin/create-company" component={CreateCompany} />
             <Route exact path="/admin/token" component={Token} />
+            <Route exact path="/admin/scheduled-email" component={EditScheduledCampaign} />
             <Route component={NotFound} />
           </Switch>
         </Dashboard>

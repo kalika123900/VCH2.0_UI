@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import styles from '../user-jss';
 import TextField from '@material-ui/core/TextField';
 import { connect } from 'react-redux';
+import Grid from '@material-ui/core/Grid';
 import { bindActionCreators } from 'redux';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
@@ -43,7 +44,7 @@ const MenuProps = {
 };
 
 class EditEducation extends React.Component {
-  handleChange = (event, id) => {
+  handleChange = (event, id, scoreIndex) => {
     const { educationInfo, addInfo, } = this.props;
     const MapEducationInfo = educationInfo.toJS();
     const newEducationArr = MapEducationInfo.map((item, index) => {
@@ -53,39 +54,53 @@ class EditEducation extends React.Component {
             return {
               ...item,
               subject: [],
-              [event.target.name]: event.target.value
-            };
-          } else {
-            return {
-              ...item,
-              subject: '',
+              score: [],
               [event.target.name]: event.target.value
             };
           }
-        } else if (event.target.name == 'qualification_type') {
+          return {
+            ...item,
+            subject: '',
+            [event.target.name]: event.target.value
+          };
+        } else if (event.target.name == 'qualification_type' && item.type != 'University') {
           if (event.target.value == 'Other') {
             return {
               ...item,
               subject: '',
+              score: [],
               [event.target.name]: event.target.value
             }
-          } else {
-            return {
-              ...item,
-              subject: [],
-              [event.target.name]: event.target.value
-            }
+          }
+          return {
+            ...item,
+            subject: [],
+            score: [],
+            [event.target.name]: event.target.value
+          }
+        } else if (event.target.name == 'subject') {
+          return {
+            ...item,
+            score: [],
+            [event.target.name]: event.target.value
+          }
+        } else if (event.target.name == 'score') {
+          let newScoreArr = item.score;
+          newScoreArr[scoreIndex] = event.target.value;
+
+          return {
+            ...item,
+            score: newScoreArr
           }
         }
         return {
           ...item,
           [event.target.name]: event.target.value
         };
-      } else {
-        return {
-          ...item
-        };
       }
+      return {
+        ...item
+      };
     });
 
     addInfo({ ...this.props, educationInfo: newEducationArr });
@@ -105,9 +120,12 @@ class EditEducation extends React.Component {
       score
     } = MapEducationInfo[id];
 
+    console.log(MapEducationInfo[id])
+
     let qualificationTypeItems = [];
     let subjectData = [];
     let scoreData = [];
+    let subjectScoreJSX = [];
 
     if (type == 'University') {
       qualificationTypeItems = qualificationOption;
@@ -126,6 +144,79 @@ class EditEducation extends React.Component {
         subjectData = aLevelScotishSubjectItems
         scoreData = scottishGradesItems
       }
+
+      var subjectArr = subject;
+      if (qualification_type == 'Other') {
+        let subjectString = subject.replace(/\s*,\s*/g, ",").trim();
+        if (subjectString.length > 0) {
+          subjectArr = subjectString.split(',');
+        } else {
+          subjectArr = []
+        }
+      }
+
+      subjectScoreJSX = subjectArr.map((item, index) => {
+        return (
+          <div key={index.toString()}>
+            <FormControl className={classes.formControl} >
+              <Grid container spacing={2} >
+                <Grid item md={8} xs={12} >
+                  <TextField
+                    label="Subject Name"
+                    className={classes.textField}
+                    value={item}
+                    variant="outlined"
+                    margin="normal"
+                    readOnly
+                    style={{ width: '100%' }}
+                  />
+                </Grid>
+                <Grid item md={4} xs={12}>
+                  {scoreData.length == 0 ?
+                    <div>
+                      <FormControl className={classes.formControl}>
+                        <TextField
+                          label="Score Achieved"
+                          className={classes.textField}
+                          type="text"
+                          margin="normal"
+                          value={(score[index] == undefined || score[index] == null) ? '' : score[index]}
+                          name="score"
+                          variant="outlined"
+                          onChange={e => this.handleChange(e, id, index)}
+                        />
+                      </FormControl>
+                    </div>
+                    :
+                    <div>
+                      <FormControl className={classes.formControl} style={{ marginBottom: 0 }}>
+                        <InputLabel
+                          htmlFor="Score Achieved"
+                        >
+                          Score Achieved
+                          </InputLabel>
+                        <Select
+                          placeholder="Score Achieved"
+                          value={(score[index] == undefined || score[index] == null) ? '' : score[index]}
+                          name="score"
+                          onChange={e => this.handleChange(e, id, index)}
+                          MenuProps={MenuProps}
+                        >
+                          {scoreData.map((item, index) => (
+                            <MenuItem key={index} value={item}>
+                              <ListItemText primary={item} />
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </div>
+                  }
+                </Grid>
+              </Grid>
+            </FormControl>
+          </div>
+        )
+      });
     }
 
     return (
@@ -231,6 +322,7 @@ class EditEducation extends React.Component {
               />
               <Typography variant="caption" >(Mention all your subjects here and seperate them by comma)</Typography>
             </FormControl>
+            {subjectScoreJSX}
           </div>
           :
           type == 'University'
@@ -241,7 +333,7 @@ class EditEducation extends React.Component {
                   htmlFor="Subject"
                 >
                   Subject
-              </InputLabel>
+                </InputLabel>
                 <Select
                   placeholder="Subject"
                   value={subject}
@@ -258,45 +350,83 @@ class EditEducation extends React.Component {
               </FormControl>
             </div>
             :
-            <div>
-              <FormControl className={classes.formControl}>
-                <InputLabel
-                  htmlFor="Subject"
-                >
-                  Subject
-                </InputLabel>
-                <Select
-                  multiple
-                  value={subject}
-                  input={<Input />}
-                  name="subject"
-                  MenuProps={MenuProps}
-                  component={Select}
-                  renderValue={selected => {
-                    const subjectName = [];
-                    subjectData.map((value, index) => {
-                      if (selected.includes(value)) {
-                        subjectName.push(value);
-                      }
-                    });
-                    return subjectName.join(', ');
-                  }
-                  }
-                  onChange={e => this.handleChange(e, id)}
-                >
-                  {subjectData.map((item, index) => (
-                    <MenuItem key={index.toString()} value={item}>
-                      <TextField
-                        name="selectedSubject"
-                        component={Checkbox}
-                        checked={subject.indexOf(item) > -1}
-                      />
-                      <ListItemText primary={item} />
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
+            <Fragment>
+              <div>
+                <FormControl className={classes.formControl}>
+                  <InputLabel
+                    htmlFor="Subject"
+                  >
+                    Subject
+                  </InputLabel>
+                  <Select
+                    multiple
+                    value={subject}
+                    input={<Input />}
+                    name="subject"
+                    MenuProps={MenuProps}
+                    component={Select}
+                    renderValue={selected => {
+                      const subjectName = [];
+                      subjectData.map((value, index) => {
+                        if (selected.includes(value)) {
+                          subjectName.push(value);
+                        }
+                      });
+                      return subjectName.join(', ');
+                    }
+                    }
+                    onChange={e => this.handleChange(e, id)}
+                  >
+                    {subjectData.map((item, index) => (
+                      <MenuItem key={index.toString()} value={item}>
+                        <TextField
+                          name="selectedSubject"
+                          component={Checkbox}
+                          checked={subject.indexOf(item) > -1}
+                        />
+                        <ListItemText primary={item} />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+              {subjectScoreJSX}
+              {(qualification_type == 'International Baccalaureate' && subject.length > 0) &&
+                <div>
+                  <FormControl className={classes.formControl}>
+                    <Grid container spacing={2} >
+                      <Grid item md={8} xs={12} >
+                        <TextField
+                          label="Total IB Score"
+                          className={classes.textField}
+                          value={'Total IB Score'}
+                          margin="normal"
+                          variant="outlined"
+                          readOnly
+                          style={{ width: '100%' }}
+                        />
+                      </Grid>
+                      <Grid item md={4} xs={12}>
+                        <div>
+                          <FormControl className={classes.formControl}>
+                            <TextField
+                              label="Score Achieved"
+                              className={classes.textField}
+                              type="text"
+                              value={score[subject.length] == undefined || score[subject.length] == null ? '' : score[subject.length]}
+                              name="score"
+                              margin="normal"
+                              variant="outlined"
+                              onChange={e => this.handleChange(e, id, subject.length)}
+                            />
+                          </FormControl>
+                        </div>
+                      </Grid>
+                    </Grid>
+                  </FormControl>
+                </div>
+              }
+            </Fragment>
         }
         <div>
           <FormControl className={classes.formControl}>
@@ -342,22 +472,7 @@ class EditEducation extends React.Component {
             </Select>
           </FormControl>
         </div>
-        {scoreData.length == 0 ?
-          <div>
-            <FormControl className={classes.formControl}>
-              <TextField
-                label="Score Achieved"
-                className={classes.textField}
-                type="text"
-                value={score}
-                name="score"
-                margin="normal"
-                variant="outlined"
-                onChange={e => this.handleChange(e, id)}
-              />
-            </FormControl>
-          </div>
-          :
+        {type == 'University' &&
           <div>
             <FormControl className={classes.formControl}>
               <InputLabel
