@@ -88,9 +88,10 @@ class Campaigns extends React.Component {
       if (user.capabilities == 3)
         this.props.history.push('/client/unauthorized');
     }
-
-    if (localStorage.hasOwnProperty('campaignProgress')) {
-      this.props.restoreProgress(JSON.parse(localStorage.getItem('campaignProgress')));
+    if (props.userType == 'CLIENT') {
+      if (localStorage.hasOwnProperty('campaignProgress')) {
+        this.props.restoreProgress(JSON.parse(localStorage.getItem('campaignProgress')));
+      }
     }
   }
 
@@ -313,8 +314,10 @@ Campaigns.propTypes = {
 };
 
 const reducerCampaign = 'campaign';
+const reducerA = 'Auth';
 
 const mapStateToProps = state => ({
+  userType: state.getIn([reducerA, 'userType']),
   languages: state.getIn([reducerCampaign, 'languages']),
   qualificationType: state.getIn([reducerCampaign, 'qualificationType']),
   name: state.getIn([reducerCampaign, 'name']),

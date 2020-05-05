@@ -72,11 +72,18 @@ async function postJSON(url, data) {
 class CreateCampaign extends React.Component {
   constructor(props) {
     super(props)
-    if (localStorage.hasOwnProperty('campaignProgress')) {
-      const campaignData = JSON.parse(localStorage.getItem('campaignProgress'));
-      this.state = {
-        activeStep: campaignData.activeStep,
-        isCreateCampaign: true
+    if (props.userType == 'CLIENT') {
+      if (localStorage.hasOwnProperty('campaignProgress')) {
+        const campaignData = JSON.parse(localStorage.getItem('campaignProgress'));
+        this.state = {
+          activeStep: campaignData.activeStep,
+          isCreateCampaign: true
+        }
+      } else {
+        this.state = {
+          activeStep: 0,
+          isCreateCampaign: true
+        }
       }
     } else {
       this.state = {
@@ -292,8 +299,10 @@ class CreateCampaign extends React.Component {
                   onClick={() => {
                     userType == 'ADMIN' ? this.setState((prevState) => ({ activeStep: prevState.activeStep + 1 }))
                       : this.setState((prevState) => ({ activeStep: prevState.activeStep + 2 }))
-                    let campaignData = { ...this.props, activeStep: this.state.activeStep + 2 }
-                    localStorage.setItem('campaignProgress', JSON.stringify(campaignData));
+                    if (this.props.userType == 'CLIENT') {
+                      let campaignData = { ...this.props, activeStep: this.state.activeStep + 2 }
+                      localStorage.setItem('campaignProgress', JSON.stringify(campaignData));
+                    }
                   }}
                 >
                   Next
@@ -351,8 +360,10 @@ class CreateCampaign extends React.Component {
                   onClick={() => {
                     userType == 'ADMIN' ? this.setState((prevState) => ({ activeStep: prevState.activeStep - 1 }))
                       : this.setState((prevState) => ({ activeStep: prevState.activeStep - 2 }))
-                    let campaignData = { ...this.props, activeStep: this.state.activeStep - 2 }
-                    localStorage.setItem('campaignProgress', JSON.stringify(campaignData));
+                    if (this.props.userType == 'CLIENT') {
+                      let campaignData = { ...this.props, activeStep: this.state.activeStep - 2 }
+                      localStorage.setItem('campaignProgress', JSON.stringify(campaignData));
+                    }
                   }}
                 >
                   Back
