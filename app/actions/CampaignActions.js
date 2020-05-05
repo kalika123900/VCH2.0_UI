@@ -48,3 +48,8 @@ export const campaignRemoveMsg = (data) => ({
 export const removeCampaignInfo = () => ({
   type: types.REMOVE_CAMPAIGN_INFO
 });
+
+export const restoreCampaignProgress = (data) => ({
+  type: types.RESTORE_CAMPAIGN_PROGRESS,
+  data
+});

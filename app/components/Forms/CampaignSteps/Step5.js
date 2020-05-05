@@ -21,6 +21,16 @@ import PapperBlock from '../../PapperBlock/PapperBlock';
 import styles from '../../../containers/Pages/HelpSupport/helpSupport-jss';
 import { parseDateHelper } from '../../../redux/helpers/dateTimeHelper';
 
+function daysDifference(timestamp) {
+  timestamp = Math.round((new Date(timestamp).getTime() / 1000));
+  const date = new Date();
+  const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  const currentDate = Math.round((new Date(dateString).getTime() / 1000));
+  const timeDiff = timestamp - currentDate;
+
+  return Math.floor(timeDiff / (60 * 60 * 24));
+}
+
 class Step5 extends React.Component {
   state = {
     expanded: null
@@ -92,7 +102,7 @@ class Step5 extends React.Component {
                   <FormControlLabel value="28" control={<Radio />} label="1 Month" />
                   <FormControlLabel value="56" control={<Radio />} label="2 Month" />
                   <FormControlLabel value="84" control={<Radio />} label="3 Month" />
-                  <FormControlLabel value="5" control={<Radio />} label="No deadline - run continuously until cancelled" />
+                  {/* <FormControlLabel value="5" control={<Radio />} label="No deadline - run continuously until cancelled" /> */}
                   <FormControlLabel value="0" control={<Radio />} label="Custom Deadline" />
                 </RadioGroup>
               </div>
@@ -104,7 +114,7 @@ class Step5 extends React.Component {
                         margin="normal"
                         format="dd/MM/yyyy"
                         placeholder="Choose Date"
-                        value={choosedDeadline === '0' ? new Date(deadline) : new Date(roleDeadline)}
+                        value={new Date(deadline)}
                         onChange={this.handleDateChange}
                         KeyboardButtonProps={{
                           'aria-label': 'change date',
@@ -112,14 +122,20 @@ class Step5 extends React.Component {
                       />
                     </Grid>
                   </MuiPickersUtilsProvider>
-                  {/* {choosedDeadline === '5' &&
+                  {(daysDifference(deadline) < 7) &&
                     <Grid style={{ textAlign: "center" }}>
-
-                      <Typography variant="caption" color="textSecondary">
-                        (It's Your role deadline)
+                      <Typography variant="caption" color="error">
+                        (campaign duration should be greater or equal to 7 days)
                       </Typography>
                     </Grid>
-                  } */}
+                  }
+                  {(daysDifference(deadline) > 90) &&
+                    <Grid style={{ textAlign: "center" }}>
+                      <Typography variant="caption" color="error">
+                        (campaign duration should be less or equal to 90 days)
+                      </Typography>
+                    </Grid>
+                  }
                 </div>
               )}
             </PapperBlock>

@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import { storeStep2Info } from 'dan-actions/CampaignActions';
 import styles from './step-jss';
 import AddRole from '../AddRole';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { makeSecureDecrypt } from '../../../Helpers/security';
 
 async function postData(url, data) {
@@ -53,7 +54,7 @@ class Step2 extends React.Component {
       });
   }
 
-  componentDidMount() {
+  fetchRoles = () => {
     const { userType } = this.props;
     if (userType == "CLIENT") {
       const user = JSON.parse(
@@ -82,6 +83,26 @@ class Step2 extends React.Component {
           console.error(err);
         });
     }
+  }
+
+  componentDidMount() {
+    this.fetchRoles();
+  }
+
+  removeRole = (id) => {
+    const data = {
+      role_id: id,
+    };
+
+    postData(`${API_URL}/client/remove-role`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          this.fetchRoles();
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   handleRole = (id, name, roleDate) => {
@@ -159,22 +180,29 @@ class Step2 extends React.Component {
                 roleData.map((value) => (
                   (usedRoleData.indexOf(value.id) === -1)
                     ? (
-                      <Grid
-                        className={classes.gridMargin}
-                        key={value.id}
-                      >
-                        <Typography
-                          className={role === value.id
-                            ? (classes.activeBoarder)
-                            : null
-                          }
-                          variant="body1"
-                          style={{ cursor: 'pointer' }}
-                          onClick={() => this.handleRole(value.id, value.role_name, value.role_deadline)}
+                      <Fragment>
+                        <Grid
+                          className={classes.gridMargin}
+                          key={value.id}
                         >
-                          {value.role_name}
-                        </Typography>
-                      </Grid>
+                          <Typography
+                            className={role === value.id
+                              ? (classes.activeBoarder)
+                              : null
+                            }
+                            variant="body1"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => this.handleRole(value.id, value.role_name, value.role_deadline)}
+                          >
+                            {value.role_name}
+                            {role == value.id &&
+                              <Button onClick={e => this.removeRole(value.id)} >
+                                <DeleteIcon />
+                              </Button>
+                            }
+                          </Typography>
+                        </Grid>
+                      </Fragment>
                     )
                     : (
                       <Grid

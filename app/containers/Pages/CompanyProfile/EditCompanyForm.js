@@ -75,9 +75,10 @@ class SignupForm extends React.Component {
       makeSecureDecrypt(localStorage.getItem('user'))
     );
 
-    if (user.cId == null) {
-      this.props.history.push('/client/unauthorized');
-    }
+    if (props.userType == 'CLIENT')
+      if (user.cId == null) {
+        this.props.history.push('/client/unauthorized');
+      }
   }
 
   getCompanyInfo = () => {

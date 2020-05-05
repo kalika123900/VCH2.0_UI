@@ -4,6 +4,7 @@ import brand from 'dan-api/dummy/brand';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { bindActionCreators } from 'redux';
+import Avatar from '@material-ui/core/Avatar';
 import { connect } from 'react-redux';
 import avatarApi from 'dan-api/images/avatars';
 import {

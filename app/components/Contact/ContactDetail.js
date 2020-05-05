@@ -240,15 +240,15 @@ class ContactDetail extends React.Component {
               </ListItemAvatar>
               <ListItemText primary={dataContact.getIn([itemSelected, 'address'])} secondary="Address" />
             </ListItem> */}
-            <Divider variant="inset" />
-            <ListItem>
+            {/* <Divider variant="inset" /> */}
+            {/* <ListItem>
               <ListItemAvatar>
                 <Avatar className={classes.purpleIcon}>
                   <Language />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText primary={dataContact.getIn([itemSelected, 'website'])} secondary="Website" />
-            </ListItem>
+            </ListItem> */}
           </List>
         </div>
       </main >

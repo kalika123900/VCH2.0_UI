@@ -9,7 +9,8 @@ import {
   removeCampaignInfo,
   campaignInfoInit,
   campaignRemoveMsg,
-  campaignInitMsg
+  campaignInitMsg,
+  restoreCampaignProgress
 } from 'dan-actions/CampaignActions';
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import { universityItems, keywordsData, skillMenu } from 'dan-api/apps/profileOption';
@@ -86,6 +87,10 @@ class Campaigns extends React.Component {
     if (user.managerType != 2) {
       if (user.capabilities == 3)
         this.props.history.push('/client/unauthorized');
+    }
+
+    if (localStorage.hasOwnProperty('campaignProgress')) {
+      this.props.restoreProgress(JSON.parse(localStorage.getItem('campaignProgress')));
     }
   }
 
@@ -246,6 +251,7 @@ class Campaigns extends React.Component {
         .then((res) => {
           if (res.status === 1) {
             removeInfo();
+            localStorage.removeItem('campaignProgress');
             addMsg({ warnMsg: 'Campaign created Successfully' });
             history.push('/client/campaign-management');
           } else {
@@ -330,13 +336,15 @@ const mapStateToProps = state => ({
   heading: state.getIn([reducerCampaign, 'heading']),
   body: state.getIn([reducerCampaign, 'body']),
   societies: state.getIn([reducerCampaign, 'societies']),
+  audience: state.getIn([reducerCampaign, 'audience']),
 });
 
 const mapDispatchToProps = dispatch => ({
   removeInfo: bindActionCreators(removeCampaignInfo, dispatch),
   campaignInit: bindActionCreators(campaignInfoInit, dispatch),
   addMsg: bindActionCreators(campaignInitMsg, dispatch),
-  removeMsg: bindActionCreators(campaignRemoveMsg, dispatch)
+  removeMsg: bindActionCreators(campaignRemoveMsg, dispatch),
+  restoreProgress: bindActionCreators(restoreCampaignProgress, dispatch),
 });
 
 const CampaignMapped = connect(

@@ -14,14 +14,17 @@ import { Button } from '@material-ui/core';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import { makeSecureDecrypt } from 'dan-helpers/security';
+import avatarApi from 'dan-api/images/avatars';
 import { CustomConfirmation, StudentProfileDialog } from 'dan-components';
 import qs from 'qs';
 import styles from 'dan-components/Tables/tableStyle-jss';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
+import Avatar from '@material-ui/core/Avatar';
 
-function createData(id, student_name, email, gender, nationality, status) {
+function createData(id, avatar, student_name, email, gender, nationality, status) {
   return {
     id,
+    avatar,
     student_name,
     email,
     gender,
@@ -160,9 +163,10 @@ class StudentTable extends React.Component {
             res.data.map(item => {
               const name = `${item.firstname} ${item.lastname}`;
               const studentStatus = status[item.status.toString()];
+              const avatar = item.profile != null && item.profile != '' ? item.profile : item.gender == "Male" ? avatarApi[7] : avatarApi[6];
               const nationality = item.nationality != null && item.nationality != '' ? item.nationality : 'Not avilable';
               const gender = item.gender != null && item.gender != '' ? item.gender : 'Not avilable';
-              tempData.push(createData(item.id, name, item.email, gender, nationality, studentStatus));
+              tempData.push(createData(item.id, avatar, name, item.email, gender, nationality, studentStatus));
             });
             studentData = tempData;
             this.setState({ isStudents: true, studentCount: res.data[0].count });
@@ -220,6 +224,7 @@ class StudentTable extends React.Component {
               <Table className={classNames(classes.table, classes.hover)}>
                 <TableHead>
                   <TableRow>
+                    <TableCell padding="default">Profile</TableCell>
                     <TableCell padding="default">Student Name</TableCell>
                     <TableCell align="left">Email</TableCell>
                     <TableCell align="left">Gender</TableCell>
@@ -231,6 +236,9 @@ class StudentTable extends React.Component {
                 <TableBody>
                   {studentData.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(n => (
                     <TableRow key={n.id} >
+                      <TableCell padding="default">
+                        <Avatar alt="avatar" src={n.avatar} className={classes.avatar} />
+                      </TableCell>
                       <TableCell padding="default">{n.student_name}</TableCell>
                       <TableCell align="left">{n.email}</TableCell>
                       <TableCell align="left">{n.gender}</TableCell>

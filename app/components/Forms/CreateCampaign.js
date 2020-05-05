@@ -70,10 +70,21 @@ async function postJSON(url, data) {
 }
 
 class CreateCampaign extends React.Component {
-  state = {
-    activeStep: 0,
-    isCreateCampaign: true
-  };
+  constructor(props) {
+    super(props)
+    if (localStorage.hasOwnProperty('campaignProgress')) {
+      const campaignData = JSON.parse(localStorage.getItem('campaignProgress'));
+      this.state = {
+        activeStep: campaignData.activeStep,
+        isCreateCampaign: true
+      }
+    } else {
+      this.state = {
+        activeStep: 0,
+        isCreateCampaign: true
+      }
+    }
+  }
 
   handleCreateCampaign = (count) => {
     if (count > 100) {
@@ -89,10 +100,18 @@ class CreateCampaign extends React.Component {
   }
 
   handleBack = () => {
+    if (this.props.userType == 'CLIENT') {
+      let campaignData = { ...this.props, activeStep: this.state.activeStep - 1 }
+      localStorage.setItem('campaignProgress', JSON.stringify(campaignData));
+    }
     this.setState((prevState) => ({ activeStep: prevState.activeStep - 1 }));
   }
 
   handleNext = () => {
+    if (this.props.userType == 'CLIENT') {
+      let campaignData = { ...this.props, activeStep: this.state.activeStep + 1 }
+      localStorage.setItem('campaignProgress', JSON.stringify(campaignData));
+    }
     this.setState((prevState) => ({ activeStep: prevState.activeStep + 1 }));
   }
 
@@ -268,11 +287,13 @@ class CreateCampaign extends React.Component {
                 <Button
                   variant="contained"
                   fullWidth
-                  disabled={(daysDifference(deadline) < 7) ? true : false}
+                  disabled={((daysDifference(deadline) < 7) || (daysDifference(deadline) > 90)) ? true : false}
                   color="primary"
                   onClick={() => {
                     userType == 'ADMIN' ? this.setState((prevState) => ({ activeStep: prevState.activeStep + 1 }))
                       : this.setState((prevState) => ({ activeStep: prevState.activeStep + 2 }))
+                    let campaignData = { ...this.props, activeStep: this.state.activeStep + 2 }
+                    localStorage.setItem('campaignProgress', JSON.stringify(campaignData));
                   }}
                 >
                   Next
@@ -330,6 +351,8 @@ class CreateCampaign extends React.Component {
                   onClick={() => {
                     userType == 'ADMIN' ? this.setState((prevState) => ({ activeStep: prevState.activeStep - 1 }))
                       : this.setState((prevState) => ({ activeStep: prevState.activeStep - 2 }))
+                    let campaignData = { ...this.props, activeStep: this.state.activeStep - 2 }
+                    localStorage.setItem('campaignProgress', JSON.stringify(campaignData));
                   }}
                 >
                   Back
@@ -396,7 +419,7 @@ class CreateCampaign extends React.Component {
                           &&
                           <Typography variant="caption" color="error">
                             (You can't create campaign because it effects more than 100 students)
-                        </Typography>
+                          </Typography>
                         }
                       </Fragment>
                     )
@@ -452,15 +475,33 @@ const mapDispatchToProps = dispatch => ({
 
 const CreateCampaignMapped = connect(
   state => ({
+    activeStep: state.getIn([reducerCampaign, 'activeStep']),
     deco: state.getIn([reducer, 'decoration']),
     userType: state.getIn([reducerA, 'userType']),
     warnMsg: state.getIn([reducerCampaign, 'warnMsg']),
-    role: state.getIn([reducerCampaign, 'role']),
+    campaignStatus: state.getIn([reducerCampaign, 'campaignStatus']),
+    languages: state.getIn([reducerCampaign, 'languages']),
+    qualificationType: state.getIn([reducerCampaign, 'qualificationType']),
     name: state.getIn([reducerCampaign, 'name']),
+    role: state.getIn([reducerCampaign, 'role']),
+    roleDeadline: state.getIn([reducerCampaign, 'roleDeadline']),
+    gender: state.getIn([reducerCampaign, 'gender']),
+    university: state.getIn([reducerCampaign, 'university']),
+    keywords: state.getIn([reducerCampaign, 'keywords']),
+    deadline: state.getIn([reducerCampaign, 'deadline']),
+    choosedDeadline: state.getIn([reducerCampaign, 'choosedDeadline']),
+    selectedYear: state.getIn([reducerCampaign, 'selectedYear']),
+    ethnicity: state.getIn([reducerCampaign, 'ethnicity']),
+    interestedSectors: state.getIn([reducerCampaign, 'interestedSectors']),
+    workLocation: state.getIn([reducerCampaign, 'workLocation']),
+    experience: state.getIn([reducerCampaign, 'experience']),
+    minGrade: state.getIn([reducerCampaign, 'minGrade']),
+    subjects: state.getIn([reducerCampaign, 'subjects']),
+    skills: state.getIn([reducerCampaign, 'skills']),
     heading: state.getIn([reducerCampaign, 'heading']),
     body: state.getIn([reducerCampaign, 'body']),
-    deadline: state.getIn([reducerCampaign, 'deadline']),
-    campaignStatus: state.getIn([reducerCampaign, 'campaignStatus']),
+    societies: state.getIn([reducerCampaign, 'societies']),
+    audience: state.getIn([reducerCampaign, 'audience']),
   }),
   mapDispatchToProps
 )(CreateCampaignReduxed);

@@ -70,7 +70,7 @@ class Contact extends React.Component {
             data = res.data.map(item => {
               return {
                 id: item.id,
-                avatar: avatarApi[9],
+                avatar: item.profile != null && item.profile != '' ? item.profile : item.gender == 'Male' ? avatarApi[7] : avatarApi[6],
                 name: `${item.firstname} ${item.lastname}`,
                 title: '',
                 phone: item.phone,

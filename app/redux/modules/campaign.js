@@ -9,7 +9,8 @@ import {
   CAMPAIGN_INFO_INIT,
   CAMPAIGN_INIT_MSG,
   CAMPAIGN_REMOVE_MSG,
-  REMOVE_CAMPAIGN_INFO
+  REMOVE_CAMPAIGN_INFO,
+  RESTORE_CAMPAIGN_PROGRESS
 } from 'dan-actions/actionConstants';
 import { DateHelper } from '../helpers/dateTimeHelper';
 
@@ -36,11 +37,12 @@ const initialState = {
   minGrade: List([]),
   heading: '',
   body: '',
-  deadline: DateHelper.format(DateHelper.addDays(new Date(), 5)),
-  choosedDeadline: '5',
+  deadline: DateHelper.format(DateHelper.addDays(new Date(), 7)),
+  choosedDeadline: '28',
   name: '',
   audience: 10,
-  societies: List([])
+  societies: List([]),
+  activeStep: 0
 };
 
 const initialImmutableState = fromJS(initialState);
@@ -193,11 +195,52 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('minGrade', List([]))
           .set('heading', '')
           .set('body', '')
-          .set('deadline', DateHelper.format(DateHelper.addDays(new Date(), 5)))
-          .set('choosedDeadline', '0')
+          .set('deadline', DateHelper.format(DateHelper.addDays(new Date(), 7)))
+          .set('choosedDeadline', '28')
           .set('name', '')
           .set('audience', 10)
           .set('societies', List([]))
+      });
+
+    case RESTORE_CAMPAIGN_PROGRESS:
+      const university = fromJS(action.data.university);
+      const languages = fromJS(action.data.languages);
+      const qualificationType = fromJS(action.data.qualificationType);
+      const keywords = fromJS(action.data.keywords);
+      const subjects = fromJS(action.data.subjects);
+      const skills = fromJS(action.data.skills);
+      const gender = fromJS(action.data.gender);
+      const interestedSectors = fromJS(action.data.interestedSectors);
+      const workLocation = fromJS(action.data.workLocation);
+      const minGrade = fromJS(action.data.minGrade);
+      const selectedYear = fromJS(action.data.selectedYear);
+      const societies = fromJS(action.data.societies)
+      return state.withMutations((mutableState) => {
+        mutableState
+          .set('role', action.data.role)
+          .set('roleName', action.data.roleName)
+          .set('roleDeadline', action.data.roleDeadline)
+          .set('qualificationType', qualificationType)
+          .set('languages', languages)
+          .set('university', university)
+          .set('subjects', subjects)
+          .set('skills', skills)
+          .set('keywords', keywords)
+          .set('gender', gender)
+          .set('selectedYear', selectedYear)
+          .set('ethnicity', action.data.ethnicity)
+          .set('interestedSectors', interestedSectors)
+          .set('workLocation', workLocation)
+          .set('experience', action.data.experience)
+          .set('minGrade', minGrade)
+          .set('societies', societies)
+          .set('heading', action.data.heading)
+          .set('body', action.data.body)
+          .set('deadline', action.data.deadline)
+          .set('choosedDeadline', action.data.choosedDeadline)
+          .set('name', action.data.name)
+          .set('audience', action.data.audience)
+          .set('activeStep', action.data.activeStep)
       });
 
     default:
