@@ -52,7 +52,7 @@ class StudentCover extends React.Component {
         user_id: user.id
       }
     }
-    if (this.props.userType == 'CLIENT') {
+    if (this.props.userType == 'CLIENT' || this.props.userType == 'ADMIN') {
       data = {
         user_id: this.props.user_id
       }

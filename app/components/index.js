@@ -150,6 +150,7 @@ export StudentCompanies from './Profile/StudentCompanies';
 export StudentSummary from './Profile/StudentSummary';
 export ClientJobProfiles from './Profile/ClientJobProfiles';
 export ClientJobDescription from './Profile/ClientJobDescription';
+export StudentProfileDialog  from './Profile/StudentProfileDialog';
 // Card
 export StudentCard from './CardPaper/StudentCard';
 export RecipientStudentCard from './CardPaper/RecipientStudentCard';

@@ -14,7 +14,7 @@ import { Button } from '@material-ui/core';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import { makeSecureDecrypt } from 'dan-helpers/security';
-import { CustomConfirmation } from 'dan-components';
+import { CustomConfirmation, StudentProfileDialog } from 'dan-components';
 import qs from 'qs';
 import styles from 'dan-components/Tables/tableStyle-jss';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
@@ -53,8 +53,18 @@ class StudentTable extends React.Component {
     user_id: -1,
     studentCount: 0,
     rowsPerPage: 10,
-    isStudents: false
+    isStudents: false,
+    profile: false,
+    openProfile: -1
   }
+
+  handleProfileOpen = (id) => {
+    this.setState({ profile: true, openProfile: id });
+  };
+
+  handleProfileClose = () => {
+    this.setState({ profile: false, openProfile: -1 });
+  };
 
   handleConfirmation = (id, action) => {
     let value = this.state.open ? false : true
@@ -197,6 +207,7 @@ class StudentTable extends React.Component {
               'Are you sure you want to remove this student?'
           }
         />
+        <StudentProfileDialog user_id={this.state.openProfile} open={this.state.profile} handleClose={this.handleProfileClose} />
         <div className={classes.rootTable} >
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
@@ -226,6 +237,9 @@ class StudentTable extends React.Component {
                       <TableCell align="left">{n.nationality}</TableCell>
                       <TableCell align="left">{n.status}</TableCell>
                       <TableCell align="center">
+                        <Button variant="contained" color="primary" onClick={(e) => this.handleProfileOpen(n.id)} style={{ marginRight: 5 }}>
+                          View Profile
+                        </Button>
                         {n.status == 'Disable by admin' ?
                           <Button variant="contained" color="primary" onClick={(e) => this.handleConfirmation(n.id, 'enable')}>
                             Enable
