@@ -22,6 +22,7 @@ import {
   closeNotifAction
 } from 'dan-actions/EmailActions';
 import qs from 'qs';
+import { makeSecureDecrypt } from 'dan-helpers/security';
 import styles from 'dan-components/Email/email-jss';
 
 const email = value => (
@@ -76,6 +77,17 @@ class ClientEmailThread extends React.Component {
     messageType: 'error',
     notifyMessage: '',
   }
+
+  constructor(props) {
+    super(props)
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+    if (user.cId == null) {
+      this.props.history.push('/client/unauthorized');
+    }
+  }
+
 
   sendEmail = (to, subject, emailContent, files) => {
     const actionSendEmail = this.props.sendEmail;

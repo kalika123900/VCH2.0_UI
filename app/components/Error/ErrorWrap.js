@@ -53,6 +53,8 @@ const ErrorWrap = (props) => (
         staticContext.status = 404; // eslint-disable-line
       }
       const { classes, title, desc } = props;
+      const baseUrl = props.location.pathname;
+      const urlArray = baseUrl.split('/');
       return (
         <div className={classes.errorWrap}>
           <Typography className={classes.title} variant="h1">{title}</Typography>
@@ -62,7 +64,7 @@ const ErrorWrap = (props) => (
             color="primary"
             className={classes.button}
             component={Link}
-            to="/"
+            to={`/${urlArray[1].toLowerCase()}`}
           >
             Go To Dashboard
           </Button>

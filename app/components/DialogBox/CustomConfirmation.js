@@ -11,7 +11,7 @@ import styles from '../Forms/user-jss';
 
 class CustomConfirmation extends React.Component {
   render() {
-    const { open, handleClose, handleAction } = this.props;
+    const { open, handleClose, handleAction, message } = this.props;
 
     return (
       <div>
@@ -25,7 +25,7 @@ class CustomConfirmation extends React.Component {
           >
             <DialogTitle id="form-dialog-title">Confirm</DialogTitle>
             <DialogContent style={{ width: '100%' }}>
-              Are You sure you want to remove this
+              {message}
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose} color="primary">
@@ -47,5 +47,9 @@ CustomConfirmation.propTypes = {
   handleAction: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired
 };
+
+CustomConfirmation.defaultProps = {
+  message: 'Are You sure you want to remove this'
+}
 
 export default withStyles(styles)(CustomConfirmation);

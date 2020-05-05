@@ -127,18 +127,16 @@ class SeatManagementTable extends React.Component {
       company_id: user.cId
     };
 
-    this.setState({ open: false });
-
-    // postData(`${API_URL}/client/remove-seat`, data)
-    //   .then((res) => {
-    //     if (res.status === 1) {
-    //       this.setState({ open: false });
-    //       this.getStaff();
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    postData(`${API_URL}/client/remove-seat`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({ open: false });
+          this.getStaff();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   addMember = () => {

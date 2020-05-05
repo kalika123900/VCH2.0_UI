@@ -69,6 +69,17 @@ class SignupForm extends React.Component {
     logo: null,
   };
 
+  constructor(props) {
+    super(props)
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    if (user.cId == null) {
+      this.props.history.push('/client/unauthorized');
+    }
+  }
+
   getCompanyInfo = () => {
     var data = {};
     if (this.props.userType == 'ADMIN') {
@@ -306,7 +317,7 @@ class SignupForm extends React.Component {
                   label="Company Headquarter"
                   required
                   validate={[required]}
-                  onChange={() => { this.handleChange() }}
+                  onChange={(e) => { this.handleChange(e) }}
                 />
               </FormControl>
             </div>

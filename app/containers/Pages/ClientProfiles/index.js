@@ -17,6 +17,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Button from '@material-ui/core/Button';
 import formatDate from '../../../Helpers/formatDate';
 import qs from 'qs';
+import { CustomConfirmation } from 'dan-components';
 import { makeSecureEncrypt } from '../../../Helpers/security';
 import { makeSecureDecrypt } from '../../../Helpers/security';
 
@@ -47,7 +48,39 @@ class ClientProfile extends React.Component {
   state = {
     clientData: [],
     page: 0,
-    rowsPerPage: 5
+    rowsPerPage: 5,
+    open: false,
+    client_id: -1,
+  }
+
+  handleConfirmation = (e, id) => {
+    let value = this.state.open ? false : true
+    this.setState({ open: value, client_id: id })
+  }
+
+  removeClient = (id) => {
+    const data = {
+      client_id: id
+    };
+
+    postData(`${API_URL}/admin/remove-client`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({ open: false });
+          this.getClients();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  handleClose = () => {
+    this.setState({ open: false })
+  }
+
+  handleAction = () => {
+    this.removeClient(this.state.client_id);
   }
 
   handleChangePage = (event, page) => {
@@ -119,7 +152,7 @@ class ClientProfile extends React.Component {
       });
   }
 
-  componentDidMount() {
+  getClients = () => {
     const _that = this;
     async function getData(url) {
       const response = await fetch(url, {
@@ -150,13 +183,22 @@ class ClientProfile extends React.Component {
       });
   }
 
+  componentDidMount() {
+    this.getClients();
+  }
+
   render() {
     const { classes } = this.props;
-    const { rowsPerPage, page, clientData } = this.state;
+    const { rowsPerPage, page, clientData, open } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, clientData.length - (page * rowsPerPage));
 
     return (
       <Fragment>
+        <CustomConfirmation
+          open={open}
+          handleClose={this.handleClose}
+          handleAction={this.handleAction}
+        />
         <div className={classes.rootTable} style={{ wordBreak: 'normal' }}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
@@ -174,6 +216,7 @@ class ClientProfile extends React.Component {
                     <TableCell align="left">Email</TableCell>
                     <TableCell align="left">Phone</TableCell>
                     <TableCell align="left">Action</TableCell>
+                    <TableCell align="left">Remove</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -186,6 +229,11 @@ class ClientProfile extends React.Component {
                       <TableCell align="left">
                         <Button variant="contained" color="primary" onClick={() => this.handleRedirect(n)}>
                           LogIn As Client
+                        </Button>
+                      </TableCell>
+                      <TableCell name='confirm' align="left">
+                        <Button onClick={(e) => this.handleConfirmation(e, n.id)}>
+                          <DeleteIcon />
                         </Button>
                       </TableCell>
                     </TableRow>

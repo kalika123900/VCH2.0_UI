@@ -43,6 +43,16 @@ async function postData(url, data) {
 }
 
 class Contact extends React.Component {
+  constructor(props) {
+    super(props)
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    if (user.cId == null) {
+      this.props.history.push('/client/unauthorized');
+    }
+  }
   componentDidMount() {
     const { fetchData } = this.props;
     const user = JSON.parse(

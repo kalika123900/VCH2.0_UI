@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import classNames from 'classnames';
 import qs from 'qs';
+import { CustomConfirmation } from 'dan-components';
 import { isWidthUp } from '@material-ui/core/withWidth';
 import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
@@ -18,6 +19,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import styles from 'dan-components/Tables/tableStyle-jss';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
 import formatDate from '../../../Helpers/formatDate';
 
@@ -56,10 +58,17 @@ class CompanyProfile extends React.Component {
     companyData: [],
     page: 0,
     rowsPerPage: 5,
-    isDeleted: false
+    isDeleted: false,
+    open: false,
+    companyId: -1,
   }
 
-  showCompany = (id) => {
+  handleConfirmation = (e, id) => {
+    let value = this.state.open ? false : true
+    this.setState({ open: value, companyId: id })
+  }
+
+  showCompany = (e, id) => {
     this.props.history.push(`/admin/company-profile/${btoa(id)}`)
   }
 
@@ -73,6 +82,31 @@ class CompanyProfile extends React.Component {
 
   newCompany = () => {
     this.props.history.push('/admin/create-company')
+  }
+
+  handleClose = () => {
+    this.setState({ open: false })
+  }
+
+  handleAction = () => {
+    this.removeCompany(this.state.companyId);
+  }
+
+  removeCompany = (id) => {
+    const data = {
+      companyId: id
+    };
+
+    postData(`${API_URL}/admin/remove-company`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({ open: false });
+          this.getCompanies();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   componentDidMount() {
@@ -106,11 +140,16 @@ class CompanyProfile extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { rowsPerPage, page, companyData } = this.state;
+    const { rowsPerPage, page, companyData, open } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, companyData.length - (page * rowsPerPage));
 
     return (
       <Fragment>
+        <CustomConfirmation
+          open={open}
+          handleClose={this.handleClose}
+          handleAction={this.handleAction}
+        />
         <div className={classes.rootTable} style={{ wordBreak: 'normal' }}>
           <Toolbar className={classes.toolbar}>
             <div className={classes.title}>
@@ -133,19 +172,29 @@ class CompanyProfile extends React.Component {
                   <TableRow>
                     <TableCell padding="default">Name</TableCell>
                     <TableCell align="left">Email</TableCell>
-                    <TableCell padding="left">Phone</TableCell>
-                    <TableCell align="left">Established At</TableCell>
-                    <TableCell align="left">Status</TableCell>
+                    <TableCell align="left">Phone</TableCell>
+                    <TableCell align="left">Created At</TableCell>
+                    <TableCell align="left">Edit Profile</TableCell>
+                    <TableCell align="left">Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {companyData.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(n => (
-                    <TableRow key={n.id} onClick={() => this.showCompany(n.id)} >
+                    <TableRow key={n.id}  >
                       <TableCell padding="default">{n.name}</TableCell>
-                      <TableCell padding="default">{n.email}</TableCell>
+                      <TableCell align="default">{n.email}</TableCell>
                       <TableCell align="left">{n.phone}</TableCell>
                       <TableCell align="left">{n.establish_at}</TableCell>
-                      <TableCell align="left">{n.status}</TableCell>
+                      <TableCell align="left">
+                        <Button name='edit' onClick={(e) => this.showCompany(e, n.id)}>
+                          <EditIcon />
+                        </Button>
+                      </TableCell>
+                      <TableCell name='confirm' align="left">
+                        <Button onClick={(e) => this.handleConfirmation(e, n.id)}>
+                          <DeleteIcon />
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))}
                   {emptyRows > 0 && (

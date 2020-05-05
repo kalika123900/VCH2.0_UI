@@ -22,8 +22,20 @@ async function postData(url, data) {
 }
 
 class Settings extends React.Component {
+
   state = {
     switchData: []
+  }
+
+  constructor(props) {
+    super(props)
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    if (user.cId == null) {
+      this.props.history.push('/client/unauthorized');
+    }
   }
 
   handleIsUpdate = () => {

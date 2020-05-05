@@ -74,6 +74,16 @@ class ClientEmail extends React.Component {
     mail_type: null,
   }
 
+  constructor(props) {
+    super(props)
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+    if (user.cId == null) {
+      this.props.history.push('/client/unauthorized');
+    }
+  }
+
   sendEmail = (to, subject, emailContent, files) => {
     const actionSendEmail = this.props.sendEmail;
     const data = {

@@ -24,7 +24,9 @@ class SeatManagement extends Component {
     const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))
     );
-    if (user.managerType != 2) {
+    if (user.cId == null) {
+      this.props.history.push('/client/unauthorized');
+    } else if (user.managerType != 2) {
       this.props.history.push('/client/unauthorized');
     }
   }

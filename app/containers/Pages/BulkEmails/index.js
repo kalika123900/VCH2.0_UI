@@ -38,7 +38,11 @@ class BulkEmails extends React.Component {
       makeSecureDecrypt(localStorage.getItem('user'))
     );
 
-    if (user.managerType != 2) {
+    if (user.cId == null) {
+      this.props.history.push('/client/unauthorized');
+    }
+
+    else if (user.managerType != 2) {
       if (user.capabilities == 3)
         this.props.history.push('/client/unauthorized');
     }

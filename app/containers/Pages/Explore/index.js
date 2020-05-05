@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import { Pagination, ExploreFilter, StudentCard } from 'dan-components';
 import Button from '@material-ui/core/Button';
 import qs from 'qs';
+import { makeSecureDecrypt } from 'dan-helpers/security';
 import { universityItems } from 'dan-api/apps/profileOption'
 
 const customStyles = {
@@ -27,8 +28,14 @@ async function getData(url) {
 }
 
 class Explore extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+    if (user.cId == null) {
+      this.props.history.push('/client/unauthorized');
+    }
     this.state = {
       isStudent: false,
       showFilter: false,
