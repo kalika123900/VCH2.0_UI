@@ -32,7 +32,7 @@ const initialState = {
   interestedSectors: List([]),
   workLocation: List(['London']),
   selectedYear: List([]),
-  ethnicity: 'Not Preferable',
+  ethnicity: 'No preference',
   experience: 'no',
   minGrade: List([]),
   heading: '',
@@ -188,7 +188,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('keywords', List([]))
           .set('gender', List([]))
           .set('selectedYear', List([]))
-          .set('ethnicity', 'No-preference')
+          .set('ethnicity', 'No preference')
           .set('interestedSectors', List([]))
           .set('workLocation', List(['London']))
           .set('experience', 'no')

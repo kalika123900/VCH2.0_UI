@@ -139,7 +139,7 @@ const styles = theme => ({
     border: '2px solid green',
     padding: '5px !important',
     cursor: 'pointer'
-  },
+  }
 });
 
 export default styles;

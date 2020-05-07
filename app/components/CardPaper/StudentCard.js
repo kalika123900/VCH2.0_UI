@@ -231,7 +231,7 @@ class StudentCard extends React.Component {
               className={classes.bottomLink}
             >
               <BottomNavigationAction onClick={(e) => this.handleClickOpen(e)} className={classes.customBottomNavLabel} label="Send Message" className={classes.customBottomNavLabel} icon={<SendIcon className={classes.customMargin} />} />
-              <BottomNavigationAction className={classes.customBottomNavLabel} label="Add to Shortlist" icon={<PlaylistAddIcon className={classes.customMargin} />} />
+              {/* <BottomNavigationAction className={classes.customBottomNavLabel} label="Add to Shortlist" icon={<PlaylistAddIcon className={classes.customMargin} />} /> */}
               <BottomNavigationAction onClick={(e) => this.handleAddContact(user_id)} className={classes.customBottomNavLabel} label="Add to Contacts" icon={<ContactsIcon className={classes.customMargin} />} />
             </BottomNavigation>
           </CardActions>

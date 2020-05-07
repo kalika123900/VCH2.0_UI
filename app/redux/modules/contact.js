@@ -5,13 +5,15 @@ import {
   SEARCH_CONTACT,
   SHOW_DETAIL_CONTACT,
   HIDE_DETAIL,
+  COMPOSE_MAIL,
   EDIT_CONTACT,
   SUBMIT_CONTACT,
   DELETE_CONTACT,
   TOGGLE_FAVORITE,
   ADD_CONTACT,
   CLOSE_CONTACT_FORM,
-  CLOSE_NOTIF
+  CLOSE_NOTIF,
+  SEND_MAIL
 } from '../../actions/actionConstants';
 
 const initialState = {
@@ -56,6 +58,16 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('formValues', null)
           .set('avatarInit', '')
           .set('notifMsg', notif.discard);
+      });
+    case COMPOSE_MAIL:
+      return state.withMutations((mutableState) => {
+        mutableState.set('openFrm', true);
+      });
+    case SEND_MAIL:
+      return state.withMutations((mutableState) => {
+        mutableState
+          .set('openFrm', false)
+          .set('notifMsg', notif.sent);
       });
     case EDIT_CONTACT:
       return state.withMutations((mutableState) => {

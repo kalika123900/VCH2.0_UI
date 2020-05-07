@@ -10,6 +10,14 @@ export const showDetailAction = item => ({
   item,
 });
 
+export const composeAction = {
+  type: types.COMPOSE_MAIL,
+};
+
+export const sendAction = {
+  type: types.SEND_MAIL,
+};
+
 export const hideDetailAction = {
   type: types.HIDE_DETAIL,
 };

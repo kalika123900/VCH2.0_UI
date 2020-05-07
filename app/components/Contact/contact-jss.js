@@ -315,6 +315,16 @@ const styles = theme => ({
       display: 'none'
     }
   },
+  checkItem: {
+    display: 'none',
+  },
+  checkGrid: {
+    display: 'flex',
+    '&:hover $checkItem': {
+      display: 'flex',
+    }
+  },
+
 });
 
 export default styles;

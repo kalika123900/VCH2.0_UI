@@ -198,6 +198,7 @@ export StudentEmailSidebar from './Email/StudentEmailSidebar';
 export EmailSidebar from './Email/EmailSidebar';
 export EmailList from './Email/EmailList';
 export ComposeEmail from './Email/ComposeEmail';
+export DirectEmail from './Email/DirectEmail';
 // Calendar
 export EventCalendar from './Calendar/EventCalendar';
 export DetailEvent from './Calendar/DetailEvent';

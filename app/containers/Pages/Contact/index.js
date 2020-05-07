@@ -21,13 +21,16 @@ import {
   removeAction,
   addToFavoriteAction,
   searchAction,
-  closeNotifAction
+  closeNotifAction,
+  composeAction,
+  sendAction
 } from 'dan-actions/ContactActions';
 import {
   ContactList,
   ContactDetail,
   AddContact,
-  Notification
+  Notification,
+  DirectEmail
 } from 'dan-components';
 import styles from 'dan-components/Contact/contact-jss';
 
@@ -39,6 +42,18 @@ async function postData(url, data) {
     },
     body: qs.stringify(data)
   });
+  return await response.json();
+}
+
+async function postJSON(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  });
+
   return await response.json();
 }
 
@@ -79,7 +94,8 @@ class Contact extends React.Component {
                 // companyEmail: 'johndoe@company.com',
                 // address: 'Ipsum Street no.77 Block A/5A, New York',
                 website: '',
-                favorited: item.favorite
+                favorited: item.favorite,
+                selected: false
               }
             });
           }
@@ -96,6 +112,48 @@ class Contact extends React.Component {
     const avatarBase64 = typeof avatar === 'object' ? URL.createObjectURL(avatar) : avatar;
     const avatarPreview = avatar !== null ? avatarBase64 : dummy.user.avatar;
     submit(item, avatarPreview);
+  }
+
+  handleCompose = () => {
+    const { compose } = this.props;
+    compose();
+  }
+
+  sendDirectEmail = (subject, emailContent, files, handleSuccess) => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    let data = this.props.dataContact.filter(item => {
+      if (item.get('selected')) return true;
+      return false;
+    }).map(item => {
+      return {
+        to: item.get('personalEmail'),
+        subject,
+        body: emailContent,
+        type: 'direct',
+        sender_id: user.cId,
+        sender_type: 'client',
+        receiver_id: item.get('id'),
+        receiver_type: 'user'
+      }
+    })
+
+    const apiData = {
+      emailData: data.toJS()
+    }
+
+    postJSON(`${API_URL}/client/send-direct-email`, apiData) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          this.props.sendEmail();
+          handleSuccess();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   render() {
@@ -134,6 +192,7 @@ class Contact extends React.Component {
         <div className={classes.root}>
           <ContactList
             addFn
+            compose={this.handleCompose}
             total={dataContact.size}
             addContact={add}
             clippedRight
@@ -153,6 +212,11 @@ class Contact extends React.Component {
             favorite={favorite}
           />
         </div>
+        <DirectEmail
+          sendEmail={this.sendDirectEmail}
+          open={open}
+          closeForm={close}
+        />
         {/* <AddContact
           addContact={add}
           openForm={open}
@@ -175,6 +239,7 @@ Contact.propTypes = {
   open: PropTypes.bool.isRequired,
   showMobileDetail: PropTypes.bool.isRequired,
   add: PropTypes.func.isRequired,
+  compose: PropTypes.func.isRequired,
   close: PropTypes.func.isRequired,
   submit: PropTypes.func.isRequired,
   edit: PropTypes.func.isRequired,
@@ -205,6 +270,8 @@ const constDispatchToProps = dispatch => ({
   hideDetail: () => dispatch(hideDetailAction),
   submit: bindActionCreators(submitAction, dispatch),
   edit: bindActionCreators(editAction, dispatch),
+  compose: () => dispatch(composeAction),
+  sendEmail: () => dispatch(sendAction),
   add: () => dispatch(addAction),
   close: () => dispatch(closeAction),
   remove: bindActionCreators(removeAction, dispatch),
