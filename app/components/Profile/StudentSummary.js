@@ -13,9 +13,12 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import PapperBlock from '../PapperBlock/PapperBlock';
 import EmailIcon from '@material-ui/icons/Email';
 import styles from './profile-jss';
+import Switch from '@material-ui/core/Switch';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
+import WorkIcon from '@material-ui/icons/Work';
 import EditIcon from '@material-ui/icons/Edit';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import qs from 'qs';
@@ -38,14 +41,38 @@ class StudentSummary extends React.Component {
     name: '',
     email: '',
     dob: '',
-    phone: ''
+    phone: '',
+    employment_status: false
   }
 
   handleRedirect = () => {
     this.props.history.push(`/student/edit-details`)
   }
 
-  componentDidMount() {
+  handleToggle = (e) => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const value = e._targetInst.stateNode.checked;
+
+    const data = {
+      user_id: user.id,
+      employment_status: value
+    };
+
+    postData(`${API_URL}/student/set-employment-status`, data)
+      .then((res) => {
+        if (res.status == 1) {
+          this.setState({ employment_status: value });
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  getProfileData = () => {
     var data = {};
     if (this.props.userType == 'STUDENT') {
       const user = JSON.parse(
@@ -69,7 +96,8 @@ class StudentSummary extends React.Component {
             name: `${res.data.firstname} ${res.data.lastname}`,
             email: res.data.email,
             phone: res.data.phone,
-            dob: res.data.dob == null ? 'Not avilable' : formatDate(res.data.dob)
+            dob: res.data.dob == null ? 'Not avilable' : formatDate(res.data.dob),
+            employment_status: res.data.employment_status
           })
         }
       })
@@ -78,8 +106,12 @@ class StudentSummary extends React.Component {
       });
   }
 
+  componentDidMount() {
+    this.getProfileData();
+  }
+
   render() {
-    const { name, email, phone, dob } = this.state;
+    const { name, email, phone, dob, employment_status } = this.state;
     const { classes, userType } = this.props;
 
     return (
@@ -123,6 +155,22 @@ class StudentSummary extends React.Component {
               </ListItemAvatar>
               <ListItemText primary="Email" secondary={email} />
             </ListItem>
+            {userType == 'STUDENT' &&
+              <ListItem style={{ paddingLeft: 0 }}>
+                <ListItemAvatar>
+                  <Avatar>
+                    <WorkIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary="Employment Status" secondary="Are you open for job opportunities" />
+                <ListItemSecondaryAction>
+                  <Switch
+                    onChange={this.handleToggle}
+                    checked={employment_status}
+                  />
+                </ListItemSecondaryAction>
+              </ListItem>
+            }
           </List>
         </Grid>
       </PapperBlock>

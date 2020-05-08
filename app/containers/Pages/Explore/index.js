@@ -6,12 +6,14 @@ import imgApi from 'dan-api/images/university';
 import avatarApi from 'dan-api/images/avatars';
 import { withStyles } from '@material-ui/core/styles';
 import styles from 'dan-components/Forms/user-jss';
+import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { Pagination, ExploreFilter, StudentCard } from 'dan-components';
 import Button from '@material-ui/core/Button';
 import qs from 'qs';
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import { universityItems } from 'dan-api/apps/profileOption'
+import CircularProgress from 'dan-components/Loading/CircularProgress';
 
 const customStyles = {
   root: {
@@ -19,9 +21,24 @@ const customStyles = {
   }
 };
 
-async function getData(url) {
+async function postData(url, data) {
   const response = await fetch(url, {
-    method: 'GET',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+  return await response.json();
+}
+
+async function postJSON(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
   });
 
   return await response.json();
@@ -37,57 +54,106 @@ class Explore extends React.Component {
       this.props.history.push('/client/unauthorized');
     }
     this.state = {
+      isLoading: false,
       isStudent: false,
-      showFilter: false,
-      btnText: ' Show Filter',
+      isFilter: false,
+      btnText: 'Apply Filter',
       page: 1,
       contentsPerPage: 24,
-      datas: []
+      datas: [],
+      studentCount: 1,
+      name: '',
+      skill: [],
+      role: '',
+      university: [],
+      course: [],
+      grade: [],
+      experience: 0,
+      interests: [],
+      activity: 0,
+      location: '',
     };
-
-    this.onPageChange = this.onPageChange.bind(this);
-    this.onPrev = this.onPrev.bind(this);
-    this.onNext = this.onNext.bind(this);
-    this.onGoFirst = this.onGoFirst.bind(this);
-    this.onGoLast = this.onGoLast.bind(this);
   }
 
-  onPageChange(page) {
+  handleReset = () => {
+    this.setState({
+      name: '',
+      skill: [],
+      role: '',
+      university: [],
+      course: [],
+      grade: [],
+      experience: 0,
+      interests: [],
+      activity: 0,
+      location: '',
+    });
+  }
+
+  handleChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value })
+  }
+
+  onPageChange = (page) => {
     this.setState({ page });
+    this.state.isFilter ? this.getFilterStudents() : this.getStudents();
   }
 
-  onPrev() {
+  onPrev = () => {
     let { page } = this.state;
     if (page > 1) {
       this.setState({ page: page -= 1 });
     } else {
       this.setState({ page: 1 });
     }
+    this.state.isFilter ? this.getFilterStudents() : this.getStudents();
   }
 
-  onNext(totalPages) {
+  onNext = (totalPages) => {
     let { page } = this.state;
     if (page < totalPages) {
       this.setState({ page: page += 1 });
     } else {
       this.setState({ page: totalPages });
     }
+    this.state.isFilter ? this.getFilterStudents() : this.getStudents();
   }
 
-  onGoFirst() {
+  onGoFirst = () => {
     this.setState({ page: 1 });
+    this.state.isFilter ? this.getFilterStudents() : this.getStudents();
   }
 
-  onGoLast(totalPages) {
+  onGoLast = (totalPages) => {
     this.setState({ page: totalPages });
+    this.state.isFilter ? this.getFilterStudents() : this.getStudents();
   }
 
-  componentDidMount() {
-    getData(`${API_URL}/utils/get-students`) // eslint-disable-line
+  getFilterStudents = () => {
+    this.setState({ isLoading: true })
+    const data = {
+      offset: ((this.state.page - 1) * this.state.contentsPerPage),
+      rows: this.state.contentsPerPage,
+      name: this.state.name,
+      skill: this.state.skill,
+      role: this.state.role,
+      university: this.state.university,
+      course: this.state.course,
+      grade: this.state.grade,
+      experience: this.state.experience,
+      interests: this.state.interests,
+      activity: this.state.activity,
+      location: this.state.location
+    }
+
+    postJSON(`${API_URL}/utils/get-filter-students`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
           if (res.data.length > 0) {
-            this.setState({ isStudent: true, datas: res.data })
+            this.setState({ isStudent: true, datas: res.data, studentCount: res.data[0].count, isLoading: false })
+          }
+          else {
+            this.setState({ isStudent: false, isLoading: false, datas: res.data, studentCount: 1 });
           }
         }
       })
@@ -96,11 +162,46 @@ class Explore extends React.Component {
       });
   }
 
+  getStudents = () => {
+    this.setState({ isLoading: true })
+    const data = {
+      offset: ((this.state.page - 1) * this.state.contentsPerPage),
+      rows: this.state.contentsPerPage
+    }
+
+    postData(`${API_URL}/utils/get-students`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          if (res.data.length > 0) {
+            this.setState({ isStudent: true, datas: res.data, studentCount: res.data[0].count, isLoading: false })
+          }
+          else {
+            this.setState({ isLoading: false });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  componentDidMount() {
+    this.getStudents();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.page != this.state.page) {
+      this.state.isFilter ? this.getFilterStudents() : this.getStudents();
+    }
+  }
+
   handleFilter = () => {
-    if (this.state.showFilter) {
-      this.setState({ showFilter: false, btnText: 'Show Filter' });
+    if (this.state.isFilter) {
+      this.setState({ isFilter: false, btnText: 'Apply Filter', page: 1 });
+      this.handleReset();
+      this.getStudents();
     } else {
-      this.setState({ showFilter: true, btnText: 'Hide Filter' });
+      this.setState({ isFilter: true, btnText: 'Remove Filter', page: 1 });
     }
   }
 
@@ -112,13 +213,9 @@ class Explore extends React.Component {
     const title = brand.name + ' - Explore';
     const description = brand.desc;
     const { classes } = this.props;
-    const { page, contentsPerPage, datas, isStudent } = this.state;
+    const { page, contentsPerPage, datas, isStudent, studentCount, isLoading } = this.state;
 
-    const indexOfLastTodo = page * contentsPerPage;
-    const indexOfFirstTodo = indexOfLastTodo - contentsPerPage;
-    const currentContent = datas.slice(indexOfFirstTodo, indexOfLastTodo);
-
-    const renderContent = currentContent.map((data, index) => (
+    const renderContent = datas.map((data, index) => (
       < Grid item md={3} sm={6} xs={12} key={index.toString()} >
         <StudentCard
           user_id={data.id}
@@ -135,7 +232,7 @@ class Explore extends React.Component {
     ));
 
     const pageNumbers = [];
-    for (let i = 1; i <= Math.ceil(datas.length / contentsPerPage); i += 1) {
+    for (let i = 1; i <= Math.ceil(studentCount / contentsPerPage); i += 1) {
       pageNumbers.push(i);
     }
 
@@ -149,48 +246,67 @@ class Explore extends React.Component {
           <meta property="twitter:title" content={title} />
           <meta property="twitter:description" content={description} />
         </Helmet>
-        {isStudent &&
+
+        <Fragment>
+          <Grid style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Grid>
+              <Button variant="contained" color="primary" onClick={(e) => this.handleFilter(e)}>
+                {this.state.btnText}
+              </Button>
+            </Grid>
+            <Grid>
+              <Button variant="contained" color="secondary" onClick={(e) => this.handleContacts(e)}>
+                Contacts
+                </Button>
+            </Grid>
+          </Grid>
+          <Grid style={{ width: '100%', marginBottom: 20 }}>
+            {this.state.isFilter &&
+              <ExploreFilter
+                {...this.state}
+                handleSubmit={this.getFilterStudents}
+                handleChange={this.handleChange}
+                handleReset={this.handleReset}
+              />}
+          </Grid>
+        </Fragment>
+        {isStudent ?
           <Fragment>
-            <Grid style={{ display: 'flex', justifyContent: 'space-between' }}>
+            {isLoading ?
               <Grid>
-                <Button variant="contained" color="primary" onClick={(e) => this.handleFilter(e)}>
-                  {this.state.btnText}
-                </Button>
+                <CircularProgress />
               </Grid>
-              <Grid>
-                <Button variant="contained" color="secondary" onClick={(e) => this.handleContacts(e)}>
-                  Contacts
-                </Button>
-              </Grid>
-            </Grid>
-            <Grid style={{ width: '100%', marginBottom: 20 }}>
-              {this.state.showFilter && <ExploreFilter />}
-            </Grid>
+              :
+              <Fragment>
+                <Grid
+                  container
+                  alignItems="flex-start"
+                  direction="row"
+                  spacing={2}
+                  className={classes.root, classes.studentCardGrid}
+                >
+                  {renderContent}
+                </Grid>
 
-            <Grid
-              container
-              alignItems="flex-start"
-              justify="space-between"
-              direction="row"
-              spacing={2}
-              className={classes.root, classes.studentCardGrid}
-            >
-              {renderContent}
-            </Grid>
-
-            <Pagination
-              curpage={page}
-              totpages={pageNumbers.length}
-              boundaryPagesRange={1}
-              onChange={this.onPageChange}
-              siblingPagesRange={1}
-              hideEllipsis={false}
-              onPrev={this.onPrev}
-              onNext={() => this.onNext(pageNumbers.length)}
-              onGoFirst={this.onGoFirst}
-              onGoLast={() => this.onGoLast(pageNumbers.length)}
-            />
+                <Pagination
+                  curpage={page}
+                  totpages={pageNumbers.length}
+                  boundaryPagesRange={1}
+                  onChange={this.onPageChange}
+                  siblingPagesRange={1}
+                  hideEllipsis={false}
+                  onPrev={this.onPrev}
+                  onNext={() => this.onNext(pageNumbers.length)}
+                  onGoFirst={this.onGoFirst}
+                  onGoLast={() => this.onGoLast(pageNumbers.length)}
+                />
+              </Fragment>
+            }
           </Fragment>
+          :
+          <Grid style={{ textAlign: 'center' }}>
+            <Typography variant="subtitle2" color="secondary">No Data Found</Typography>
+          </Grid>
         }
       </div>
     );
