@@ -25,9 +25,6 @@ const styles = theme => ({
   swipeDrawerPaper: {
     width: drawerWidth,
   },
-  insetcustom: {
-    paddingLeft: '24px'
-  },
   opened: {
     '& $primary, & $icon': {
       color: theme.palette.primary.main,
@@ -136,7 +133,7 @@ const styles = theme => ({
     paddingBottom: theme.spacing(0.5),
     margin: `${theme.spacing(0.5)}px 0`,
     [theme.breakpoints.down('lg')]: {
-      paddingLeft: theme.spacing(3)
+      paddingLeft: theme.spacing(5)
     }
   },
   child: {
@@ -187,10 +184,10 @@ const styles = theme => ({
   },
   iconed: {},
   head: {
-    padding: `${theme.spacing(1)}px 0`,
-    margin: `${theme.spacing(1)}px 0`,
+    padding: `${theme.spacing(0.5)}px 0`,
+    margin: `${theme.spacing(0.5)}px 0`,
     borderRadius: `0 ${theme.spacing(3)}px ${theme.spacing(3)}px 0`,
-    paddingLeft: theme.spacing(3),
+    paddingLeft: theme.spacing(5),
     '&$iconed': {
       paddingLeft: theme.spacing(3),
     },
@@ -219,6 +216,7 @@ const styles = theme => ({
       background: 'none',
       position: 'absolute',
     },
+    bottom: 0,
     left: theme.spacing(3),
     lineHeight: '24px',
   },
@@ -232,10 +230,11 @@ const styles = theme => ({
     textDecoration: 'none',
     fontSize: 16,
     margin: 0,
+    backgroundColor: theme.palette.primary.main,
     fontWeight: 500,
     color: theme.palette.text.primary,
     '& img': {
-      width: 30,
+      width: 70,
       marginRight: 10,
     },
   },

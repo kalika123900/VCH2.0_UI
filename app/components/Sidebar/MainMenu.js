@@ -7,12 +7,10 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Collapse from '@material-ui/core/Collapse';
 import Chip from '@material-ui/core/Chip';
-import Ionicon from 'react-ionicons';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import styles from './sidebar-jss';
@@ -45,18 +43,12 @@ class MainMenu extends React.Component {
               className={
                 classNames(
                   classes.head,
-                  item.icon ? classes.iconed : '',
                   open.indexOf(item.key) > -1 ? classes.opened : '',
                 )
               }
               onClick={() => openSubMenu(item.key, item.keyParent)}
             >
-              {item.icon && (
-                <ListItemIcon className={classes.icon}>
-                  <Ionicon icon={item.icon} />
-                </ListItemIcon>
-              )}
-              <ListItemText classes={{ primary: classes.primary }} variant="inset" className={classes.insetcustom} primary={item.name} />
+              <ListItemText classes={{ primary: classes.primary }} variant="inset" primary={item.name} />
               {open.indexOf(item.key) > -1 ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
             <Collapse
@@ -69,7 +61,7 @@ class MainMenu extends React.Component {
               timeout="auto"
               unmountOnExit
             >
-              <List className={classes.dense} component="nav" dense>
+              <List component="nav" dense>
                 {getMenus(item.child, 'key')}
               </List>
             </Collapse>
@@ -98,7 +90,7 @@ class MainMenu extends React.Component {
           component={LinkBtn}
           to={item.link}
           onClick={() => this.handleClick()}
-        > <Ionicon icon={item.icon} />
+        >
           <ListItemText classes={{ primary: classes.primary }} primary={item.name} />
           {item.badge && (
             <Chip color="primary" label={item.badge} className={classes.badge} />

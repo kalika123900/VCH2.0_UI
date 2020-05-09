@@ -22,7 +22,7 @@ class ProductCard extends React.Component {
       index
     } = this.props;
     return (
-      <Card className={classNames(classes.cardProduct, isWidthUp('sm', width) && list ? classes.cardList : '')}>
+      <Card className={classNames(classes.cardProduct, isWidthUp('sm', width) && list ? classes.cardList : '')} style={{ width: '100%' }}>
         <CardContent className={classes.floatingButtonWrap}>
           <Typography noWrap gutterBottom variant="h5" className={classes.title} component="h2">
             {role_name}

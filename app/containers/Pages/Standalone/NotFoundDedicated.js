@@ -13,7 +13,7 @@ class NotFoundDedicated extends React.Component {
       <div className={classNames(classes.appFrameOuter, gradient ? classes.gradientBg : classes.solidBg)}>
         <main className={classes.outerContent} id="mainContent">
           <div className={classes.petal} />
-          <ErrorWrap title="404" desc="Oops, Page Not Found :(" />
+          <ErrorWrap {...this.props} title="404" desc="Oops, Page Not Found :(" />
         </main>
       </div>
     );

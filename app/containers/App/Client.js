@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Footer } from 'dan-components';
-import Dashboard from '../Templates/ClientDashboard';
+import Dashboard from '../Templates/Dashboard';
 import {
   ClientDashboard, Campaigns, Explore, BulkEmails,
   CampaignManagement, CampaignDetails, EditDetails,

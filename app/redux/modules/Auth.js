@@ -4,7 +4,7 @@ import {
   REMOVE_AUTH
 } from 'dan-actions/actionConstants';
 const initialState = {
-  userType: false,
+  userType: '',
   userDetail: {}
 };
 

@@ -25,7 +25,7 @@ const combinedStyles = CombineStyles(customStyles, styles);
 
 class ClientCard extends React.Component {
   handleRedirect = (id) => {
-    this.props.history.push(`/student/opportunities/${btoa(id)}`);
+    location.href = `/student/opportunities/${btoa(id)}`;
   }
 
   render() {
@@ -35,56 +35,42 @@ class ClientCard extends React.Component {
       cover,
       avatar,
       name,
-      btnText,
-      data
+      btnText
     } = this.props;
 
     return (
-      <Fragment>
-        <Card className={classes.cardSocmed}>
-          <CardMedia
-            className={classes.mediaProfile}
-            image={cover}
-            title="cover"
-          />
-          <CardContent className={classes.contentProfile} >
-            <Avatar alt="avatar" src={avatar} className={classes.avatarBig} />
-            <Typography variant="h6" className={classes.name} gutterBottom>
-              {name}
-            </Typography>
-            <Typography color="secondary" className={classes.subheading} gutterBottom>
+      <Card className={classes.cardSocmed}>
+        <CardMedia
+          className={classes.mediaProfile}
+          image={cover}
+          title="cover"
+        />
+        <CardContent className={classes.contentProfile} >
+          <Avatar alt="avatar" src={avatar} className={classes.avatarBig} />
+          <Typography variant="h6" className={classes.name} gutterBottom>
+            {name}
+          </Typography>
+          <Typography color="secondary" className={classes.subheading} gutterBottom>
 
 
-            </Typography>
-            <Typography color="textSecondary" variant="body2" className={classes.subheading} gutterBottom>
+          </Typography>
+          <Typography color="textSecondary" variant="body2" className={classes.subheading} gutterBottom>
 
-            </Typography>
-            <Button className={classes.buttonProfile}
-              size="small" variant="outlined"
-              color="primary"
-              style={{ margin: "10px 10px 25px 10px" }}
-              onClick={() => this.handleRedirect(id)}
-            >
-              {btnText}
-            </Button>
-          </CardContent>
-          <Divider />
-        </Card>
-      </Fragment>
+          </Typography>
+          <Button className={classes.buttonProfile}
+            size="small" variant="outlined"
+            color="primary"
+            style={{ margin: "10px 10px 25px 10px" }}
+            onClick={() => this.handleRedirect(id)}
+          >
+            {btnText}
+          </Button>
+        </CardContent>
+        <Divider />
+      </Card>
     );
   }
 }
-
-ClientCard.propTypes = {
-  classes: PropTypes.object.isRequired,
-  cover: PropTypes.string.isRequired,
-  avatar: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  role: PropTypes.string.isRequired,
-  roleDesc: PropTypes.string.isRequired,
-  btnText: PropTypes.string.isRequired,
-  isVerified: PropTypes.bool
-};
 
 ClientCard.defaultProps = {
   isVerified: false

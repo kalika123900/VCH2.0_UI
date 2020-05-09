@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
+import { browserHistory } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -19,6 +20,7 @@ import avatarApi from 'dan-api/images/avatars';
 import EmailIcon from '@material-ui/icons/Email';
 import { Typography, Divider, Button } from '@material-ui/core';
 import { ProductCard } from 'dan-components';
+import SimilarJobProfiles from './SimilarJobProfiles';
 import formatDate from 'dan-helpers/formatDate';
 
 async function postData(url, data) {
@@ -33,6 +35,15 @@ async function postData(url, data) {
 }
 
 class ClientJobProfile extends React.Component {
+  constructor(props) {
+    super(props);
+
+    //Here ya go
+    this.props.history.listen((location, action) => {
+      console.log(action);
+    });
+  }
+
   state = {
     tab: 0,
     name: '',
@@ -45,7 +56,7 @@ class ClientJobProfile extends React.Component {
     jobInfoIndex: 0
   }
 
-  componentDidMount() {
+  getJobDescription = () => {
     const cId = atob(this.props.match.params.id)
     const data = {
       company_id: cId
@@ -76,6 +87,10 @@ class ClientJobProfile extends React.Component {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  componentDidMount() {
+    this.getJobDescription();
   }
 
   handleChangeTab = (event, value) => {
@@ -167,11 +182,11 @@ class ClientJobProfile extends React.Component {
                     justify="center"
                     direction="row"
                     spacing={2}
+                    style={{ width: '100%' }}
                   >
                     {jobsJSX}
                   </Grid>
                 </PapperBlock>
-
                 :
                 this.state.label == 'About this job' &&
                 <PapperBlock title="Job Info" icon="ios-aperture-outline" whiteBg desc="">
@@ -184,15 +199,15 @@ class ClientJobProfile extends React.Component {
                     </Typography>
                   </Grid>
                   <Divider />
-                  <Typography variant="h6" color="primary" className={classes.subHeading}>About {name}:</Typography>
+                  <Typography variant="h6" color="primary" className={classes.subHeading}>About position:</Typography>
                   <Grid className={classes.content}>
                     <Grid className={classes.makeFlex}>
                       <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin} >Job Type:</Typography>
-                      <Typography variant="subtitle2">Full Time</Typography>
+                      <Typography variant="subtitle2">{(jobs.length > 0 && jobs[jobInfoIndex].role_type != null) ? jobs[jobInfoIndex].role_type : 'Not Avilable'}</Typography>
                     </Grid>
                     <Grid className={classes.makeFlex}>
                       <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin}>Experience level:</Typography>
-                      <Typography variant="subtitle2">Mid-Level, Senior</Typography>
+                      <Typography variant="subtitle2">{(jobs.length > 0 && jobs[jobInfoIndex].experience_level != null) ? jobs[jobInfoIndex].experience_level : 'Not Avilable'}</Typography>
                     </Grid>
                     <Grid className={classes.makeFlex}>
                       <Typography variant="subtitle2" color="textSecondary" className={classes.customMargin}>Role:</Typography>
@@ -207,9 +222,12 @@ class ClientJobProfile extends React.Component {
                     }
                   </Grid>
                   <Grid className={classes.subHeading}>
-                    <Typography variant="h6" color="primary" className={classes.customMargin}>Location: </Typography>
+                    <Typography variant="h6" color="primary" className={classes.customMargin}>Work Location: </Typography>
                     <Grid className={classes.content}>
-                      <Typography variant="subtitle2">London</Typography>
+                      {jobs.length > 0 && (jobs[jobInfoIndex].work_location.split(',')).map((item, index) => {
+                        return <Typography variant="subtitle2" key={index.toString()}>{item}</Typography>
+                      })
+                      }
                     </Grid>
                   </Grid>
                   <Typography variant="h6" color="primary" className={classes.subHeading}>Job description:</Typography>
@@ -308,7 +326,7 @@ class ClientJobProfile extends React.Component {
             )}
             {tab === 3 && (
               <Fragment >
-
+                <SimilarJobProfiles company_id={atob(this.props.match.params.id)} />
               </Fragment>
             )}
           </Grid>

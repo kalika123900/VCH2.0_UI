@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import { Footer } from 'dan-components';
 import NotFound from 'containers/Pages/Standalone/NotFoundDedicated';
-import Dashboard from '../Templates/AdminDashboard';
+import Dashboard from '../Templates/Dashboard';
 import EditScheduledCampaign from '../../containers/Tables/EditScheduledCampaign';
 import {
   AdminDashboard, AdminSeatManagement, AdminCampaignManagement, CampaignEdit,

@@ -26,7 +26,6 @@ class Student extends React.Component {
           {/* Profile Progress */}
           <Divider className={classes.divider} />
           <ProfileProgress />
-
           <SuitableCompanies />
           {/* <StudentTimeline dataTimeline={data} /> */}
         </Grid>

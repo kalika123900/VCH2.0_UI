@@ -12,18 +12,14 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import styles from './widget-jss';
 import PapperBlock from '../PapperBlock/PapperBlock';
-import Typography from '@material-ui/core/Typography';
 import Place from '@material-ui/icons/Place';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import ListItemText from '@material-ui/core/ListItemText';
 import {
   sectorsData,
   skillMenu,
-  courses,
-  degreeGradesItems,
-  universityItems,
+  jobType,
 } from 'dan-api/apps/profileOption';
 
 const ITEM_HEIGHT = 48;
@@ -38,55 +34,11 @@ const MenuProps = {
 };
 
 class ClientFilter extends PureComponent {
-  state = {
-    skill: [],
-    location: '',
-    intern: false,
-    fullTime: false,
-    partTime: false,
-    intern: false,
-    allJobs: false,
-    remote: false,
-    freeIntern: false,
-    paidIntern: false,
-    interests: []
-  };
-
-  handleReset = () => {
-    this.setState({
-      skill: [],
-      location: '',
-      intern: false,
-      fullTime: false,
-      partTime: false,
-      intern: false,
-      remote: false,
-      allJobs: false,
-      paidIntern: false,
-      freeIntern: false,
-      interests: []
-    })
-  }
-
-  handleLocationChange = prop => event => {
-    this.setState({ location: event.target.value })
-  };
-
-  handleChangeSelect = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-
-  handleCheckbox = name => event => {
-    this.setState({ [name]: event.target.checked });
-  };
-
   render() {
-    const { classes } = this.props;
     const
       {
-        skill, location, intern, fullTime, interests,
-        partTime, remote, allJobs, freeIntern, paidIntern
-      } = this.state;
+        skill, location, interests, handleChange, handleReset, handleSubmit, classes, workType
+      } = this.props;
 
     return (
       <PapperBlock whiteBg noMargin title="Apply Filter" icon="ios-search-outline" desc="">
@@ -111,7 +63,7 @@ class ClientFilter extends PureComponent {
                   return skillName.join(', ');
                 }
                 }
-                onChange={e => this.handleChangeSelect(e)}
+                onChange={e => handleChange(e)}
               >
                 {skillMenu.map((item, index) => (
                   (item.length > 0) &&
@@ -133,8 +85,8 @@ class ClientFilter extends PureComponent {
               <Input
                 id="location-simple"
                 value={location}
-
-                onChange={this.handleLocationChange('location')}
+                name='location'
+                onChange={e => handleChange(e)}
                 endAdornment={<InputAdornment position="end"><Place /></InputAdornment>}
                 aria-describedby="standard-weight-helper-text"
                 inputProps={{
@@ -146,7 +98,6 @@ class ClientFilter extends PureComponent {
         </Grid>
         <Grid container spacing={2}>
           <Grid item sm={6} xs={6}>
-            {/* <Typography variant="button" className={classes.divider}>Industry</Typography> */}
             <Grid>
               <FormControl className={classes.formControlTrade}>
                 <InputLabel htmlFor="sector-simple">Industry</InputLabel>
@@ -168,9 +119,10 @@ class ClientFilter extends PureComponent {
                     return interestsName.join(', ');
                   }
                   }
-                  onChange={e => this.handleChangeSelect(e)}
+                  onChange={e => handleChange(e)}
                 >
                   {sectorsData.map((item, index) => (
+                    item != "I'm flexible / Open to all roles" &&
                     <MenuItem key={index.toString()} value={item}>
                       <TextField
                         name="interests"
@@ -185,67 +137,47 @@ class ClientFilter extends PureComponent {
             </Grid>
           </Grid>
           <Grid item sm={6} xs={6}>
-            <Typography variant="button" className={classes.divider}>Work Type</Typography>
-            <Grid>
-              <FormControlLabel
-                control={(
-                  <Checkbox
-                    checked={allJobs}
-                    onChange={this.handleCheckbox('allJobs')}
-                    value="allJobs"
-                  />
-                )}
-                label="All Jobs"
-              />
-              <FormControlLabel
-                control={(
-                  <Checkbox
-                    checked={intern}
-                    onChange={this.handleCheckbox('intern')}
-                    value="intern"
-                  />
-                )}
-                label="Intership"
-              />
-              <FormControlLabel
-                control={(
-                  <Checkbox
-                    checked={fullTime}
-                    onChange={this.handleCheckbox('fullTime')}
-                    value="fullTime"
-                  />
-                )}
-                label="Full Time"
-              />
-              <FormControlLabel
-                control={(
-                  <Checkbox
-                    checked={partTime}
-                    onChange={this.handleCheckbox('partTime')}
-                    value="partTime"
-                  />
-                )}
-                label="Part Time"
-              />
-              <FormControlLabel
-                control={(
-                  <Checkbox
-                    checked={remote}
-                    onChange={this.handleCheckbox('remote')}
-                    value="remote"
-                  />
-                )}
-                label="Remote Job"
-              />
-            </Grid>
+            <FormControl className={classes.formControlTrade}>
+              <InputLabel htmlFor="work-type">Work Type</InputLabel>
+              <Select
+                multiple
+                value={workType}
+                input={<Input />}
+                name="workType"
+                MenuProps={MenuProps}
+                component={Select}
+                renderValue={selected => {
+                  const workName = [];
+                  jobType.map((value, index) => {
+                    if (selected.includes(value)) {
+                      workName.push(value);
+                    }
+                  });
+                  return workName.join(', ');
+                }
+                }
+                onChange={e => handleChange(e)}
+              >
+                {jobType.map((item, index) => (
+                  <MenuItem key={index.toString()} value={item}>
+                    <TextField
+                      name="work-checkbox"
+                      component={Checkbox}
+                      checked={workType.indexOf(item) > -1}
+                    />
+                    <ListItemText primary={item} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
         </Grid>
         <Divider className={classes.divider} />
         <div className={classes.textRight}>
-          <Button color="secondary" variant="contained" className={classes.button} onClick={(e) => { this.handleReset() }}>
+          <Button color="secondary" variant="contained" className={classes.button} onClick={(e) => handleReset()}>
             Reset
           </Button>
-          <Button color="secondary" variant="contained" className={classes.button}>
+          <Button color="secondary" variant="contained" className={classes.button} onClick={(e) => handleSubmit()} >
             Filter Results
           </Button>
         </div>

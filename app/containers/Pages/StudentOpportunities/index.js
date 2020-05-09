@@ -32,7 +32,6 @@ class CompanyProfiles extends React.Component {
     const description = brand.desc;
     const { classes } = this.props;
     return (
-
       <div className={classes.root}>
         <Helmet>
           <title>{title}</title>

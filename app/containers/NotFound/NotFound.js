@@ -1,13 +1,13 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import brand from 'dan-api/dummy/brand';
-import { Route } from 'react-router-dom';
+import { Route, withRouter } from 'react-router-dom';
 import { ErrorWrap } from 'dan-components';
 
 const title = brand.name + ' - Page Not Found';
 const description = brand.desc;
 
-const NotFound = () => (
+const NotFound = (props) => (
   <Route
     render={({ staticContext }) => {
       if (staticContext) {
@@ -23,11 +23,11 @@ const NotFound = () => (
             <meta property="twitter:title" content={title} />
             <meta property="twitter:description" content={description} />
           </Helmet>
-          <ErrorWrap title="404" desc="Oops, Page Not Found :(" />
+          <ErrorWrap {...props} title="404" desc="Oops, Page Not Found :(" />
         </div>
       );
     }}
   />
 );
 
-export default NotFound;
+export default withRouter(NotFound);

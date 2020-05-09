@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
-import Dashboard from '../Templates/StudentDashboard';
+import Dashboard from '../Templates/Dashboard';
 import { Footer } from 'dan-components';
 import {
   StudentDashboard, EditStudentDetails, StudentMessage,

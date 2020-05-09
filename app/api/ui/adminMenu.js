@@ -35,11 +35,6 @@ module.exports = [
     icon: 'ios-information-circle-outline',
     child: [
       {
-        key: 'management',
-        name: 'Management',
-        title: true,
-      },
-      {
         key: 'edit-client-accounts',
         name: 'Client Accounts',
         link: '/admin/client-accounts',

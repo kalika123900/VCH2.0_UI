@@ -11,6 +11,7 @@ import classNames from 'classnames';
 import logo from 'dan-images/logo.svg';
 import brand from 'dan-api/dummy/brand';
 import styles from '../Sidebar/sidebar-jss';
+import { Button } from '@material-ui/core';
 
 class SideNavMobile extends React.Component {
   render() {
@@ -25,7 +26,7 @@ class SideNavMobile extends React.Component {
         key={index.toString()}
         button
         className={classes.headCapital}
-        component={AnchorLink}
+        component={Button}
         href={item.url}
         onClick={closeDrawer}
       >
@@ -43,9 +44,9 @@ class SideNavMobile extends React.Component {
         </div>
         <div className={classNames(classes.menuContainer, classes.landingNav, classes.rounded)}>
           <List className={classes.dense} component="nav">
-            <Scrollspy items={['feature', 'showcase', 'testimonials', 'tech', 'pricing', 'contact']} currentClassName={classes.active}>
-              {getMenus(menuList)}
-            </Scrollspy>
+            {/* <Scrollspy items={['feature', 'showcase', 'testimonials', 'tech', 'pricing', 'contact', 'student', 'client', 'admin']} currentClassName={classes.active}> */}
+            {getMenus(menuList)}
+            {/* </Scrollspy> */}
           </List>
           <Typography variant="caption" className={classes.copyright}>
             &copy; 2019 Dandelion Designs

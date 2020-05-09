@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
+import logo from 'dan-images/logo.png';
+import brand from 'dan-api/dummy/brand';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Popper from '@material-ui/core/Popper';
@@ -14,6 +16,7 @@ import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
 import styles from './header-jss';
 
 const LinkBtn = React.forwardRef(function LinkBtn(props, ref) { // eslint-disable-line
@@ -21,14 +24,13 @@ const LinkBtn = React.forwardRef(function LinkBtn(props, ref) { // eslint-disabl
 });
 
 // eslint-disable-next-line
-class DropListMenu extends React.Component {
+class MainMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       active: [],
       openMenu: [],
       anchorEl: null,
-      isVirtual: localStorage.hasOwnProperty('oldUser')
     };
     this.handleClose = this.handleClose.bind(this);
     this.handleOpenMenu = this.handleOpenMenu.bind(this);
@@ -67,8 +69,8 @@ class DropListMenu extends React.Component {
   }
 
   render() {
-    const { classes, open, dataMenu } = this.props;
-    const { active, openMenu, anchorEl, isVirtual } = this.state;
+    const { classes, open, dataMenu, userType } = this.props;
+    const { active, openMenu, anchorEl } = this.state;
     const getMenus = (parent, menuArray) => menuArray.map((item, index) => {
       if (item.multilevel) {
         return false;
@@ -85,11 +87,10 @@ class DropListMenu extends React.Component {
                 classNames(
                   classes.headMenu,
                   open.indexOf(item.key) > -1 ? classes.opened : '',
-                  active.indexOf(item.key) > -1 ? classes.selected : ''
+                  // active.indexOf(item.key) > -1 ? classes.selected : ''
                 )
               }
               onClick={(event) => this.handleOpenMenu(event, item.key, item.keyParent)}
-              style={{ color: 'white' }}
             >
               {item.name}
               <ExpandMore className={classes.rightIcon} />
@@ -104,11 +105,11 @@ class DropListMenu extends React.Component {
                 <Grow
                   {...TransitionProps}
                   id="menu-list-grow"
-                  style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom', background: '#3f51b5' }}
+                  style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
                 >
                   <Paper className={classes.dropDownMenu}>
                     <ClickAwayListener onClickAway={this.handleClose}>
-                      <List role="menu" component="nav" style={{ overflow: 'hidden' }} className={classes.paperMenu}>
+                      <List role="menu" component="nav" className={classes.paperMenu}>
                         {getMenus(item.key, item.child)}
                       </List>
                     </ClickAwayListener>
@@ -120,55 +121,68 @@ class DropListMenu extends React.Component {
         );
       }
       if (item.title) {
-        return false;
+        return (
+          <ListSubheader component="div" key={index.toString()} className={classes.title}>{item.name}</ListSubheader>
+        );
       }
       return (
         <ListItem
           key={index.toString()}
+          button
           exact
+          className={classes.menuItem}
+          // activeClassName={classes.active}
           component={LinkBtn}
           to={item.link}
           onClick={() => this.handleActiveParent(parent)}
-          className={(classes.menuItem, classes.headMenu)}
         >
-          <ListItemText className={classes.menuitemColor}
-            primary={isVirtual ? item.name == 'Sign Out' ? 'LogIn As Admin' : item.name : item.name}
-          />
+          <ListItemText primary={item.name} />
         </ListItem>
       );
     });
     return (
       <nav className={classes.mainMenu}>
         <div>
-          {getMenus(null, dataMenu)}
+          <div>
+            <NavLink to={`/${userType.toLowerCase()}`} className={classes.dropListBrand}>
+              <img src={logo} alt={brand.name} />
+            </NavLink>
+          </div>
+          <div style={{ display: 'flex' }}>
+            {getMenus(null, dataMenu)}
+          </div>
+
         </div>
       </nav>
     );
   }
 }
 
-DropListMenu.propTypes = {
+MainMenu.propTypes = {
   classes: PropTypes.object.isRequired,
   open: PropTypes.object.isRequired,
   openSubMenu: PropTypes.func.isRequired,
   dataMenu: PropTypes.array.isRequired,
+  userType: PropTypes.string.isRequired
 };
 
 const openAction = (key, keyParent) => ({ type: 'OPEN_SUBMENU', key, keyParent });
 const reducer = 'ui';
+const reducerAuth = 'Auth';
 
 const mapStateToProps = state => ({
   force: state, // force active class for sidebar menu
-  open: state.getIn([reducer, 'subMenuOpen'])
+  open: state.getIn([reducer, 'subMenuOpen']),
+  userType: state.getIn([reducerAuth, 'userType'])
 });
 
 const mapDispatchToProps = dispatch => ({
   openSubMenu: bindActionCreators(openAction, dispatch)
 });
 
-const DropListMenuMapped = connect(
+const MainMenuMapped = connect(
   mapStateToProps,
   mapDispatchToProps
-)(DropListMenu);
+)(MainMenu);
 
-export default withStyles(styles)(DropListMenuMapped);
+export default withStyles(styles)(MainMenuMapped);
