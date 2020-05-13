@@ -7,7 +7,7 @@ import { ErrorWrap } from 'dan-components';
 const title = brand.name + ' - Aplication Error';
 const description = brand.desc;
 
-const Error = () => (
+const Error = (props) => (
   <Route
     render={({ staticContext }) => {
       if (staticContext) {
@@ -23,7 +23,7 @@ const Error = () => (
             <meta property="twitter:title" content={title} />
             <meta property="twitter:description" content={description} />
           </Helmet>
-          <ErrorWrap title="500" desc="Sorry, server goes wrong" />
+          <ErrorWrap {...props} title="500" desc="Sorry, server goes wrong" />
         </div>
       );
     }}

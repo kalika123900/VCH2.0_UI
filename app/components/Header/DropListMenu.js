@@ -12,6 +12,7 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import Ionicon from 'react-ionicons';
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -92,7 +93,7 @@ class MainMenu extends React.Component {
               }
               onClick={(event) => this.handleOpenMenu(event, item.key, item.keyParent)}
             >
-              {item.name}
+              <Ionicon icon={item.icon} /> {item.name}
               <ExpandMore className={classes.rightIcon} />
             </Button>
             <Popper
@@ -136,7 +137,7 @@ class MainMenu extends React.Component {
           to={item.link}
           onClick={() => this.handleActiveParent(parent)}
         >
-          <ListItemText primary={item.name} />
+          <Ionicon icon={item.icon} /> <ListItemText primary={item.name} />
         </ListItem>
       );
     });

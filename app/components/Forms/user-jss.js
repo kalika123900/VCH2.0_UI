@@ -27,6 +27,21 @@ const styles = theme => ({
   root: {
     ...rootWraper
   },
+  placeholderUiOff: {
+    display: 'none'
+  },
+  placeholderUiOn: {
+    display: 'block'
+  },
+  autoComplete: {
+    width: '100% !important',
+    '& autoCompleteInner': {
+      width: '100%'
+    },
+  },
+  autoCompleteInner: {
+    width: '100% !Important'
+  },
   rootFull: {
     ...rootWraper,
     height: '100%',
@@ -417,6 +432,279 @@ const styles = theme => ({
   },
   customWrap: {
     padding: 0
+  },
+  customMargin: {
+    marginTop: '10%'
+  },
+  lineCont: {
+    width: '50%',
+    height: '1px',
+    backgroundColor: '#cac9c9',
+    position: 'relative',
+    margin: '20px 0px'
+  },
+  circleArea: {
+    display: 'inline-block',
+    verticalAlign: 'middle',
+    width: '35px',
+    height: '35px',
+    backgroundColor: '#3f51b5',
+    border: 'solid 1px #fbfbfb',
+    borderRadius: '50%',
+    color: '#fff',
+    fontSize: '0.9rem',
+    lineHeight: '32px',
+    position: 'absolute',
+    top: '-17px',
+    left: 'calc(50% - 30px)',
+  },
+  customGrid: {
+    display: 'block',
+    textAlign: 'left',
+    marginTop: '10px'
+  },
+  skillItems: {
+    background: '#3787C2',
+    borderRadius: ' 25px',
+    padding: ' 5px',
+    display: 'block',
+    color: 'white',
+    marginLeft: '10px',
+    marginBottom: '10px',
+    width: 'fit-content'
+  },
+  btnMargin: {
+    marginBottom: '5px'
+  },
+  chatList: {
+    padding: `${theme.spacing(6)}px ${theme.spacing(3)}px`,
+    overflow: 'auto',
+    minHeight: 'calc(100% - 100px)',
+    marginTop: 95,
+    background: theme.palette.type === 'dark' ? theme.palette.grey[800] : theme.palette.background.paper,
+    [theme.breakpoints.up('md')]: {
+      marginTop: 120,
+      background: theme.palette.type === 'dark' ? fade(theme.palette.grey[800], 0.75) : fade(theme.palette.background.paper, 0.95),
+    },
+    '& li': {
+      marginBottom: theme.spacing(6),
+      display: 'flex',
+      position: 'relative',
+      '& time': {
+        position: 'absolute',
+        top: -20,
+        color: theme.palette.grey[500],
+        fontSize: 11
+      }
+    },
+  },
+  content: {
+    flexGrow: 1,
+    transition: 'left 0.4s ease-out, opacity 0.4s ease-out',
+    [theme.breakpoints.down('xs')]: {
+      left: '100%',
+      top: 0,
+      opacity: 0,
+      position: 'absolute',
+      zIndex: 10000,
+      width: '100%',
+      height: '100%',
+    }
+  },
+  detailPopup: {
+    [theme.breakpoints.down('xs')]: {
+      left: 0,
+      opacity: 1,
+    }
+  },
+  talk: {
+    flex: 1,
+    '& p': {
+      marginBottom: 10,
+      position: 'relative',
+      '& span': {
+        padding: 10,
+        borderRadius: 10,
+        display: 'inline-block'
+      }
+    }
+  },
+  avatar: {},
+  from: {
+    '& time': {
+      left: 60,
+    },
+    '& $avatar': {
+      marginRight: 20
+    },
+    '& $talk': {
+      '& > p': {
+        '& span': {
+          backgroundColor: theme.palette.type === 'dark' ? theme.palette.secondary.dark : theme.palette.secondary.light,
+          boxShadow: theme.shadows[1]
+        },
+        '&:first-child': {
+          '& span': {
+            borderTopLeftRadius: 0,
+          },
+          '&:after': {
+            content: '""',
+            borderRight: theme.palette.type === 'dark' ? `10px solid ${theme.palette.secondary.dark}` : `10px solid ${theme.palette.secondary.light}`,
+            borderBottom: '15px solid transparent',
+            position: 'absolute',
+            left: -9,
+            top: 0
+          },
+        }
+      }
+    }
+  },
+  to: {
+    flexDirection: 'row-reverse',
+    '& time': {
+      right: 60,
+    },
+    '& $avatar': {
+      marginLeft: 20
+    },
+    '& $talk': {
+      textAlign: 'right',
+      '& > p': {
+        '& span': {
+          textAlign: 'left',
+          backgroundColor: theme.palette.type === 'dark' ? theme.palette.primary.dark : theme.palette.primary.light,
+          boxShadow: theme.shadows[1]
+        },
+        '&:first-child': {
+          '& span': {
+            borderTopRightRadius: 0,
+          },
+          '&:after': {
+            content: '""',
+            borderLeft: theme.palette.type === 'dark' ? `10px solid ${theme.palette.primary.dark}` : `10px solid ${theme.palette.primary.light}`,
+            borderBottom: '15px solid transparent',
+            position: 'absolute',
+            right: -9,
+            top: 0
+          },
+        }
+      }
+    }
+  },
+  messageBox: {
+    border: 'none',
+    padding: 0,
+    outline: 'none',
+    width: '100%',
+    '&:after, &:before': {
+      display: 'none'
+    }
+  },
+  writeMessage: {
+    bottom: 90,
+    display: 'flex',
+    minHeight: 55,
+    margin: '0 16px',
+    alignItems: 'center',
+    padding: theme.spacing(0, 2),
+    borderRadius: 50,
+    boxShadow: theme.shadows[2],
+    position: 'relative',
+    '& > div:first-child': {
+      height: '100%',
+      flex: 1,
+    },
+    '& input': {
+      color: theme.palette.text.primary,
+      background: 'transparent',
+      width: '100%',
+      height: '100%',
+      margin: 0,
+      padding: '2px 20px 2px 2px',
+      boxSizing: 'border-box',
+      border: 'none',
+      boxShadow: 'none',
+      outline: 'none'
+    }
+  },
+  messageBlock: {
+    position: 'relative',
+    bottom: '0',
+    width: '94%',
+    left: '2%',
+    minHeight: 150,
+    border: '1px solid #ccc',
+    padding: '10px'
+  },
+  sendButton: {
+    position: 'absolute',
+    right: '0',
+    bottom: '70px',
+  },
+  toolbarEditor:
+  {
+    position: 'absolute',
+    bottom: '0px',
+    width: '97%',
+    border: 'none !important'
+  },
+  rdwInlineWrapper: {
+    marginBottom: '0px',
+  },
+  emojiPopup: {
+    zIndex: '999',
+    position: 'absolute',
+    top: '-50px',
+    width: '278px',
+    height: '50px',
+    left: '30px',
+  },
+  '@media (max-width: 720px)': {
+    emojiPopup: {
+      width: 120
+    }
+  },
+  checkboxButtons: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 10
+  },
+  studentCardGrid: theme.mixins.gutters({
+    paddingTop: 16,
+    paddingBottom: 16,
+    marginTop: theme.spacing(3),
+  }),
+  warnMsg: {
+    textAlign: 'center',
+    color: 'green'
+  },
+  customFileUpload: {
+    border: '1px solid #ccc',
+    display: 'inline-block',
+    padding: '6px 12px',
+    cursor: 'pointer',
+    marginTop: 19,
+    borderRadius: 10,
+    fontWeight: 500,
+    color: '#3f51b5',
+    backgroundColor: 'whitesmoke'
+  },
+  rightIcon: {
+    marginLeft: theme.spacing(1),
+    '& svg': {
+      fill: theme.palette.common.white
+    }
+  },
+  button: {
+    marginTop: 20,
+    height: 50
+  },
+  customTopBar: {
+    backgroundColor: '#3f51b5',
+    width: '100%',
+    marginBottom: 46,
+    padding: 17
   }
 });
 

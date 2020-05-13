@@ -5,7 +5,7 @@ class Unauthorized extends React.Component {
   render() {
     return (
       <Fragment>
-        <ErrorWrap title="" desc="Link Expired :(" />
+        <ErrorWrap {...this.props} title="" desc="Link Expired :(" />
       </Fragment>
     )
   }

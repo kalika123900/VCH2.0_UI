@@ -124,7 +124,7 @@ class Signup extends React.Component {
               />
               :
               <Fragment>
-                <ErrorWrap title="" desc="Oops, unauthorised signup :(" />
+                <ErrorWrap {...this.props} title="" desc="Oops, unauthorised signup :(" />
               </Fragment>
             }
           </div>
