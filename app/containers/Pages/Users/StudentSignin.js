@@ -38,7 +38,8 @@ class StudentSignin extends React.Component {
           localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
             id: res.data.id,
             type: 'STUDENT',
-            token: res.data.token
+            token: res.data.token,
+            email: res.data.email
           })));
           window.location.reload();
         }
@@ -78,7 +79,8 @@ class StudentSignin extends React.Component {
           localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
             id: res.data.id,
             type: 'STUDENT',
-            token: res.data.token
+            token: res.data.token,
+            email: res.data.email
           })));
           window.location.reload();
         } else {
@@ -110,7 +112,8 @@ class StudentSignin extends React.Component {
           localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
             id: res.data.id,
             type: 'STUDENT',
-            token: res.data.token
+            token: res.data.token,
+            email: res.data.email
           })));
           window.location.reload();
         } else {

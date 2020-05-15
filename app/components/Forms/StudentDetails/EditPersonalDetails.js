@@ -126,13 +126,15 @@ class EditPersonalDetails extends React.Component {
       messageType: 'error',
       notifyMessage: '',
       profile: null,
-      cv: null
+      cv: null,
+      isChanges: false
     };
   }
 
   handleFileChange = (e) => {
     this.setState({
       [e.target.name]: e.target.files[0],
+      isChanges: true
     });
   }
 
@@ -150,7 +152,11 @@ class EditPersonalDetails extends React.Component {
       .then((res) => {
         if (res.status === 1) {
           this.setState({ profile: null });
-          this.getPersonalDetails();
+          const studentProfileData = {
+            ...this.props,
+            avatar: res.data.result.url
+          }
+          this.props.addInfo(studentProfileData);
           this.props.successMsg();
         } else {
           this.setState({ profile: null });
@@ -177,7 +183,11 @@ class EditPersonalDetails extends React.Component {
       .then((res) => {
         if (res.status === 1) {
           this.setState({ cv: null });
-          this.getPersonalDetails();
+          const studentProfileData = {
+            ...this.props,
+            resume: res.data.result.url
+          }
+          this.props.addInfo(studentProfileData);
           this.props.successMsg();
         } else {
           this.setState({ cv: null });
@@ -257,6 +267,7 @@ class EditPersonalDetails extends React.Component {
             nationality: res.data.nationality,
             avatar: res.data.profile,
             resume: res.data.resume,
+            status: res.data.status,
             dob,
           };
           this.props.addInfo(studentProfileData);
@@ -274,11 +285,13 @@ class EditPersonalDetails extends React.Component {
   }
 
   handleDOB = date => {
+    this.setState({ isChanges: true })
     const { addInfo } = this.props;
     addInfo({ ...this.props, dob: date });
   };
 
   handleChange = event => {
+    this.setState({ isChanges: true })
     const { addInfo } = this.props;
     addInfo({ ...this.props, [event.target.name]: event.target.value });
   };
@@ -557,11 +570,19 @@ class EditPersonalDetails extends React.Component {
                 />
               </FormControl>
             </div>
-            <div className={classes.btnArea} style={{ marginTop: '35px' }}>
-              <Button variant="contained" fullWidth color="primary" onClick={() => this.handleSubmit()}>
-                Save Changes
-            </Button>
-            </div>
+            {this.state.isChanges ?
+              <div className={classes.btnArea} style={{ marginTop: '35px' }}>
+                <Button variant="contained" fullWidth color="primary" onClick={() => this.handleSubmit()}>
+                  Save Changes
+                </Button>
+              </div>
+              :
+              <div className={classes.btnArea} style={{ marginTop: '35px' }}>
+                <Button variant="contained" fullWidth color="primary" onClick={() => this.props.goNextTab()}>
+                  Next
+                </Button>
+              </div>
+            }
           </form>
           <Snackbar
             anchorOrigin={{
@@ -636,6 +657,7 @@ const mapStateToProps = state => ({
   studentSociety: state.getIn([reducerStudent, 'studentSociety']),
   resume: state.getIn([reducerStudent, 'resume']),
   avatar: state.getIn([reducerStudent, 'avatar']),
+  status: state.getIn([reducerStudent, 'status']),
 });
 
 const mapDispatchToProps = dispatch => ({

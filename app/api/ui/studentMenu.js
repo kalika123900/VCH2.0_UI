@@ -8,12 +8,12 @@ module.exports = [
   {
     key: 'my-account',
     name: 'My Account',
-    icon: 'person-outline',
+    icon: 'ios-person-outline',
     child: [
       {
         key: 'my-profile',
         name: 'My Profile',
-        icon: 'person-circle-outline',
+        icon: 'ios-person-outline',
         link: '/student/profile',
       },
       {

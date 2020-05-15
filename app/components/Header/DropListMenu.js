@@ -93,7 +93,7 @@ class MainMenu extends React.Component {
               }
               onClick={(event) => this.handleOpenMenu(event, item.key, item.keyParent)}
             >
-              <Ionicon icon={item.icon} /> {item.name}
+              <Ionicon icon={item.icon} style={{ marginRight: 5 }} /> {item.name}
               <ExpandMore className={classes.rightIcon} />
             </Button>
             <Popper
@@ -137,7 +137,7 @@ class MainMenu extends React.Component {
           to={item.link}
           onClick={() => this.handleActiveParent(parent)}
         >
-          <Ionicon icon={item.icon} /> <ListItemText primary={item.name} />
+          <Ionicon icon={item.icon} style={{ marginRight: 5 }} /> <ListItemText primary={item.name} />
         </ListItem>
       );
     });

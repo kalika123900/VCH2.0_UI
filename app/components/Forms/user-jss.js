@@ -39,6 +39,16 @@ const styles = theme => ({
       width: '100%'
     },
   },
+  wrapContent: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: 10,
+    margin: 5,
+    backgroundColor: '#fad6d6',
+    '@media(max-width:760px)': {
+      flexDirection: 'column'
+    }
+  },
   autoCompleteInner: {
     width: '100% !Important'
   },

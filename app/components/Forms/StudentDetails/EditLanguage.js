@@ -26,6 +26,7 @@ const MenuProps = {
 
 class EditLanguage extends React.Component {
   handleChange = (event, id) => {
+    this.props.handleIsChanges('language');
     const { languageInfo, addInfo, } = this.props;
     const MapLanguageInfo = languageInfo.toJS();
     const newLanguageArr = MapLanguageInfo.map((item, index) => {

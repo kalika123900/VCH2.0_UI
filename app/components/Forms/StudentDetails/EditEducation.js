@@ -45,6 +45,7 @@ const MenuProps = {
 
 class EditEducation extends React.Component {
   handleChange = (event, id, scoreIndex) => {
+    this.props.handleIsChanges('education')
     const { educationInfo, addInfo, } = this.props;
     const MapEducationInfo = educationInfo.toJS();
     const newEducationArr = MapEducationInfo.map((item, index) => {
@@ -84,7 +85,7 @@ class EditEducation extends React.Component {
             score: [],
             [event.target.name]: event.target.value
           }
-        } else if (event.target.name == 'score') {
+        } else if (event.target.name == 'score' && item.type == 'Secondary School') {
           let newScoreArr = item.score;
           newScoreArr[scoreIndex] = event.target.value;
 
@@ -120,7 +121,6 @@ class EditEducation extends React.Component {
       score
     } = MapEducationInfo[id];
 
-    console.log(MapEducationInfo[id])
 
     let qualificationTypeItems = [];
     let subjectData = [];

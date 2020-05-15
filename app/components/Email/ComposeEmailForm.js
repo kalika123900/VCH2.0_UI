@@ -23,7 +23,7 @@ import styles from './email-jss';
 const content = {
   blocks: [{
     key: '637gr',
-    text: 'Lorem ipsum dolor sit amet',
+    text: '',
     type: 'unstyled',
     depth: 0,
     inlineStyleRanges: [],
@@ -162,7 +162,8 @@ class ComposeEmailForm extends React.Component {
                 type="email"
                 placeholder="To"
                 value={to}
-                onChange={(event) => inputChange(event, 'to')}
+                readOnly
+                // onChange={(event) => inputChange(event, 'to')}
                 margin="normal"
               />
             </div>

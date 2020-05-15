@@ -14,6 +14,7 @@ const initialState = {
   warnMsg: '',
   firstName: '',
   lastName: '',
+  status: 1,
   email: '',
   phoneNumber: '',
   dob: null,
@@ -75,6 +76,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
           .set('nationality', action.data.nationality)
           .set('resume', action.data.resume)
           .set('avatar', action.data.avatar)
+          .set('status', action.data.status)
           .set('studentSociety', studentSociety)
       });
 

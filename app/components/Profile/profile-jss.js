@@ -89,6 +89,9 @@ const styles = theme => ({
     },
     '& $avatar': {
       margin: 0
+    },
+    '@media (max-width: 1024px)': {
+      display: 'block'
     }
   },
   title: {},
@@ -98,6 +101,9 @@ const styles = theme => ({
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     overflow: 'hidden',
+  },
+  sideTab: {
+
   },
   image: {
     position: 'relative',
@@ -195,6 +201,10 @@ const styles = theme => ({
   papperBlock: {
     margin: '15%',
     marginTop: "15px",
+    '@media (max-width: 1024px)': {
+      margin: 0,
+      marginTop: "15px",
+    }
   },
   customAvatar: {
     display: 'inline-block',

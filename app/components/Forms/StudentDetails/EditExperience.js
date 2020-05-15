@@ -17,6 +17,7 @@ const required = value => (value === null ? 'Required' : undefined);
 
 class EditExperience extends React.Component {
   handleChange = (event, id) => {
+    this.props.handleIsChanges('experience')
     const { experienceInfo, addInfo, } = this.props;
     const MapExperienceInfo = experienceInfo.toJS();
     const newExperienceArr = MapExperienceInfo.map((item, index) => {
@@ -42,21 +43,27 @@ class EditExperience extends React.Component {
 
 
   handleFromDateChange = currentDate => {
+    this.props.handleIsChanges('experience')
     const { addInfo, experienceInfo, id } = this.props;
-    const year = currentDate.getFullYear();
-    let date = currentDate.getDate();
-    let month = currentDate.getMonth();
+    let dateMonthYear = '';
 
-    if (date < 10) {
-      date = '0' + date;
-    }
-    if (month < 9) {
-      month = '0' + (month + 1);
-    } else {
-      month += 1;
+    if (currentDate != null) {
+      const year = currentDate.getFullYear();
+      let date = currentDate.getDate();
+      let month = currentDate.getMonth();
+
+      if (date < 10) {
+        date = '0' + date;
+      }
+      if (month < 9) {
+        month = '0' + (month + 1);
+      } else {
+        month += 1;
+      }
+
+      dateMonthYear = year + '-' + (month) + '-' + date;
     }
 
-    const dateMonthYear = year + '-' + (month) + '-' + date;
     const MapExperienceInfo = experienceInfo.toJS();
     const newExperienceArr = MapExperienceInfo.map((item, index) => {
       if (index == id) {
@@ -75,21 +82,25 @@ class EditExperience extends React.Component {
   };
 
   handleToDateChange = currentDate => {
+    this.props.handleIsChanges('experience')
     const { addInfo, experienceInfo, id } = this.props;
-    const year = currentDate.getFullYear();
-    let date = currentDate.getDate();
-    let month = currentDate.getMonth();
+    let dateMonthYear = '';
+    if (currentDate != null) {
+      const year = currentDate.getFullYear();
+      let date = currentDate.getDate();
+      let month = currentDate.getMonth();
 
-    if (date < 10) {
-      date = '0' + date;
-    }
-    if (month < 9) {
-      month = '0' + (month + 1);
-    } else {
-      month += 1;
-    }
+      if (date < 10) {
+        date = '0' + date;
+      }
+      if (month < 9) {
+        month = '0' + (month + 1);
+      } else {
+        month += 1;
+      }
 
-    const dateMonthYear = year + '-' + (month) + '-' + date;
+      dateMonthYear = year + '-' + (month) + '-' + date;
+    }
     const MapExperienceInfo = experienceInfo.toJS();
     const newExperienceArr = MapExperienceInfo.map((item, index) => {
       if (index == id) {
@@ -153,7 +164,7 @@ class EditExperience extends React.Component {
                   margin="normal"
                   format="dd/MM/yyyy"
                   placeholder="Choose Start Date"
-                  value={from != null ? new Date(from) : null}
+                  value={from != null && from != '' ? new Date(from) : null}
                   onChange={this.handleFromDateChange}
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
@@ -172,7 +183,7 @@ class EditExperience extends React.Component {
                   margin="normal"
                   format="dd/MM/yyyy"
                   placeholder="Choose End Date"
-                  value={to != null ? new Date(to) : null}
+                  value={to != null && to != '' ? new Date(to) : null}
                   onChange={this.handleToDateChange}
                   KeyboardButtonProps={{
                     'aria-label': 'change date',

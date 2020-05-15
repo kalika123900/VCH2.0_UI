@@ -132,9 +132,9 @@ const styles = theme => ({
     paddingTop: theme.spacing(0.5),
     paddingBottom: theme.spacing(0.5),
     margin: `${theme.spacing(0.5)}px 0`,
-    [theme.breakpoints.down('lg')]: {
-      paddingLeft: theme.spacing(5)
-    }
+    // [theme.breakpoints.down('lg')]: {
+    //   paddingLeft: theme.spacing(5)
+    // }
   },
   child: {
     '& a': {
@@ -187,7 +187,7 @@ const styles = theme => ({
     padding: `${theme.spacing(0.5)}px 0`,
     margin: `${theme.spacing(0.5)}px 0`,
     borderRadius: `0 ${theme.spacing(3)}px ${theme.spacing(3)}px 0`,
-    paddingLeft: theme.spacing(5),
+    paddingLeft: theme.spacing(2),
     '&$iconed': {
       paddingLeft: theme.spacing(3),
     },

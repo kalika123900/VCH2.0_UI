@@ -95,7 +95,8 @@ class EditSkillsInterests extends React.Component {
     this.state = {
       openStyle: false,
       messageType: 'error',
-      notifyMessage: ''
+      notifyMessage: '',
+      isChanges: false
     };
   }
 
@@ -133,6 +134,7 @@ class EditSkillsInterests extends React.Component {
 
   handleChange = event => {
     const { addInfo } = this.props;
+    this.setState({ isChanges: true })
     addInfo({ ...this.props, [event.target.name]: event.target.value });
   };
 
@@ -155,6 +157,7 @@ class EditSkillsInterests extends React.Component {
       .then((res) => {
         if (res.status === 1) {
           this.props.successMsg()
+          this.setState({ isChanges: false })
           this.props.goNextTab()
         } else {
           this.props.errorMsg();
@@ -300,11 +303,19 @@ class EditSkillsInterests extends React.Component {
 
             </FormControl>
           </div>
-          <div className={classes.btnArea} style={{ marginTop: '35px' }}>
-            <Button variant="contained" fullWidth color="primary" onClick={() => this.handleSubmit()}>
-              Save Changes
+          {this.state.isChanges ?
+            <div className={classes.btnArea} style={{ marginTop: '35px' }}>
+              <Button variant="contained" fullWidth color="primary" onClick={() => this.handleSubmit()}>
+                Save Changes
             </Button>
-          </div>
+            </div>
+            :
+            <div className={classes.btnArea} style={{ marginTop: '35px' }}>
+              <Button variant="contained" fullWidth color="primary" onClick={() => this.props.goNextTab()}>
+                Next
+            </Button>
+            </div>
+          }
         </form>
         <Snackbar
           anchorOrigin={{

@@ -4,9 +4,13 @@ import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
+import Hidden from '@material-ui/core/Hidden';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
+import Fab from '@material-ui/core/Fab';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import MenuIcon from '@material-ui/icons/Menu';
 import LocalPhone from '@material-ui/icons/LocalPhone';
 import LocationOn from '@material-ui/icons/LocationOn';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
@@ -34,6 +38,7 @@ async function postData(url, data) {
   return await response.json();
 }
 
+
 class ClientJobProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -45,6 +50,7 @@ class ClientJobProfile extends React.Component {
   }
 
   state = {
+    open: false,
     tab: 0,
     name: '',
     phone: '',
@@ -54,6 +60,10 @@ class ClientJobProfile extends React.Component {
     label: 'All Jobs',
     jobs: [],
     jobInfoIndex: 0
+  }
+
+  toggleDrawer = () => {
+    this.setState({ open: !this.state.open })
   }
 
   getJobDescription = () => {
@@ -160,19 +170,23 @@ class ClientJobProfile extends React.Component {
             </PapperBlock>
           </Grid>
           <Grid item md={8} sm={12} xs={12}>
+
             <Tabs
               value={tab}
               onChange={this.handleChangeTab}
               indicatorColor="secondary"
               textColor="secondary"
-              centered
+              variant="scrollable"
+              scrollButtons="auto"
               className={classes.tab}
+              scrollButtons="on"
             >
               <Tab label={this.state.label} />
               <Tab label="Cover letter" />
               <Tab label="CV tips" />
               <Tab label="Others like this" />
             </Tabs>
+
             {tab === 0 && (
               this.state.label == 'All Jobs' ?
                 <PapperBlock title="All Jobs" icon="ios-aperture-outline" whiteBg desc="">

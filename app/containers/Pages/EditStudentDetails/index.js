@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Hidden from '@material-ui/core/Hidden';
+import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
@@ -98,6 +100,15 @@ async function postData(url, data) {
   return await response.json();
 }
 
+const label = [
+  "Personal Details",
+  "Languages",
+  "Skills & Interests",
+  "Education",
+  "Experience",
+  "Security"
+]
+
 class EditStudentDetails extends Component {
   constructor(props) {
     super(props);
@@ -108,16 +119,24 @@ class EditStudentDetails extends Component {
         tab: parseInt(atob(searchString[1])),
         openStyle: false,
         messageType: 'error',
-        notifyMessage: ''
+        notifyMessage: '',
+        isChanges: { 'language': false, 'experience': false, 'education': false }
       };
     } else {
       this.state = {
         tab: 0,
         openStyle: false,
         messageType: 'error',
-        notifyMessage: ''
+        notifyMessage: '',
+        isChanges: { 'language': false, 'experience': false, 'education': false }
       };
     }
+  }
+
+  handleIsChanges = (index) => {
+    let obj = this.state.isChanges;
+    obj[index] = true
+    this.setState({ isChanges: obj })
   }
 
   submitForm(values) {
@@ -351,6 +370,10 @@ class EditStudentDetails extends Component {
     this.setState({ tab: this.state.tab + 1 });
   }
 
+  goBack = () => {
+    this.setState({ tab: this.state.tab - 1 });
+  }
+
   successMsg = () => {
     this.setState({ notifyMessage: 'Information updated' });
     this.setState({ messageType: 'success' });
@@ -426,6 +449,9 @@ class EditStudentDetails extends Component {
       .then((res) => {
         if (res.status === 1) {
           _that.educationHandler(_that.state.data);
+          let obj = this.state.isChanges;
+          obj['education'] = false
+          this.setState({ isChanges: obj })
           this.successMsg();
           this.goNextTab();
         } else {
@@ -466,6 +492,9 @@ class EditStudentDetails extends Component {
         if (res.status === 1) {
           _that.experienceHandler(_that.state.data);
           this.successMsg();
+          let obj = this.state.isChanges;
+          obj['experience'] = false
+          this.setState({ isChanges: obj })
           this.goNextTab();
         } else {
           _that.experienceHandler(_that.state.data);
@@ -505,6 +534,9 @@ class EditStudentDetails extends Component {
         console.log(res)
         if (res.status === 1) {
           _that.languageHandler(_that.state.data);
+          let obj = this.state.isChanges;
+          obj['language'] = false
+          this.setState({ isChanges: obj })
           this.successMsg();
           this.goNextTab();
         } else {
@@ -599,6 +631,31 @@ class EditStudentDetails extends Component {
     this.setState({ openStyle: false });
   }
 
+  resendVerification = () => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const data = {
+      user_id: user.id,
+      email: user.email
+    }
+
+    postData(`${API_URL}/student/resend-verification`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({ notifyMessage: 'Please, check your indox to verify you email' });
+          this.setState({ messageType: 'success' });
+          this.setState({ openStyle: true });
+        }
+        else {
+          this.setState({ notifyMessage: 'Something went wrong' });
+          this.setState({ messageType: 'error' });
+          this.setState({ openStyle: true });
+        }
+      })
+  }
+
   render() {
     const { classes, educationInfo, experienceInfo, languageInfo } = this.props;
     const { tab } = this.state;
@@ -615,11 +672,11 @@ class EditStudentDetails extends Component {
               Remove
             </Button>
           </div>
-          <EditEducation id={index} />
+          <EditEducation id={index} handleIsChanges={this.handleIsChanges} />
         </Fragment>
       }
       else {
-        return <EditEducation id={index} key={index.toString()} />
+        return <EditEducation id={index} key={index.toString()} handleIsChanges={this.handleIsChanges} />
       }
     });
 
@@ -631,11 +688,11 @@ class EditStudentDetails extends Component {
               Remove
             </Button>
           </div>
-          <EditLanguage id={index} />
+          <EditLanguage id={index} handleIsChanges={this.handleIsChanges} />
         </Fragment>
       }
       else {
-        return <EditLanguage id={index} key={index.toString()} />
+        return <EditLanguage id={index} key={index.toString()} handleIsChanges={this.handleIsChanges} />
       }
     });
 
@@ -648,125 +705,182 @@ class EditStudentDetails extends Component {
               Remove
             </Button>
           </div>
-          <EditExperience id={index} />
+          <EditExperience id={index} handleIsChanges={this.handleIsChanges} />
         </Fragment>
       } else {
-        return <EditExperience id={index} key={index} />
+        return <EditExperience id={index} key={index} handleIsChanges={this.handleIsChanges} />
       }
     })
 
     return (
-      <Paper className={classes.fullWrap, classes.petal} >
-        <Tabs
-          value={tab}
-          onChange={this.handleChangeTab}
-          indicatorColor="secondary"
-          textColor="secondary"
-          centered
-          className={classes.tab}
-        >
-          <Tab label="Personal Details" />
-          <Tab label="Languages" />
-          <Tab label="Skills & Interests" />
-          <Tab label="Education" />
-          <Tab label="Experience" />
-          <Tab label="Security" />
-        </Tabs>
-        <section className={classes.pageFormWrap}>
-          {tab === 0 && (
-            <EditPersonalDetails goNextTab={this.goNextTab} successMsg={this.successMsg} errorMsg={this.errorMsg} />
-          )}
-          {tab === 1 && (
-            <Fragment>
-              {LanguageJSX}
-              <div className={classes.btnArea}>
-                <Button variant="text" color="primary" onClick={e => this.addLanguageField(e)}>
-                  Add More
+      <Fragment>
+        {this.props.status == 0 &&
+          <div className={classes.wrapContent}>
+            <Typography variant="subtitle2" style={{ paddingTop: 8, color: "green" }} >Your email address is not verified, Please verify your email address.</Typography>
+            <Button color="secondary" onClick={() => this.resendVerification()}>
+              Resend verification email
+            </Button>
+          </div>
+        }
+        <Paper className={classes.fullWrap, classes.petal} >
+          <Hidden lgUp>
+            <Tabs
+              value={tab}
+              onChange={this.handleChangeTab}
+              indicatorColor="secondary"
+              textColor="secondary"
+              variant="scrollable"
+              scrollButtons="on"
+              className={classes.tab}
+            >
+              <Tab label={label[0]} />
+              <Tab label={label[1]} />
+              <Tab label={label[2]} />
+              <Tab label={label[3]} />
+              <Tab label={label[4]} />
+              <Tab label={label[5]} />
+            </Tabs>
+          </Hidden>
+          <Hidden mdDown>
+            <Tabs
+              value={tab}
+              onChange={this.handleChangeTab}
+              indicatorColor="secondary"
+              textColor="secondary"
+              centered
+              className={classes.tab}
+            >
+              <Tab label={label[0]} />
+              <Tab label={label[1]} />
+              <Tab label={label[2]} />
+              <Tab label={label[3]} />
+              <Tab label={label[4]} />
+              <Tab label={label[5]} />
+            </Tabs>
+          </Hidden>
+          <section className={classes.pageFormWrap}>
+            {tab === 0 && (
+              <EditPersonalDetails goNextTab={this.goNextTab} successMsg={this.successMsg} errorMsg={this.errorMsg} />
+            )}
+            {tab === 1 && (
+              <Fragment>
+                {LanguageJSX}
+                <div className={classes.btnArea}>
+                  <Button variant="text" color="primary" onClick={e => this.addLanguageField(e)}>
+                    Add More
                 </Button>
-              </div>
-              <div className={classes.btnArea} style={{ marginTop: '35px' }}>
-                <Button variant="contained" fullWidth color="primary" onClick={() => this.handleLanguage()}>
-                  Save Changes
+                </div>
+
+                {this.state.isChanges['language'] ?
+
+                  <div className={classes.btnArea} style={{ marginTop: '35px' }}>
+                    <Button variant="contained" fullWidth color="primary" onClick={() => this.handleLanguage()}>
+                      Save Changes
                 </Button>
-              </div>
-            </Fragment>
-          )}
-          {tab === 2 && (
-            <EditSkillsInterests goNextTab={this.goNextTab} successMsg={this.successMsg} errorMsg={this.errorMsg} />
-          )}
-          {tab === 3 && (
-            <Fragment>
-              {EducationJSX}
-              <div className={classes.btnArea}>
-                <Button variant="text" color="primary" onClick={e => this.addEducationField(e)}>
-                  Add More
+                  </div>
+                  :
+                  <div className={classes.btnArea} style={{ marginTop: '35px' }}>
+                    <Button variant="contained" fullWidth color="primary" onClick={() => this.goNextTab()}>
+                      Next
                 </Button>
-              </div>
-              <div className={classes.btnArea} style={{ marginTop: '35px' }}>
-                <Button variant="contained" fullWidth color="primary" onClick={() => this.handleEducation()}>
-                  Save Changes
+                  </div>
+                }
+              </Fragment>
+            )}
+            {tab === 2 && (
+              <EditSkillsInterests goNextTab={this.goNextTab} successMsg={this.successMsg} errorMsg={this.errorMsg} />
+            )}
+            {tab === 3 && (
+              <Fragment>
+                {EducationJSX}
+                <div className={classes.btnArea}>
+                  <Button variant="text" color="primary" onClick={e => this.addEducationField(e)}>
+                    Add More
                 </Button>
-              </div>
-            </Fragment>
-          )}
-          {tab === 4 && (
-            <Fragment>
-              {ExperienceJSX}
-              <div className={classes.btnArea}>
-                <Button variant="text" color="primary" onClick={e => this.addExperienceField(e)}>
-                  Add More
+                </div>
+                {this.state.isChanges['education'] ?
+                  <div className={classes.btnArea} style={{ marginTop: '35px' }}>
+                    <Button variant="contained" fullWidth color="primary" onClick={() => this.handleEducation()}>
+                      Save Changes
                 </Button>
-              </div>
-              <div className={classes.btnArea} style={{ marginTop: '35px' }}>
-                <Button variant="contained" fullWidth color="primary" onClick={() => this.handleExperience()}>
-                  Save Changes
+                  </div>
+                  :
+                  <div className={classes.btnArea} style={{ marginTop: '35px' }}>
+                    <Button variant="contained" fullWidth color="primary" onClick={() => this.goNextTab()}>
+                      Next
                 </Button>
-              </div>
-            </Fragment>
-          )}
-          {tab === 5 && (
-            <SetNewPassword onSubmit={(values) => this.submitForm(values)} />
-          )}
-          <Snackbar
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={this.state.openStyle}
-            autoHideDuration={6000}
-            onClose={this.handleCloseStyle}
-          >
-            <SnackbarContent
-              className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
-              aria-describedby="client-snackbar"
-              message={(
-                <span id="client-snackbar" className={classes.message}>
-                  {
-                    (this.state.messageType == 'error') && <ErrorIcon className="success" />
-                  }
-                  {
-                    (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
-                  }
+                  </div>
+                }
+              </Fragment>
+            )}
+            {tab === 4 && (
+              <Fragment>
+                {ExperienceJSX}
+                <div className={classes.btnArea}>
+                  <Button variant="text" color="primary" onClick={e => this.addExperienceField(e)}>
+                    Add More
+                </Button>
+                </div>
+                {this.state.isChanges['experience'] ?
+
+                  <div className={classes.btnArea} style={{ marginTop: '35px' }}>
+                    <Button variant="contained" fullWidth color="primary" onClick={() => this.handleExperience()}>
+                      Save Changes
+                </Button>
+                  </div>
+                  :
+                  <div className={classes.btnArea} style={{ marginTop: '35px' }}>
+                    <Button variant="contained" fullWidth color="primary" onClick={() => this.goNextTab()}>
+                      Next
+                </Button>
+                  </div>
+                }
+              </Fragment>
+            )}
+            {tab === 5 && (
+              <SetNewPassword onSubmit={(values) => this.submitForm(values)} />
+            )}
+            <Snackbar
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={this.state.openStyle}
+              autoHideDuration={6000}
+              onClose={this.handleCloseStyle}
+            >
+              <SnackbarContent
+                className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
+                aria-describedby="client-snackbar"
+                message={(
+                  <span id="client-snackbar" className={classes.message}>
+                    {
+                      (this.state.messageType == 'error') && <ErrorIcon className="success" />
+                    }
+                    {
+                      (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
+                    }
 
                   &nbsp;
-                  {this.state.notifyMessage}
-                </span>
-              )}
-              action={[
-                <IconButton
-                  key="close"
-                  aria-label="Close"
-                  color="inherit"
-                  className={classes.close}
-                  onClick={this.noticeClose}
-                >
-                  <CloseIcon className={classes.icon} />
-                </IconButton>,
-              ]}
-            />
-          </Snackbar>
-        </section>
-      </Paper >
+                    {this.state.notifyMessage}
+                  </span>
+                )}
+                action={[
+                  <IconButton
+                    key="close"
+                    aria-label="Close"
+                    color="inherit"
+                    className={classes.close}
+                    onClick={this.noticeClose}
+                  >
+                    <CloseIcon className={classes.icon} />
+                  </IconButton>,
+                ]}
+              />
+            </Snackbar>
+          </section>
+        </Paper >
+      </Fragment>
     );
   }
 }
@@ -791,7 +905,8 @@ const mapStateToProps = state => ({
   experienceInfo: state.getIn([reducerStudent, 'experienceInfo']),
   oldExperienceInfo: state.getIn([reducerStudent, 'oldExperienceInfo']),
   languageInfo: state.getIn([reducerStudent, 'languageInfo']),
-  oldLanguageInfo: state.getIn([reducerStudent, 'oldLanguageInfo'])
+  oldLanguageInfo: state.getIn([reducerStudent, 'oldLanguageInfo']),
+  status: state.getIn([reducerStudent, 'status'])
 });
 
 const mapDispatchToProps = dispatch => ({

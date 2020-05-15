@@ -60,7 +60,8 @@ class StudentSignup extends React.Component {
           localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
             id: res.data.id,
             type: 'STUDENT',
-            token: res.data.token
+            token: res.data.token,
+            email: res.data.email
           })));
           window.location.reload();
         } else {
@@ -91,13 +92,14 @@ class StudentSignup extends React.Component {
     postData(`${API_URL}/student/signup`, data)
       .then((res) => {
         if (res.status === 1) {
-          this.setState({ notifyMessage: "Verify your email to activate your account" });
-          this.setState({ messageType: 'success' });
-          this.setState({ openStyle: true });
+          localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
+            id: res.data.id,
+            type: 'STUDENT',
+            token: res.data.token,
+            email: res.data.email
+          })));
 
-          setTimeout(() => {
-            this.props.history.push('/student-signin');
-          }, 4000)
+          window.location.href = '/student/edit-details';
         } else {
           this.setState({ notifyMessage: res.errorMessage });
           this.setState({ messageType: 'error' });

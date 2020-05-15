@@ -11,6 +11,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Collapse from '@material-ui/core/Collapse';
 import Chip from '@material-ui/core/Chip';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import Ionicon from 'react-ionicons';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import styles from './sidebar-jss';
@@ -48,6 +50,9 @@ class MainMenu extends React.Component {
               }
               onClick={() => openSubMenu(item.key, item.keyParent)}
             >
+              <ListItemIcon className={classes.icon}>
+                <Ionicon icon={item.icon} />
+              </ListItemIcon>
               <ListItemText classes={{ primary: classes.primary }} variant="inset" primary={item.name} />
               {open.indexOf(item.key) > -1 ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
@@ -91,6 +96,9 @@ class MainMenu extends React.Component {
           to={item.link}
           onClick={() => this.handleClick()}
         >
+          <ListItemIcon className={classes.icon}>
+            <Ionicon icon={item.icon} />
+          </ListItemIcon>
           <ListItemText classes={{ primary: classes.primary }} primary={item.name} />
           {item.badge && (
             <Chip color="primary" label={item.badge} className={classes.badge} />

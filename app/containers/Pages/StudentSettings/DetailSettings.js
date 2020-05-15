@@ -64,47 +64,63 @@ class DetailSettings extends React.Component {
         <Grid item md={8} xs={12}>
           <List>
             <ListItem>
-              <ListItemText primary="Bi-weekly Emails" secondary="Send me bi-weekly updates about my relevant opportunities via email" />
-              <ListItemSecondaryAction>
+              <ListItemText
+                primary="Bi-weekly Emails"
+                secondary="Send me bi-weekly updates about my relevant opportunities via email"
+                style={{ whiteSpace: 'pre-line' }}
+              />
+              <Grid style={{ marginLeft: 5 }}>
                 <Switch
                   name="bi-weekly-emails"
                   onChange={(e) => this.handleToggle(e)}
                   checked={switchData.indexOf('bi-weekly-emails') !== -1}
                 />
-              </ListItemSecondaryAction>
+              </Grid>
             </ListItem>
             <Divider />
             <ListItem>
-              <ListItemText primary="Updates via Text" secondary="Send me texts about opportunities" />
-              <ListItemSecondaryAction>
+              <ListItemText
+                primary="Updates via Text"
+                secondary="Send me texts about opportunities"
+                style={{ whiteSpace: 'pre-line' }}
+              />
+              <Grid style={{ marginLeft: 5 }}>
                 <Switch
                   name="updates-via-text"
                   onChange={(e) => this.handleToggle(e)}
                   checked={switchData.indexOf('updates-via-text') !== -1}
                 />
-              </ListItemSecondaryAction>
+              </Grid>
             </ListItem>
             <Divider />
             <ListItem>
-              <ListItemText primary="Email Me" secondary="Email me when a client reaches out to me with job invitations" />
-              <ListItemSecondaryAction>
+              <ListItemText
+                primary="Email Me"
+                secondary="Email me when a client reaches out to me with job invitations"
+                style={{ whiteSpace: 'pre-line' }}
+              />
+              <Grid style={{ marginLeft: 5 }}>
                 <Switch
                   name="email-me"
                   onChange={(e) => this.handleToggle(e)}
                   checked={switchData.indexOf('email-me') !== -1}
                 />
-              </ListItemSecondaryAction>
+              </Grid>
             </ListItem>
             <Divider />
             <ListItem>
-              <ListItemText primary="Text Me" secondary="Text me when a client reaches out to me about job applications " />
-              <ListItemSecondaryAction>
+              <ListItemText
+                primary="Text Me"
+                secondary="Text me when a client reaches out to me about job applications "
+                style={{ whiteSpace: 'pre-line' }}
+              />
+              <Grid style={{ marginLeft: 5 }}>
                 <Switch
                   name="text-me"
                   onChange={(e) => this.handleToggle(e)}
                   checked={switchData.indexOf('text-me') !== -1}
                 />
-              </ListItemSecondaryAction>
+              </Grid>
             </ListItem>
           </List>
           <Grid >
@@ -112,7 +128,11 @@ class DetailSettings extends React.Component {
             <List className={classes.listContainer}>
               <ListItem className={classes.listItem}>
                 <Grid style={{ margin: '5px 5px 5px 5px' }}>
-                  <ListItemText primary="Disable Account" secondary="You can temporary deactivate your account while you login again" />
+                  <ListItemText
+                    primary="Disable Account"
+                    secondary="You can temporary deactivate your account while you login again"
+                    style={{ whiteSpace: 'pre-line' }}
+                  />
                 </Grid>
                 <Grid>
                   <Button
@@ -127,7 +147,11 @@ class DetailSettings extends React.Component {
               <Divider />
               <ListItem className={classes.listItem}>
                 <Grid style={{ margin: '5px 5px 5px 5px' }}>
-                  <ListItemText primary="Delete Account" secondary="You can delete your account and remove all your data from a platform" />
+                  <ListItemText
+                    primary="Delete Account"
+                    secondary="You can delete your account and remove all your data from a platform"
+                    style={{ whiteSpace: 'pre-line' }}
+                  />
                 </Grid>
                 <Grid>
                   <Button

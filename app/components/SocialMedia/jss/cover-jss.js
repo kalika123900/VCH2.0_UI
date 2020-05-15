@@ -14,7 +14,7 @@ const styles = theme => ({
     position: 'relative',
     width: '100%',
     // overflow: 'hidden',
-    // height: 480,
+    height: 287,
     backgroundColor: theme.palette.type === 'dark' ? darken(theme.palette.primary.dark, 0.8) : theme.palette.primary.dark,
     display: 'flex',
     justifyContent: 'center',
