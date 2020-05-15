@@ -638,7 +638,8 @@ class EditStudentDetails extends Component {
 
     const data = {
       user_id: user.id,
-      email: user.email
+      email: user.email,
+      name: `${this.props.firstname} ${this.props.lastname}`
     }
 
     postData(`${API_URL}/student/resend-verification`, data)
@@ -906,7 +907,9 @@ const mapStateToProps = state => ({
   oldExperienceInfo: state.getIn([reducerStudent, 'oldExperienceInfo']),
   languageInfo: state.getIn([reducerStudent, 'languageInfo']),
   oldLanguageInfo: state.getIn([reducerStudent, 'oldLanguageInfo']),
-  status: state.getIn([reducerStudent, 'status'])
+  status: state.getIn([reducerStudent, 'status']),
+  firstname: state.getIn([reducerStudent, 'firstname']),
+  lastname: state.getIn([reducerStudent, 'lastname'])
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -109,8 +109,8 @@ class StudentSigninForm extends React.Component {
                 <Field
                   name="username"
                   component={TextFieldRedux}
-                  placeholder="Email or Username"
-                  label="Email or Username"
+                  placeholder="Email"
+                  label="Email"
                   required
                   validate={[required]}
                   className={classes.field}
