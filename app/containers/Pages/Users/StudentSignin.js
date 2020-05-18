@@ -39,7 +39,8 @@ class StudentSignin extends React.Component {
             id: res.data.id,
             type: 'STUDENT',
             token: res.data.token,
-            email: res.data.email
+            email: res.data.email,
+            name: res.data.name
           })));
           window.location.reload();
         }
@@ -80,7 +81,8 @@ class StudentSignin extends React.Component {
             id: res.data.id,
             type: 'STUDENT',
             token: res.data.token,
-            email: res.data.email
+            email: res.data.email,
+            name: res.data.name
           })));
           window.location.reload();
         } else {
@@ -113,7 +115,8 @@ class StudentSignin extends React.Component {
             id: res.data.id,
             type: 'STUDENT',
             token: res.data.token,
-            email: res.data.email
+            email: res.data.email,
+            name: res.data.name
           })));
           window.location.reload();
         } else {

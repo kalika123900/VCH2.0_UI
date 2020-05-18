@@ -141,7 +141,8 @@ class Contact extends React.Component {
     })
 
     const apiData = {
-      emailData: data.toJS()
+      emailData: data.toJS(),
+      company_name: user.name
     }
 
     postJSON(`${API_URL}/client/send-direct-email`, apiData) // eslint-disable-line

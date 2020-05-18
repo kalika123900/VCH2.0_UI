@@ -123,6 +123,10 @@ class StudentEmailThread extends React.Component {
   };
 
   sendEmail = (to, subject, emailContent, files) => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
     const actionSendEmail = this.props.sendEmail;
     const data = {
       to,
@@ -133,7 +137,9 @@ class StudentEmailThread extends React.Component {
       sender_id: this.state.sender_id,
       sender_type: this.state.sender_type,
       receiver_id: this.state.receiver_id,
-      receiver_type: this.state.receiver_type
+      receiver_type: this.state.receiver_type,
+      name: user.name,
+      user: 'client'
     }
 
     postData(`${API_URL}/utils/send-email-reply`, data) // eslint-disable-line

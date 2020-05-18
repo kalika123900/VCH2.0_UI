@@ -138,7 +138,8 @@ class StudentCard extends React.Component {
       receiver_type: 'user',
       subject,
       body,
-      to: email
+      to: email,
+      company_name: user.name
     }
 
     postData(`${API_URL}/client/direct-message`, data)
