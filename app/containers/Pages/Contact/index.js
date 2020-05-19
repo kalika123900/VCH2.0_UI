@@ -141,19 +141,29 @@ class Contact extends React.Component {
     })
 
     const apiData = {
-      emailData: data.toJS(),
-      company_name: user.name
+      company_id: user.cId,
+      emailData: data.toJS()
     }
 
-    postJSON(`${API_URL}/client/send-direct-email`, apiData) // eslint-disable-line
+    postData(`${API_URL}/client/client-info`, data)
       .then((res) => {
         if (res.status === 1) {
-          this.props.sendEmail();
-          handleSuccess();
+          apiData.company_name = `${res.data.display_name}`;
+
+          postJSON(`${API_URL}/client/send-direct-email`, apiData) // eslint-disable-line
+            .then((res) => {
+              if (res.status === 1) {
+                this.props.sendEmail();
+                handleSuccess();
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   }
 

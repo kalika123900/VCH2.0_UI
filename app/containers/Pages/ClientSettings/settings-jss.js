@@ -147,6 +147,17 @@ const styles = theme => ({
   },
   detailWrap: {
     paddingTop: theme.spacing(10)
+  },
+  listItem: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
+  '@media (max-width: 820px)': {
+    listItem: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-start'
+    }
   }
 });
 

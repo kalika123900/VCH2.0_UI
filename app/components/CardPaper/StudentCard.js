@@ -131,31 +131,41 @@ class StudentCard extends React.Component {
       makeSecureDecrypt(localStorage.getItem('user'))
     );
 
-    const data = {
+    let data = {
+      company_id: user.cId,
       sender_id: user.id,
       sender_type: 'client',
       receiver_id: user_id,
       receiver_type: 'user',
       subject,
       body,
-      to: email,
-      company_name: user.name
+      to: email
     }
 
-    postData(`${API_URL}/client/direct-message`, data)
+    postData(`${API_URL}/client/client-info`, data)
       .then((res) => {
         if (res.status === 1) {
-          this.setState({
-            notifyMessage: 'Direct Message sent',
-            messageType: 'success',
-            openStyle: true
-          })
-        } else {
-          this.setState({
-            notifyMessage: 'Direct Message not sent',
-            messageType: 'error',
-            openStyle: true
-          })
+          data.company_name = `${res.data.display_name}`;
+
+          postData(`${API_URL}/client/direct-message`, data)
+            .then((res) => {
+              if (res.status === 1) {
+                this.setState({
+                  notifyMessage: 'Direct Message sent',
+                  messageType: 'success',
+                  openStyle: true
+                })
+              } else {
+                this.setState({
+                  notifyMessage: 'Direct Message not sent',
+                  messageType: 'error',
+                  openStyle: true
+                })
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+            });
         }
       })
       .catch((err) => {
