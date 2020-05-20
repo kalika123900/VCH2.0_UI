@@ -39,7 +39,7 @@ function CampaignGraph(props) {
             <CartesianAxis vertical={false} />
             <Tooltip />
             <Legend iconType="circle" verticalALign="bottom" iconSize={10} />
-            <Line type="monotone" dataKey="Emails" strokeWidth={5} stroke="#8884d8" activeDot={{ r: 8 }} />
+            <Line type="monotone" dataKey="Emails" strokeWidth={5} stroke="#8884d8" />
             <Line type="monotone" dataKey="Opened" strokeWidth={5} stroke="#82ca9d" />
             <Line type="monotone" dataKey="Clicks" strokeWidth={5} stroke="#3a8fe1" />
           </LineChart>

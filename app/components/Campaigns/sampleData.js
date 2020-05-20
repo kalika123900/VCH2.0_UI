@@ -22,7 +22,55 @@ export const data1 = [
     Emails: 2780,
     Opened: 908,
     Clicks: 2000
-  }
+  },
+  {
+    name: 'Month 5',
+    Emails: 3000,
+    Opened: 2400,
+    Clicks: 1500
+  },
+  {
+    name: 'Month 6',
+    Emails: 2250,
+    Opened: 1398,
+    Clicks: 1010
+  },
+  {
+    name: 'Month 7',
+    Emails: 2000,
+    Opened: 2800,
+    Clicks: 490
+  },
+  {
+    name: 'Month 8',
+    Emails: 2780,
+    Opened: 908,
+    Clicks: 2000
+  },
+  {
+    name: 'Month 9',
+    Emails: 3000,
+    Opened: 2400,
+    Clicks: 1500
+  },
+  {
+    name: 'Month 10',
+    Emails: 2250,
+    Opened: 1398,
+    Clicks: 1010
+  },
+  {
+    name: 'Month 11',
+    Emails: 2000,
+    Opened: 2800,
+    Clicks: 490
+  },
+  {
+    name: 'Month 12',
+    Emails: 2780,
+    Opened: 908,
+    Clicks: 2000
+  },
 ];
 
 export const data10 = [
