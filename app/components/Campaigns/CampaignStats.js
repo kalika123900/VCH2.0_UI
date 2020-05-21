@@ -70,7 +70,7 @@ class CampaignStats extends React.Component {
     postData(`${API_URL}/campaign/clicks-count`, data)
       .then((res) => {
         if (res.status === 1) {
-          this.setState({ clicks: res.data });
+          this.setState({ clicks: res.data[0].sum });
         }
       })
       .catch((err) => {
