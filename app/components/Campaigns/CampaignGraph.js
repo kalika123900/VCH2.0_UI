@@ -215,7 +215,7 @@ class CampaignGraph extends React.Component {
     const { classes } = this.props;
     const { tab, clicksViewsData, emailedData, openedData } = this.state;
     return (
-      <PapperBlock title="Progress Graph" icon="ios-stats" whiteBg desc="">
+      <PapperBlock title="Progress Graph" icon="ios-stats" whiteBg desc="" style={{ height: '100%' }}>
         <Tabs
           value={tab}
           onChange={this.handleChangeTab}

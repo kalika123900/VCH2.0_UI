@@ -83,7 +83,7 @@ class CampaignInfo extends React.Component {
 
     return (
       <Fragment>
-        <PapperBlock title="Campaign Details" icon="ios-information-circle-outline" whiteBg desc="">
+        <PapperBlock title="Campaign Details" icon="ios-information-circle-outline" whiteBg desc="" style={{ height: '100%' }}>
           <List dense className={classes.profileList}>
             <ListItem>
               <ListItemAvatar>

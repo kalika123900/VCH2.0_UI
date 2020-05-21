@@ -29,20 +29,20 @@ class CampaignDetails extends Component {
 
     return (
       <Grid>
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           <Grid item md={6} sm={12} xs={12}>
             <CampaignStats campaignId={campaignId} />
           </Grid>
           <Grid item md={6} xs={12}>
-            <CampaignGraph campaignId={campaignId} />
+            <CampaignInfo campaignId={campaignId} />
           </Grid>
         </Grid>
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           <Grid item md={6} xs={12}>
             <CampaignPieChart campaignId={campaignId} />
           </Grid>
           <Grid item md={6} sm={12} xs={12}>
-            <CampaignInfo campaignId={campaignId} />
+            <CampaignGraph campaignId={campaignId} />
           </Grid>
         </Grid>
       </Grid>

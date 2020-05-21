@@ -215,7 +215,7 @@ class CampaignPieChart extends React.Component {
     const { classes } = this.props;
 
     return (
-      <PapperBlock title="Further Campaign Details" icon="ios-pie" whiteBg desc="">
+      <PapperBlock title="Further Campaign Details" icon="ios-pie" whiteBg desc="" style={{ height: '100%' }}>
         <Tabs
           value={tab}
           onChange={this.handleChangeTab}

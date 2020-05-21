@@ -83,7 +83,7 @@ class CampaignStats extends React.Component {
     const { emailed, clicks, views, opened } = this.state;
 
     return (
-      <PapperBlock title="Campaign Stats" icon="md-stats" whiteBg desc="">
+      <PapperBlock title="Campaign Stats" icon="md-stats" whiteBg desc="" style={{ height: '100%' }}>
         <div className={classes.rootCounterFull}>
           <Grid container spacing={2}>
             <Grid item xs={6} md={6}>
