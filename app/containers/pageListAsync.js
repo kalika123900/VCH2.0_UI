@@ -489,6 +489,10 @@ export const LockScreen = loadable(() =>
   import('./Pages/Users/LockScreen'), {
   fallback: <Loading />,
 });
+export const StudentSession = loadable(() =>
+  import('./Pages/Users/StudentSession'), {
+  fallback: <Loading />,
+});
 export const Chat = loadable(() =>
   import('./Pages/Chat'), {
   fallback: <Loading />,
