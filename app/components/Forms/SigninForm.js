@@ -79,7 +79,7 @@ class SigninForm extends React.Component {
         <Typography variant="h4" className={classes.title} gutterBottom>
           Sign In
         </Typography>
-        <section className={classes.pageFormWrap}>
+        <section className={classes.pageFormWrap} style={{ padding: 24 }}>
           {this.props.flash && this.Message()}
           <form onSubmit={handleSubmit}>
             <div>

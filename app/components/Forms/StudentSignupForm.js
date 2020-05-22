@@ -22,8 +22,6 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Grid from '@material-ui/core/Grid';
-import FacebookIcon from '@material-ui/icons/Facebook';
-import LinkedInIcon from '@material-ui/icons/LinkedIn';
 import OpenAuth from './Openauth';
 
 // validation functions
@@ -138,7 +136,7 @@ class StudentSignupForm extends React.Component {
         <Typography variant="h4" className={classes.title} gutterBottom>
           Register
         </Typography>
-        <section className={classes.pageFormWrap}>
+        <section className={classes.pageFormWrap} style={{ padding: 24 }}>
           {this.props.flash && this.Message()}
           <form onSubmit={handleSubmit}>
             <div>

@@ -12,7 +12,7 @@ export const TextFieldRedux = ({ meta: { touched, error }, input, ...rest }) => 
     <TextField
       {...rest}
       {...input}
-      value={val || input.value}
+      value={val}
       onChange={(e) => setVal(e.target.value)}
       error={touched && Boolean(error)}
     />

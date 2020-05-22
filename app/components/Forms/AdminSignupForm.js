@@ -148,7 +148,7 @@ class SignupForm extends React.Component {
         <Typography variant="h4" className={classes.title} gutterBottom>
           Create account
         </Typography>
-        <section className={classes.pageFormWrap}>
+        <section className={classes.pageFormWrap} style={{ padding: 24 }}>
           {this.props.flash && this.Message()}
           <form onSubmit={(e) => this.handleSubmitForm(e)}>
             <div>
