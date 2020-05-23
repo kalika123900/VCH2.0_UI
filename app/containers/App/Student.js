@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import Dashboard from '../Templates/Dashboard';
 import { Footer } from 'dan-components';
+import { makeSecureDecrypt } from 'dan-helpers/security';
 import {
   StudentDashboard, EditStudentDetails, StudentMessage,
   StudentAccount, StudentSettings, NotFound, JobProfiles,
@@ -16,6 +17,14 @@ class Student extends React.Component {
     super(props);
     let { isLoggedIn } = props;
     isLoggedIn ? true : props.history.push('/student-signin');
+
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    if (user.email == '' || user.email == undefined || user.email == null) {
+      props.history.push('/student/edit-details');
+    }
   }
 
   render() {

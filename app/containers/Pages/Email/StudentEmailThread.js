@@ -2,6 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import brand from 'dan-api/dummy/brand';
 import PropTypes from 'prop-types';
+import { makeSecureDecrypt } from 'dan-helpers/security';
 import { withStyles } from '@material-ui/core/styles';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -59,6 +60,17 @@ async function postData(url, data) {
 }
 
 class StudentEmailThread extends React.Component {
+  constructor(props) {
+    super(props)
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    if (user.email == '' || user.email == undefined || user.email == null) {
+      props.history.push('/student/edit-details');
+    }
+  }
+
   state = {
     to: '',
     subject: '',

@@ -24,13 +24,13 @@ export const languageOption = ["", "English", "French", "Spanish", "Arabic", "Ma
 export const qualificationOption = ["", "Bachelor's", "Integrated Master's", "Postgraduate Master's", "MBA", "Doctoral"]
 export const competencyOption = ["", 'Native', 'Basic', 'Intermediate', 'Fluent', 'Professional Standard'];
 export const society = [
-  "Oxfest Disraeli Society for Constitutional Affairs(Oxford) Planet Pledge",
+  "Oxfest Disraeli Society for Constitutional Affairs (Oxford) Planet Pledge",
   "Oxford University Hockey Club",
   "LSESU Pakistan Society",
   "LSESU Political Risk and Investment Society",
   "LSESU Trading Society",
   "UCL History Society",
-  "Aggression Sessions(Durham)",
+  "Aggression Sessions (Durham)",
   "Durham University Accounting and Finance Society",
   "Imperial Indian National Student Association",
   "Durham University Ski and Snowboard Society",

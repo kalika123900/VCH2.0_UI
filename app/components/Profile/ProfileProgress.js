@@ -74,7 +74,7 @@ class ProfileProgress extends React.Component {
           </Typography>
           {this.state.strength != 100 &&
             <Typography className={classes.title} component="h3" style={{ marginTop: 10 }}>
-              Your profile is incomplete. Employers are 5x more likely to contact you if you're profile is complete!
+              Your profile is incomplete. Employers are 5x more likely to contact you if your profile is complete!
             </Typography>
           }
           <Grid container justify="center" onClick={this.handleRedirect} >
@@ -84,7 +84,7 @@ class ProfileProgress extends React.Component {
                   <Check />
                 </Avatar>
               )}
-              label={`Complete your profile`}
+              label={this.state.strength != 100 ? `Complete your profile` : 'Profile completed'}
               className={classes.chip}
               color="primary"
               style={{ cursor: 'pointer' }}

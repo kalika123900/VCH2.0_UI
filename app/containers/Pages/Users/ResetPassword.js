@@ -20,10 +20,12 @@ async function postData(url, data) {
 
 class ResetPassword extends React.Component {
   state = {
-    success: false
+    success: false,
+    isProgress: false
   }
 
   submitForm(values) {
+    this.setState({ isProgress: true });
     const MappedValues = values.toJS();
     const searchString = (this.props.location.search).split('?user=');
     const type = searchString[1];
@@ -36,9 +38,11 @@ class ResetPassword extends React.Component {
       .then((res) => {
         if (res.status == 1) {
           this.setState({ success: true });
+          this.setState({ isProgress: false });
         }
       })
       .catch((err) => {
+        this.setState({ isProgress: false });
         console.error(err);
       });
   }
@@ -59,7 +63,7 @@ class ResetPassword extends React.Component {
         </Helmet>
         <div className={classes.container}>
           <div className={classes.userFormWrap}>
-            <ResetForm onSubmit={(values) => this.submitForm(values)} success={this.state.success} />
+            <ResetForm onSubmit={(values) => this.submitForm(values)} success={this.state.success} isProgress={this.state.isProgress} />
           </div>
         </div>
       </div>

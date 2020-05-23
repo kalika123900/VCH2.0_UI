@@ -11,6 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import { TextFieldRedux } from '../ReduxFormMUI';
 import styles from '../user-jss';
+import CircularProgress from '../../Loading/CircularProgress';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -68,6 +69,7 @@ class ResetForm extends React.Component {
       handleSubmit,
       submitting,
       deco,
+      isProgress
     } = this.props;
     const { showPassword } = this.state;
 
@@ -141,12 +143,18 @@ class ResetForm extends React.Component {
                   />
                 </FormControl>
               </div>
-              <div className={classes.btnArea}>
-                <Button variant="contained" color="primary" type="submit">
-                  Change Password
+              {!isProgress ?
+                <div className={classes.btnArea}>
+                  <Button variant="contained" color="primary" type="submit">
+                    Change Password
                   <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
-                </Button>
-              </div>
+                  </Button>
+                </div>
+                :
+                <div>
+                  <CircularProgress />
+                </div>
+              }
             </form>
           </section>
         </Fragment>

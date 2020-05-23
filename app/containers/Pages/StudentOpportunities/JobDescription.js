@@ -8,6 +8,7 @@ import Hidden from '@material-ui/core/Hidden';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
+import { makeSecureDecrypt } from 'dan-helpers/security';
 import Fab from '@material-ui/core/Fab';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -41,12 +42,14 @@ async function postData(url, data) {
 
 class ClientJobProfile extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
 
-    //Here ya go
-    this.props.history.listen((location, action) => {
-      console.log(action);
-    });
+    if (user.email == '' || user.email == undefined || user.email == null) {
+      props.history.push('/student/edit-details');
+    }
   }
 
   state = {

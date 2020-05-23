@@ -127,7 +127,8 @@ class EditPersonalDetails extends React.Component {
       notifyMessage: '',
       profile: null,
       cv: null,
-      isChanges: false
+      isChanges: false,
+      profileEmail: ''
     };
   }
 
@@ -213,7 +214,6 @@ class EditPersonalDetails extends React.Component {
     const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))
     );
-
     const MappedSociety = this.props.studentSociety.toJS();
 
     const data = {
@@ -224,8 +224,9 @@ class EditPersonalDetails extends React.Component {
       gender: this.props.gender,
       ethnicity: this.props.ethnicity,
       society: MappedSociety,
+      email: this.props.email,
       nationality: this.props.nationality,
-      user_id: user.id
+      user_id: user.id,
     };
 
     postJSON(`${API_URL}/student/create-personal-details`, data) // eslint-disable-line
@@ -270,6 +271,7 @@ class EditPersonalDetails extends React.Component {
             status: res.data.status,
             dob,
           };
+          this.setState({ profileEmail: res.data.email })
           this.props.addInfo(studentProfileData);
         } else {
           console.log('something not good ');
@@ -320,7 +322,7 @@ class EditPersonalDetails extends React.Component {
       resume,
       studentSociety
     } = this.props;
-    const { profile, cv } = this.state;
+    const { profile, cv, profileEmail } = this.state;
     const MappedSociety = studentSociety.toJS();
     return (
       <Fragment>
@@ -366,7 +368,6 @@ class EditPersonalDetails extends React.Component {
                   variant="outlined"
                   validate={[required]}
                   onChange={e => this.handleChange(e)}
-                  readOnly
                 />
               </FormControl>
             </div>
@@ -382,23 +383,38 @@ class EditPersonalDetails extends React.Component {
                   variant="outlined"
                   validate={[required]}
                   onChange={e => this.handleChange(e)}
-                  readOnly
                 />
               </FormControl>
             </div>
             <div>
               <FormControl className={classes.formControl}>
-                <TextField
-                  label="Email"
-                  className={classes.textField}
-                  type="email"
-                  name="email"
-                  value={email}
-                  autoComplete="email"
-                  margin="normal"
-                  variant="outlined"
-                  readOnly
-                />
+                {(profileEmail == null || profileEmail == '' || profileEmail == undefined) ?
+                  <TextField
+                    label="Email"
+                    className={classes.textField}
+                    type="email"
+                    name="email"
+                    value={email}
+                    autoComplete="email"
+                    margin="normal"
+                    variant="outlined"
+                    validate={[required, emailValidator]}
+                    onChange={(e) => this.handleChange(e)}
+                  />
+                  :
+                  <TextField
+                    label="Email"
+                    className={classes.textField}
+                    type="email"
+                    name="email"
+                    value={email}
+                    autoComplete="email"
+                    margin="normal"
+                    variant="outlined"
+                    validate={[required, emailValidator]}
+                  />
+                }
+
               </FormControl>
             </div>
             <div>
@@ -408,7 +424,6 @@ class EditPersonalDetails extends React.Component {
                   className={classes.textField}
                   type="text"
                   value={phoneNumber}
-                  autoComplete="phone"
                   name="phoneNumber"
                   margin="normal"
                   variant="outlined"
@@ -513,7 +528,9 @@ class EditPersonalDetails extends React.Component {
                         component={Checkbox}
                         checked={MappedSociety.indexOf(item) > -1}
                       />
-                      <ListItemText primary={item} />
+                      <ListItemText primary={item} style={{
+                        whiteSpace: 'pre-line'
+                      }} />
                     </MenuItem>
                   ))}
                 </Select>

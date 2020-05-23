@@ -12,6 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import brand from 'dan-api/dummy/brand';
 import logo from 'dan-images/logo.png';
+import CircularProgress from '../Loading/CircularProgress';
 import { TextFieldRedux } from './ReduxFormMUI';
 import styles from './user-jss';
 
@@ -31,7 +32,8 @@ class ResetForm extends React.Component {
       pristine,
       submitting,
       deco,
-      success
+      success,
+      isProgress
     } = this.props;
     return (
       <Paper className={classNames(classes.paperWrap, deco && classes.petal)}>
@@ -64,12 +66,18 @@ class ResetForm extends React.Component {
                     />
                   </FormControl>
                 </div>
-                <div className={classes.btnArea}>
-                  <Button variant="contained" color="primary" type="submit">
-                    Send Reset Link
-                <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
-                  </Button>
-                </div>
+                {!isProgress ?
+                  <div className={classes.btnArea}>
+                    <Button variant="contained" color="primary" type="submit">
+                      Send Reset Link
+                    <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
+                    </Button>
+                  </div>
+                  :
+                  <div>
+                    <CircularProgress />
+                  </div>
+                }
               </form>
             </section>
           </Fragment>

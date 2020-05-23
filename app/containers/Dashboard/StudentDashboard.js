@@ -5,6 +5,7 @@ import brand from 'dan-api/dummy/brand';
 import { withStyles } from '@material-ui/core/styles';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { makeSecureDecrypt } from 'dan-helpers/security';
 import data from 'dan-api/apps/timelineData';
 import { fetchAction } from 'dan-actions/SocmedActions';
 import styles from 'dan-components/SocialMedia/jss/cover-jss';
@@ -12,6 +13,16 @@ import { Student } from 'dan-components';
 import StudentDemographics from '../Widgets/StudentDemographics';
 
 class StudentDashboard extends PureComponent {
+  constructor(props) {
+    super(props)
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    if (user.email == '' || user.email == undefined || user.email == null) {
+      props.history.push('/student/edit-details');
+    }
+  }
   componentDidMount() {
     const { fetchData } = this.props;
     fetchData(data);

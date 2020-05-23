@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import { makeSecureEncrypt } from 'dan-helpers/security';
 
 class StudentSession extends React.Component {
   constructor(props) {
@@ -15,13 +16,17 @@ class StudentSession extends React.Component {
             email: res.data.email,
             name: res.data.name
           })));
-          window.location.reload();
+          if (res.data.status == 0 || res.data.isEditDetails)
+            window.location.href = '/student/edit-details';
+          else {
+            window.location.reload();
+          }
         }
       }
     }
   }
   render() {
-    return (<p>Please wait</p>)
+    return (null)
   }
 }
 

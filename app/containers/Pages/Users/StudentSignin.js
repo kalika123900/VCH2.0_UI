@@ -48,7 +48,7 @@ class StudentSignin extends React.Component {
   handleOauth = (data) => {
     const apiData = {
       name: data.name,
-      email: data.email,
+      email: data.email ? data.email : null,
       profile: data.picture,
       user_id: data.id,
       type: data.provider
@@ -64,7 +64,11 @@ class StudentSignin extends React.Component {
             email: res.data.email,
             name: res.data.name
           })));
-          window.location.reload();
+          if (res.data.status == 0 || res.data.isEditDetails)
+            window.location.href = '/student/edit-details';
+          else {
+            window.location.reload();
+          }
         } else {
           this.setState({ notifyMessage: res.errorMessage });
           this.setState({ messageType: 'error' });
@@ -98,7 +102,11 @@ class StudentSignin extends React.Component {
             email: res.data.email,
             name: res.data.name
           })));
-          window.location.reload();
+          if (res.data.status == 0 || res.data.isEditDetails)
+            window.location.href = '/student/edit-details';
+          else {
+            window.location.reload();
+          }
         } else {
           this.setState({ notifyMessage: res.errorMessage });
           this.setState({ messageType: 'error' });

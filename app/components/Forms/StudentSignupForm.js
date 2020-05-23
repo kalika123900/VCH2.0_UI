@@ -229,7 +229,7 @@ class StudentSignupForm extends React.Component {
                 )}
                 label="Agree with"
               />
-              <Link to="#" className={classes.link}>Terms &amp; Condition</Link>
+              <Link to="#" className={classes.link}>Terms &amp; Conditions</Link>
             </div>
             <div className={classes.btnArea}>
               <Button variant="contained" fullWidth color="primary" type="submit">

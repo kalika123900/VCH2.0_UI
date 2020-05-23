@@ -77,7 +77,8 @@ class EditDetailsForm extends React.Component {
       messageType: 'error',
       notifyMessage: '',
       avatar: '',
-      profile: null
+      profile: null,
+      isProgress: false
     };
   }
 
@@ -102,6 +103,7 @@ class EditDetailsForm extends React.Component {
   }
 
   submitForm(values) {
+    this.setState({ isProgress: true })
     const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))
     );
@@ -117,15 +119,18 @@ class EditDetailsForm extends React.Component {
     postData(`${API_URL}/utils/set-new-password`, data)
       .then((res) => {
         if (res.status === 1) {
+          this.setState({ isProgress: false })
           this.successMsg()
           this.resetTab();
         } else {
+          this.setState({ isProgress: false })
           this.setState({ notifyMessage: 'Old Password is not correct' });
           this.setState({ messageType: 'error' });
           this.setState({ openStyle: true });
         }
       })
       .catch((err) => {
+        this.setState({ isProgress: false })
         console.error(err);
       });
   }
@@ -413,7 +418,7 @@ class EditDetailsForm extends React.Component {
             </form>
           )}
           {tab === 1 && (
-            <SetNewPassword onSubmit={(values) => this.submitForm(values)} />
+            <SetNewPassword onSubmit={(values) => this.submitForm(values)} isProgress={this.state.isProgress} />
           )}
           <Snackbar
             anchorOrigin={{

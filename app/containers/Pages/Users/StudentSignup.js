@@ -63,7 +63,11 @@ class StudentSignup extends React.Component {
             token: res.data.token,
             email: res.data.email
           })));
-          window.location.reload();
+          if (res.data.status == 0 || res.data.isEditDetails)
+            window.location.href = '/student/edit-details';
+          else {
+            window.location.reload();
+          }
         } else {
           this.setState({ notifyMessage: res.errorMessage });
           this.setState({ messageType: 'error' });

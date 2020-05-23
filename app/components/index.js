@@ -215,3 +215,5 @@ export ThemeSetting from './TemplateSettings/ThemeSetting';
 // DialogBox
 export ConfirmationDialog from './DialogBox/ConfirmationDialog';
 export CustomConfirmation from './DialogBox/CustomConfirmation';
+
+export CircularProgress from './Loading/CircularProgress';

@@ -120,7 +120,9 @@ class EditStudentDetails extends Component {
         openStyle: false,
         messageType: 'error',
         notifyMessage: '',
-        isChanges: { 'language': false, 'experience': false, 'education': false }
+        isChanges: { 'language': false, 'experience': false, 'education': false },
+        verification: 'Resend verification email',
+        isProgress: false
       };
     } else {
       this.state = {
@@ -128,7 +130,9 @@ class EditStudentDetails extends Component {
         openStyle: false,
         messageType: 'error',
         notifyMessage: '',
-        isChanges: { 'language': false, 'experience': false, 'education': false }
+        isChanges: { 'language': false, 'experience': false, 'education': false },
+        verification: 'Resend verification email',
+        isProgress: false
       };
     }
   }
@@ -140,6 +144,7 @@ class EditStudentDetails extends Component {
   }
 
   submitForm(values) {
+    this.setState({ isProgress: true })
     const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))
     );
@@ -155,15 +160,18 @@ class EditStudentDetails extends Component {
     postData(`${API_URL}/utils/set-new-password`, data)
       .then((res) => {
         if (res.status === 1) {
+          this.setState({ isProgress: false })
           this.successMsg()
           this.resetTab();
         } else {
+          this.setState({ isProgress: false })
           this.setState({ notifyMessage: 'Old Password is not correct' });
           this.setState({ messageType: 'error' });
           this.setState({ openStyle: true });
         }
       })
       .catch((err) => {
+        this.setState({ isProgress: false })
         console.error(err);
       });
   }
@@ -632,6 +640,7 @@ class EditStudentDetails extends Component {
   }
 
   resendVerification = () => {
+    this.setState({ verification: '...Sending verification email' })
     const user = JSON.parse(
       makeSecureDecrypt(localStorage.getItem('user'))
     );
@@ -645,11 +654,13 @@ class EditStudentDetails extends Component {
     postData(`${API_URL}/student/resend-verification`, data)
       .then((res) => {
         if (res.status === 1) {
+          this.setState({ verification: 'Resend verification email' })
           this.setState({ notifyMessage: 'Please, check your indox to verify you email' });
           this.setState({ messageType: 'success' });
           this.setState({ openStyle: true });
         }
         else {
+          this.setState({ verification: 'Resend verification email' })
           this.setState({ notifyMessage: 'Something went wrong' });
           this.setState({ messageType: 'error' });
           this.setState({ openStyle: true });
@@ -659,7 +670,7 @@ class EditStudentDetails extends Component {
 
   render() {
     const { classes, educationInfo, experienceInfo, languageInfo } = this.props;
-    const { tab } = this.state;
+    const { tab, verification } = this.state;
 
     const MapEducationInfo = educationInfo.toJS();
     const MapExperienceInfo = experienceInfo.toJS();
@@ -719,7 +730,7 @@ class EditStudentDetails extends Component {
           <div className={classes.wrapContent}>
             <Typography variant="subtitle2" style={{ paddingTop: 8, color: "green" }} >Your email address is not verified, Please verify your email address.</Typography>
             <Button color="secondary" onClick={() => this.resendVerification()}>
-              Resend verification email
+              {verification}
             </Button>
           </div>
         }
@@ -839,7 +850,7 @@ class EditStudentDetails extends Component {
               </Fragment>
             )}
             {tab === 5 && (
-              <SetNewPassword onSubmit={(values) => this.submitForm(values)} />
+              <SetNewPassword onSubmit={(values) => this.submitForm(values)} isProgress={this.state.isProgress} />
             )}
             <Snackbar
               anchorOrigin={{

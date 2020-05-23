@@ -68,6 +68,16 @@ const compare = (item1, item2) => {
 }
 
 class StudentEmail extends React.Component {
+  constructor(props) {
+    super(props)
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    if (user.email == '' || user.email == undefined || user.email == null) {
+      props.history.push('/student/edit-details');
+    }
+  }
   state = {
     to: '',
     subject: '',

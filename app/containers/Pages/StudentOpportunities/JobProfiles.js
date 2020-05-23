@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import imgApi from 'dan-api/images/photos';
 import avatarApi from 'dan-api/images/avatars';
+import { makeSecureDecrypt } from 'dan-helpers/security';
 import { withStyles } from '@material-ui/core/styles';
 import styles from '../../../components/Profile/profile-jss';
 import Grid from '@material-ui/core/Grid';
@@ -45,6 +46,17 @@ async function postJSON(url, data) {
 }
 
 class JobProfiles extends React.Component {
+  constructor(props) {
+    super(props)
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    if (user.email == '' || user.email == undefined || user.email == null) {
+      props.history.push('/student/edit-details');
+    }
+  }
+
   state = {
     isLoading: false,
     isJob: false,
