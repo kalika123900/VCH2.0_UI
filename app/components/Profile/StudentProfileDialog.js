@@ -11,9 +11,9 @@ import StudentClientView from './StudentClientView';
 class StudentProfileDialog extends React.Component {
   render() {
     const {
-      classes,
       user_id
     } = this.props;
+
     const { open, handleClose } = this.props;
     return (
       <div>

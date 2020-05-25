@@ -104,6 +104,13 @@ class StudentSummary extends React.Component {
       .catch((err) => {
         console.log(err);
       });
+
+    if (this.props.userType == 'CLIENT') {
+      postData(`${API_URL}/utils/update-student-views`, data)
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
 
   componentDidMount() {

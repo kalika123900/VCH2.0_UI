@@ -229,7 +229,7 @@ class StudentSignupForm extends React.Component {
                 )}
                 label="Agree with"
               />
-              <Link to="#" className={classes.link}>Terms &amp; Conditions</Link>
+              <Link onClick={e => window.open("https://res.cloudinary.com/dp21wbaku/image/upload/v1590394789/VCH2.0/terms-and-conditions_eeiju9.pdf")} target="_blank" className={classes.link}>Terms &amp; Conditions</Link>
             </div>
             <div className={classes.btnArea}>
               <Button variant="contained" fullWidth color="primary" type="submit">

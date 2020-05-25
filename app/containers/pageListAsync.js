@@ -333,6 +333,10 @@ export const StaffSignup = loadable(() =>
   import('./Pages/Users/StaffSignup'), {
   fallback: <Loading />,
 });
+export const PrivacyPolicy = loadable(() =>
+  import('./Pages/PrivacyPolicy'), {
+  fallback: <Loading />,
+});
 export const AdminSignup = loadable(() =>
   import('./Pages/Users/AdminSignup'), {
   fallback: <Loading />,

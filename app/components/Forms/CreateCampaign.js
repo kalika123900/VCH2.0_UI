@@ -77,20 +77,54 @@ class CreateCampaign extends React.Component {
         const campaignData = JSON.parse(localStorage.getItem('campaignProgress'));
         this.state = {
           activeStep: campaignData.activeStep,
-          isCreateCampaign: true
+          isCreateCampaign: true,
         }
       } else {
         this.state = {
           activeStep: 0,
-          isCreateCampaign: true
+          isCreateCampaign: true,
         }
       }
     } else {
       this.state = {
         activeStep: 0,
-        isCreateCampaign: true
+        isCreateCampaign: true,
       }
     }
+  }
+
+  handleIsStep4 = () => {
+    const store = {
+      'university': [],
+      'qualificationType': [],
+      'languages': [],
+      'societies': [],
+      'gender': '',
+      'subjects': [],
+      'skills': [],
+      'selectedYear': [],
+      'minGrade': [],
+      'keywords': [],
+      'interestedSectors': [],
+      'workLocation': []
+    }
+
+    let returnBool = true
+
+    Object.keys(store).forEach((key, index) => {
+      if (typeof store[key] === 'object') {
+        const property = this.props[key].toJS();
+        if (property.length == 0) {
+          returnBool = false;
+        }
+      } else {
+        if (this.props[key].length == 0) {
+          returnBool = false;
+        }
+      }
+    })
+
+    return returnBool;
   }
 
   handleCreateCampaign = (count) => {
@@ -161,6 +195,8 @@ class CreateCampaign extends React.Component {
 
     const { activeStep } = this.state;
     const steps = userType == 'ADMIN' ? adminGetSteps() : getSteps();
+    const isStep4 = this.handleIsStep4();
+    console.log(isStep4)
 
     let isDisable = true;
     let isCampaignName = true;
@@ -234,7 +270,13 @@ class CreateCampaign extends React.Component {
                 </Button>
               </Grid>
               <Grid className={(classes.btnArea, classes.pageFormWrap)}>
-                <Button variant="contained" fullWidth color="primary" onClick={() => this.handleNext()}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  onClick={() => this.handleNext()}
+                  disabled={!isStep4}
+                >
                   Next
                   <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} />
                 </Button>
@@ -495,6 +537,7 @@ const CreateCampaignMapped = connect(
     qualificationType: state.getIn([reducerCampaign, 'qualificationType']),
     name: state.getIn([reducerCampaign, 'name']),
     role: state.getIn([reducerCampaign, 'role']),
+    roleName: state.getIn([reducerCampaign, 'roleName']),
     roleDeadline: state.getIn([reducerCampaign, 'roleDeadline']),
     gender: state.getIn([reducerCampaign, 'gender']),
     university: state.getIn([reducerCampaign, 'university']),
@@ -506,13 +549,13 @@ const CreateCampaignMapped = connect(
     interestedSectors: state.getIn([reducerCampaign, 'interestedSectors']),
     workLocation: state.getIn([reducerCampaign, 'workLocation']),
     experience: state.getIn([reducerCampaign, 'experience']),
+    heading: state.getIn([reducerCampaign, 'heading']),
+    body: state.getIn([reducerCampaign, 'body']),
+    audience: state.getIn([reducerCampaign, 'audience']),
     minGrade: state.getIn([reducerCampaign, 'minGrade']),
     subjects: state.getIn([reducerCampaign, 'subjects']),
     skills: state.getIn([reducerCampaign, 'skills']),
-    heading: state.getIn([reducerCampaign, 'heading']),
-    body: state.getIn([reducerCampaign, 'body']),
     societies: state.getIn([reducerCampaign, 'societies']),
-    audience: state.getIn([reducerCampaign, 'audience']),
   }),
   mapDispatchToProps
 )(CreateCampaignReduxed);

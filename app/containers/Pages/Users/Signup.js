@@ -8,6 +8,13 @@ import { SignupForm } from 'dan-components';
 import styles from 'dan-components/Forms/user-jss';
 import { Typography } from '@material-ui/core';
 import { ErrorWrap } from 'dan-components';
+import messageStyles from 'dan-styles/Messages.scss';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 
 async function postData(url, data) {
   const response = await fetch(url, {
@@ -36,7 +43,20 @@ class Signup extends React.Component {
     cEmail: '',
     cPhone: '',
     cHeadquarter: '',
-    cLogo: ''
+    cLogo: '',
+    openStyle: false,
+    messageType: 'error',
+    notifyMessage: ''
+  }
+
+
+  handleCloseStyle = () => {
+    this.setState({ openStyle: false });
+  }
+
+  noticeClose = event => {
+    event.preventDefault();
+    this.setState({ openStyle: false });
   }
 
   verifyToken = () => {
@@ -88,6 +108,9 @@ class Signup extends React.Component {
           this.props.history.push('/signin');
         } else {
           this.setState({ errorMessage: res.errorMessage, flash: true });
+          this.setState({ notifyMessage: res.errorMessage });
+          this.setState({ messageType: 'error' });
+          this.setState({ openStyle: true });
         }
       })
       .catch((err) => {
@@ -136,6 +159,44 @@ class Signup extends React.Component {
             }
           </div>
         </div>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={this.state.openStyle}
+          autoHideDuration={6000}
+          onClose={this.handleCloseStyle}
+        >
+          <SnackbarContent
+            className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
+            aria-describedby="client-snackbar"
+            message={(
+              <span id="client-snackbar" className={classes.message}>
+                {
+                  (this.state.messageType == 'error') && <ErrorIcon className="success" />
+                }
+                {
+                  (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
+                }
+
+                  &nbsp;
+                {this.state.notifyMessage}
+              </span>
+            )}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                className={classes.close}
+                onClick={this.noticeClose}
+              >
+                <CloseIcon className={classes.icon} />
+              </IconButton>,
+            ]}
+          />
+        </Snackbar>
       </div>
     );
   }

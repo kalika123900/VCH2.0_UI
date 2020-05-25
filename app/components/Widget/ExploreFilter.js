@@ -117,29 +117,6 @@ class ExploreFilter extends PureComponent {
               />
             </FormControl>
           </Grid>
-          {/* <Grid item sm={6} xs={6}>
-            <FormControl className={classes.formControlTrade}>
-              <InputLabel htmlFor="role-simple">Role</InputLabel>
-              <Select
-                value={role}
-                onChange={e => handleChange(e)}
-                inputProps={{
-                  name: 'role',
-                  id: 'role-simple',
-                }}
-              >
-                <MenuItem value="">
-                  <em>--select role--</em>
-                </MenuItem>
-                <MenuItem value="BNB">AI Engineer</MenuItem>
-                <MenuItem value="BTC">Technology Analyst</MenuItem>
-                <MenuItem value="BKC">Technical Project Manager</MenuItem>
-                <MenuItem value="BPC">Business Analyst</MenuItem>
-                <MenuItem value="BCN">Software Engineer</MenuItem>
-                <MenuItem value="ADA">HR Manager</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid> */}
         </Grid>
         <Grid container spacing={2}>
           <Grid item sm={6} xs={6}>
@@ -321,31 +298,12 @@ class ExploreFilter extends PureComponent {
                 }}
               >
                 <MenuItem value={today()}>Active Today</MenuItem>
-                <MenuItem value={firstDayOfNthWeek(new Date(), 1)}>Active in last 1 Week ago</MenuItem>
-                <MenuItem value={firstDayOfNthWeek(new Date(), 2)}>Active in last 2 Week ago</MenuItem>
-                <MenuItem value={firstDayOfLastMonth()}>Active in last Month ago</MenuItem>
+                <MenuItem value={firstDayOfNthWeek(new Date(), 1)}>Active in the last Week</MenuItem>
+                <MenuItem value={firstDayOfNthWeek(new Date(), 2)}>Active in the last 2 Weeks</MenuItem>
+                <MenuItem value={firstDayOfLastMonth()}>Active in the last Month</MenuItem>
               </Select>
             </FormControl>
           </Grid>
-        </Grid>
-        <Grid container spacing={2}>
-          {/* <Grid item sm={6} xs={6}>
-            <FormControl className={classes.formControlTrade}>
-              <InputLabel htmlFor="location-simple">Location</InputLabel>
-              <Input
-                id="location-simple"
-                value={location}
-                name="location"
-                onChange={e => handleChange(e)}
-                endAdornment={<InputAdornment position="end"><Place /></InputAdornment>}
-                aria-describedby="standard-weight-helper-text"
-                inputProps={{
-                  'aria-label': 'location',
-                }}
-              />
-            </FormControl>
-          </Grid> */}
-
         </Grid>
         <Divider className={classes.divider} />
         <div className={classes.textRight}>

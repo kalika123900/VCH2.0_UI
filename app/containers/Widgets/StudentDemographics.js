@@ -23,8 +23,29 @@ import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import TrackChangesIcon from '@material-ui/icons/TrackChanges';
 import styles from 'dan-components/Widget/widget-jss';
 import TimerIcon from '@material-ui/icons/Timer';
+import qs from 'qs';
+import { makeSecureDecrypt } from 'dan-helpers/security';
 
 const colors = [red[300], blue[300], cyan[300], lime[300]];
+
+async function getData(url) {
+  const response = await fetch(url, {
+    method: 'GET',
+  });
+
+  return await response.json();
+}
+
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+  return await response.json();
+}
 
 function addZero(number) {
   if (number < 10)
@@ -36,7 +57,10 @@ function addZero(number) {
 class ChartInfographic extends PureComponent {
   state = {
     deadline: new Date("Aug 1, 2020 00:00:00").getTime(),
-    timer: '00:00:00:00'
+    timer: '00:00:00:00',
+    opportunities: 0,
+    views: 0,
+    contacted: 0
   }
 
   updateTimer = () => {
@@ -53,8 +77,65 @@ class ChartInfographic extends PureComponent {
     }, 1000);
   }
 
+  getOpportunities = () => {
+    getData(`${API_URL}/student/get-platform-opportunities`) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({ opportunities: res.data[0].opportunities })
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  getViews = () => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+
+    const data = {
+      user_id: user.id
+    }
+
+    postData(`${API_URL}/student/get-profile-views`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({ views: res.data[0].views })
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
+
+  getContacted = () => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+
+    const data = {
+      user_id: user.id
+    }
+
+    postData(`${API_URL}/student/get-contacted`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({ contacted: res.data[0].contacted })
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
+
   componentDidMount() {
     this.updateTimer();
+    this.getContacted();
+    this.getViews();
+    this.getOpportunities();
   }
 
   render() {
@@ -68,7 +149,7 @@ class ChartInfographic extends PureComponent {
             <CounterWidget
               color={colorfull[6]}
               start={0}
-              end={106}
+              end={this.state.opportunities}
               duration={3}
               title="Opportunities on the platform"
             >
@@ -79,7 +160,7 @@ class ChartInfographic extends PureComponent {
             <CounterWidget
               color={colorfull[3]}
               start={0}
-              end={4}
+              end={this.state.contacted}
               duration={3}
               title="Contacted by an employer"
             >
@@ -91,7 +172,7 @@ class ChartInfographic extends PureComponent {
             <CounterWidget
               color={colorfull[5]}
               start={0}
-              end={5}
+              end={this.state.views}
               duration={3}
               title="Profile View by an employer"
             >

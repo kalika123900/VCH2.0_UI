@@ -135,6 +135,7 @@ class Step6 extends React.Component {
         }
       })
       .catch((err) => {
+        this.setState({ loading: false })
         console.error(err);
       });
   }

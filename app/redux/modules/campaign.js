@@ -28,7 +28,7 @@ const initialState = {
   subjects: List([]),
   skills: List([]),
   keywords: List([]),
-  gender: List(['Prefer not to say']),
+  gender: List(['No preference']),
   interestedSectors: List([]),
   workLocation: List(['London']),
   selectedYear: List([]),

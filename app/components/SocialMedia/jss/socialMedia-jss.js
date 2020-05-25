@@ -30,6 +30,7 @@ const styles = theme => ({
   },
   listPeople: {
     padding: `${theme.spacing(0.5)}px ${theme.spacing(1)}px`,
+    margin: 10
   },
   sliderWrap: {
     height: 310,
