@@ -157,10 +157,10 @@ class CompanyProfile extends React.Component {
             </div>
             <div className={classes.spacer} />
             <div className={classes.actions}>
-              <Tooltip title="Add Company">
+              <Tooltip title="Managed by me">
                 <Button variant="contained" onClick={() => this.newCompany()} color="secondary" className={classes.button}>
                   <AddIcon className={classNames(isWidthUp('sm', 'sm') && classes.leftIcon, classes.iconSmall)} />
-                  {isWidthUp('sm', 'sm') && 'Add Company'}
+                  {isWidthUp('sm', 'sm') && 'Managed by me'}
                 </Button>
               </Tooltip>
             </div>

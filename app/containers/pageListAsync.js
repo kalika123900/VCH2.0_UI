@@ -357,6 +357,10 @@ export const CreateCompany = loadable(() =>
   import('./Pages/Users/CreateCompany'), {
   fallback: <Loading />,
 });
+export const ChooseCompany = loadable(() =>
+  import('./Pages/ChooseCompany'), {
+  fallback: <Loading />,
+});
 export const StudentSignin = loadable(() =>
   import('./Pages/Users/StudentSignin'), {
   fallback: <Loading />,

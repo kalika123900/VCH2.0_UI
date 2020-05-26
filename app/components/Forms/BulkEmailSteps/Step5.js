@@ -17,6 +17,7 @@ import RemoveCircle from '@material-ui/icons/RemoveCircle';
 import RecipientStudentCard from '../../CardPaper/RecipientStudentCard';
 import { universityItems, keywordsData, skillMenu } from 'dan-api/apps/profileOption';
 import { emailStep5Info } from 'dan-actions/BulkEmailActions';
+import CircularProgress from '../../Loading/CircularProgress';
 
 async function postJSON(url, data) {
   const response = await fetch(url, {
@@ -39,7 +40,8 @@ class Step5 extends React.Component {
     super();
     this.state = {
       page: 1,
-      contentsPerPage: 24
+      contentsPerPage: 24,
+      isProgress: true
     };
 
     this.onPageChange = this.onPageChange.bind(this);
@@ -80,28 +82,6 @@ class Step5 extends React.Component {
   }
 
   componentDidMount() {
-    //     const MapSkills = getIds(this.props.skills.toJS(), skillMenu);
-    //     const MapKeywords = getIds(this.props.keywords.toJS(), keywordsData);
-    //     const MapUniversity = getIds(this.props.university.toJS(), universityItems);
-
-    //     const data = {
-    //       university: MapUniversity,
-    //       keywords: MapKeywords,
-    //       skills: MapSkills,
-    //       ethnicity: this.props.ethnicity,
-    // dataSize
-    // university_ids
-    // skill_ids
-    // ethnicity
-    // genders
-    // subjects
-    // sectors
-    // selected_year
-    // languages
-    // qualification_type
-    // experience
-    //     };
-
     const MapSkills = getIds(this.props.skills.toJS(), skillMenu);
     const MapUniversity = getIds(this.props.university.toJS(), universityItems);
 
@@ -125,9 +105,13 @@ class Step5 extends React.Component {
         if (res.status === 1) {
           this.props.addInfo({ ...this.props, studentList: res.data.data })
           this.props.handleCreateBulkEmail(res.data.data.length);
+          this.setState({ isProgress: false })
+        } else {
+          this.setState({ isProgress: false })
         }
       })
       .catch((err) => {
+        this.setState({ isProgress: false })
         console.error(err);
       });
 
@@ -214,9 +198,12 @@ class Step5 extends React.Component {
             />
           </Fragment>
           :
-          <Typography variant="caption" color="error">
-            No students are perfect according to your needs
-          </Typography>
+          !this.state.isProgress ?
+            <Typography variant="caption" color="error">
+              No students are perfect according to your needs
+            </Typography>
+            :
+            <CircularProgress />
         }
       </div>
     );

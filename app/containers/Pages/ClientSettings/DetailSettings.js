@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
+import { BlockPicker } from 'react-color'
 import Button from '@material-ui/core/Button'
 import Divider from '@material-ui/core/Divider';
 import Switch from '@material-ui/core/Switch';
@@ -29,7 +30,8 @@ async function postData(url, data) {
 class DetailSettings extends React.Component {
   state = {
     displayName: '',
-    message: ''
+    message: '',
+    background: '#000040',
   }
 
   handleClose = () => {
@@ -107,6 +109,10 @@ class DetailSettings extends React.Component {
         console.error(err);
       });
   }
+
+  handleChangeComplete = (color) => {
+    this.setState({ background: color.hex });
+  };
 
   componentDidMount() {
     this.getName();
@@ -208,6 +214,25 @@ class DetailSettings extends React.Component {
                 </Grid>
               </ListItem>
             </List>
+          </Grid>
+          <Grid style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginTop: 20
+          }}>
+            <Grid>
+              <ListItemText
+                primary="Color of your email"
+                secondary="Color that displays on your email banners or buttons"
+                style={{ whiteSpace: 'pre-line' }}
+              />
+            </Grid>
+            <Grid>
+              <BlockPicker
+                color={this.state.background}
+                onChangeComplete={this.handleChangeComplete}
+              />
+            </Grid>
           </Grid>
         </Grid>
       </Grid >

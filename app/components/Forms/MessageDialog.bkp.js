@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Editor } from 'react-draft-wysiwyg';
-import { convertFromRaw, EditorState, convertToRaw } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
+import { convertToRaw } from 'draft-js';
 import { draftToMarkdown } from 'markdown-draft-js';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -14,34 +13,19 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
 import Paper from '@material-ui/core/Paper';
 import styles from './user-jss';
-import css from 'dan-styles/Form.scss';
 import { TextField } from '@material-ui/core';
 
-const content = {
-  blocks: [{
-    key: '637gr',
-    text: '',
-    type: 'unstyled',
-    depth: 0,
-    inlineStyleRanges: [],
-    entityRanges: [],
-    data: {}
-  }],
-  entityMap: {}
-};
-
-
 class MessageDialog extends React.Component {
-  constructor(props) {
-    super(props);
-    const contentBlock = convertFromRaw(content);
-    if (contentBlock) {
-      const editorState = EditorState.createWithContent(contentBlock);
-      this.state = {
-        editorState,
-        heading: '',
-        emailContent: draftToHtml(convertToRaw(editorState.getCurrentContent()))
-      };
+  state = {
+    heading: '',
+    editorState: ''
+  }
+
+  sendMessageByEnter = (event, message) => {
+    const { sendMessage } = this.props;
+    if (event.key === 'Enter' && event.target.value !== '') {
+      sendMessage(message.__html);
+      this.resetInput();
     }
   }
 
@@ -49,33 +33,42 @@ class MessageDialog extends React.Component {
     this.setState({ heading: e.target.value })
   }
 
-  submit = () => {
+  submit = (message) => {
     const { sendMessage, handleClose } = this.props;
-    const { emailContent, heading } = this.state;
+    const { editorState, heading } = this.state;
 
-    if (emailContent != '') {
-      sendMessage(heading, emailContent);
-    }
-
-    const contentBlock = convertFromRaw(content);
-    if (contentBlock) {
-      let editorState = EditorState.createWithContent(contentBlock);
-      this.setState({ editorState, heading: '', emailContent: '' });
-    }
+    sendMessage(heading, draftToMarkdown(convertToRaw(editorState.getCurrentContent())));
+    this.setState({ editorState: '', heading: '' });
     handleClose();
   }
 
   onEditorStateChange = editorState => {
     this.setState({
-      editorState,
-      emailContent: draftToHtml(convertToRaw(editorState.getCurrentContent()))
+      editorState
     });
   };
 
   render() {
-    const { classes, open, handleClose } = this.props;
+    const { classes, open, handleClose, sendMessage } = this.props;
     const { editorState, heading } = this.state;
 
+    const editorToolbar = {
+      options: ['inline', 'blockType', 'list', 'emoji'],
+      inline: {
+        options: ['bold', 'italic', 'underline'],
+      },
+      blockType: {
+        inDropdown: false,
+        options: ['Normal', 'Code'],
+      },
+      list: {
+        inDropdown: false,
+        options: ['ordered', 'unordered', 'indent'],
+      },
+      emoji: {
+        popupClassName: classes.emojiPopup,
+      }
+    };
     return (
       <div>
         <Grid container justify="center" direction="column">
@@ -87,7 +80,7 @@ class MessageDialog extends React.Component {
             style={{ position: 'absolute' }}
           >
             <DialogTitle id="form-dialog-title">Message</DialogTitle>
-            <DialogContent style={{ width: '100%' }} className={css.bodyForm}>
+            <DialogContent style={{ width: '100%' }}>
               <FormControl style={{ width: '100%' }}>
                 <TextField
                   variant="outlined"
@@ -95,30 +88,25 @@ class MessageDialog extends React.Component {
                   name="heading"
                   value={heading}
                   onChange={(e) => this.handleChange(e)}
+                  style={{ margin: 10, width: '100%' }}
                 />
-                <div>
+                <Paper className={classes.messageBlock}>
                   <Editor
                     editorState={editorState}
                     editorClassName={classes.textEditor}
                     toolbarClassName={classes.toolbarEditor}
                     onEditorStateChange={this.onEditorStateChange}
-                    toolbar={{
-                      options: ['inline', 'fontSize', 'fontFamily', 'colorPicker', 'image', 'emoji', 'list', 'textAlign', 'link'],
-                      inline: { inDropdown: true },
-                      color: true,
-                      list: { inDropdown: true },
-                      textAlign: { inDropdown: true },
-                      link: { inDropdown: true },
-                    }}
+                    toolbar={editorToolbar}
+                    onKeyPress={(event) => this.sendMessageByEnter(event, editorState)}
                   />
-                </div>
+                </Paper>
               </FormControl>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose} color="primary">
                 Cancel
               </Button>
-              <Button onClick={(event) => this.submit()} color="primary" disabled={this.state.heading == '' ? true : false}>
+              <Button onClick={(event) => this.submit(editorState)} color="primary">
                 Send
               </Button>
             </DialogActions>

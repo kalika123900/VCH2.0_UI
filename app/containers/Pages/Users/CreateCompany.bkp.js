@@ -1,11 +1,10 @@
-import React, { useReducer } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet';
 import brand from 'dan-api/dummy/brand';
 import PropTypes from 'prop-types';
 import qs from 'qs';
 import { withStyles } from '@material-ui/core/styles';
 import { CreateCompanyForm } from 'dan-components';
-import { makeSecureDecrypt } from 'dan-helpers/security';
 import styles from 'dan-components/Forms/user-jss';
 
 async function postData(url, data) {
@@ -20,39 +19,27 @@ async function postData(url, data) {
   return await response.json();
 }
 
-async function postFormData(url, data) {
-  const response = await fetch(url, {
-    method: 'POST',
-    body: data
-  });
-  return await response.json();
-}
-
 class CreateCompany extends React.Component {
   state = {
-    cLogo: '',
-    logo: null
+    errorMessage: '',
+    flash: false
   }
 
-  handleFileChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.files[0],
-    })
+  handleFlash = () => {
+    this.setState({ errorMessage: '', flash: false });
   }
 
   submitForm(values) {
-    const user = JSON.parse(
-      makeSecureDecrypt(localStorage.getItem('user'))
-    );
-
     const MappedValues = values.toJS();
     const { cName, cEmail, cPhone, cHeadquarter } = MappedValues;
-    const data = { cName, cEmail, cPhone, cHeadquarter, logo: this.state.cLogo, managed_by: user.id };
+    const data = { cName, cEmail, cPhone, cHeadquarter };
 
     postData(`${API_URL}/admin/create-company`, data)
       .then((res) => {
         if (res.status === 1) {
           this.props.history.push('/admin/company-profile');
+        } else {
+          this.setState({ errorMessage: res.errorMessage.errors[0].message, flash: true });
         }
       })
       .catch((err) => {
@@ -60,38 +47,11 @@ class CreateCompany extends React.Component {
       });
   }
 
-  handleChangeLogo = () => {
-    var data = new FormData();
-
-    data.append('logo', this.state.logo);
-
-    postFormData(`${API_URL}/admin/add-company-logo`, data) // eslint-disable-line
-      .then((res) => {
-        if (res.status === 1) {
-          this.setState({ cLogo: res.result.url });
-          this.setState({ logo: null });
-        }
-      })
-      .catch((err) => {
-        this.setState({ logo: null });
-        console.log(err);
-      });
-  }
-
-
-  componentDidUpdate() {
-    if (this.state.logo != null) {
-      this.handleChangeLogo()
-    }
-  }
-
-
   render() {
     const title = brand.name + ' - CreateCompany';
     const description = brand.desc;
     const { classes } = this.props;
-    const { logo, cLogo } = this.state;
-
+    const { errorMessage, flash } = this.state;
     return (
       <div className={classes.rootFull}>
         <Helmet>
@@ -106,9 +66,9 @@ class CreateCompany extends React.Component {
           <div className={classes.fullFormWrap}>
             <CreateCompanyForm
               onSubmit={(values) => this.submitForm(values)}
-              handleFileChange={this.handleFileChange}
-              logo={logo}
-              cLogo={cLogo}
+              handleFlash={this.handleFlash}
+              errorMessage={errorMessage}
+              flash={flash}
             />
           </div>
         </div>

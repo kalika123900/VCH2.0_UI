@@ -69,12 +69,6 @@ class SignupForm extends React.Component {
     event.preventDefault();
   };
 
-  componentDidUpdate() {
-    if (this.state.logo != null) {
-      this.handleChangeLogo()
-    }
-  }
-
   render() {
     const {
       classes,

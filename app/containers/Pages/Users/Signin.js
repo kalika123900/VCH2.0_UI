@@ -77,6 +77,8 @@ class Signin extends React.Component {
               theme: 'blueTheme'
             })));
             window.location.reload();
+          } else if (res.data.type == 10) {
+            this.props.history.push(`/choose-company?${btoa(JSON.stringify(res.data))}`)
           } else {
             localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
               id: res.data.id,

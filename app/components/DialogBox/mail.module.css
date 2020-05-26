@@ -1,0 +1,138 @@
+body{
+  padding: 0!important;
+  margin: 0!important;
+  display: block!important;
+  min-width: 100% !important;
+  width: 100% !important;
+  background: #f2f8f8;
+  -webkit-text-size-adjust: none
+  }
+
+a {
+  color: #488edc;
+  text-decoration: none
+}
+
+p {
+  padding: 0!important;
+  margin: 0!important
+}
+
+img {
+  -ms-interpolation-mode: bicubic;
+  /* Allow smoother rendering of resized image in Internet Explorer */
+}
+
+.mcnPreviewText {
+  display: none!important;
+}
+
+.cke_editable,
+.cke_editable a,
+.cke_editable span,
+.cke_editable a span {
+ color: #000001!important;
+}
+
+.tpl-content {
+  padding: 0!important;
+}
+
+ul li {
+  list-style-type: square;
+  font-size: 15px;
+  line-height: 25px;
+  position: relative;
+  right: 17px;
+}
+
+tr td p {
+  color: #000;
+  font-family: 'Open Sans', sans - serif;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: left;
+  margin-bottom: 17px!important;
+
+}
+
+/* Mobile styles */
+@media only screen and(max-device-width: 480px),
+  only screen and(max-width: 480px) {
+  u +.body.gwfw {
+    width: 100% !important;
+    width: 100vw!important;
+  }
+
+
+.m-shell {
+    width: 100% !important;
+    min-width: 100% !important;
+  }
+
+.m-center {
+    text-align: center!important;
+  }
+
+      .nav {
+    line-height: 26px!important;
+  }
+
+      .center {
+    margin: 0 auto!important;
+  }
+
+      .td {
+    width: 100% !important;
+    min-width: 100% !important;
+  }
+
+.m-br-15 {
+    height: 15px!important;
+  }
+
+      .pb30 {
+    padding-bottom: 30px!important;
+  }
+
+      .p30-15 {
+    padding: 30px 15px!important;
+  }
+
+      .p0-15 {
+    padding: 0px 15px!important;
+  }
+
+      .m-td,
+      .m-hide {
+    display: none!important;
+    width: 0!important;
+    height: 0!important;
+    font-size: 0!important;
+    line-height: 0!important;
+    min-height: 0!important;
+  }
+
+      .m-block {
+    display: block!important;
+  }
+
+      .fluid-img img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto!important;
+  }
+
+      .column,
+      .column-top,
+      .column-bottom,
+      .column-dir {
+    float: left!important;
+    width: 100% !important;
+    display: block!important;
+  }
+
+      .content-spacing {
+    width: 15px!important;
+  }
+}

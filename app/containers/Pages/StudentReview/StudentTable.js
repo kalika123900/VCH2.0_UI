@@ -10,7 +10,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { Button } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import { makeSecureDecrypt } from 'dan-helpers/security';
@@ -58,7 +58,8 @@ class StudentTable extends React.Component {
     rowsPerPage: 10,
     isStudents: false,
     profile: false,
-    openProfile: -1
+    openProfile: -1,
+    search: ''
   }
 
   handleProfileOpen = (id) => {
@@ -97,13 +98,15 @@ class StudentTable extends React.Component {
       .then((res) => {
         if (res.status === 1) {
           this.setState({ open: false });
-          this.getStudents();
+          this.state.search == '' ? this.getStudents() : this.searchStudents();
         }
       })
       .catch((err) => {
         console.log(err);
       });
   }
+
+
 
   disableStudent = (id) => {
     const data = {
@@ -114,12 +117,16 @@ class StudentTable extends React.Component {
       .then((res) => {
         if (res.status === 1) {
           this.setState({ open: false });
-          this.getStudents();
+          this.state.search == '' ? this.getStudents() : this.searchStudents();
         }
       })
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  handleChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value })
   }
 
   enableStudent = (id) => {
@@ -131,7 +138,7 @@ class StudentTable extends React.Component {
       .then((res) => {
         if (res.status === 1) {
           this.setState({ open: false });
-          this.getStudents();
+          this.state.search == '' ? this.getStudents() : this.searchStudents();
         }
       })
       .catch((err) => {
@@ -141,12 +148,12 @@ class StudentTable extends React.Component {
 
   handleChangePage = (event, page) => {
     this.setState({ page });
-    this.getStudents();
+    this.state.search == '' ? this.getStudents() : this.searchStudents();
   };
 
   handleChangeRowsPerPage = event => {
     this.setState({ rowsPerPage: event.target.value });
-    this.getStudents()
+    this.state.search == '' ? this.getStudents() : this.searchStudents();
   };
 
   getStudents = () => {
@@ -178,16 +185,49 @@ class StudentTable extends React.Component {
       });
   }
 
+  searchStudents = () => {
+
+    let data = {
+      query: this.state.search
+    }
+
+    postData(`${API_URL}/admin/get-search-students`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          if (res.data.length > 0) {
+            let tempData = [];
+            res.data.map(item => {
+              const name = `${item.firstname} ${item.lastname}`;
+              const studentStatus = status[item.status.toString()];
+              const avatar = item.profile != null && item.profile != '' ? item.profile : item.gender == "Male" ? avatarApi[7] : avatarApi[6];
+              const nationality = item.nationality != null && item.nationality != '' ? item.nationality : 'Not avilable';
+              const gender = item.gender != null && item.gender != '' ? item.gender : 'Not avilable';
+              tempData.push(createData(item.id, avatar, name, item.email, gender, nationality, studentStatus));
+            });
+            studentData = tempData;
+            this.setState({ isStudents: true, studentCount: res.data[0].count });
+          }
+          else {
+            studentData = [];
+            this.setState({ isStudents: false, studentCount: 0 });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   componentDidMount() {
     this.getStudents();
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.page != this.state.page) {
-      this.getStudents();
+      this.state.search == '' ? this.getStudents() : this.searchStudents();
     }
     else if (prevState.rowsPerPage != this.state.rowsPerPage) {
-      this.getStudents();
+      this.state.search == '' ? this.getStudents() : this.searchStudents();
     }
   }
 
@@ -218,6 +258,14 @@ class StudentTable extends React.Component {
               <Typography variant="h6">Our Students</Typography>
             </div>
             <div className={classes.spacer} />
+            <div style={{ display: 'contents' }}>
+              <TextField
+                name='search'
+                placeholder="Student Name"
+                onChange={this.handleChange}
+              />
+              <Button variant="contained" color="primary" onClick={this.searchStudents} style={{ margin: 5 }}>Search</Button>
+            </div>
           </Toolbar>
           {isStudents
             ? (

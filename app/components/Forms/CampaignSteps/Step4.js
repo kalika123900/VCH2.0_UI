@@ -8,6 +8,7 @@ import qs from 'qs';
 import {
   EditorState, convertToRaw, ContentState, convertFromHTML, Modifier
 } from 'draft-js';
+import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -110,10 +111,14 @@ class CustomOption extends PureComponent {
 }
 
 class Step4 extends PureComponent {
-  state = {
-    cname: '',
-    email: '',
-    logo: avatarApi[0]
+
+
+  closeNotif = () => {
+    this.setState({ message: '' })
+  }
+
+  handleDialog = () => {
+    this.setState({ dialog: !this.state.dialog })
   }
 
   constructor(props) {
@@ -124,7 +129,14 @@ class Step4 extends PureComponent {
       const editorState = EditorState.createEmpty();
       this.state = {
         editorState,
-        headingEditor: heading
+        headingEditor: heading,
+        cname: '',
+        email: '',
+        logo: avatarApi[0],
+        message: '',
+        variant: 'success',
+        dialog: false,
+        sendText: 'Send to me'
       };
     }
     else {
@@ -139,11 +151,55 @@ class Step4 extends PureComponent {
         const editorState = EditorState.createWithContent(iState);
         this.state = {
           editorState,
-          headingEditor: heading
+          headingEditor: heading,
+          cname: '',
+          email: '',
+          logo: avatarApi[0],
+          message: '',
+          variant: 'success',
+          dialog: false,
+          sendText: 'Send to me'
         };
       }
     }
   }
+
+  sendPreview = () => {
+    this.setState({ sendText: '...sending' })
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const data = {
+      heading: this.props.heading,
+      body: draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())),
+      email: user.email
+    };
+
+    postData(`${API_URL}/client/get-email-preview`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({ sendText: 'Sent' })
+          this.setState({ message: 'Email preview sent', variant: 'success' })
+        }
+        else {
+          this.setState({ sendText: 'Try again' })
+          this.setState({ message: 'Something went wrong', variant: 'error' })
+        }
+      })
+      .catch((err) => {
+        this.setState({ message: 'Something went wrong', variant: 'error' })
+        console.error(err);
+      });
+  }
+
+  handlePreview = () => {
+    let heading = this.props.heading;
+    let body = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()))
+    const url = 'https://backend.vchopportunities.co.uk/utils/email-preview?heading=' + heading + '&body=' + body;
+    window.open(url)
+  }
+
 
   componentDidMount() {
     const { userType } = this.props;
@@ -210,7 +266,8 @@ class Step4 extends PureComponent {
   };
 
   render() {
-    const { editorState, headingEditor, cname, email, logo } = this.state;
+    var __that = this;
+    const { editorState, headingEditor, cname, email, logo } = __that.state;
     const { classes, heading } = this.props;
     return (
       <Fragment>
@@ -292,14 +349,30 @@ class Step4 extends PureComponent {
                 />
               </Grid>
               <Grid className={classes.textPreview} dangerouslySetInnerHTML={{ __html: draftToHtml(convertToRaw(editorState.getCurrentContent())), }} />
-              <Grid>
-                <Typography variant="caption">
-                  @ 2020 Varsity Careers Hub
-                </Typography>
-              </Grid>
+              {this.props.userType == 'CLIENT' &&
+                <Grid style={{ display: 'flex', justifyContent: 'space-between', margin: 10 }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ borderRadius: 'initial' }}
+                    onClick={this.handlePreview}
+                  >
+                    Preview
+                </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ borderRadius: 'initial' }}
+                    onClick={this.sendPreview}
+                  >
+                    {__that.state.sendText}
+                  </Button>
+                </Grid>
+              }
             </Grid>
           </Grid>
         </Grid>
+        {/* <SnackNotification close={this.closeNotif} message={this.state.message} variant={this.state.variant} /> */}
       </Fragment>
     );
   }

@@ -155,6 +155,7 @@
     "react-chartjs-2": "^2.7.4",
     "react-charts": "^1.0.10",
     "react-clock": "^2.3.0",
+    "react-color": "^2.18.1",
     "react-countup": "^3.0.3",
     "react-dom": "16.8.6",
     "react-draft-wysiwyg": "^1.12.13",

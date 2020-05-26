@@ -3,24 +3,17 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 import { Field, reduxForm } from 'redux-form/immutable';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import ArrowForward from '@material-ui/icons/ArrowForward';
-import Icon from '@material-ui/core/Icon';
-import brand from 'dan-api/dummy/brand';
-import logo from 'dan-images/logo.png';
-import FlashMessage from 'react-flash-message';
-import IconButton from '@material-ui/core/IconButton';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import { TextFieldRedux, CheckboxRedux } from './ReduxFormMUI';
+import { TextFieldRedux } from './ReduxFormMUI';
 import styles from './user-jss';
+import avatarApi from 'dan-api/images/avatars';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);
@@ -31,26 +24,9 @@ const email = value => (
     ? 'Invalid email'
     : undefined
 );
-const text = value => (
-  value && !/^[A-Za-z]+$/i.test(value)
-    ? 'Must be a Alphabet'
-    : undefined
-);
-const passwordsMatch = (value, allValues) => {
-  if (value !== allValues.get('password')) {
-    return 'Passwords dont match';
-  }
-  return undefined;
-};
 
-const minPasswordLength = minLength(8);
-const maxPasswordLength = maxLength(15);
 const minTextLength = minLength(3);
 const maxTextLength = maxLength(20);
-
-const LinkBtn = React.forwardRef(function LinkBtn(props, ref) { // eslint-disable-line
-  return <NavLink to={props.to} {...props} innerRef={ref} />; // eslint-disable-line
-});
 
 const renderField = (props) => {
   const {
@@ -72,50 +48,52 @@ const renderField = (props) => {
 };
 
 // eslint-disable-next-line
-class CreateCompanyForm extends React.Component {
-  state = {
-    showPassword: false,
-  };
-
-  Message = () => {
-    setTimeout(() => {
-      this.props.handleFlash();
-    }, 4000);
-    return (
-      <FlashMessage duration={4000}>
-        <Typography variant="subtitle1" color="error">
-          {this.props.errorMessage}
-        </Typography>
-      </FlashMessage>
-    );
-  }
-
-  handleClickShowPassword = () => {
-    const { showPassword } = this.state;
-    this.setState({ showPassword: !showPassword });
-  };
-
-  handleMouseDownPassword = event => {
-    event.preventDefault();
-  };
-
+class SignupForm extends React.Component {
   render() {
     const {
       classes,
       handleSubmit,
       pristine,
       submitting,
-      deco
+      deco,
+      cLogo,
+      logo
     } = this.props;
-    const { showPassword } = this.state;
     return (
       <Paper className={classNames(classes.fullWrap, deco && classes.petal)}>
         <Typography variant="h4" className={classes.title} gutterBottom>
-          Create Company Profile
+          Create Client Token
         </Typography>
         <section className={classes.pageFormWrap}>
-          {this.props.flash && this.Message()}
           <form onSubmit={handleSubmit}>
+            <div className={classes.row}>
+              <IconButton>
+                <Avatar
+                  alt="company logo"
+                  src={(cLogo == '' || cLogo == null) ? avatarApi[7] : cLogo}
+                  className={classes.avatar}
+                  style={{
+                    width: '103px',
+                    display: 'inline-block',
+                    height: 'auto',
+                  }}
+                />
+              </IconButton>
+            </div>
+            <div>
+              <FormControl className={classes.formControl}>
+                <label for="company-logo" className={classes.customFileUpload}>
+                  {logo == null ? 'Choose Company Logo' : logo.name}
+                </label>
+                <input
+                  id="company-logo"
+                  name="logo"
+                  type="file"
+                  onChange={this.props.handleFileChange}
+                  style={{ display: 'none' }}
+                />
+              </FormControl>
+            </div>
             <div>
               <FormControl className={classes.formControl}>
                 <Field
@@ -171,6 +149,7 @@ class CreateCompanyForm extends React.Component {
             <div className={classes.btnArea}>
               <Button variant="contained" fullWidth color="primary" type="submit">
                 Create
+                <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} disabled={submitting || pristine} />
               </Button>
             </div>
           </form>
@@ -180,7 +159,7 @@ class CreateCompanyForm extends React.Component {
   }
 }
 
-CreateCompanyForm.propTypes = {
+SignupForm.propTypes = {
   classes: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   pristine: PropTypes.bool.isRequired,
@@ -188,16 +167,16 @@ CreateCompanyForm.propTypes = {
   deco: PropTypes.bool.isRequired,
 };
 
-const CreateCompanyFormReduxed = reduxForm({
-  form: 'clientCreateCompanyForm',
+const SignupFormReduxed = reduxForm({
+  form: 'clientSignupForm',
   enableReinitialize: true,
-})(CreateCompanyForm);
+})(SignupForm);
 
 const reducer = 'ui';
-const CreateCompanyFormMapped = connect(
+const SignupFormMapped = connect(
   state => ({
     deco: state.getIn([reducer, 'decoration'])
   }),
-)(CreateCompanyFormReduxed);
+)(SignupFormReduxed);
 
-export default withStyles(styles)(CreateCompanyFormMapped);
+export default withStyles(styles)(SignupFormMapped);

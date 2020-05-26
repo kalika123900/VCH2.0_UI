@@ -646,17 +646,35 @@ const styles = theme => ({
     padding: '10px',
     margin: 10
   },
+  textEditor: {
+    background: theme.palette.background.paper,
+    minHeight: 250,
+    maxHeight: 250,
+    border: `1px solid ${theme.palette.divider}`,
+    padding: '0 10px',
+    color: theme.palette.text.primary
+  },
   sendButton: {
     position: 'absolute',
     right: '0',
     bottom: '70px',
   },
-  toolbarEditor:
-  {
-    position: 'absolute',
-    bottom: '0px',
-    width: '97%',
-    border: 'none !important'
+  toolbarEditor: {
+    margin: '5px 0 5px 0',
+    background: theme.palette.background.default,
+    border: '1px solid #BBBBBB',
+    '& > div': {
+      background: theme.palette.background.paper,
+      '& img': {
+        filter: theme.palette.type === 'dark' ? 'invert(100%)' : 'invert(0%)'
+      },
+      '& a': {
+        color: theme.palette.text.primary,
+        '& > div': {
+          borderTopColor: theme.palette.text.primary,
+        }
+      }
+    }
   },
   rdwInlineWrapper: {
     marginBottom: '0px',
