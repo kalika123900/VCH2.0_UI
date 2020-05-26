@@ -91,7 +91,8 @@ class StudentEmail extends React.Component {
     mail_type: null,
     openStyle: false,
     messageType: 'error',
-    notifyMessage: ''
+    notifyMessage: '',
+    ref_id: null
   }
 
   handleCloseStyle = () => {
@@ -109,6 +110,7 @@ class StudentEmail extends React.Component {
       subject,
       body: emailContent,
       type: this.state.mail_type,
+      ref_id: this.state.ref_id,
       thread_id: this.state.thread_id,
       sender_id: this.state.sender_id,
       sender_type: this.state.sender_type,
@@ -293,6 +295,7 @@ class StudentEmail extends React.Component {
         subject: MappedMail.thread_id == -1 ? 'Reply: ' + mail.get('subject') : mail.get('subject'),
         thread_id: MappedMail.thread_id == -1 ? MappedMail.id : MappedMail.thread_id,
         mail_type: MappedMail.type,
+        ref_id: MappedMail.ref_id,
         sender_id: MappedMail.receiver_id,
         sender_type: MappedMail.receiver_type,
         receiver_id: MappedMail.sender_id,

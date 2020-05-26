@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import { emailStep1Info } from 'dan-actions/BulkEmailActions';
 import styles from '../CampaignSteps/step-jss';
 import AddRole from '../AddRole';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { makeSecureDecrypt } from '../../../Helpers/security';
 
 async function postData(url, data) {
@@ -39,7 +40,7 @@ class Step1 extends React.Component {
     );
 
     const data = {
-      company_id: user.cId
+      company_id: user.cId,
     };
 
     postData(`${API_URL}/client/fetch-role`, data)
@@ -53,15 +54,15 @@ class Step1 extends React.Component {
       });
   }
 
-  componentDidMount() {
+  fetchRoles = () => {
     const { userType } = this.props;
-    if (userType == 'CLIENT') {
+    if (userType == "CLIENT") {
       const user = JSON.parse(
         makeSecureDecrypt(localStorage.getItem('user'))
       );
 
       const data = {
-        company_id: user.cId
+        company_id: user.cId,
       };
 
       postData(`${API_URL}/client/fetch-role`, data)
@@ -84,10 +85,30 @@ class Step1 extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.fetchRoles();
+  }
+
+  removeRole = (id) => {
+    const data = {
+      role_id: id,
+    };
+
+    postData(`${API_URL}/client/remove-role`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          this.fetchRoles();
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
   handleRole = (id, name, roleDate) => {
     const { addInfo } = this.props;
 
-    const roleDeadline = new Date(roleDate);
+    let roleDeadline = new Date(roleDate);
     const year = roleDeadline.getFullYear();
     let date = roleDeadline.getDate();
     let month = roleDeadline.getMonth();
@@ -105,7 +126,7 @@ class Step1 extends React.Component {
   };
 
   handleOpen = () => {
-    const value = !this.state.open;
+    let value = !this.state.open;
     this.setState({ open: value });
   };
 
@@ -113,12 +134,12 @@ class Step1 extends React.Component {
     const { classes, role, userType } = this.props;
     const { open, roleData, usedRoleData } = this.state;
     let reduxRoleData = null;
-    if (userType == 'ADMIN') {
+    if (userType == "ADMIN") {
       reduxRoleData = this.props.roleData.toJS();
     }
 
     return (
-      userType == 'ADMIN' ? (
+      userType == "ADMIN" ? (
         <Fragment>
           {reduxRoleData.length > 0
             ? (reduxRoleData.map((value) => (
@@ -155,26 +176,33 @@ class Step1 extends React.Component {
       ) : (
           <Fragment>
             {
-              roleData.length > 0
-                ? roleData.map((value) => (
+              roleData.length > 0 ?
+                roleData.map((value) => (
                   (usedRoleData.indexOf(value.id) === -1)
                     ? (
-                      <Grid
-                        className={classes.gridMargin}
-                        key={value.id}
-                      >
-                        <Typography
-                          className={role === value.id
-                            ? (classes.activeBoarder)
-                            : null
-                          }
-                          variant="body1"
-                          style={{ cursor: 'pointer' }}
-                          onClick={() => this.handleRole(value.id, value.role_name, value.role_deadline)}
+                      <Fragment>
+                        <Grid
+                          className={classes.gridMargin}
+                          key={value.id}
                         >
-                          {value.role_name}
-                        </Typography>
-                      </Grid>
+                          <Typography
+                            className={role === value.id
+                              ? (classes.activeBoarder)
+                              : null
+                            }
+                            variant="body1"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => this.handleRole(value.id, value.role_name, value.role_deadline)}
+                          >
+                            {value.role_name}
+                            {role == value.id &&
+                              <Button onClick={e => this.removeRole(value.id)} >
+                                <DeleteIcon />
+                              </Button>
+                            }
+                          </Typography>
+                        </Grid>
+                      </Fragment>
                     )
                     : (
                       <Grid
@@ -196,17 +224,16 @@ class Step1 extends React.Component {
                       </Grid>
                     )
                 ))
-                : (
-                  <Typography
-                    variant="caption"
-                    color="error"
-                    style={{
-                      padding: 20
-                    }}
-                  >
-                    It looks like you haven't added any roles yet
-                  </Typography>
-                )
+                :
+                <Typography
+                  variant="caption"
+                  color="error"
+                  style={{
+                    padding: 20
+                  }}
+                >
+                  It looks like you haven't added any roles yet
+                </Typography>
             }
             <Divider />
             {
@@ -232,7 +259,7 @@ class Step1 extends React.Component {
             }
           </Fragment>
         )
-    );
+    )
   }
 }
 

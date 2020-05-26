@@ -55,3 +55,8 @@ export const moveAction = (mail, category) => ({
 export const closeNotifAction = {
   type: types.CLOSE_NOTIF
 };
+
+export const setRecentCampaign = (data) => ({
+  type: types.SET_RECENT_CAMPAIGN,
+  data
+})

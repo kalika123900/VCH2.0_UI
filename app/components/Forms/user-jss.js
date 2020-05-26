@@ -640,11 +640,11 @@ const styles = theme => ({
   messageBlock: {
     position: 'relative',
     bottom: '0',
-    width: '94%',
-    left: '2%',
+    width: '100%',
     minHeight: 150,
     border: '1px solid #ccc',
-    padding: '10px'
+    padding: '10px',
+    margin: 10
   },
   sendButton: {
     position: 'absolute',

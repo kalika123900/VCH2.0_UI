@@ -80,6 +80,7 @@ export const SEND_MAIL = 'SEND_MAIL';
 export const MOVE_TO = 'MOVE_TO';
 export const DELETE_MAIL = 'DELETE_MAIL';
 export const TOGGLE_STARED = 'TOGGLE_STARED';
+export const SET_RECENT_CAMPAIGN = 'SET_RECENT_CAMPAIGN';
 
 // Calendar
 export const FETCH_CALENDAR_DATA = 'FETCH_CALENDAR_DATA';

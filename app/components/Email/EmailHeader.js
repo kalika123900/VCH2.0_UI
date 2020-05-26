@@ -1,8 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
+import {
+  setRecentCampaign
+} from 'dan-actions/EmailActions';
 import Toolbar from '@material-ui/core/Toolbar';
 import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
@@ -11,12 +15,19 @@ import ListItemText from '@material-ui/core/ListItemText';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import styles from './email-jss';
+import qs from 'qs';
+import { makeSecureDecrypt } from 'dan-helpers/security';
 
-const recentCampaign = [
-  'Development Campaign',
-  'Test Development',
-  'Testing Campaign'
-];
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: qs.stringify(data)
+  });
+  return await response.json();
+}
 
 
 const ITEM_HEIGHT = 48;
@@ -32,16 +43,51 @@ const MenuProps = {
 
 class EmailHeader extends React.Component {
   state = {
-    cname: 'Test Development'
+    cname: 'All Messages',
+    recentCampaign: [{ id: -1, campaign_name: 'All Messages' }]
+  }
+
+  getRecentCampaign = () => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const data = {
+      company_id: user.cId
+    }
+
+    postData(`${API_URL}/campaign/get-recent-campaign`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1) {
+          let data = [{ id: -1, campaign_name: 'All Messages' }]
+          if (res.data.length > 0) {
+            res.data.map(item => {
+              data.push(item)
+            })
+          }
+          this.setState({ recentCampaign: data })
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
+    this.state.recentCampaign.map(item => {
+      if (item.campaign_name == event.target.value)
+        this.props.addInfo({ id: item.id })
+    })
   };
+
+  componentDidMount() {
+    this.getRecentCampaign();
+  }
 
   render() {
     const { classes, search, handleDrawerToggle } = this.props;
-    const { cname } = this.state;
+    const { cname, recentCampaign } = this.state;
 
     return (
       <AppBar position="absolute" className={classes.appBar}>
@@ -61,10 +107,9 @@ class EmailHeader extends React.Component {
               </div>
               <input className={classes.input} onChange={(event) => search(event)} placeholder="Search Email" />
             </div>
-            {this.props.userType == 'CLIENT' &&
+            {(this.props.userType == 'CLIENT' && this.props.currentPage != 'bulkemail') &&
               <div className={classes.selectWrapper}>
                 <Select
-                  placeholder="Recent Campaign"
                   value={cname}
                   name="cname"
                   onChange={(e) => this.handleChange(e)}
@@ -72,8 +117,8 @@ class EmailHeader extends React.Component {
                   style={{ width: '100%' }}
                 >
                   {recentCampaign.map((item, index) => (
-                    <MenuItem key={index} value={item}>
-                      <ListItemText primary={item} />
+                    <MenuItem key={index} value={item.campaign_name}>
+                      <ListItemText primary={item.campaign_name} style={{ whiteSpace: 'pre-line' }} />
                     </MenuItem>
                   ))}
                 </Select>
@@ -93,12 +138,20 @@ EmailHeader.propTypes = {
 };
 
 const reducerA = 'Auth';
+const reducer = 'email';
 const mapStateToProps = state => ({
-  userType: state.getIn([reducerA, 'userType'])
+  userType: state.getIn([reducerA, 'userType']),
+  currentPage: state.getIn([reducer, 'currentPage']),
+});
+
+
+const constDispatchToProps = dispatch => ({
+  addInfo: bindActionCreators(setRecentCampaign, dispatch)
 });
 
 const EmailHeaderMapped = connect(
-  mapStateToProps
+  mapStateToProps,
+  constDispatchToProps
 )(EmailHeader);
 
 export default withStyles(styles)(EmailHeaderMapped);

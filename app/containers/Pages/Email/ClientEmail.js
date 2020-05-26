@@ -73,6 +73,7 @@ class ClientEmail extends React.Component {
     receiver_id: null,
     receiver_type: null,
     mail_type: null,
+    ref_id: null
   }
 
   constructor(props) {
@@ -97,6 +98,7 @@ class ClientEmail extends React.Component {
       body: emailContent,
       type: this.state.mail_type,
       thread_id: this.state.thread_id,
+      ref_id: this.state.ref_id,
       sender_id: this.state.sender_id,
       sender_type: this.state.sender_type,
       receiver_id: this.state.receiver_id,
@@ -135,7 +137,19 @@ class ClientEmail extends React.Component {
               .then((res) => { // eslint-disable-line
                 if (res.status === 1) {
                   if (res.data.length > 0) {
-                    let inboxEmailsData = res.data.map(item => {
+                    let apiData = res.data;
+
+                    if (this.props.recentCampaignId !== -1) {
+                      apiData = apiData.filter(item => {
+                        if (item.ref_id == this.props.recentCampaignId) {
+                          return true;
+                        } else {
+                          return false;
+                        }
+                      })
+                    }
+                    let inboxEmailsData = apiData.map(item => {
+
                       return {
                         ...item,
                         id: item.id,
@@ -149,6 +163,7 @@ class ClientEmail extends React.Component {
                         attachment: [],
                         stared: item.sender_type == 'client' ? item.sender_stared : item.receiver_stared,
                       }
+
                     })
                     response = inboxEmailsData;
                     callback(response.sort(compare));
@@ -177,7 +192,18 @@ class ClientEmail extends React.Component {
               .then((res) => { // eslint-disable-line
                 if (res.status === 1) {
                   if (res.data.length > 0) {
-                    let inboxEmailsData = res.data.map(item => {
+                    let apiData = res.data;
+
+                    if (this.props.recentCampaignId !== -1) {
+                      apiData = apiData.filter(item => {
+                        if (item.ref_id == this.props.recentCampaignId) {
+                          return true;
+                        } else {
+                          return false;
+                        }
+                      })
+                    }
+                    let inboxEmailsData = apiData.map(item => {
                       return {
                         ...item,
                         id: item.id,
@@ -219,7 +245,18 @@ class ClientEmail extends React.Component {
               .then((res) => { // eslint-disable-line
                 if (res.status === 1) {
                   if (res.data.length > 0) {
-                    let staredEmailsData = res.data.map(item => {
+                    let apiData = res.data;
+
+                    if (this.props.recentCampaignId !== -1) {
+                      apiData = apiData.filter(item => {
+                        if (item.ref_id == this.props.recentCampaignId) {
+                          return true;
+                        } else {
+                          return false;
+                        }
+                      })
+                    }
+                    let staredEmailsData = apiData.map(item => {
                       return {
                         ...item,
                         id: item.id,
@@ -261,7 +298,18 @@ class ClientEmail extends React.Component {
               .then((res) => { // eslint-disable-line
                 if (res.status === 1) {
                   if (res.data.length > 0) {
-                    let responseEmailsData = res.data.map(item => {
+                    let apiData = res.data;
+
+                    if (this.props.recentCampaignId !== -1) {
+                      apiData = apiData.filter(item => {
+                        if (item.ref_id == this.props.recentCampaignId) {
+                          return true;
+                        } else {
+                          return false;
+                        }
+                      })
+                    }
+                    let responseEmailsData = apiData.map(item => {
                       return {
                         ...item,
                         id: item.id,
@@ -360,6 +408,7 @@ class ClientEmail extends React.Component {
         to: MappedMail.sender_email,
         subject: MappedMail.thread_id == -1 ? 'Reply: ' + mail.get('subject') : mail.get('subject'),
         thread_id: MappedMail.thread_id == -1 ? MappedMail.id : MappedMail.thread_id,
+        ref_id: MappedMail.ref_id,
         mail_type: MappedMail.type,
         sender_id: MappedMail.receiver_id,
         sender_type: MappedMail.receiver_type,
@@ -467,6 +516,7 @@ const mapStateToProps = state => ({
   keyword: state.getIn([reducer, 'keywordValue']),
   currentPage: state.getIn([reducer, 'currentPage']),
   openFrm: state.getIn([reducer, 'openFrm']),
+  recentCampaignId: state.getIn([reducer, 'recentCampaignId']),
   messageNotif: state.getIn([reducer, 'notifMsg']),
 });
 

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { withStyles } from '@material-ui/core/styles';
 import styles from '../../Forms/user-jss';
-import imgApi from 'dan-api/images/photos';
+import imgApi from 'dan-api/images/university';
 import avatarApi from 'dan-api/images/avatars';
 import datas from 'dan-api/apps/connectionData';
 import Grid from '@material-ui/core/Grid';
@@ -80,22 +80,51 @@ class Step5 extends React.Component {
   }
 
   componentDidMount() {
+    //     const MapSkills = getIds(this.props.skills.toJS(), skillMenu);
+    //     const MapKeywords = getIds(this.props.keywords.toJS(), keywordsData);
+    //     const MapUniversity = getIds(this.props.university.toJS(), universityItems);
+
+    //     const data = {
+    //       university: MapUniversity,
+    //       keywords: MapKeywords,
+    //       skills: MapSkills,
+    //       ethnicity: this.props.ethnicity,
+    // dataSize
+    // university_ids
+    // skill_ids
+    // ethnicity
+    // genders
+    // subjects
+    // sectors
+    // selected_year
+    // languages
+    // qualification_type
+    // experience
+    //     };
+
     const MapSkills = getIds(this.props.skills.toJS(), skillMenu);
-    const MapKeywords = getIds(this.props.keywords.toJS(), keywordsData);
     const MapUniversity = getIds(this.props.university.toJS(), universityItems);
 
     const data = {
-      university: MapUniversity,
-      keywords: MapKeywords,
-      skills: MapSkills,
-      ethnicity: this.props.ethnicity
+      university_ids: MapUniversity,
+      skill_ids: MapSkills,
+      ethnicity: this.props.ethnicity,
+      dataSize: 10,
+      genders: this.props.gender,
+      subjects: this.props.subjects,
+      sectors: this.props.interestedSectors,
+      selected_year: this.props.selectedYear,
+      languages: this.props.languages,
+      qualification_type: this.props.qualificationType,
+      experience: this.props.experience
     };
 
-    postJSON(`${API_URL}/campaign/get-email-students`, data)
+
+    postJSON(`${API_URL}/bulkemail/get-email-students`, data)
       .then((res) => {
         if (res.status === 1) {
-          this.props.addInfo({ ...this.props, studentList: res.data })
-          this.props.handleCreateBulkEmail(res.data.length);
+          this.props.addInfo({ ...this.props, studentList: res.data.data })
+          this.props.handleCreateBulkEmail(res.data.data.length);
         }
       })
       .catch((err) => {
@@ -130,11 +159,11 @@ class Step5 extends React.Component {
     const renderContent = currentContent.map((data, index) => (
       <Grid className={classes.posRelative} item md={3} sm={6} xs={12} key={index.toString()} >
         <RecipientStudentCard
-          cover={imgApi[0]}
-          avatar={data.gender == "Male" ? avatarApi[7] : avatarApi[6]}
+          user_id={data.id}
+          cover={imgApi[universityItems.indexOf(data.university_name)]}
+          avatar={data.profile != null && data.profile != '' ? data.profile : data.gender == "Male" ? avatarApi[7] : avatarApi[6]}
           name={`${data.firstname} ${data.lastname}`}
           title=''
-          isVerified={false}
           btnText="See Profile"
           university={data.university_name}
         />
@@ -208,7 +237,14 @@ const mapStateToProps = state => ({
   skills: state.getIn([reducerBulkEmail, 'skills']),
   blackList: state.getIn([reducerBulkEmail, 'blackList']),
   studentList: state.getIn([reducerBulkEmail, 'studentList']),
-  userType: state.getIn([reducerA, 'userType'])
+  userType: state.getIn([reducerA, 'userType']),
+  gender: state.getIn([reducerBulkEmail, 'gender']),
+  subjects: state.getIn([reducerBulkEmail, 'subjects']),
+  interestedSectors: state.getIn([reducerBulkEmail, 'interestedSectors']),
+  languages: state.getIn([reducerBulkEmail, 'languages']),
+  selectedYear: state.getIn([reducerBulkEmail, 'selectedYear']),
+  experience: state.getIn([reducerBulkEmail, 'experience']),
+  qualificationType: state.getIn([reducerBulkEmail, 'qualificationType']),
 });
 
 const mapDispatchToProps = dispatch => ({

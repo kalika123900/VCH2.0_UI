@@ -55,6 +55,41 @@ class CreateBulkEmail extends React.Component {
     isCreateBulkEmail: true
   };
 
+  handleIsStep3 = () => {
+    const store = {
+      'university': [],
+      'qualificationType': [],
+      'languages': [],
+      // 'societies': [],
+      'gender': '',
+      'subjects': [],
+      'skills': [],
+      'selectedYear': [],
+      'minGrade': [],
+      'keywords': [],
+      'interestedSectors': [],
+      'workLocation': []
+    }
+
+    let returnBool = true
+
+    Object.keys(store).forEach((key, index) => {
+      if (typeof store[key] === 'object') {
+        const property = this.props[key].toJS();
+        if (property.length == 0) {
+          returnBool = false;
+        }
+      } else {
+        if (this.props[key].length == 0) {
+          returnBool = false;
+        }
+      }
+    })
+
+    return returnBool;
+  }
+
+
   handleCreateBulkEmail = (count) => {
     if (count > 100) {
       const user = JSON.parse(
@@ -112,6 +147,7 @@ class CreateBulkEmail extends React.Component {
 
     const { activeStep } = this.state;
     const steps = getSteps();
+    const isStep3 = this.handleIsStep3();
 
     let isDisable = true;
     let isCreateDisable = true;
@@ -180,7 +216,12 @@ class CreateBulkEmail extends React.Component {
                 </Button>
               </Grid>
               <Grid className={(classes.btnArea, classes.pageFormWrap)}>
-                <Button variant="contained" fullWidth color="primary" onClick={() => this.handleNext()}>
+                <Button
+                  variant="contained"
+                  fullWidth color="primary"
+                  onClick={() => this.handleNext()}
+                  disabled={!isStep3}
+                >
                   Next
                   <ArrowForward className={classNames(classes.rightIcon, classes.iconSmall)} />
                 </Button>
@@ -383,6 +424,17 @@ const CreateBulkEmailMapped = connect(
     name: state.getIn([reducerBulkEmail, 'name']),
     heading: state.getIn([reducerBulkEmail, 'heading']),
     body: state.getIn([reducerBulkEmail, 'body']),
+    university: state.getIn([reducerBulkEmail, 'university']),
+    qualificationType: state.getIn([reducerBulkEmail, 'qualificationType']),
+    languages: state.getIn([reducerBulkEmail, 'languages']),
+    gender: state.getIn([reducerBulkEmail, 'gender']),
+    subjects: state.getIn([reducerBulkEmail, 'subjects']),
+    skills: state.getIn([reducerBulkEmail, 'skills']),
+    selectedYear: state.getIn([reducerBulkEmail, 'selectedYear']),
+    minGrade: state.getIn([reducerBulkEmail, 'minGrade']),
+    keywords: state.getIn([reducerBulkEmail, 'keywords']),
+    interestedSectors: state.getIn([reducerBulkEmail, 'interestedSectors']),
+    workLocation: state.getIn([reducerBulkEmail, 'workLocation']),
   }),
   mapDispatchToProps
 )(CreateBulkEmailReduxed);

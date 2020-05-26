@@ -88,7 +88,7 @@ class MessageDialog extends React.Component {
                   name="heading"
                   value={heading}
                   onChange={(e) => this.handleChange(e)}
-                  style={{ margin: 10 }}
+                  style={{ margin: 10, width: '100%' }}
                 />
                 <Paper className={classes.messageBlock}>
                   <Editor
@@ -100,7 +100,6 @@ class MessageDialog extends React.Component {
                     onKeyPress={(event) => this.sendMessageByEnter(event, editorState)}
                   />
                 </Paper>
-                {/* <InlineTextEditor /> */}
               </FormControl>
             </DialogContent>
             <DialogActions>

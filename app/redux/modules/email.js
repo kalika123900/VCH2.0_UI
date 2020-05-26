@@ -12,7 +12,8 @@ import {
   DELETE_MAIL,
   MOVE_TO,
   TOGGLE_STARED,
-  CLOSE_NOTIF
+  CLOSE_NOTIF,
+  SET_RECENT_CAMPAIGN
 } from '../../actions/actionConstants';
 import { getDate, getTime } from '../helpers/dateTimeHelper';
 
@@ -24,6 +25,7 @@ const initialState = {
   currentPage: 'inbox',
   openFrm: false,
   notifMsg: '',
+  recentCampaignId: -1
 };
 
 const buildMessage = (to, subject, content, files) => {
@@ -46,6 +48,10 @@ const buildMessage = (to, subject, content, files) => {
 const initialImmutableState = fromJS(initialState);
 export default function reducer(state = initialImmutableState, action = {}) {
   switch (action.type) {
+    case SET_RECENT_CAMPAIGN:
+      return state.withMutations((mutableState) => {
+        mutableState.set('recentCampaignId', action.data.id);
+      });
     case FETCH_EMAIL_DATA:
       return state.withMutations((mutableState) => {
         const items = fromJS(action.items);

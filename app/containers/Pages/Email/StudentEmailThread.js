@@ -85,7 +85,8 @@ class StudentEmailThread extends React.Component {
     openStyle: false,
     messageType: 'error',
     notifyMessage: '',
-    mailData: []
+    mailData: [],
+    ref_id: null
   }
 
   getThreadEmails = () => {
@@ -145,6 +146,7 @@ class StudentEmailThread extends React.Component {
       subject,
       body: emailContent,
       type: this.state.mail_type,
+      ref_id: this.state.ref_id,
       thread_id: this.state.thread_id,
       sender_id: this.state.sender_id,
       sender_type: this.state.sender_type,
@@ -177,6 +179,7 @@ class StudentEmailThread extends React.Component {
         subject: MappedMail.thread_id == -1 ? 'Reply: ' + mail.get('subject') : mail.get('subject'),
         thread_id: MappedMail.thread_id == -1 ? MappedMail.id : MappedMail.thread_id,
         mail_type: MappedMail.type,
+        ref_id: MappedMail.ref_id,
         sender_id: MappedMail.receiver_id,
         sender_type: MappedMail.receiver_type,
         receiver_id: MappedMail.sender_id,
@@ -189,6 +192,7 @@ class StudentEmailThread extends React.Component {
         subject: MappedMail.thread_id == -1 ? 'Reply: ' + mail.get('subject') : mail.get('subject'),
         thread_id: MappedMail.thread_id == -1 ? MappedMail.id : MappedMail.thread_id,
         mail_type: MappedMail.type,
+        ref_id: MappedMail.ref_id,
         sender_id: MappedMail.sender_id,
         sender_type: MappedMail.sender_type,
         receiver_id: MappedMail.sender_id,

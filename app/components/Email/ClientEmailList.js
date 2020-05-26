@@ -8,6 +8,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import Avatar from '@material-ui/core/Avatar';
 import classNames from 'classnames';
+import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Delete from '@material-ui/icons/Delete';
@@ -98,6 +99,11 @@ class EmailList extends React.Component {
     if (prevProps.filterPage != this.props.filterPage) {
       this.showClientEmail(this.props.filterPage);
     }
+
+    if (prevProps.recentCampaignId !== this.props.recentCampaignId) {
+      this.showClientEmail(this.props.filterPage);
+    }
+
   };
 
   getEmailRender = async (type) => {
@@ -322,4 +328,15 @@ EmailList.propTypes = {
   keyword: PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(withRouter(EmailList));
+
+const reducer = 'email';
+const mapStateToProps = state => ({
+  recentCampaignId: state.getIn([reducer, 'recentCampaignId']),
+});
+
+const EmailListMapped = connect(
+  mapStateToProps
+)(EmailList);
+
+
+export default withStyles(styles)(withRouter(EmailListMapped));

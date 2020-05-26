@@ -53,12 +53,13 @@ class RecipientStudentCard extends React.Component {
       title,
       isVerified,
       btnText,
-      university
+      university,
+      user_id
     } = this.props;
 
     return (
       <Fragment>
-        <StudentProfileDialog open={this.state.profile} handleClose={this.handleProfileClose} />
+        <StudentProfileDialog user_id={user_id} open={this.state.profile} handleClose={this.handleProfileClose} />
         <Card className={classes.cardSocmed}>
           <CardMedia
             className={classes.mediaProfile}
