@@ -31,7 +31,43 @@ class DetailSettings extends React.Component {
   state = {
     displayName: '',
     message: '',
-    background: '#000040',
+    background: '#04003c',
+  }
+
+  getEmailColor = () => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const data = {
+      company_id: user.cId,
+    }
+
+    postData(`${API_URL}/client/get-email-color`, data)
+      .then((res) => {
+        if (res.status == 1) {
+          this.setState({ background: res.data[0].email_color })
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
+  updateEmailColor = () => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const data = {
+      company_id: user.cId,
+      email_color: this.state.background.toString()
+    }
+
+    postData(`${API_URL}/client/update-email-color`, data)
+      .catch((e) => {
+        console.log(e);
+      });
   }
 
   handleClose = () => {
@@ -112,10 +148,12 @@ class DetailSettings extends React.Component {
 
   handleChangeComplete = (color) => {
     this.setState({ background: color.hex });
+    this.updateEmailColor();
   };
 
   componentDidMount() {
     this.getName();
+    this.getEmailColor();
   }
 
   render() {
