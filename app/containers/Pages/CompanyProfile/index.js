@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { makeSecureEncrypt } from 'dan-helpers/security';
+import { makeSecureDecrypt } from 'dan-helpers/security';
 import { withStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import classNames from 'classnames';
@@ -42,14 +44,20 @@ async function postData(url, data) {
   return await response.json();
 }
 
-function createData(id, name, email, phone, establish_at, status) {
+function createData(id, name, email, phone, establish_at, status, manager_id, manager_email, firstname, lastname, username, manager_phone) {
   return {
     id,
     name,
     email,
     phone,
     establish_at,
-    status
+    status,
+    manager_id,
+    manager_email,
+    firstname,
+    lastname,
+    username,
+    manager_phone
   };
 }
 
@@ -113,6 +121,31 @@ class CompanyProfile extends React.Component {
     this.getCompanies();
   }
 
+  companyLogin = (n) => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const data = {
+      id: n.manager_id,
+      email: n.manager_email,
+      name: `${n.firstname} ${n.lastname}`,
+      username: n.username,
+      phone: n.manager_phone,
+      type: 'CLIENT',
+      token: user.token,
+      cId: n.id,
+      role: 'COMPANY-ADMIN',
+      managerType: 2,
+      mode: 'light',
+      theme: 'blueTheme'
+    }
+
+    localStorage.setItem('user', makeSecureEncrypt(JSON.stringify(data)));
+
+    window.location.reload();
+  }
+
   getCompanies = () => {
     const _that = this;
 
@@ -126,7 +159,7 @@ class CompanyProfile extends React.Component {
               const establish_at = formatDate(item.establish_at);
 
               companyData.push(
-                createData(item.id, item.name, item.email, item.phone, establish_at, status)
+                createData(item.id, item.name, item.email, item.phone, establish_at, status, item.manager_id, item.manager_email, item.firstname, item.lastname, item.username, item.manager_phone)
               );
               _that.setState({ companyData });
             });
@@ -176,6 +209,7 @@ class CompanyProfile extends React.Component {
                     <TableCell align="left">Created At</TableCell>
                     <TableCell align="left">Edit Profile</TableCell>
                     <TableCell align="left">Action</TableCell>
+                    <TableCell align="left">Manage</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -193,6 +227,11 @@ class CompanyProfile extends React.Component {
                       <TableCell name='confirm' align="left">
                         <Button onClick={(e) => this.handleConfirmation(e, n.id)}>
                           <DeleteIcon />
+                        </Button>
+                      </TableCell>
+                      <TableCell align="left">
+                        <Button onClick={() => this.companyLogin(n)}>
+                          Login
                         </Button>
                       </TableCell>
                     </TableRow>

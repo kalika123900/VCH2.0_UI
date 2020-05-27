@@ -24,29 +24,29 @@ export const languageOption = ["", "English", "French", "Spanish", "Arabic", "Ma
 export const qualificationOption = ["", "Bachelor's", "Integrated Master's", "Postgraduate Master's", "MBA", "Doctoral"]
 export const competencyOption = ["", 'Native', 'Basic', 'Intermediate', 'Fluent', 'Professional Standard'];
 export const society = [
-  "Oxfest Disraeli Society for Constitutional Affairs (Oxford) Planet Pledge",
-  "Oxford University Hockey Club",
+  "Aggression Sessions (Durham)",
+  "Durham Swiss Society",
+  "Durham University Accounting and Finance Society",
+  "Durham University Economics Society",
+  "Durham University Ski and Snowboard Society",
+  "Durham University: Collingwood Charity Fashion Show",
+  "Hatfield College Rugby Club",
+  "Imperial Indian National Student Association",
   "LSESU Pakistan Society",
   "LSESU Political Risk and Investment Society",
   "LSESU Trading Society",
-  "UCL History Society",
-  "Aggression Sessions (Durham)",
-  "Durham University Accounting and Finance Society",
-  "Imperial Indian National Student Association",
-  "Durham University Ski and Snowboard Society",
-  "Hatfield College Rugby Club",
-  "Durham Swiss Society",
-  "Durham University Economics Society",
-  "Durham University: Collingwood Charity Fashion Show",
+  "Oxfest Disraeli Society for Constitutional Affairs (Oxford) Planet Pledge",
   "Oxford Universities Quidditch Society",
-  "University Cross Country Club",
-  "Oxford University Netball Club",
-  "Oxford University LGBTQ + Society",
-  "Oxford Women * In Law Student Society",
-  "Oxford University Hong Kong Society",
-  "Oxford University Taiwanese Students Society",
   "Oxford University Bulgarian Society",
-  "Oxford University Geological Society"
+  "Oxford University Geological Society",
+  "Oxford University Hockey Club",
+  "Oxford University Hong Kong Society",
+  "Oxford University LGBTQ + Society",
+  "Oxford University Netball Club",
+  "Oxford University Taiwanese Students Society",
+  "Oxford Women * In Law Student Society",
+  "UCL History Society",
+  "University Cross Country Club"
 ];
 
 export const experienceType = ["Fresher", "Begineer", "Intermediate", "Expert"];

@@ -31,7 +31,7 @@ class Admin extends React.Component {
             <Route exact path="/admin/campaign-management" component={AdminCampaignManagement} />
             <Route exact path="/admin/campaign-review/:campaignId" component={CampaignEdit} />
             <Route exact path="/admin/bulkemail-review/:bulkEmailId" component={BulkEmailEdit} />
-            <Route exact path="/admin/client-accounts" component={ClientAccounts} />
+            <Route exact path="/admin/client-tokens" component={ClientAccounts} />
             <Route exact path="/admin/client-profiles" component={ClientProfiles} />
             <Route exact path="/admin/student-review" component={StudentReview} />
             <Route exact path="/admin/edit-details" component={AdminEditDetails} />

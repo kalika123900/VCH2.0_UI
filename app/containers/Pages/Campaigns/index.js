@@ -129,6 +129,7 @@ class Campaigns extends React.Component {
             const roleDeadline = formatDeadline(roleData[0].role_deadline);
 
             const campaignData = {
+              audience: res.data.info.audience,
               languages,
               qualificationType,
               roleDeadline,
@@ -181,7 +182,7 @@ class Campaigns extends React.Component {
       deadline,
       choosedDeadline,
       languages,
-      qualificationType
+      qualificationType,
     } = this.props;
 
     const MapWorkLocation = workLocation.toJS();

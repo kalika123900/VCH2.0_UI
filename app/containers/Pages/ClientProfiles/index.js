@@ -127,7 +127,9 @@ class ClientProfile extends React.Component {
               phone: res.data.phone,
               managerType: res.data.type,
               type: 'CLIENT',
-              token: res.data.token
+              token: res.data.token,
+              mode: 'light',
+              theme: 'blueTheme'
             })));
           } else {
             localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
@@ -141,7 +143,9 @@ class ClientProfile extends React.Component {
               role: res.data.role,
               capabilities: res.data.capabilities,
               type: 'CLIENT',
-              token: res.data.token
+              token: res.data.token,
+              mode: 'light',
+              theme: 'blueTheme'
             })));
           }
           window.location.reload();

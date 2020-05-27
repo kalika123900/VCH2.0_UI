@@ -73,7 +73,7 @@ class Token extends React.Component {
     postData(`${API_URL}/admin/create-token`, data)
       .then((res) => {
         if (res.status === 1) {
-          this.props.history.push('/admin/client-accounts');
+          this.props.history.push('/admin/client-tokens');
         } else {
           this.setState({ errorMessage: res.errorMessage, flash: true });
         }

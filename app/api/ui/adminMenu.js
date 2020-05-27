@@ -35,10 +35,10 @@ module.exports = [
     icon: 'ios-cog-outline',
     child: [
       {
-        key: 'edit-client-accounts',
-        name: 'Client Accounts',
+        key: 'edit-client-tokens',
+        name: 'Client Tokens',
         icon: 'ios-person-outline',
-        link: '/admin/client-accounts',
+        link: '/admin/client-tokens',
       },
       {
         key: 'client-profile',

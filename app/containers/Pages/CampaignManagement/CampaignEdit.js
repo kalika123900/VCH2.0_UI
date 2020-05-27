@@ -122,7 +122,7 @@ class CampaignEdit extends React.Component {
           initialDeadline = res.data.info.deadline == null ? null : formatDeadline(res.data.info.deadline);
 
           const campaignData = {
-            audience: 10,
+            audience: res.data.info.audience,
             languages,
             qualificationType,
             roleName: roleData[0].role_name,
@@ -283,6 +283,7 @@ const mapStateToProps = state => ({
   skills: state.getIn([reducerCampaign, 'skills']),
   heading: state.getIn([reducerCampaign, 'heading']),
   body: state.getIn([reducerCampaign, 'body']),
+  audience: state.getIn([reducerCampaign, 'audience']),
   societies: state.getIn([reducerCampaign, 'societies']),
   followUps: state.getIn([reducerCampaign, 'followUps']),
 });

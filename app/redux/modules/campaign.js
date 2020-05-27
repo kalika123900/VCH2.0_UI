@@ -37,7 +37,7 @@ const initialState = {
   minGrade: List([]),
   heading: '',
   body: '',
-  deadline: DateHelper.format(DateHelper.addDays(new Date(), 7)),
+  deadline: DateHelper.format(DateHelper.addDays(new Date(), 28)),
   choosedDeadline: '28',
   name: '',
   audience: 10,

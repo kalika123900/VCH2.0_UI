@@ -44,8 +44,12 @@ class Step5 extends React.Component {
 
   handleReduxChange = (value) => {
     const { addInfo } = this.props;
-    const deadline = parseDateHelper.format(parseDateHelper.addDays(new Date(), value));
-    addInfo({ deadline, choosedDeadline: value });
+    if (value != 0) {
+      const deadline = parseDateHelper.format(parseDateHelper.addDays(new Date(), value));
+      addInfo({ deadline, choosedDeadline: value });
+    } else {
+      addInfo({ ...this.props, choosedDeadline: value });
+    }
   };
 
   handleDateChange = currentDate => {
