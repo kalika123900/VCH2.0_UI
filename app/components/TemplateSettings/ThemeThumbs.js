@@ -30,8 +30,7 @@ const ThemeThumb = props => {
           <ul>
             <li style={{ backgroundColor: themePalette[value].palette.primary.main }} />
             <li style={{ backgroundColor: themePalette[value].palette.secondary.main }} />
-          </ul>
-        </div>
+          </ul></div>
       </Tooltip>
     </div>
   );

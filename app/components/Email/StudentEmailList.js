@@ -225,7 +225,11 @@ class EmailList extends React.Component {
               _that.setState({ JSX: JSX });
               resolve(rawData);
             } else {
-              _that.setState({ JSX: null });
+              const JSX =
+                <div style={{ textAlign: "center", marginTop: 50, padding: 5 }}>
+                  <Typography variant="body2">It looks like you haven't been sent any messages yet</Typography>
+                </div>
+              _that.setState({ JSX });
               resolve(response)
             }
           });

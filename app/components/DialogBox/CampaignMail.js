@@ -1,6 +1,5 @@
 import React from 'react';
 import classnames from 'classnames';
-import './mail.module.css';
 
 class CampaignMail extends React.Component {
   render() {

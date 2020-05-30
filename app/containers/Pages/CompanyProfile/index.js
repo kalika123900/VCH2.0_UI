@@ -138,10 +138,21 @@ class CompanyProfile extends React.Component {
       role: 'COMPANY-ADMIN',
       managerType: 2,
       mode: 'light',
-      theme: 'blueTheme'
+      theme: 'blueTheme',
+      via: 'ADMIN'
     }
 
     localStorage.setItem('user', makeSecureEncrypt(JSON.stringify(data)));
+    localStorage.setItem('oldUser', makeSecureEncrypt(JSON.stringify({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      username: user.username,
+      phone: user.phone,
+      managerType: user.type,
+      type: "ADMIN",
+      token: user.token
+    })));
 
     window.location.reload();
   }

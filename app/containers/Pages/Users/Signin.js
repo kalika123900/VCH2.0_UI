@@ -74,7 +74,8 @@ class Signin extends React.Component {
               type: 'CLIENT',
               token: res.data.token,
               mode: 'light',
-              theme: 'blueTheme'
+              theme: 'blueTheme',
+              via: 'CLIENT'
             })));
             window.location.reload();
           } else if (res.data.type == 10) {
@@ -93,7 +94,8 @@ class Signin extends React.Component {
               type: 'CLIENT',
               token: res.data.token,
               mode: 'light',
-              theme: 'blueTheme'
+              theme: 'blueTheme',
+              via: 'CLIENT'
             })));
             window.location.reload();
           }

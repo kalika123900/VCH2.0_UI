@@ -173,7 +173,8 @@ class Step4 extends PureComponent {
     const data = {
       heading: this.props.heading,
       body: draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())),
-      email: user.email
+      email: user.email,
+      company_id: user.cId
     };
 
     postData(`${API_URL}/client/get-email-preview`, data)
@@ -194,9 +195,13 @@ class Step4 extends PureComponent {
   }
 
   handlePreview = () => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
     let heading = this.props.heading;
     let body = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()))
-    const url = 'https://backend.vchopportunities.co.uk/utils/email-preview?heading=' + heading + '&body=' + body;
+    const url = 'https://backend.vchopportunities.co.uk/utils/email-preview?heading=' + heading + '&body=' + body + '&company_id=' + user.cId;
     window.open(url)
   }
 

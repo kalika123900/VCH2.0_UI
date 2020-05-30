@@ -18,6 +18,8 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import PapperBlock from 'dan-components/PapperBlock/PapperBlock';
 import styles from 'dan-components/Profile/profile-jss';
 import qs from 'qs';
+import ReactHtmlParser from 'react-html-parser';
+import renderHTML from 'react-render-html';
 import imgApi from 'dan-api/images/photos';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -62,7 +64,9 @@ class ClientJobProfile extends React.Component {
     email: '',
     label: 'All Jobs',
     jobs: [],
-    jobInfoIndex: 0
+    jobInfoIndex: 0,
+    coverLetter: '',
+    cvTips: ''
   }
 
   toggleDrawer = () => {
@@ -84,6 +88,8 @@ class ClientJobProfile extends React.Component {
             this.setState({ email: res.data[0].email })
             this.setState({ headquarter: res.data[0].headquarter })
             this.setState({ logo: res.data[0].logo })
+            this.setState({ coverLetter: res.data[0].cover_letter })
+            this.setState({ cvTips: res.data[0].cv_tips })
           }
         }
       })
@@ -269,76 +275,16 @@ class ClientJobProfile extends React.Component {
             )}
             {tab === 1 && (
               <Fragment>
-                <Typography variant="body1" style={{ padding: 20 }}>
-                  The standard Lorem Ipsum passage, used since the 1500s
-                </Typography>
-                <Typography variant="caption" style={{ padding: 20 }}>
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                </Typography>
-                <Typography variant="body1" style={{ padding: 20 }}>
-                  The standard Lorem Ipsum passage, used since the 1500s
-                </Typography>
-                <Typography variant="caption" style={{ padding: 20 }}>
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                </Typography>
-                <Typography variant="body1" style={{ padding: 20 }}>
-                  The standard Lorem Ipsum passage, used since the 1500s
-                </Typography>
-                <Typography variant="caption" style={{ padding: 20 }}>
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                </Typography>
+                <Grid style={{ padding: 20, margin: 20 }}>
+                  {ReactHtmlParser(this.state.coverLetter)}
+                </Grid>
               </Fragment>
             )}
             {tab === 2 && (
               <Fragment >
-                <Typography variant="body1" style={{ padding: 20 }}>
-                  The standard Lorem Ipsum passage, used since the 1500s
-                </Typography>
-                <Typography variant="caption" style={{ padding: 20 }}>
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                </Typography>
-                <Typography variant="body1" style={{ padding: 20 }}>
-                  The standard Lorem Ipsum passage, used since the 1500s
-                </Typography>
-                <Typography variant="caption" style={{ padding: 20 }}>
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                </Typography>
-                <Typography variant="body1" style={{ padding: 20 }}>
-                  The standard Lorem Ipsum passage, used since the 1500s
-                </Typography>
-                <Typography variant="caption" style={{ padding: 20 }}>
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-                  non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                </Typography>
+                <Grid style={{ padding: 20, margin: 20 }}>
+                  {ReactHtmlParser(this.state.cvTips)}
+                </Grid>
               </Fragment>
             )}
             {tab === 3 && (

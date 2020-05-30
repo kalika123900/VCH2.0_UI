@@ -73,7 +73,8 @@ class TemplateSettings extends React.Component {
       type: 'CLIENT',
       token: user.token,
       mode: this.state.mode,
-      theme: this.state.theme
+      theme: this.state.theme,
+      via: user.via,
     })));
     window.location.reload();
   }

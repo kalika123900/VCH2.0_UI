@@ -150,10 +150,10 @@ class JobProfiles extends React.Component {
           <Fragment>
             <Grid
               container
+              spacing={2}
               alignItems="flex-start"
               justify="center"
               direction="row"
-              spacing={3}
               style={{ marginTop: 20 }}
             >
               {renderContent}

@@ -101,7 +101,7 @@ class EmailHeader extends React.Component {
             <MenuIcon />
           </IconButton>
           <div className={classes.flex}>
-            <div className={classes.wrapper}>
+            <div className={classes.wrapper} style={{ width: '100%' }}>
               <div className={classes.search}>
                 <SearchIcon />
               </div>
@@ -117,8 +117,12 @@ class EmailHeader extends React.Component {
                   style={{ width: '100%' }}
                 >
                   {recentCampaign.map((item, index) => (
-                    <MenuItem key={index} value={item.campaign_name}>
-                      <ListItemText primary={item.campaign_name} style={{ whiteSpace: 'pre-line' }} />
+                    <MenuItem key={index} value={item.campaign_name} gutters>
+                      <ListItemText primary={item.campaign_name} style={{
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap',
+                        textOverflow: 'ellipsis'
+                      }} />
                     </MenuItem>
                   ))}
                 </Select>

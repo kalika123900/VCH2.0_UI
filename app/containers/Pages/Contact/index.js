@@ -145,7 +145,7 @@ class Contact extends React.Component {
       emailData: data.toJS()
     }
 
-    postData(`${API_URL}/client/client-info`, data)
+    postData(`${API_URL}/client/client-info`, apiData)
       .then((res) => {
         if (res.status === 1) {
           apiData.company_name = `${res.data.display_name}`;

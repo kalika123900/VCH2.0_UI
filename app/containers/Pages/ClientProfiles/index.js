@@ -129,7 +129,8 @@ class ClientProfile extends React.Component {
               type: 'CLIENT',
               token: res.data.token,
               mode: 'light',
-              theme: 'blueTheme'
+              theme: 'blueTheme',
+              via: 'ADMIN'
             })));
           } else {
             localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
@@ -145,7 +146,8 @@ class ClientProfile extends React.Component {
               type: 'CLIENT',
               token: res.data.token,
               mode: 'light',
-              theme: 'blueTheme'
+              theme: 'blueTheme',
+              via: 'ADMIN'
             })));
           }
           window.location.reload();

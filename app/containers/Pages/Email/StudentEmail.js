@@ -353,7 +353,7 @@ class StudentEmail extends React.Component {
           <meta property="twitter:description" content={description} />
         </Helmet>
         <Notification close={() => closeNotif()} message={messageNotif} />
-        <div className={classes.root}>
+        <div className={classes.root} style={{ minHeight: 400 }}>
           <EmailHeader search={search} handleDrawerToggle={this.handleDrawerToggle} />
           <StudentEmailSidebar
             compose={this.handleCompose}

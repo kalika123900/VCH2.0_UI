@@ -27,7 +27,8 @@ class SimpleDialog extends React.Component {
           token: res.token,
           type: 'CLIENT',
           mode: 'light',
-          theme: 'blueTheme'
+          theme: 'blueTheme',
+          via: 'ADMIN'
         }
       }
     }
@@ -51,6 +52,7 @@ class SimpleDialog extends React.Component {
       type: this.state.type,
       mode: this.state.mode,
       theme: this.state.theme,
+      via: this.state.via
     })));
     window.location.reload();
   };
