@@ -153,7 +153,8 @@ class StudentEmailThread extends React.Component {
       receiver_id: this.state.receiver_id,
       receiver_type: this.state.receiver_type,
       name: user.name,
-      user: 'client'
+      user: 'client',
+      company_id: null
     }
 
     postData(`${API_URL}/utils/send-email-reply`, data) // eslint-disable-line

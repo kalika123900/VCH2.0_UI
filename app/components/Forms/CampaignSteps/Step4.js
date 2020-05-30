@@ -57,7 +57,11 @@ class CustomOption extends PureComponent {
     this.placeholderOptions = [
       { key: 'firstName', value: '{{firstName}}', text: 'First Name' },
       { key: 'lastName', value: '{{lastName}}', text: 'Last name' },
-      { key: 'email', value: '{{email}}', text: 'Email' },];
+      { key: 'email', value: '{{email}}', text: 'Email' },
+      { key: 'university', value: '{{university}}', text: 'University' },
+      { key: 'course', value: '{{course}}', text: 'Course' },
+      { key: 'graduation-year', value: '{{graduation-year}}', text: 'Graduation Year' }
+    ];
   }
 
   static propTypes = {

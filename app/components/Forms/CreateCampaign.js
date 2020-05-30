@@ -196,7 +196,6 @@ class CreateCampaign extends React.Component {
     const { activeStep } = this.state;
     const steps = userType == 'ADMIN' ? adminGetSteps() : getSteps();
     const isStep4 = this.handleIsStep4();
-    console.log(isStep4)
 
     let isDisable = true;
     let isCampaignName = true;

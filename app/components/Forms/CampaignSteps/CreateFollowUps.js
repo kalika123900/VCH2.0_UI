@@ -8,7 +8,7 @@ import { markdownToDraft } from 'markdown-draft-js';
 import { storeFollowUps } from 'dan-actions/CampaignActions';
 import { withStyles } from '@material-ui/core/styles';
 import { stateFromMarkdown } from 'draft-js-import-markdown';
-import { convertFromRaw, EditorState, ContentState, convertFromHTML, convertToRaw } from 'draft-js';
+import { convertFromRaw, EditorState, convertToRaw, Modifier } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
 import TextField from '@material-ui/core/TextField';
@@ -70,6 +70,72 @@ function getHumanDate(unix_timestamp) {
   }
 
   return (`${day} ${monthString[month]} ${year}`);
+}
+
+class CustomOption extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false
+    };
+    this.placeholderOptions = [
+      { key: 'firstName', value: '{{firstName}}', text: 'First Name' },
+      { key: 'lastName', value: '{{lastName}}', text: 'Last name' },
+      { key: 'email', value: '{{email}}', text: 'Email' },
+      { key: 'university', value: '{{university}}', text: 'University' },
+      { key: 'course', value: '{{course}}', text: 'Course' },
+      { key: 'graduation-year', value: '{{graduation-year}}', text: 'Graduation Year' }
+    ];
+  }
+
+  static propTypes = {
+    onChange: PropTypes.func,
+    editorState: PropTypes.object,
+  }
+
+  componentDidMount() {
+    const listItem = this.placeholderOptions.map(item => (
+      <li
+        onClick={this.addStar.bind(this, item.value)}
+        key={item.key}
+
+        className="rdw-dropdownoption-default"
+      >
+        {item.text}
+      </li>
+    ));
+
+    this.setState({ listItem });
+  }
+
+  addStar = (placeholder) => {
+    const { editorState, onChange } = this.props;
+    const contentState = Modifier.replaceText(
+      editorState.getCurrentContent(),
+      editorState.getSelection(),
+      placeholder,
+      editorState.getCurrentInlineStyle(),
+    );
+    onChange(EditorState.push(editorState, contentState, 'insert-characters'));
+  };
+
+  openPlaceholderDropdown = () => this.setState({ open: !this.state.open })
+
+  render() {
+    return (
+      <div onClick={this.openPlaceholderDropdown} className="rdw-block-wrapper" aria-label="rdw-block-control">
+        <div className="rdw-dropdown-wrapper rdw-block-dropdown" aria-label="rdw-dropdown">
+          <div className="rdw-dropdown-selectedtext" title="Placeholders">
+            <span>First Name</span>
+            <div className={`rdw-dropdown-caretto${this.state.open ? 'close' : 'open'}`} />
+          </div>
+          <ul className="rdw-dropdown-optionwrapper " style={{ display: `${this.state.open ? 'block' : 'none'}` }}>
+            {this.state.listItem}
+          </ul>
+        </div>
+      </div>
+    );
+  }
 }
 
 class Wysiwyg extends PureComponent {
@@ -213,6 +279,7 @@ class Wysiwyg extends PureComponent {
               editorState={editorState}
               editorClassName={classes.textEditor}
               toolbarClassName={classes.toolbarEditor}
+              toolbarCustomButtons={[<CustomOption />]}
               onEditorStateChange={(state) => {
                 let newFollowUps = followUps.set(index, {
                   ...followUps.get(index),
