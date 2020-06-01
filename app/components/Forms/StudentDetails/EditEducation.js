@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import styles from '../user-jss';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
@@ -44,6 +45,10 @@ const MenuProps = {
 };
 
 class EditEducation extends React.Component {
+  state = {
+    key: ''
+  }
+
   handleChange = (event, id, scoreIndex) => {
     this.props.handleIsChanges('education')
     const { educationInfo, addInfo, } = this.props;
@@ -106,6 +111,10 @@ class EditEducation extends React.Component {
 
     addInfo({ ...this.props, educationInfo: newEducationArr });
   };
+
+  search = (e) => {
+    this.setState({ key: e.target.value })
+  }
 
   render() {
     const { classes, id, educationInfo } = this.props;
@@ -328,25 +337,39 @@ class EditEducation extends React.Component {
           type == 'University'
             ?
             <div>
-              <FormControl className={classes.formControl}>
-                <InputLabel
-                  htmlFor="Subject"
-                >
-                  Subject
-                </InputLabel>
-                <Select
-                  placeholder="Subject"
+              <FormControl className={classes.formControl} >
+                <Autocomplete
+                  options={subjectData}
                   value={subject}
-                  name="subject"
-                  onChange={e => this.handleChange(e, id)}
-                  MenuProps={MenuProps}
-                >
-                  {subjectData.map((item, index) => (
-                    <MenuItem key={index} value={item}>
-                      <ListItemText primary={item} />
-                    </MenuItem>
-                  ))}
-                </Select>
+                  autoHighlight
+                  onChange={e => {
+                    const data = {
+                      target: {
+                        name: 'subject',
+                        value: e.target.textContent
+                      }
+                    }
+                    this.handleChange(data, id)
+                  }}
+                  getOptionLabel={(option) => option}
+                  renderOption={(option) => (
+                    <React.Fragment>
+                      {option}
+                    </React.Fragment>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      style={{ width: '100%', marginTop: 20 }}
+                      {...params}
+                      label="Subject"
+                      variant="outlined"
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'new-password', // disable autocomplete and autofill
+                      }}
+                    />
+                  )}
+                />
               </FormControl>
             </div>
             :

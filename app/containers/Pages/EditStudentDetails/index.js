@@ -577,6 +577,7 @@ class EditStudentDetails extends Component {
     const MapLanguageInfo = languageInfo.toJS();
     const newLanguageArr = arrayRemove(MapLanguageInfo, index);
     addLanguageInfo({ ...this.props, languageInfo: newLanguageArr });
+    this.handleIsChanges('language');
   }
 
   addEducationField = (e) => {
@@ -604,6 +605,7 @@ class EditStudentDetails extends Component {
     const MapEducationInfo = educationInfo.toJS();
     const newEducationArr = arrayRemove(MapEducationInfo, index);
     addEducationInfo({ ...this.props, educationInfo: newEducationArr });
+    this.handleIsChanges('education');
   }
 
   addExperienceField = (e) => {
@@ -628,6 +630,7 @@ class EditStudentDetails extends Component {
     const MapExperienceInfo = experienceInfo.toJS();
     const newExperienceArr = arrayRemove(MapExperienceInfo, index);
     addExperienceInfo({ ...this.props, experienceInfo: newExperienceArr });
+    this.handleIsChanges('experience');
   }
 
   noticeClose = event => {
