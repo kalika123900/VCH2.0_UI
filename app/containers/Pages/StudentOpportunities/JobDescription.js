@@ -69,6 +69,13 @@ class ClientJobProfile extends React.Component {
     cvTips: ''
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.match.params.id !== this.props.match.params.id) {
+      this.getJobDescription();
+      this.setState({ tab: 0 })
+    }
+  }
+
   toggleDrawer = () => {
     this.setState({ open: !this.state.open })
   }
@@ -143,6 +150,7 @@ class ClientJobProfile extends React.Component {
       <Fragment>
         <Grid container spacing={3} >
           <Grid item md={4} xs={12}>
+            <Button variant="contained" style={{ marginBottom: 10 }} onClick={() => this.props.history.push('/student/opportunities')}>Go Back</Button>
             <PapperBlock title="Company Info" icon="ios-contact-outline" whiteBg noMargin desc="">
               <Grid className={classes.companyTitle}>
                 <Avatar alt="avatar" src={(logo == '' || logo == null) ? avatarApi[0] : logo} className={classes.avatarBig}

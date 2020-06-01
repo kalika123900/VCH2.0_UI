@@ -170,6 +170,7 @@ class EditExperience extends React.Component {
                     'aria-label': 'change date',
                   }}
                   style={{ width: '100%' }}
+                  autoOk={true}
                 />
               </Grid>
             </MuiPickersUtilsProvider>
@@ -189,6 +190,7 @@ class EditExperience extends React.Component {
                     'aria-label': 'change date',
                   }}
                   style={{ width: '100%' }}
+                  autoOk={true}
                 />
               </Grid>
             </MuiPickersUtilsProvider>

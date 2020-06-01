@@ -25,7 +25,7 @@ const combinedStyles = CombineStyles(customStyles, styles);
 
 class ClientCard extends React.Component {
   handleRedirect = (id) => {
-    location.href = `/student/opportunities/${btoa(id)}`;
+    this.props.history.push(`/student/opportunities/${btoa(id)}`);
   }
 
   render() {

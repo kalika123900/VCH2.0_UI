@@ -1,11 +1,5 @@
 module.exports = [
   {
-    key: 'dashboard',
-    name: 'Dashboard',
-    icon: 'ios-home-outline',
-    link: '/student',
-  },
-  {
     key: 'my-account',
     name: 'My Account',
     icon: 'ios-person-outline',
@@ -35,6 +29,12 @@ module.exports = [
         link: '/student/signout',
       }
     ]
+  },
+  {
+    key: 'dashboard',
+    name: 'Dashboard',
+    icon: 'ios-home-outline',
+    link: '/student',
   },
   {
     key: 'messages',

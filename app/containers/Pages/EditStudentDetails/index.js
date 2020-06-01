@@ -162,7 +162,6 @@ class EditStudentDetails extends Component {
         if (res.status === 1) {
           this.setState({ isProgress: false })
           this.successMsg()
-          this.resetTab();
         } else {
           this.setState({ isProgress: false })
           this.setState({ notifyMessage: 'Old Password is not correct' });
@@ -395,7 +394,7 @@ class EditStudentDetails extends Component {
   }
 
   resetTab = () => {
-    this.setState({ tab: 0 });
+    this.props.history.push('/student')
   }
 
   handleEducation = () => {
@@ -502,8 +501,7 @@ class EditStudentDetails extends Component {
           this.successMsg();
           let obj = this.state.isChanges;
           obj['experience'] = false
-          this.setState({ isChanges: obj })
-          this.goNextTab();
+          this.setState({ isChanges: obj });
         } else {
           _that.experienceHandler(_that.state.data);
           this.errorMsg();
@@ -845,8 +843,8 @@ class EditStudentDetails extends Component {
                   </div>
                   :
                   <div className={classes.btnArea} style={{ marginTop: '35px' }}>
-                    <Button variant="contained" fullWidth color="primary" onClick={() => this.goNextTab()}>
-                      Next
+                    <Button variant="contained" fullWidth color="primary" onClick={() => this.resetTab()}>
+                      Done
                 </Button>
                   </div>
                 }
