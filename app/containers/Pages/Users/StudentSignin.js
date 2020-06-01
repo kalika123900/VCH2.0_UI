@@ -179,6 +179,7 @@ class StudentSignin extends React.Component {
                 color="inherit"
                 className={classes.close}
                 onClick={this.noticeClose}
+
               >
                 <CloseIcon className={classes.icon} />
               </IconButton>,

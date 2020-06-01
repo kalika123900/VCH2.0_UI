@@ -209,9 +209,10 @@ class EditSkillsInterests extends React.Component {
                 }
                 }
                 onChange={e => this.handleChange(e)}
+                style={{ paddingTop: 10, paddingBottom: 10 }}
               >
                 {sectorsData.map((item, index) => (
-                  <MenuItem key={index.toString()} value={item}>
+                  <MenuItem key={index.toString()} value={item} >
                     <TextField
                       name="industrie-checkbox"
                       component={Checkbox}
@@ -248,6 +249,7 @@ class EditSkillsInterests extends React.Component {
                 }
                 }
                 onChange={e => this.handleChange(e)}
+                style={{ paddingTop: 10, paddingBottom: 10 }}
               >
                 {companyList.map((item, index) => (
                   <MenuItem key={index.toString()} value={item}>
@@ -287,6 +289,7 @@ class EditSkillsInterests extends React.Component {
                 }
                 }
                 onChange={e => this.handleChange(e)}
+                style={{ paddingTop: 10, paddingBottom: 10 }}
               >
                 {skillMenu.map((item, index) => (
                   item.length > 0 &&

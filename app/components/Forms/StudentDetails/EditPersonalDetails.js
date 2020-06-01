@@ -345,7 +345,7 @@ class EditPersonalDetails extends React.Component {
             <div style={{ textAlign: 'center' }}>
               <FormControl className={classes.formControl}>
                 <label htmlFor="profile" className={classes.customFileUpload}>
-                  {profile == null ? 'Change Profile Picture' : profile.name}
+                  {profile == null ? 'CHANGE PROFILE PICTURE' : profile.name}
                 </label>
                 <input
                   id="profile"
@@ -576,7 +576,7 @@ class EditPersonalDetails extends React.Component {
             <div style={{ textAlign: 'center' }}>
               <FormControl className={classes.formControl}>
                 <label htmlFor="cv" className={classes.customFileUpload}>
-                  {cv == null ? 'Upload Your Resume' : cv.name}
+                  {cv == null ? 'UPLOAD YOUR RESUME' : cv.name}
                 </label>
                 <input
                   id="cv"

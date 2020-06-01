@@ -713,8 +713,9 @@ const styles = theme => ({
     padding: '6px 12px',
     cursor: 'pointer',
     marginTop: 19,
+    fontSize: 18,
+    fontWeight: 'bold',
     borderRadius: 10,
-    fontWeight: 500,
     color: '#3f51b5',
     backgroundColor: 'whitesmoke'
   },

@@ -23,6 +23,7 @@ import FlashMessage from 'react-flash-message';
 import styles from './user-jss';
 import { TextFieldRedux, CheckboxRedux } from './ReduxFormMUI';
 import OpenAuth from './Openauth';
+import TextField from '@material-ui/core/TextField'
 
 // validation functions
 const required = value => (value === null ? 'Required' : undefined);

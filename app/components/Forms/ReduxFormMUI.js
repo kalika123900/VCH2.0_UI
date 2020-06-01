@@ -13,7 +13,10 @@ export const TextFieldRedux = ({ meta: { touched, error }, input, ...rest }) => 
       {...rest}
       {...input}
       value={val}
-      onChange={(e) => setVal(e.target.value)}
+      onChange={(e) => {
+        input.onChange(e)
+        setVal(e.target.value)
+      }}
       error={touched && Boolean(error)}
     />
   );
@@ -28,6 +31,7 @@ TextFieldRedux.propTypes = {
 TextFieldRedux.defaultProps = {
   meta: null,
 };
+
 /* End */
 
 /* Select */
