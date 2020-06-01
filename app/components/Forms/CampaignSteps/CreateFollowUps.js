@@ -145,7 +145,7 @@ class Wysiwyg extends PureComponent {
     logo: avatarApi[0]
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const data = {
       deadline: this.props.deadline,
       campaignId: this.props.campaignId

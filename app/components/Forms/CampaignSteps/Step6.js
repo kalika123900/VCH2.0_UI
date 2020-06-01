@@ -179,8 +179,6 @@ class Step6 extends React.Component {
         .catch((err) => {
           console.error(err);
         });
-
-      this.getCampaignImpression()
     }
 
     if (userType == 'ADMIN') {
@@ -201,6 +199,8 @@ class Step6 extends React.Component {
           console.error(err);
         });
     }
+
+    this.getCampaignImpression()
   }
 
   handleChange = (e) => {
