@@ -205,7 +205,7 @@ class Step4 extends PureComponent {
 
     let heading = this.props.heading;
     let body = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()))
-    const url = 'https://backend.vchopportunities.co.uk/utils/email-preview?heading=' + heading + '&body=' + body + '&company_id=' + user.cId;
+    const url = 'https://backend.varsitycareershub.co.uk/utils/email-preview?heading=' + heading + '&body=' + body + '&company_id=' + user.cId;
     window.open(url)
   }
 

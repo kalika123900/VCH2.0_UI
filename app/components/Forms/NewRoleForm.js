@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import { bindActionCreators } from 'redux';
+import { Editor } from 'react-draft-wysiwyg';
+import { convertFromRaw, EditorState, convertToRaw } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import Select from '@material-ui/core/Select';
@@ -39,7 +42,39 @@ const MenuProps = {
   },
 };
 
+const content = {
+  blocks: [{
+    key: '637gr',
+    text: '',
+    type: 'unstyled',
+    depth: 0,
+    inlineStyleRanges: [],
+    entityRanges: [],
+    data: {}
+  }],
+  entityMap: {}
+};
+
 class NewRoleForm extends React.Component {
+  constructor(props) {
+    super(props);
+    const contentBlock = convertFromRaw(content);
+    if (contentBlock) {
+      const editorState = EditorState.createWithContent(contentBlock);
+      this.state = {
+        editorState
+      };
+    }
+  }
+
+  onEditorStateChange = editorState => {
+    this.setState({
+      editorState
+    });
+
+    this.props.addInfo({ ...this.props, roleDesc: draftToHtml(convertToRaw(editorState.getCurrentContent())) });
+  };
+
   handleMultiSelect = (event) => {
     const { value } = event.target;
     const { addInfo } = this.props;
@@ -57,9 +92,6 @@ class NewRoleForm extends React.Component {
     }
     if (event.target.name === 'roleLink') {
       addInfo({ ...this.props, roleLink: event.target.value });
-    }
-    if (event.target.name === 'roleDesc') {
-      addInfo({ ...this.props, roleDesc: event.target.value });
     }
     if (event.target.name === 'roleType') {
       addInfo({ ...this.props, roleType: event.target.value });
@@ -252,19 +284,20 @@ class NewRoleForm extends React.Component {
           <div>
             <FormControl className={classes.formControl}>
               <Typography variant="h6">Please provide role description</Typography>
-              <TextField
-                id="outlined-multiline-static"
-                label="Role Description"
-                name="roleDesc"
-                value={roleDesc}
-                onChange={e => this.handleReduxChange(e)}
-                className={classes.textField}
-                multiline
-                rows={6}
-                margin="normal"
-                variant="outlined"
+              <Editor
+                editorState={this.state.editorState}
+                editorClassName={classes.textEditor}
+                toolbarClassName={classes.toolbarEditor}
+                onEditorStateChange={this.onEditorStateChange}
+                toolbar={{
+                  options: ['inline', 'fontSize', 'fontFamily', 'colorPicker', 'image', 'emoji', 'list', 'textAlign', 'link'],
+                  inline: { inDropdown: true },
+                  color: true,
+                  list: { inDropdown: true },
+                  textAlign: { inDropdown: true },
+                  link: { inDropdown: true },
+                }}
               />
-              {/* <Typography variant="caption">(Make sure it is the link to the actual page so that we can scan the page for key information)</Typography> */}
             </FormControl>
           </div>
           <div>

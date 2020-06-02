@@ -30,7 +30,7 @@ class StudentSummary extends React.Component {
               {item[0]}
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary={item} />
+          <ListItemText primary={item} style={{ whiteSpace: 'pre-line', padding: 5 }} />
         </ListItem>
       </Grid>
     });

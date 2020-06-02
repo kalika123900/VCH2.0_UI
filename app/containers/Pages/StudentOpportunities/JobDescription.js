@@ -140,7 +140,7 @@ class ClientJobProfile extends React.Component {
         index={index}
         key={index.toString()}
         role_name={item.role_name}
-        role_description={item.role_description}
+        role_description={ReactHtmlParser(item.role_description)}
         role_deadline={formatDate(item.role_deadline)}
         openJobDesc={this.openJobDesc}
       />
@@ -263,7 +263,7 @@ class ClientJobProfile extends React.Component {
                   </Grid>
                   <Typography variant="h6" color="primary" className={classes.subHeading}>Job description:</Typography>
                   <Grid className={classes.content}>
-                    <Typography variant="subtitle2" color="textSecondary" >{jobs.length > 0 && jobs[jobInfoIndex].role_description}</Typography>
+                    {jobs.length > 0 && ReactHtmlParser(jobs[jobInfoIndex].role_description)}
                   </Grid>
                   <Grid className={classes.subHeading}>
                     <Typography variant="h6" color="primary" className={classes.customMargin}>Last Date: </Typography>

@@ -217,7 +217,7 @@ class StudentSignupForm extends React.Component {
                 />
               </FormControl>
             </div>
-            <div>
+            <div style={{ textAlign: 'justify', padding: 10 }}>
               <FormControlLabel
                 control={(
                   <Field
@@ -227,9 +227,38 @@ class StudentSignupForm extends React.Component {
                     className={classes.agree}
                   />
                 )}
-                label="Agree with"
+                label="Accept Our T&Cs"
               />
+              <Typography variant="body2" color="textSecondary">I agree to Varsity Careers Hub's Terms of Use and particularly to VCH's Privacy Policy</Typography>
               <Link onClick={e => window.open("https://res.cloudinary.com/dp21wbaku/image/upload/v1590394789/VCH2.0/terms-and-conditions_eeiju9.pdf")} target="_blank" className={classes.link}>Terms &amp; Conditions</Link>
+            </div>
+            <div style={{ textAlign: 'justify', padding: 10 }}>
+              <FormControlLabel
+                control={(
+                  <Field
+                    name="isEmployersContact"
+                    component={CheckboxRedux}
+                    required
+                    className={classes.agree}
+                  />
+                )}
+                label="Allow Employers to contact you and to view your CV and Personal data"
+              />
+              <Typography variant="body2" color="textSecondary">I consent to my personal information and CV being used and shared by Varsity Careers Hub to match me with career opportunities and to be contacted either by Varsity Careers Hub or potential employers, please find full details in the Terms of Use.</Typography>
+            </div>
+            <div style={{ textAlign: 'justify', padding: 10 }}>
+              <FormControlLabel
+                control={(
+                  <Field
+                    name="isVCHContact"
+                    component={CheckboxRedux}
+                    required
+                    className={classes.agree}
+                  />
+                )}
+                label="Allow Varsity Careers Hub to contact you"
+              />
+              <Typography variant="body2" color="textSecondary">I consent to receive event invites, employers news , Varsity Careers Hub updates and handy hints to help me along my career journey</Typography>
             </div>
             <div className={classes.btnArea}>
               <Button variant="contained" fullWidth color="primary" type="submit">

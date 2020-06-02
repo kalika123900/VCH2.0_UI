@@ -57,7 +57,7 @@ class CampaignMail extends React.Component {
                                         <tr>
                                           <td
                                             class="text white center">
-                                            <div ><a href="vchopportunities.co.uk/student/messages">Respond on VCH</a></div>
+                                            <div ><a href="app.varsitycareershub.co.uk/student/messages">Respond on VCH</a></div>
                                           </td>
                                         </tr>
                                       </table>
@@ -96,7 +96,7 @@ class CampaignMail extends React.Component {
                                       <tr>
                                         <td class="text white center">
                                           <div ><a
-                                            href='vchopportunities.co.uk/student'>My Account</a></div>
+                                            href='app.varsitycareershub.co.uk/student'>My Account</a></div>
                                         </td>
                                       </tr>
                                     </table>
@@ -107,7 +107,7 @@ class CampaignMail extends React.Component {
                                         <td
                                           class="text white center">
                                           <div><a
-                                            href='vchopportunities.co.uk/student/settings'>Update your preferences
+                                            href='app.varsitycareershub.co.uk/student/settings'>Update your preferences
                                         here</a></div>
                                         </td>
                                       </tr>
