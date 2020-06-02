@@ -112,7 +112,7 @@ const styles = theme => ({
     width: drawerWidth,
     background: theme.palette.type === 'dark' ? darken(theme.palette.primary.light, 0.6) : lighten(theme.palette.primary.light, 0.5),
     border: 'none',
-    minHeight: '100%',
+    minHeight: '400px',
   },
   selected: {
     background: theme.palette.type === 'dark' ? darken(theme.palette.primary.light, 0.5) : darken(theme.palette.primary.light, 0.05),

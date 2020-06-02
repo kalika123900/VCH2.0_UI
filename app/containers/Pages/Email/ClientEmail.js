@@ -425,8 +425,8 @@ class ClientEmail extends React.Component {
     const { compose } = this.props;
     compose();
     this.setState({
-      to: '  ',
-      subject: '  ',
+      to: '',
+      subject: '',
     });
   }
 

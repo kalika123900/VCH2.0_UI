@@ -133,7 +133,7 @@ class StudentCard extends React.Component {
 
     let data = {
       company_id: user.cId,
-      sender_id: user.id,
+      sender_id: user.cId,
       sender_type: 'client',
       receiver_id: user_id,
       receiver_type: 'user',
