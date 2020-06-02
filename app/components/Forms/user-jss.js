@@ -662,7 +662,7 @@ const styles = theme => ({
   toolbarEditor: {
     margin: '5px 0 5px 0',
     background: theme.palette.background.default,
-    border: '1px solid #BBBBBB',
+    border: 'none',
     '& > div': {
       background: theme.palette.background.paper,
       '& img': {
@@ -673,6 +673,14 @@ const styles = theme => ({
         '& > div': {
           borderTopColor: theme.palette.text.primary,
         }
+      },
+      '& ul': {
+        background: theme.palette.background.default,
+        width: '100%'
+      },
+      '& .rdw-link-modal': {
+        background: theme.palette.background.default,
+        position: 'initial'
       }
     }
   },
