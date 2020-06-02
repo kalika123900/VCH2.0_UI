@@ -1,5 +1,6 @@
 import React, { Fragment, PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Editor } from 'react-draft-wysiwyg';
@@ -35,6 +36,14 @@ const content = {
   blocks: [],
   entityMap: {}
 };
+
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function replaceAll(str, term, replacement) {
+  return str.replace(new RegExp(escapeRegExp(term), 'g'), replacement);
+}
 
 async function postData(url, data) {
   const response = await fetch(url, {
@@ -140,7 +149,10 @@ class Step4 extends PureComponent {
         message: '',
         variant: 'success',
         dialog: false,
-        sendText: 'Send to me'
+        sendText: 'Send to me',
+        user: JSON.parse(
+          makeSecureDecrypt(localStorage.getItem('user'))
+        )
       };
     }
     else {
@@ -162,7 +174,10 @@ class Step4 extends PureComponent {
           message: '',
           variant: 'success',
           dialog: false,
-          sendText: 'Send to me'
+          sendText: 'Send to me',
+          user: JSON.parse(
+            makeSecureDecrypt(localStorage.getItem('user'))
+          )
         };
       }
     }
@@ -199,14 +214,8 @@ class Step4 extends PureComponent {
   }
 
   handlePreview = () => {
-    const user = JSON.parse(
-      makeSecureDecrypt(localStorage.getItem('user'))
-    );
+    window.open(`https://backend.varsitycareershub.co.uk/utils/email-preview?heading=${this.props.heading}&body=${replaceAll(this.props.body, '\n', '%0A')}&company_id=${this.state.user.cId}`)
 
-    let heading = this.props.heading;
-    let body = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()))
-    const url = 'https://backend.varsitycareershub.co.uk/utils/email-preview?heading=' + heading + '&body=' + body + '&company_id=' + user.cId;
-    window.open(url)
   }
 
 
@@ -262,7 +271,7 @@ class Step4 extends PureComponent {
     this.setState({
       editorState,
     });
-    addInfo({ body: draftToMarkdown(convertToRaw(editorState.getCurrentContent())), heading: headingEditor });
+    addInfo({ body: draftToHtml(convertToRaw(editorState.getCurrentContent())), heading: headingEditor });
   };
 
   onHeadingChange = (headingEditor) => {
@@ -271,7 +280,7 @@ class Step4 extends PureComponent {
     this.setState({
       headingEditor,
     });
-    addInfo({ body: editorState, heading: headingEditor });
+    addInfo({ ...this.props, heading: headingEditor });
   };
 
   render() {
@@ -368,6 +377,7 @@ class Step4 extends PureComponent {
                   >
                     Preview
                 </Button>
+                  {/* <Link onClick={e =>  >Test</Link> */}
                   <Button
                     variant="contained"
                     color="primary"

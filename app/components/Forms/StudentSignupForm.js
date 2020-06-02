@@ -230,7 +230,7 @@ class StudentSignupForm extends React.Component {
                 label="Accept Our T&Cs"
               />
               <Typography variant="body2" color="textSecondary">I agree to Varsity Careers Hub's Terms of Use and particularly to VCH's Privacy Policy</Typography>
-              <Link onClick={e => window.open("https://res.cloudinary.com/dp21wbaku/image/upload/v1590394789/VCH2.0/terms-and-conditions_eeiju9.pdf")} target="_blank" className={classes.link}>Terms &amp; Conditions</Link>
+              <Link onClick={e => window.open("https://res.cloudinary.com/dp21wbaku/image/upload/v1590394789/VCH2.0/terms-and-conditions_eeiju9.pdf")} className={classes.link}>Terms &amp; Conditions</Link>
             </div>
             <div style={{ textAlign: 'justify', padding: 10 }}>
               <FormControlLabel

@@ -155,7 +155,7 @@ class EditPersonalDetails extends React.Component {
           this.setState({ profile: null });
           const studentProfileData = {
             ...this.props,
-            avatar: res.data.result.url
+            avatar: res.data.result.secure_url
           }
           this.props.addInfo(studentProfileData);
           this.props.successMsg();
@@ -186,7 +186,7 @@ class EditPersonalDetails extends React.Component {
           this.setState({ cv: null });
           const studentProfileData = {
             ...this.props,
-            resume: res.data.result.url
+            resume: res.data.result.secure_url
           }
           this.props.addInfo(studentProfileData);
           this.props.successMsg();

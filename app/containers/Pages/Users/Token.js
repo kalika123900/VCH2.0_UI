@@ -49,7 +49,7 @@ class Token extends React.Component {
     postFormData(`${API_URL}/admin/add-company-logo`, data) // eslint-disable-line
       .then((res) => {
         if (res.status === 1) {
-          this.setState({ cLogo: res.result.url });
+          this.setState({ cLogo: res.result.secure_url });
           this.setState({ logo: null });
         }
       })
