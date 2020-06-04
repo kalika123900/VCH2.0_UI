@@ -10,7 +10,7 @@ import {
   Sector,
   ResponsiveContainer
 } from 'recharts';
-import qs from 'qs';
+
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { data6 } from './sampleData';
@@ -112,9 +112,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
   return await response.json();
 }

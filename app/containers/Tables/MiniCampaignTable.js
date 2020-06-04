@@ -16,7 +16,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import Tooltip from '@material-ui/core/Tooltip';
 import styles from 'dan-components/Tables/tableStyle-jss';
-import qs from 'qs';
+
 import { makeSecureDecrypt } from '../../Helpers/security';
 import formatDate from '../../Helpers/formatDate';
 import { Button } from '@material-ui/core';
@@ -35,9 +35,9 @@ async function getData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
 
   return await response.json();

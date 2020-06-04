@@ -3,7 +3,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
 import FacebookIcon from '@material-ui/icons/Facebook';
-import qs from 'qs';
+
 
 const LINKEDIN_STATE = 'ivhdRLo4m4HNZkdG';
 const LINKEDIN_RIDERECT = 'http://localhost:5000/student/oauth/callback';

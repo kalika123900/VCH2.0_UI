@@ -21,7 +21,7 @@ import { Typography } from '@material-ui/core';
 import WorkIcon from '@material-ui/icons/Work';
 import EditIcon from '@material-ui/icons/Edit';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import qs from 'qs';
+
 import { makeSecureDecrypt } from '../../Helpers/security';
 import formatDate from '../../Helpers/formatDate';
 
@@ -29,9 +29,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
   return await response.json();
 }

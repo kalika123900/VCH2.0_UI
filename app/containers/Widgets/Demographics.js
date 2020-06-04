@@ -22,7 +22,7 @@ import Divider from '@material-ui/core/Divider';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import TrackChangesIcon from '@material-ui/icons/TrackChanges';
 import styles from 'dan-components/Widget/widget-jss';
-import qs from 'qs';
+
 import { makeSecureDecrypt } from 'dan-helpers/security';
 
 const colors = [red[300], blue[300], cyan[300], lime[300]];
@@ -39,9 +39,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
   return await response.json();
 }

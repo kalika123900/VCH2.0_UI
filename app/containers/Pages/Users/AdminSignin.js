@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import brand from 'dan-api/dummy/brand';
 import PropTypes from 'prop-types';
-import qs from 'qs';
+
 import { withStyles } from '@material-ui/core/styles';
 import { AdminSigninForm } from 'dan-components';
 import styles from 'dan-components/Forms/user-jss';
@@ -51,7 +51,7 @@ class AdminSignin extends React.Component {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: qs.stringify(data)
+        body: JSON.stringify(data)
       });
 
       return await response.json();

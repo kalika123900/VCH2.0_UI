@@ -17,9 +17,8 @@ import LocationOn from '@material-ui/icons/LocationOn';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import PapperBlock from 'dan-components/PapperBlock/PapperBlock';
 import styles from 'dan-components/Profile/profile-jss';
-import qs from 'qs';
+
 import ReactHtmlParser from 'react-html-parser';
-import renderHTML from 'react-render-html';
 import imgApi from 'dan-api/images/photos';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -34,9 +33,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
   return await response.json();
 }

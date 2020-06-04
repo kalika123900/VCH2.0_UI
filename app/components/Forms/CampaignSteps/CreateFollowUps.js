@@ -7,7 +7,6 @@ import draftToMarkdown from 'draftjs-to-markdown';
 import { markdownToDraft } from 'markdown-draft-js';
 import { storeFollowUps } from 'dan-actions/CampaignActions';
 import { withStyles } from '@material-ui/core/styles';
-import { stateFromMarkdown } from 'draft-js-import-markdown';
 import { convertFromRaw, EditorState, convertToRaw, Modifier } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
@@ -24,7 +23,7 @@ import Typography from '@material-ui/core/Typography';
 import 'dan-styles/vendors/react-draft-wysiwyg/react-draft-wysiwyg.css';
 import styles from 'dan-components/Email/email-jss';
 import avatarApi from 'dan-api/images/avatars';
-import qs from 'qs';
+
 
 const showdown = require('showdown');
 const converter = new showdown.Converter();
@@ -46,9 +45,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
 
   return await response.json();

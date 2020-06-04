@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button'
 import Divider from '@material-ui/core/Divider';
 import Switch from '@material-ui/core/Switch';
 import { withStyles } from '@material-ui/core/styles';
-import qs from 'qs';
+
 import { Notification } from 'dan-components';
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import styles from './settings-jss';
@@ -23,9 +23,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
 
   return response.json();

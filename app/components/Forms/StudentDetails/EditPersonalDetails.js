@@ -19,7 +19,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { storeProfileDetails, warnMsgInit, warnMsgRemove } from 'dan-actions/studentProfileActions';
 import { genderItems, ethnicityItems, nationalityItems, society } from 'dan-api/apps/profileOption';
-import qs from 'qs';
+
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import messageStyles from 'dan-styles/Messages.scss';
 import CloseIcon from '@material-ui/icons/Close';
@@ -91,9 +91,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
   return await response.json();
 }

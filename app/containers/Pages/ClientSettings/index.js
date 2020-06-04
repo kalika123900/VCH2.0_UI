@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet';
 import brand from 'dan-api/dummy/brand';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import qs from 'qs';
+
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import DetailSettings from './DetailSettings';
 import styles from './settings-jss';
@@ -13,9 +13,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
 
   return response.json();

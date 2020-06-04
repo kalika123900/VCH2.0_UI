@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { SigninForm } from 'dan-components';
 import styles from 'dan-components/Forms/user-jss';
-import qs from 'qs';
+
 import { makeSecureEncrypt } from '../../../Helpers/security';
 import messageStyles from 'dan-styles/Messages.scss';
 import CloseIcon from '@material-ui/icons/Close';
@@ -52,7 +52,7 @@ class Signin extends React.Component {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: qs.stringify(data)
+        body: JSON.stringify(data)
       });
 
       return await response.json();

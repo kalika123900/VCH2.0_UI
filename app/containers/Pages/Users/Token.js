@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import brand from 'dan-api/dummy/brand';
 import PropTypes from 'prop-types';
-import qs from 'qs';
+
 import { withStyles } from '@material-ui/core/styles';
 import { TokenForm } from 'dan-components';
 import styles from 'dan-components/Forms/user-jss';
@@ -11,9 +11,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
 
   return await response.json();

@@ -16,7 +16,7 @@ import PapperBlock from '../../components/PapperBlock/PapperBlock';
 import { data10 } from '../../components/Campaigns/sampleData';
 import styles from '../Charts/demos/fluidChart-jss';
 import { Typography, Grid } from '@material-ui/core';
-import qs from 'qs';
+
 
 function toHumanDate(date) {
   const dateObject = new Date(date);

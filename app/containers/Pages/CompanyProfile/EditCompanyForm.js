@@ -12,7 +12,7 @@ import ArrowForward from '@material-ui/icons/ArrowForward';
 import FlashMessage from 'react-flash-message';
 import { makeSecureDecrypt } from '../../../Helpers/security';
 import styles from '../../../components/Forms/user-jss';
-import qs from 'qs';
+
 import messageStyles from 'dan-styles/Messages.scss';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
@@ -41,9 +41,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
   return await response.json();
 }

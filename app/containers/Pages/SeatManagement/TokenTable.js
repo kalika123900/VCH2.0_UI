@@ -13,7 +13,7 @@ import styles from 'dan-components/Tables/tableStyle-jss';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Button } from '@material-ui/core';
 import formatDate from '../../../Helpers/formatDate';
-import qs from 'qs';
+
 import { CustomConfirmation } from 'dan-components';
 import { makeSecureDecrypt } from '../../../Helpers/security';
 
@@ -21,9 +21,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
   return await response.json();
 }

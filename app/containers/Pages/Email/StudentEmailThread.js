@@ -8,7 +8,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import avatarApi from 'dan-api/images/avatars';
 import Grid from '@material-ui/core/Grid';
-import qs from 'qs';
+
 import {
   StudentEmailSidebar,
   StudentEmailThreadList,
@@ -52,9 +52,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
   return await response.json();
 }

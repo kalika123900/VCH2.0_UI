@@ -13,7 +13,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Input from '@material-ui/core/Input';
-import qs from 'qs';
+
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import { storeSkillInterests, } from 'dan-actions/studentProfileActions';
 import { companyList, skillMenu, sectorsData } from 'dan-api/apps/profileOption';
@@ -82,9 +82,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
   return await response.json();
 }

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Editor } from 'react-draft-wysiwyg';
 import { draftToMarkdown } from 'markdown-draft-js';
-import qs from 'qs';
+
 import {
   EditorState, convertToRaw, ContentState, convertFromHTML, Modifier
 } from 'draft-js';
@@ -49,9 +49,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
 
   return await response.json();

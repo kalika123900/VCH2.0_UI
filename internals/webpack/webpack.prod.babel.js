@@ -45,7 +45,7 @@ module.exports = require('./webpack.base.babel')({
     ],
     nodeEnv: 'production',
     sideEffects: true,
-    concatenateModules: true,
+    concatenateModules: false,
     splitChunks: {
       chunks: 'all',
       minSize: 30000,

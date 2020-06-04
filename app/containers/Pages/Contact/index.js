@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 // import data from 'dan-api/apps/contactData';
 import { Helmet } from 'react-helmet';
 import brand from 'dan-api/dummy/brand';
-import qs from 'qs';
+
 import { makeSecureDecrypt } from '../../../Helpers/security';
 import dummy from 'dan-api/dummy/dummyContents';
 import {
@@ -38,9 +38,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
   return await response.json();
 }

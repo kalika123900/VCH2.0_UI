@@ -14,7 +14,7 @@ import { JobFilter } from 'dan-components';
 import { Pagination } from 'dan-components';
 import Button from '@material-ui/core/Button';
 import CircularProgress from 'dan-components/Loading/CircularProgress';
-import qs from 'qs';
+
 
 const customStyles = {
   root: {
@@ -26,9 +26,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
   return await response.json();
 }

@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import PapperBlock from '../PapperBlock/PapperBlock';
 import styles from './profile-jss';
-import qs from 'qs';
+
 import { makeSecureDecrypt } from '../../Helpers/security';
 import { Typography } from '@material-ui/core';
 import avatarApi from 'dan-api/images/avatars';
@@ -21,9 +21,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
   return await response.json();
 }

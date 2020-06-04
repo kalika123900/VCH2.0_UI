@@ -15,7 +15,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import AddIcon from '@material-ui/icons/Add';
 import styles from 'dan-components/Tables/tableStyle-jss';
-import qs from 'qs';
+
 import { makeSecureDecrypt } from '../../../Helpers/security';
 import formatDate from '../../../Helpers/formatDate';
 
@@ -48,7 +48,7 @@ class CampaignTable extends React.Component {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: qs.stringify(data)
+        body: JSON.stringify(data)
       });
 
       return await response.json();

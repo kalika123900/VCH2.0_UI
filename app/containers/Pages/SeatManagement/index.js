@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { SeatManagementForm } from 'dan-components'
 import SeatManagementTable from './SeatManagementTable'
 import TokenTable from './TokenTable';
-import qs from 'qs';
+
 import Grid from '@material-ui/core/Grid';
 import { makeSecureDecrypt } from '../../../Helpers/security';
 
@@ -10,9 +10,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
 
   return await response.json();

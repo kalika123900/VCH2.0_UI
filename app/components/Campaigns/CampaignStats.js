@@ -10,15 +10,15 @@ import OpenInBrowser from '@material-ui/icons/OpenInBrowser';
 import TouchAppIcon from '@material-ui/icons/TouchApp';
 import PapperBlock from '../PapperBlock/PapperBlock';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import qs from 'qs';
+
 
 async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
 
   return response.json();

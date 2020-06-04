@@ -21,7 +21,7 @@ import Grid from '@material-ui/core/Grid';
 import { CombineStyles } from 'dan-helpers';
 import Ionicon from 'react-ionicons';
 import styles from './cardStyle-jss';
-import qs from 'qs';
+
 import MessageDialog from '../Forms/MessageDialog';
 import StudentProfileDialog from '../Profile/StudentProfileDialog';
 import { makeSecureDecrypt } from '../../Helpers/security';
@@ -50,9 +50,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
 
   return await response.json();

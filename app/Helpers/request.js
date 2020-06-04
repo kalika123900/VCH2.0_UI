@@ -1,4 +1,4 @@
-import qs from 'qs';
+
 
 export async function postData(url, data, token) {
   const response = await fetch(url, {
@@ -7,7 +7,7 @@ export async function postData(url, data, token) {
       'Content-Type': 'application/x-www-form-urlencoded',
       Authorization: `Bearer ${token}`
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
 
   return await response.json();

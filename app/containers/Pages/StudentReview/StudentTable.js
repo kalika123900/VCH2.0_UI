@@ -16,7 +16,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import avatarApi from 'dan-api/images/avatars';
 import { CustomConfirmation, StudentProfileDialog } from 'dan-components';
-import qs from 'qs';
+
 import styles from 'dan-components/Tables/tableStyle-jss';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import Avatar from '@material-ui/core/Avatar';
@@ -37,9 +37,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
   return await response.json();
 }

@@ -18,7 +18,7 @@ import TableRow from '@material-ui/core/TableRow';
 import AddIcon from '@material-ui/icons/Add';
 import { ConfirmationDialog } from 'dan-components';
 import styles from 'dan-components/Tables/tableStyle-jss';
-import qs from 'qs';
+
 import { makeSecureDecrypt } from '../../../Helpers/security';
 import formatDate from '../../../Helpers/formatDate';
 
@@ -37,9 +37,9 @@ async function getData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
 
   return await response.json();

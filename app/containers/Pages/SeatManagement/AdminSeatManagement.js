@@ -2,16 +2,16 @@ import React, { Component } from 'react'
 import { AdminSeatManagementForm } from 'dan-components'
 import AdminSeatManagementTable from './AdminSeatManagementTable'
 import AdminTokenTable from './AdminTokenTable';
-import qs from 'qs';
+
 import Grid from '@material-ui/core/Grid';
 
 async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
 
   return await response.json();

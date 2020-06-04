@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { StudentSigninForm } from 'dan-components';
 import styles from 'dan-components/Forms/user-jss';
-import qs from 'qs';
+
 import { makeSecureEncrypt } from '../../../Helpers/security';
 import messageStyles from 'dan-styles/Messages.scss';
 import CloseIcon from '@material-ui/icons/Close';
@@ -19,9 +19,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
 
   return await response.json();

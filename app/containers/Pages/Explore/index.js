@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { Pagination, ExploreFilter, StudentCard } from 'dan-components';
 import Button from '@material-ui/core/Button';
-import qs from 'qs';
+
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import { universityItems } from 'dan-api/apps/profileOption'
 import CircularProgress from 'dan-components/Loading/CircularProgress';
@@ -25,9 +25,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
   return await response.json();
 }

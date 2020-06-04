@@ -26,7 +26,7 @@ import Work from '@material-ui/icons/Work';
 import Language from '@material-ui/icons/Language';
 import Divider from '@material-ui/core/Divider';
 import styles from './contact-jss';
-import qs from 'qs';
+
 import { makeSecureDecrypt } from '../../Helpers/security';
 
 const optionsOpt = [
@@ -41,9 +41,9 @@ async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
-    body: qs.stringify(data)
+    body: JSON.stringify(data)
   });
   return await response.json();
 }

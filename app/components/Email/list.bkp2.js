@@ -33,7 +33,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import qs from 'qs';
+
 import { makeSecureDecrypt } from 'dan-helpers/security';
 
 const ITEM_HEIGHT = 80;
