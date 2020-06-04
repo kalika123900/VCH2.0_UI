@@ -74,7 +74,7 @@ class openAuth extends PureComponent {
 
       // var xhr = new XMLHttpRequest();
       // xhr.open("POST", 'https://www.linkedin.com/oauth/v2/accessToken', true);
-      // xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      // xhr.setRequestHeader("Content-Type", "application/json");
       // xhr.onreadystatechange = function () { // Call a function when the state changes.
       //   if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
       //     

@@ -143,7 +143,7 @@ class StudentEmail extends React.Component {
             response = fetch(`${API_URL}/student/get-inbox-emails`, {
               method: 'POST',
               headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
               },
               body: qs.stringify(apiData)
             })
@@ -185,7 +185,7 @@ class StudentEmail extends React.Component {
             response = fetch(`${API_URL}/student/get-sent-emails`, {
               method: 'POST',
               headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
               },
               body: qs.stringify(apiData)
             })
@@ -227,7 +227,7 @@ class StudentEmail extends React.Component {
             response = fetch(`${API_URL}/student/get-stared-emails`, {
               method: 'POST',
               headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
               },
               body: qs.stringify(apiData)
             })

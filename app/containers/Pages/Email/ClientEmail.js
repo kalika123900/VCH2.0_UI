@@ -130,7 +130,7 @@ class ClientEmail extends React.Component {
             response = fetch(`${API_URL}/client/get-inbox-emails`, {
               method: 'POST',
               headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
               },
               body: qs.stringify(apiData)
             })
@@ -185,7 +185,7 @@ class ClientEmail extends React.Component {
             response = fetch(`${API_URL}/client/get-sent-emails`, {
               method: 'POST',
               headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
               },
               body: qs.stringify(apiData)
             })
@@ -238,7 +238,7 @@ class ClientEmail extends React.Component {
             response = fetch(`${API_URL}/client/get-stared-emails`, {
               method: 'POST',
               headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
               },
               body: qs.stringify(apiData)
             })
@@ -291,7 +291,7 @@ class ClientEmail extends React.Component {
             response = fetch(`${API_URL}/client/get-campaign-responses`, {
               method: 'POST',
               headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
               },
               body: qs.stringify(apiData)
             })
@@ -344,7 +344,7 @@ class ClientEmail extends React.Component {
             response = fetch(`${API_URL}/client/get-bulkemail-queries`, {
               method: 'POST',
               headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
               },
               body: qs.stringify(apiData)
             })
