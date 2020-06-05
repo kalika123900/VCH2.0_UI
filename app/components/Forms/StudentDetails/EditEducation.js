@@ -44,6 +44,13 @@ const MenuProps = {
   },
 };
 
+
+function arrayRemove(arr, value) {
+  return arr.filter(function (ele) {
+    return ele != value;
+  });
+}
+
 class EditEducation extends React.Component {
   state = {
     key: ''
@@ -374,43 +381,34 @@ class EditEducation extends React.Component {
             </div>
             :
             <Fragment>
-              <div>
-                <FormControl className={classes.formControl}>
-                  <InputLabel
-                    htmlFor="Subject"
-                  >
-                    Subject
-                  </InputLabel>
-                  <Select
+              <div style={{ marginTop: 10 }}>
+                <FormControl className={classes.customFormControl}>
+                  <Autocomplete
+                    style={{ width: '100%' }}
                     multiple
                     value={subject}
-                    input={<Input />}
-                    name="subject"
-                    MenuProps={MenuProps}
-                    component={Select}
-                    renderValue={selected => {
-                      const subjectName = [];
-                      subjectData.map((value, index) => {
-                        if (selected.includes(value)) {
-                          subjectName.push(value);
+                    onChange={(e, option) => {
+                      const data = {
+                        target: {
+                          name: 'subject',
+                          value: option
                         }
-                      });
-                      return subjectName.join(', ');
-                    }
-                    }
-                    onChange={e => this.handleChange(e, id)}
-                  >
-                    {subjectData.map((item, index) => (
-                      <MenuItem key={index.toString()} value={item}>
-                        <TextField
-                          name="selectedSubject"
-                          component={Checkbox}
-                          checked={subject.indexOf(item) > -1}
-                        />
-                        <ListItemText primary={item} />
-                      </MenuItem>
-                    ))}
-                  </Select>
+                      }
+                      this.handleChange(data, id)
+                    }}
+                    options={arrayRemove(subjectData, '')}
+                    getOptionLabel={option => option}
+                    renderOption={option => option}
+                    freeSolo
+                    renderInput={params => (
+                      <TextField
+                        style={{ width: '100%' }}
+                        {...params}
+                        label={'Subjects'}
+                        variant="outlined"
+                      />
+                    )}
+                  />
                 </FormControl>
               </div>
               {subjectScoreJSX}

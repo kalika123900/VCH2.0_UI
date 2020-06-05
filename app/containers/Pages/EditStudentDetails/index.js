@@ -126,7 +126,7 @@ class EditStudentDetails extends Component {
       };
     } else {
       this.state = {
-        tab: 0,
+        tab: 3,
         openStyle: false,
         messageType: 'error',
         notifyMessage: '',

@@ -171,7 +171,18 @@ const styles = theme => ({
   },
   formControl: {
     width: '100%',
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
+  },
+  customFormControl: {
+    width: '100%',
+    marginBottom: theme.spacing(1),
+    '& div': {
+      '& div': {
+        '& div': {
+          padding: '0 8px 0'
+        }
+      }
+    }
   },
   socmedLogin: {
     [theme.breakpoints.up('sm')]: {

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
@@ -43,6 +44,13 @@ const MenuProps = {
     },
   },
 };
+
+function arrayRemove(arr, value) {
+  return arr.filter(function (ele) {
+    return ele != value;
+  });
+}
+
 
 class Step2 extends React.Component {
   handleReduxChange = event => {
@@ -247,37 +255,32 @@ class Step2 extends React.Component {
                 <Typography variant="h6">
                   Courses that the role targets
                 </Typography>
-                <Select
+                <Autocomplete
+                  style={{ width: '100%' }}
                   multiple
                   value={subjects.toJS()}
-                  name="subjects"
-                  input={<Input />}
-                  MenuProps={MenuProps}
-                  component={Select}
-                  renderValue={selected => {
-                    const subjectName = [];
-                    courses.map((value, index) => {
-                      if (selected.includes(value)) {
-                        subjectName.push(value);
+                  onChange={(e, option) => {
+                    const data = {
+                      target: {
+                        name: 'subjects',
+                        value: option
                       }
-                    });
-                    return subjectName.join(', ');
-                  }
-                  }
-                  onChange={e => this.handleReduxChange(e)}
-                >
-                  {courses.map((item, index) => (
-                    (item.length > 0) &&
-                    <MenuItem key={index.toString()} value={item}>
-                      <TextField
-                        name="subject-checkbox"
-                        component={Checkbox}
-                        checked={subjects.indexOf(item) > -1}
-                      />
-                      <ListItemText primary={item} />
-                    </MenuItem>
-                  ))}
-                </Select>
+                    }
+                    this.handleReduxChange(data)
+                  }}
+                  options={arrayRemove(courses, '')}
+                  getOptionLabel={option => option}
+                  renderOption={option => option}
+                  freeSolo
+                  renderInput={params => (
+                    <TextField
+                      style={{ width: '100%' }}
+                      {...params}
+                      label={'Courses'}
+                      variant="outlined"
+                    />
+                  )}
+                />
               </FormControl>
             </Grid>
           </Grid>
@@ -289,37 +292,32 @@ class Step2 extends React.Component {
                 <Typography variant="h6">
                   Skills that the role targets
                 </Typography>
-                <Select
+                <Autocomplete
+                  style={{ width: '100%' }}
                   multiple
                   value={skills.toJS()}
-                  input={<Input />}
-                  name="skills"
-                  MenuProps={MenuProps}
-                  component={Select}
-                  renderValue={selected => {
-                    const skillName = [];
-                    skillMenu.map((value, index) => {
-                      if (selected.includes(value)) {
-                        skillName.push(value);
+                  onChange={(e, option) => {
+                    const data = {
+                      target: {
+                        name: 'skills',
+                        value: option
                       }
-                    });
-                    return skillName.join(', ');
-                  }
-                  }
-                  onChange={e => this.handleReduxChange(e)}
-                >
-                  {skillMenu.map((item, index) => (
-                    (item.length > 0) &&
-                    <MenuItem key={index.toString()} value={item}>
-                      <TextField
-                        name="skill-checkbox"
-                        component={Checkbox}
-                        checked={skills.indexOf(item) > -1}
-                      />
-                      <ListItemText primary={item} />
-                    </MenuItem>
-                  ))}
-                </Select>
+                    }
+                    this.handleReduxChange(data)
+                  }}
+                  options={arrayRemove(skillMenu, '')}
+                  getOptionLabel={option => option}
+                  renderOption={option => option}
+                  freeSolo
+                  renderInput={params => (
+                    <TextField
+                      style={{ width: '100%' }}
+                      {...params}
+                      label={'Skills'}
+                      variant="outlined"
+                    />
+                  )}
+                />
               </FormControl>
             </Grid>
           </Grid>

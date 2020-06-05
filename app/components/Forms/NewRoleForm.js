@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import { bindActionCreators } from 'redux';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Editor } from 'react-draft-wysiwyg';
 import { convertFromRaw, EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import Select from '@material-ui/core/Select';
-import Checkbox from '@material-ui/core/Checkbox';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -41,6 +41,12 @@ const MenuProps = {
     },
   },
 };
+
+function arrayRemove(arr, value) {
+  return arr.filter(function (ele) {
+    return ele != value;
+  });
+}
 
 const content = {
   blocks: [{
@@ -75,13 +81,9 @@ class NewRoleForm extends React.Component {
     this.props.addInfo({ ...this.props, roleDesc: draftToHtml(convertToRaw(editorState.getCurrentContent())) });
   };
 
-  handleMultiSelect = (event) => {
-    const { value } = event.target;
+  handleMultiSelect = (e, option) => {
     const { addInfo } = this.props;
-
-    if (event.target.name == 'skills') {
-      addInfo({ ...this.props, skills: value });
-    }
+    addInfo({ ...this.props, skills: option })
   };
 
   handleReduxChange = event => {
@@ -154,48 +156,35 @@ class NewRoleForm extends React.Component {
             </FormControl>
           </div>
           <div>
-            <FormControl className={classes.formControl}>
-              <InputLabel
-                htmlFor="select-skill"
+            <FormControl className={classes.formControl} style={{ marginBottom: 20 }}>
+              <Typography
+                variant="h6" style={{ textAlign: 'left', marginBottom: 10 }}
               >
                 Which skills are relevant?
-              </InputLabel>
-              <Select
+              </Typography>
+              <Autocomplete
+                style={{ width: '100%' }}
                 multiple
                 value={MapSkills}
-                input={<Input />}
-                name="skills"
-                MenuProps={MenuProps}
-                component={Select}
-                renderValue={selected => {
-                  const skillName = [];
-                  skillMenu.map((value, index) => {
-                    if (selected.includes(value)) {
-                      skillName.push(value);
-                    }
-                  });
-                  return skillName.join(', ');
-                }
-                }
-                onChange={e => this.handleMultiSelect(e)}
-              >
-                {skillMenu.map((item, index) => (
-                  (item.length > 0) &&
-                  <MenuItem key={index.toString()} value={item}>
-                    <TextField
-                      name="skill-checkbox"
-                      component={Checkbox}
-                      checked={MapSkills.indexOf(item) > -1}
-                    />
-                    <ListItemText primary={item} />
-                  </MenuItem>
-                ))}
-              </Select>
+                onChange={(e, option) => this.handleMultiSelect(e, option)}
+                options={arrayRemove(skillMenu, '')}
+                getOptionLabel={option => option}
+                renderOption={option => option}
+                freeSolo
+                renderInput={params => (
+                  <TextField
+                    style={{ width: '100%' }}
+                    {...params}
+                    label={'Skills'}
+                    variant="outlined"
+                  />
+                )}
+              />
             </FormControl>
           </div>
           <div>
-            <FormControl className={classes.formControl}>
-              <Typography variant="h6" style={{ textAlign: 'left' }}>
+            <FormControl className={classes.formControl} style={{ marginBottom: 20 }}>
+              <Typography variant="h6" style={{ textAlign: 'left', marginBottom: 10 }}>
                 Which course are relevant?
               </Typography>
               <SelectAdd
@@ -207,7 +196,7 @@ class NewRoleForm extends React.Component {
             </FormControl>
           </div>
           <div>
-            <FormControl className={classes.formControl}>
+            <FormControl className={classes.formControl} style={{ marginBottom: 20 }}>
               <InputLabel
                 htmlFor="select-role-type"
               >
@@ -229,7 +218,7 @@ class NewRoleForm extends React.Component {
             </FormControl>
           </div>
           <div>
-            <FormControl className={classes.formControl}>
+            <FormControl className={classes.formControl} style={{ marginBottom: 20 }}>
               <InputLabel
                 htmlFor="select-experience-level"
               >
@@ -251,7 +240,7 @@ class NewRoleForm extends React.Component {
             </FormControl>
           </div>
           <div>
-            <FormControl component="fieldset" required className={classes.formControl}>
+            <FormControl component="fieldset" required className={classes.formControl} style={{ marginBottom: 20 }} >
               <Typography variant="h6">Tell us some role descriptors to help:</Typography>
               <Typography variant="caption">(a member of the team will manually check your role description against the target audience)</Typography>
               <SelectAdd
@@ -263,7 +252,7 @@ class NewRoleForm extends React.Component {
             </FormControl>
           </div>
           <div>
-            <FormControl className={classes.formControl}>
+            <FormControl className={classes.formControl} style={{ marginBottom: 20 }}>
               <Typography variant="h6">What is the role’s application deadline?</Typography>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Grid container justify="space-around">
@@ -282,7 +271,7 @@ class NewRoleForm extends React.Component {
             </FormControl>
           </div>
           <div>
-            <FormControl className={classes.formControl}>
+            <FormControl className={classes.formControl} style={{ marginBottom: 20 }}>
               <Typography variant="h6">Please provide role description</Typography>
               <Editor
                 editorState={this.state.editorState}
@@ -301,7 +290,7 @@ class NewRoleForm extends React.Component {
             </FormControl>
           </div>
           <div>
-            <FormControl className={classes.formControl}>
+            <FormControl className={classes.formControl} >
               <Typography variant="h6">What is the role page link?</Typography>
               <TextField
                 id="outlined-link"

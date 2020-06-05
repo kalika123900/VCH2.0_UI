@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import styles from '../user-jss';
 import { connect } from 'react-redux';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { bindActionCreators } from 'redux';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
@@ -13,7 +14,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Input from '@material-ui/core/Input';
-
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import { storeSkillInterests, } from 'dan-actions/studentProfileActions';
 import { companyList, skillMenu, sectorsData } from 'dan-api/apps/profileOption';
@@ -36,6 +36,12 @@ const MenuProps = {
     },
   },
 };
+
+function arrayRemove(arr, value) {
+  return arr.filter(function (ele) {
+    return ele != value;
+  });
+}
 
 function stringToArray(string) {
   const splitArray = string.split(',');
@@ -264,46 +270,34 @@ class EditSkillsInterests extends React.Component {
               </Select>
             </FormControl>
           </div>
-          <div>
-            <FormControl className={classes.formControl}>
-              <InputLabel
-                htmlFor="select-Skills"
-              >
-                What are your best skills?
-                </InputLabel>
-              <Select
+          <div >
+            <FormControl className={classes.customFormControl} style={{ marginTop: 15 }}>
+              <Autocomplete
+                style={{ width: '100%' }}
                 multiple
                 value={skills.toJS()}
-                input={<Input />}
-                name="skills"
-                MenuProps={MenuProps}
-                component={Select}
-                renderValue={selected => {
-                  const skillName = [];
-                  skillMenu.map((value, index) => {
-                    if (selected.includes(value)) {
-                      skillName.push(value);
+                onChange={(e, option) => {
+                  const data = {
+                    target: {
+                      name: 'skills',
+                      value: option
                     }
-                  });
-                  return skillName.join(', ');
-                }
-                }
-                onChange={e => this.handleChange(e)}
-                style={{ paddingTop: 10, paddingBottom: 10 }}
-              >
-                {skillMenu.map((item, index) => (
-                  item.length > 0 &&
-                  <MenuItem key={index.toString()} value={item}>
-                    <TextField
-                      name="skill-checkbox"
-                      component={Checkbox}
-                      checked={skills.indexOf(item) > -1}
-                    />
-                    <ListItemText primary={item} />
-                  </MenuItem>
-                ))}
-              </Select>
-
+                  }
+                  this.handleChange(data)
+                }}
+                options={arrayRemove(skillMenu, '')}
+                getOptionLabel={option => option}
+                renderOption={option => option}
+                freeSolo
+                renderInput={params => (
+                  <TextField
+                    style={{ width: '100%' }}
+                    {...params}
+                    label={'What are your best skills?'}
+                    variant="outlined"
+                  />
+                )}
+              />
             </FormControl>
           </div>
           {this.state.isChanges ?
