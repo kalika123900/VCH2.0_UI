@@ -6,7 +6,7 @@ import FacebookIcon from '@material-ui/icons/Facebook';
 
 const LINKEDIN_STATE = 'ivhdRLo4m4HNZkdG';
 const LINKEDIN_RIDERECT = 'https://backend.varsitycareershub.co.uk/student/oauth/callback';
-const LINKEDIN_CLIENT_ID = '86hjqcfyyu993o';
+const LINKEDIN_CLIENT_ID = '86ah7dbi213mec';
 const LINKEDIN_URL = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${LINKEDIN_RIDERECT}&state=${LINKEDIN_STATE}&scope=r_liteprofile%20r_emailaddress`;
 
 class openAuth extends PureComponent {

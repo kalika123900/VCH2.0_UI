@@ -44,7 +44,7 @@ const text = value => (
 const minPasswordLength = minLength(8);
 const maxPasswordLength = maxLength(15);
 const minTextLength = minLength(3);
-const maxTextLength = maxLength(20);
+const maxTextLength = maxLength(30);
 
 const passwordsMatch = (value, allValues) => {
   if (value !== allValues.get('password')) {

@@ -33,7 +33,7 @@ const text = value => (
 );
 
 const minTextLength = minLength(3);
-const maxTextLength = maxLength(20);
+const maxTextLength = maxLength(30);
 
 const renderField = (props) => {
   const {

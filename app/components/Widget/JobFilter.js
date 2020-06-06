@@ -6,6 +6,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Input from '@material-ui/core/Input';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import Grid from '@material-ui/core/Grid';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
@@ -33,6 +34,13 @@ const MenuProps = {
   },
 };
 
+function arrayRemove(arr, value) {
+  return arr.filter(function (ele) {
+    return ele != value;
+  });
+}
+
+
 class ClientFilter extends PureComponent {
   render() {
     const
@@ -42,60 +50,6 @@ class ClientFilter extends PureComponent {
 
     return (
       <PapperBlock whiteBg noMargin title="Apply Filter" icon="ios-search-outline" desc="">
-        <Grid container spacing={2}>
-          <Grid item sm={6} xs={6}>
-            <FormControl className={classes.formControlTrade}>
-              <InputLabel htmlFor="skill-simple">Skill</InputLabel>
-              <Select
-                multiple
-                value={skill}
-                input={<Input />}
-                name="skill"
-                MenuProps={MenuProps}
-                component={Select}
-                renderValue={selected => {
-                  const skillName = [];
-                  skillMenu.map((value, index) => {
-                    if (selected.includes(value)) {
-                      skillName.push(value);
-                    }
-                  });
-                  return skillName.join(', ');
-                }
-                }
-                onChange={e => handleChange(e)}
-              >
-                {skillMenu.map((item, index) => (
-                  (item.length > 0) &&
-                  <MenuItem key={index.toString()} value={item}>
-                    <TextField
-                      name="skill-checkbox"
-                      component={Checkbox}
-                      checked={skill.indexOf(item) > -1}
-                    />
-                    <ListItemText primary={item} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item sm={6} xs={6}>
-            <FormControl className={classes.formControlTrade}>
-              <InputLabel htmlFor="location-simple">Location</InputLabel>
-              <Input
-                id="location-simple"
-                value={location}
-                name='location'
-                onChange={e => handleChange(e)}
-                endAdornment={<InputAdornment position="end"><Place /></InputAdornment>}
-                aria-describedby="standard-weight-helper-text"
-                inputProps={{
-                  'aria-label': 'location',
-                }}
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
         <Grid container spacing={2}>
           <Grid item sm={6} xs={6}>
             <Grid>
@@ -169,6 +123,54 @@ class ClientFilter extends PureComponent {
                   </MenuItem>
                 ))}
               </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item sm={6} xs={6}>
+            <FormControl className={classes.customFormControl}>
+              <Autocomplete
+                style={{ width: '100%' }}
+                multiple
+                value={skill}
+                onChange={(e, option) => {
+                  const data = {
+                    target: {
+                      name: 'skill',
+                      value: option
+                    }
+                  }
+                  handleChange(data)
+                }}
+                options={arrayRemove(skillMenu, '')}
+                getOptionLabel={option => option}
+                renderOption={option => option}
+                freeSolo
+                renderInput={params => (
+                  <TextField
+                    style={{ width: '100%' }}
+                    {...params}
+                    label={'Skills'}
+                    variant="outlined"
+                  />
+                )}
+              />
+            </FormControl>
+          </Grid>
+          <Grid item sm={6} xs={6}>
+            <FormControl className={classes.formControlTrade} style={{ marginBottom: 0, height: '100%', marginTop: -12 }}>
+              <InputLabel htmlFor="location-simple">Location</InputLabel>
+              <Input
+                id="location-simple"
+                value={location}
+                name='location'
+                onChange={e => handleChange(e)}
+                endAdornment={<InputAdornment position="end"><Place /></InputAdornment>}
+                aria-describedby="standard-weight-helper-text"
+                inputProps={{
+                  'aria-label': 'location',
+                }}
+              />
             </FormControl>
           </Grid>
         </Grid>

@@ -145,7 +145,7 @@ class StudentEmail extends React.Component {
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: qs.stringify(apiData)
+              body: JSON.stringify(apiData)
             })
               .then(response => response.json())
               .then((res) => { // eslint-disable-line
@@ -187,7 +187,7 @@ class StudentEmail extends React.Component {
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: qs.stringify(apiData)
+              body: JSON.stringify(apiData)
             })
               .then(response => response.json())
               .then((res) => { // eslint-disable-line
@@ -229,7 +229,7 @@ class StudentEmail extends React.Component {
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: qs.stringify(apiData)
+              body: JSON.stringify(apiData)
             })
               .then(response => response.json())
               .then((res) => { // eslint-disable-line

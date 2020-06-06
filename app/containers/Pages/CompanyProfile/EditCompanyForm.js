@@ -35,7 +35,7 @@ const emailValidator = value => (
 );
 
 const minTextLength = minLength(3);
-const maxTextLength = maxLength(20);
+const maxTextLength = maxLength(30);
 
 async function postData(url, data) {
   const response = await fetch(url, {

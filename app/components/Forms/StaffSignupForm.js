@@ -47,7 +47,7 @@ const passwordsMatch = (value, allValues) => {
 const minPasswordLength = minLength(8);
 const maxPasswordLength = maxLength(15);
 const minTextLength = minLength(3);
-const maxTextLength = maxLength(20);
+const maxTextLength = maxLength(30);
 
 const LinkBtn = React.forwardRef(function LinkBtn(props, ref) { // eslint-disable-line
   return <NavLink to={props.to} {...props} innerRef={ref} />; // eslint-disable-line
