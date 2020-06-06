@@ -11,6 +11,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Place from '@material-ui/icons/Place';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import PapperBlock from '../PapperBlock/PapperBlock';
 import styles from './widget-jss';
 import {
@@ -35,6 +36,12 @@ const MenuProps = {
   },
 };
 
+function arrayRemove(arr, value) {
+  return arr.filter(function (ele) {
+    return ele != value;
+  });
+}
+
 function today() {
   let dateObj = new Date();
   const dateString = `${dateObj.getFullYear()}-${dateObj.getMonth() + 1}-${dateObj.getDate()}`;
@@ -57,67 +64,13 @@ function firstDayOfLastMonth() {
 class ExploreFilter extends PureComponent {
   render() {
     const {
-      classes, skill, location, role, university,
+      classes, skill, location, role, university, keyword,
       course, grade, experience, interests, activity, name,
       handleChange, handleSubmit, handleReset
     } = this.props;
 
     return (
       <PapperBlock whiteBg noMargin title="Apply Filter" icon="ios-search-outline" desc="">
-        <Grid container spacing={2}>
-          <Grid item sm={6} xs={6}>
-            <FormControl className={classes.formControlTrade}>
-              <InputLabel htmlFor="skill-simple">Skill</InputLabel>
-              <Select
-                multiple
-                value={skill}
-                input={<Input />}
-                name="skill"
-                MenuProps={MenuProps}
-                component={Select}
-                renderValue={selected => {
-                  const skillName = [];
-                  skillMenu.map((value, index) => {
-                    if (selected.includes(value)) {
-                      skillName.push(value);
-                    }
-                  });
-                  return skillName.join(', ');
-                }
-                }
-                onChange={e => handleChange(e)}
-              >
-                {skillMenu.map((item, index) => (
-                  (item.length > 0) &&
-                  <MenuItem key={index.toString()} value={item}>
-                    <TextField
-                      name="skill-checkbox"
-                      component={Checkbox}
-                      checked={skill.indexOf(item) > -1}
-                    />
-                    <ListItemText primary={item} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item sm={6} xs={6}>
-            <FormControl className={classes.formControlTrade}>
-              <InputLabel htmlFor="location-simple">Student Name</InputLabel>
-              <Input
-                id="name-simple"
-                value={name}
-                name="name"
-
-                onChange={e => handleChange(e)}
-                aria-describedby="standard-weight-helper-text"
-                inputProps={{
-                  'aria-label': 'name',
-                }}
-              />
-            </FormControl>
-          </Grid>
-        </Grid>
         <Grid container spacing={2}>
           <Grid item sm={6} xs={6}>
             <FormControl className={classes.formControlTrade}>
@@ -158,33 +111,32 @@ class ExploreFilter extends PureComponent {
           </Grid>
           <Grid item sm={6} xs={6}>
             <FormControl className={classes.formControlTrade}>
-              <InputLabel htmlFor="degree-simple">Course</InputLabel>
+              <InputLabel htmlFor="interests-simple">Interests</InputLabel>
               <Select
                 multiple
-                value={course}
-                name="course"
+                value={interests}
                 input={<Input />}
+                name="interests"
                 MenuProps={MenuProps}
                 component={Select}
                 renderValue={selected => {
-                  const subjectName = [];
-                  courses.map((value, index) => {
+                  const interestsName = [];
+                  sectorsData.map((value, index) => {
                     if (selected.includes(value)) {
-                      subjectName.push(value);
+                      interestsName.push(value);
                     }
                   });
-                  return subjectName.join(', ');
+                  return interestsName.join(', ');
                 }
                 }
                 onChange={e => handleChange(e)}
               >
-                {courses.map((item, index) => (
-                  (item.length > 0) &&
+                {sectorsData.map((item, index) => (
                   <MenuItem key={index.toString()} value={item}>
                     <TextField
-                      name="subject-checkbox"
+                      name="interests"
                       component={Checkbox}
-                      checked={course.indexOf(item) > -1}
+                      checked={interests.indexOf(item) > -1}
                     />
                     <ListItemText primary={item} />
                   </MenuItem>
@@ -231,8 +183,27 @@ class ExploreFilter extends PureComponent {
           </Grid>
           <Grid item sm={6} xs={6}>
             <FormControl className={classes.formControlTrade}>
+              <InputLabel htmlFor="location-simple">Student Name</InputLabel>
+              <Input
+                id="name-simple"
+                value={name}
+                name="name"
+
+                onChange={e => handleChange(e)}
+                aria-describedby="standard-weight-helper-text"
+                inputProps={{
+                  'aria-label': 'name',
+                }}
+              />
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item sm={6} xs={6}>
+            <FormControl className={classes.formControlTrade}>
               <InputLabel htmlFor="skill-simple">Experience</InputLabel>
               <Select
+                name="experience"
                 value={experience}
                 placeholder="Experience"
                 onChange={e => handleChange(e)}
@@ -245,43 +216,6 @@ class ExploreFilter extends PureComponent {
                 <MenuItem value={365 * 4}>4 Years</MenuItem>
                 <MenuItem value={365 * 3}>3 Years</MenuItem>
                 <MenuItem value={365}>Atleast 1 Years</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-        </Grid>
-        <Grid container spacing={2}>
-          <Grid item sm={6} xs={6}>
-            <FormControl className={classes.formControlTrade}>
-              <InputLabel htmlFor="interests-simple">Interests</InputLabel>
-              <Select
-                multiple
-                value={interests}
-                input={<Input />}
-                name="interests"
-                MenuProps={MenuProps}
-                component={Select}
-                renderValue={selected => {
-                  const interestsName = [];
-                  sectorsData.map((value, index) => {
-                    if (selected.includes(value)) {
-                      interestsName.push(value);
-                    }
-                  });
-                  return interestsName.join(', ');
-                }
-                }
-                onChange={e => handleChange(e)}
-              >
-                {sectorsData.map((item, index) => (
-                  <MenuItem key={index.toString()} value={item}>
-                    <TextField
-                      name="interests"
-                      component={Checkbox}
-                      checked={interests.indexOf(item) > -1}
-                    />
-                    <ListItemText primary={item} />
-                  </MenuItem>
-                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -304,6 +238,84 @@ class ExploreFilter extends PureComponent {
               </Select>
             </FormControl>
           </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item sm={6} xs={6}>
+            <FormControl className={classes.customFormControl}>
+              <Autocomplete
+                style={{ width: '100%' }}
+                multiple
+                value={skill}
+                onChange={(e, option) => {
+                  const data = {
+                    target: {
+                      name: 'skill',
+                      value: option
+                    }
+                  }
+                  handleChange(data)
+                }}
+                options={arrayRemove(skillMenu, '')}
+                getOptionLabel={option => option}
+                renderOption={option => option}
+                freeSolo
+                renderInput={params => (
+                  <TextField
+                    style={{ width: '100%' }}
+                    {...params}
+                    label={'Skills'}
+                    variant="outlined"
+                  />
+                )}
+              />
+            </FormControl>
+          </Grid>
+          <Grid item sm={6} xs={6} >
+            <FormControl className={classes.customFormControl}>
+              <Autocomplete
+                style={{ width: '100%' }}
+                multiple
+                value={course}
+                onChange={(e, option) => {
+                  const data = {
+                    target: {
+                      name: 'course',
+                      value: option
+                    }
+                  }
+                  handleChange(data)
+                }}
+                options={arrayRemove(courses, '')}
+                getOptionLabel={option => option}
+                renderOption={option => option}
+                freeSolo
+                renderInput={params => (
+                  <TextField
+                    style={{ width: '100%' }}
+                    {...params}
+                    label={'Courses'}
+                    variant="outlined"
+                  />
+                )}
+              />
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Divider className={classes.divider} />
+        <Grid>
+          <FormControl className={classes.formControlTrade}>
+            <InputLabel htmlFor="location-simple">Search Keyword</InputLabel>
+            <Input
+              id="name-simple"
+              value={keyword}
+              name="keyword"
+              onChange={e => handleChange(e)}
+              aria-describedby="standard-weight-helper-text"
+              inputProps={{
+                'aria-label': 'keyword',
+              }}
+            />
+          </FormControl>
         </Grid>
         <Divider className={classes.divider} />
         <div className={classes.textRight}>

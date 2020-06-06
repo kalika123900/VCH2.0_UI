@@ -590,6 +590,17 @@ const styles = theme => ({
     marginTop: theme.spacing(1) * -2,
     marginBottom: theme.spacing(2),
   },
+  customFormControl: {
+    width: '100%',
+    marginBottom: theme.spacing(1),
+    '& div': {
+      '& div': {
+        '& div': {
+          padding: '0 8px 0'
+        }
+      }
+    }
+  },
   tradeUp: {
     color: green[500],
     '& svg': {

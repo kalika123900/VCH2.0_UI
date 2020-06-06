@@ -54,9 +54,10 @@ class Explore extends React.Component {
       this.props.history.push('/client/unauthorized');
     }
     this.state = {
+      keyword: '',
       isLoading: false,
       isStudent: false,
-      isFilter: false,
+      isFilter: true,
       btnText: 'Apply Filter',
       page: 1,
       contentsPerPage: 24,
@@ -77,6 +78,7 @@ class Explore extends React.Component {
 
   handleReset = () => {
     this.setState({
+      keyword: '',
       name: '',
       skill: [],
       role: '',
@@ -143,7 +145,8 @@ class Explore extends React.Component {
       experience: this.state.experience,
       interests: this.state.interests,
       activity: this.state.activity,
-      location: this.state.location
+      location: this.state.location,
+      keyword: this.state.keyword
     }
 
     postJSON(`${API_URL}/utils/get-filter-students`, data) // eslint-disable-line
