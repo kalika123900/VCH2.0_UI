@@ -57,7 +57,7 @@ class Explore extends React.Component {
       keyword: '',
       isLoading: false,
       isStudent: false,
-      isFilter: true,
+      isFilter: false,
       btnText: 'Apply Filter',
       page: 1,
       contentsPerPage: 24,
