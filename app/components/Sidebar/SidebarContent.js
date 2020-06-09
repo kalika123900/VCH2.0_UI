@@ -10,16 +10,82 @@ import dummy from 'dan-api/dummy/dummyContents';
 import logo from 'dan-images/logo.png';
 import MainMenu from './MainMenu';
 import styles from './sidebar-jss';
+import avatarApi from 'dan-api/images/avatars';
+import { makeSecureDecrypt } from 'dan-helpers/security';
+
+const users = {
+  STUDENT: {
+    key: 'student',
+    info: 'get-personal-details',
+    attribute: 'profile',
+    id: 'user_id',
+    uid: 'id'
+  },
+  CLIENT: {
+    key: 'client',
+    info: 'client-info',
+    attribute: 'logo',
+    id: 'company_id',
+    uid: 'cId'
+  },
+  ADMIN: {
+    key: 'admin',
+    info: 'get-account-info',
+    attribute: 'profile',
+    id: 'id',
+    uid: 'id'
+  }
+}
+
+async function postData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  });
+
+  return await response.json();
+}
+
 
 class SidebarContent extends React.Component {
-  state = {
-    transform: 0,
-  };
+  constructor(props) {
+    super(props)
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+    this.state = {
+      transform: 0,
+      name: user.name,
+      profile: ''
+    }
+  }
 
   componentDidMount = () => {
     // Scroll content to top
     const mainContent = document.getElementById('sidebar');
     mainContent.addEventListener('scroll', this.handleScroll);
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const data = {
+      [users[this.props.userType].id]: user[users[this.props.userType].uid]
+    }
+
+    postData(`${API_URL}/${users[this.props.userType].key}/${users[this.props.userType].info}`, data)
+      .then((res) => {
+        if (res.status === 1) {
+          this.setState({ profile: res.data[users[this.props.userType].attribute] })
+        } else {
+          this.setState({ profile: '' })
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   componentWillUnmount() {
@@ -43,7 +109,7 @@ class SidebarContent extends React.Component {
       dataMenu,
       userType
     } = this.props;
-    const { transform } = this.state;
+    const { transform, name, profile } = this.state;
 
     return (
       <div className={classNames(classes.drawerInner, !drawerPaper ? classes.drawerPaperClose : '')}>
@@ -56,12 +122,12 @@ class SidebarContent extends React.Component {
             style={{ opacity: 1 - (transform / 100), marginTop: transform * -0.3 }}
           >
             <Avatar
-              alt={dummy.user.name}
-              src={dummy.user.avatar}
+              alt={name}
+              src={profile.length == 0 || profile == null ? avatarApi[7] : profile}
               className={classNames(classes.avatar, classes.bigAvatar)}
             />
             <div>
-              <h4>{dummy.user.name}</h4>
+              <h4>{name}</h4>
             </div>
           </div>
         </div>

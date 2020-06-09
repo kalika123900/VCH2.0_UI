@@ -18,12 +18,14 @@ class Student extends React.Component {
     let { isLoggedIn } = props;
     isLoggedIn ? true : props.history.push('/student-signin');
 
-    const user = JSON.parse(
-      makeSecureDecrypt(localStorage.getItem('user'))
-    );
+    if (isLoggedIn) {
+      const user = JSON.parse(
+        makeSecureDecrypt(localStorage.getItem('user'))
+      );
 
-    if (user.email == '' || user.email == undefined || user.email == null) {
-      props.history.push('/student/edit-details');
+      if (user.email == '' || user.email == undefined || user.email == null) {
+        props.history.push('/student/edit-details');
+      }
     }
   }
 
