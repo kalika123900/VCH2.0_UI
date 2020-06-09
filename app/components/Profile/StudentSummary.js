@@ -42,7 +42,8 @@ class StudentSummary extends React.Component {
     email: '',
     dob: '',
     phone: '',
-    employment_status: false
+    employment_status: false,
+    resume: ''
   }
 
   handleRedirect = () => {
@@ -97,7 +98,8 @@ class StudentSummary extends React.Component {
             email: res.data.email,
             phone: res.data.phone,
             dob: res.data.dob == null ? 'Not avilable' : formatDate(res.data.dob),
-            employment_status: res.data.employment_status
+            employment_status: res.data.employment_status,
+            resume: res.data.resume
           })
         }
       })
@@ -111,6 +113,11 @@ class StudentSummary extends React.Component {
           console.log(err);
         });
     }
+  }
+
+
+  showResume = () => {
+    window.open(this.state.resume);
   }
 
   componentDidMount() {
@@ -180,6 +187,15 @@ class StudentSummary extends React.Component {
             }
           </List>
         </Grid>
+        {(userType != 'STUDENT' && this.state.resume.length > 0 && this.state.resume != null) ?
+          <Grid style={{ textAlign: "right" }}>
+            <Button color="primary" onClick={this.showResume} variant="contained" color="secondary">Click to view uploaded CV</Button>
+          </Grid>
+          :
+          <Grid style={{ textAlign: "right" }}>
+            <Button color="primary" variant="contained" color="secondary">CV not uploaded</Button>
+          </Grid>
+        }
       </PapperBlock>
     );
   }
