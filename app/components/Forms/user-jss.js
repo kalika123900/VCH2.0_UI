@@ -753,6 +753,12 @@ const styles = theme => ({
     width: '100%',
     marginBottom: 46,
     padding: 17
+  },
+  customSlider: {
+    maxWidth: 800,
+    margin: 'auto',
+    marginBottom: 30,
+    marginTop: 20
   }
 });
 

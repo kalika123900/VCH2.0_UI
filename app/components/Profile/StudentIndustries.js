@@ -23,16 +23,20 @@ class StudentSummary extends React.Component {
     const { classes, industries, userType } = this.props;
 
     const JSX = industries.map((item, index) => {
-      return <Grid item md={6} key={index.toString()} >
-        <ListItem>
-          <ListItemAvatar>
-            <Avatar className={classNames(classes.avatar, classes.greenAvatar)}>
-              {item[0]}
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary={item} style={{ whiteSpace: 'pre-line', padding: 5 }} />
-        </ListItem>
-      </Grid>
+      if (item) {
+        return <Grid item md={6} key={index.toString()} >
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar className={classNames(classes.avatar, classes.greenAvatar)}>
+                {item[0]}
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={item} style={{ whiteSpace: 'pre-line', padding: 5 }} />
+          </ListItem>
+        </Grid>
+      } else {
+        return null;
+      }
     });
 
     return (

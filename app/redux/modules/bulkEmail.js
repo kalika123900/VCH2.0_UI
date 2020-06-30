@@ -18,6 +18,7 @@ const initialState = {
   blackList: List([]),
   warnMsg: '',
   role: -1,
+  audience: 10,
   // roleDeadline: '',
   roleName: '',
   roleData: List([]),
@@ -104,13 +105,13 @@ export default function reducer(state = initialImmutableState, action = {}) {
         mutableState
           .set('blackList', blackList)
           .set('studentList', studentList)
+          .set('audience', action.data.audience)
       });
 
     case EMAIL_STEP6_INFO:
       return state.withMutations((mutableState) => {
         mutableState
           .set('name', action.data.name)
-          .set('audience', action.data.audience)
       });
 
     case EMAIL_INIT_MSG:

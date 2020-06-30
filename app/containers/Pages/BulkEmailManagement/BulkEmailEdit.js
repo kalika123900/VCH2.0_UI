@@ -93,6 +93,7 @@ class BulkEmailEdit extends React.Component {
 
           const bulkEmailData = {
             ...this.props,
+            audience: res.data.info.audience,
             languages,
             qualificationType,
             roleName: roleData[0].role_name,
@@ -246,7 +247,8 @@ const mapStateToProps = state => ({
   heading: state.getIn([reducerBulkEmail, 'heading']),
   body: state.getIn([reducerBulkEmail, 'body']),
   studentList: state.getIn([reducerBulkEmail, 'studentList']),
-  blackList: state.getIn([reducerBulkEmail, 'blackList'])
+  blackList: state.getIn([reducerBulkEmail, 'blackList']),
+  audience: state.getIn([reducerBulkEmail, 'audience']),
 });
 
 const mapDispatchToProps = dispatch => ({

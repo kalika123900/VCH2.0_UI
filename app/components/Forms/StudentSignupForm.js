@@ -35,6 +35,11 @@ const email = value => (
     ? 'Invalid email'
     : undefined
 );
+const name = value => (
+  value && !/^[a-z ,.' -]+$/i.test(value)
+    ? 'Invalid name'
+    : undefined
+)
 const text = value => (
   value && !/^[A-Za-z]+$/i.test(value)
     ? 'Must be a Alphabet'
@@ -147,8 +152,8 @@ class StudentSignupForm extends React.Component {
                   placeholder="First Name"
                   label="First Name"
                   required
+                  validate={[required, name]}
                   className={classes.field}
-                  validate={[minTextLength, maxTextLength]}
                 />
               </FormControl>
             </div>
@@ -160,8 +165,8 @@ class StudentSignupForm extends React.Component {
                   placeholder="Last Name"
                   label="Last Name"
                   required
+                  validate={[required, name]}
                   className={classes.field}
-                  validate={[minTextLength, maxTextLength]}
                 />
               </FormControl>
             </div>

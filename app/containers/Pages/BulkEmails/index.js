@@ -174,7 +174,8 @@ const mapStateToProps = state => ({
   heading: state.getIn([reducerBulkEmail, 'heading']),
   body: state.getIn([reducerBulkEmail, 'body']),
   studentList: state.getIn([reducerBulkEmail, 'studentList']),
-  blackList: state.getIn([reducerBulkEmail, 'blackList'])
+  blackList: state.getIn([reducerBulkEmail, 'blackList']),
+  audience: state.getIn([reducerBulkEmail, 'audience']),
 });
 
 const mapDispatchToProps = dispatch => ({

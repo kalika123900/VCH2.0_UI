@@ -87,10 +87,10 @@ class StudentSignup extends React.Component {
     const MappedValues = values.toJS();
     const data = {
       auth_via: 'form',
-      firstname: MappedValues.firstname,
-      lastname: MappedValues.lastname,
-      email: MappedValues.email,
-      password: MappedValues.password
+      firstname: MappedValues.firstname.trim(),
+      lastname: MappedValues.lastname.trim(),
+      email: MappedValues.email.trim(),
+      password: MappedValues.password.trim()
     }
 
     postData(`${API_URL}/student/signup`, data)

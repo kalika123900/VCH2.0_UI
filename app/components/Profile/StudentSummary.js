@@ -99,7 +99,7 @@ class StudentSummary extends React.Component {
             phone: res.data.phone,
             dob: res.data.dob == null ? 'Not avilable' : formatDate(res.data.dob),
             employment_status: res.data.employment_status,
-            resume: res.data.resume
+            resume: res.data.resume ? res.data.resume : ''
           })
         }
       })
@@ -187,7 +187,7 @@ class StudentSummary extends React.Component {
             }
           </List>
         </Grid>
-        {(userType != 'STUDENT' && this.state.resume.length > 0 && this.state.resume != null) ?
+        {(this.state.resume.length > 0 && this.state.resume != null) ?
           <Grid style={{ textAlign: "right" }}>
             <Button color="primary" onClick={this.showResume} variant="contained" color="secondary">Click to view uploaded CV</Button>
           </Grid>
