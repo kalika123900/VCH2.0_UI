@@ -208,7 +208,7 @@ class Step5 extends React.Component {
       <Grid className={classes.posRelative} item md={3} sm={6} xs={12} key={index.toString()} >
         <RecipientStudentCard
           user_id={data.id}
-          cover={imgApi[universityItems.indexOf(data.university_name)]}
+          cover={(universityItems.indexOf(data.university_name) >= imgApi.length || universityItems.indexOf(data.university_name) === -1) ? imgApi[0] : imgApi[universityItems.indexOf(data.university_name)]}
           avatar={data.profile != null && data.profile != '' ? data.profile : data.gender == "Male" ? avatarApi[7] : avatarApi[6]}
           name={`${data.firstname} ${data.lastname}`}
           title=''

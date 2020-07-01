@@ -223,7 +223,7 @@ class Explore extends React.Component {
         <StudentCard
           user_id={data.id}
           email={data.email}
-          cover={imgApi[universityItems.indexOf(data.university_name)]}
+          cover={(universityItems.indexOf(data.university_name) >= imgApi.length || universityItems.indexOf(data.university_name) === -1) ? imgApi[0] : imgApi[universityItems.indexOf(data.university_name)]}
           avatar={data.profile != null && data.profile != '' ? data.profile : data.gender == "Male" ? avatarApi[7] : avatarApi[6]}
           name={`${data.firstname} ${data.lastname}`}
           title={data.subject}

@@ -755,10 +755,13 @@ const styles = theme => ({
     padding: 17
   },
   customSlider: {
-    maxWidth: 800,
+    width: '800px',
     margin: 'auto',
     marginBottom: 30,
-    marginTop: 20
+    marginTop: 20,
+    '@media (max-width: 720px)': {
+      width: 300
+    }
   }
 });
 
