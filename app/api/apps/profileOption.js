@@ -45,7 +45,7 @@ export const society = [
   "UCL History Society",
   "University Cross Country Club"
 ];
-export const experienceType = ["Fresher", "Begineer", "Intermediate", "Expert"];
+export const experienceType = ["Fresher", "Beginner", "Intermediate", "Expert"];
 export const jobType = ["Internship", "Permanent", "Grad Scheme"];
 export const courses = ['Engineering Management', '(TESOL) Teachers of English to Speakers of Other Languages', '3D Design',
   'Accountancy and Business', 'Accounting', 'Accounting and Economics', 'Accounting and Finance', 'Accounting and Law',

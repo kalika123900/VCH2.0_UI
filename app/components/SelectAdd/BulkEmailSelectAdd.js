@@ -153,7 +153,8 @@ class SelectAdd extends Component {
           }}
           renderOption={option => option}
           style={{ width: 300 }}
-          freeSolo
+          freeSolo={false}
+          disableCloseOnSelect={true}
           renderInput={params => (
             <TextField
               className={this.props.classes.autoCompleteInner}

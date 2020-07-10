@@ -73,6 +73,7 @@ class Explore extends React.Component {
       interests: [],
       activity: 0,
       location: '',
+      graduation_year: []
     };
   }
 
@@ -89,6 +90,7 @@ class Explore extends React.Component {
       interests: [],
       activity: 0,
       location: '',
+      graduation_year: []
     });
   }
 
@@ -146,7 +148,8 @@ class Explore extends React.Component {
       interests: this.state.interests,
       activity: this.state.activity,
       location: this.state.location,
-      keyword: this.state.keyword
+      keyword: this.state.keyword,
+      graduation_year: this.state.graduation_year
     }
 
     postJSON(`${API_URL}/utils/get-filter-students`, data) // eslint-disable-line

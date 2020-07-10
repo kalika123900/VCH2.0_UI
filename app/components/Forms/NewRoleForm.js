@@ -170,7 +170,8 @@ class NewRoleForm extends React.Component {
                 options={arrayRemove(skillMenu, '')}
                 getOptionLabel={option => option}
                 renderOption={option => option}
-                freeSolo
+                freeSolo={false}
+                disableCloseOnSelect={true}
                 renderInput={params => (
                   <TextField
                     style={{ width: '100%' }}

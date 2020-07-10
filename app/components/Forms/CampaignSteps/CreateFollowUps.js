@@ -150,6 +150,24 @@ class Wysiwyg extends PureComponent {
       campaignId: this.props.campaignId
     };
 
+    const clientData = {
+      campaignId: this.props.campaignId
+    };
+
+    postData(`${API_URL}/admin/client-info`, clientData)
+      .then((res) => {
+        if (res.status === 1) {
+          let { data } = res;
+          let email = data.email;
+          let cname = `${data.name}`;
+          let logo = data.logo;
+          this.setState({ email, cname, logo });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
     if (this.props.campaignStatus != 0) {
       postData(`${API_URL}/campaign/get-schedule-data`, data)
         .then((res) => {
@@ -213,26 +231,6 @@ class Wysiwyg extends PureComponent {
           console.error(err);
         });
     }
-  }
-
-  componentDidMount() {
-    const data = {
-      campaignId: this.props.campaignId
-    };
-
-    postData(`${API_URL}/admin/client-info`, data)
-      .then((res) => {
-        if (res.status === 1) {
-          let { data } = res;
-          let email = data.email;
-          let cname = `${data.name}`;
-          let logo = data.logo;
-          this.setState({ email, cname, logo });
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
   }
 
   onHeadingChange = (event, id) => {

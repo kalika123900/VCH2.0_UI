@@ -20,6 +20,7 @@ import {
   courses,
   degreeGradesItems,
   universityItems,
+  graduationYearItems
 } from 'dan-api/apps/profileOption';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -66,7 +67,7 @@ class ExploreFilter extends PureComponent {
     const {
       classes, skill, location, role, university, keyword,
       course, grade, experience, interests, activity, name,
-      handleChange, handleSubmit, handleReset
+      handleChange, handleSubmit, handleReset, graduation_year
     } = this.props;
 
     return (
@@ -258,7 +259,8 @@ class ExploreFilter extends PureComponent {
                 options={arrayRemove(skillMenu, '')}
                 getOptionLabel={option => option}
                 renderOption={option => option}
-                freeSolo
+                freeSolo={false}
+                disableCloseOnSelect={true}
                 renderInput={params => (
                   <TextField
                     style={{ width: '100%' }}
@@ -288,7 +290,8 @@ class ExploreFilter extends PureComponent {
                 options={arrayRemove(courses, '')}
                 getOptionLabel={option => option}
                 renderOption={option => option}
-                freeSolo
+                freeSolo={false}
+                disableCloseOnSelect={true}
                 renderInput={params => (
                   <TextField
                     style={{ width: '100%' }}
@@ -298,6 +301,45 @@ class ExploreFilter extends PureComponent {
                   />
                 )}
               />
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item sm={6} xs={6}>
+            <FormControl className={classes.formControlTrade}>
+              <InputLabel >Graduation Year</InputLabel>
+              <Select
+                multiple
+                value={graduation_year}
+                name="graduation_year"
+                input={<Input />}
+                renderValue={selected => {
+                  const graduationYear = [];
+                  graduationYearItems.map((value, index) => {
+                    if (selected.includes(value)) {
+                      graduationYear.push(value);
+                    }
+                  });
+                  return graduationYear.join(', ');
+                }
+                }
+                MenuProps={MenuProps}
+                component={Select}
+                onChange={e => handleChange(e)}
+                style={{ whiteSpace: 'normal' }}
+              >
+                {graduationYearItems.map((item, index) => (
+                  (item.length > 0) &&
+                  <MenuItem key={index.toString()} value={item}>
+                    <TextField
+                      name="year-checkbox"
+                      component={Checkbox}
+                      checked={graduation_year.indexOf(item) > -1}
+                    />
+                    <ListItemText primary={item} />
+                  </MenuItem>
+                ))}
+              </Select>
             </FormControl>
           </Grid>
         </Grid>

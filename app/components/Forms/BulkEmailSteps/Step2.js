@@ -271,7 +271,8 @@ class Step2 extends React.Component {
                   options={arrayRemove(courses, '')}
                   getOptionLabel={option => option}
                   renderOption={option => option}
-                  freeSolo
+                  freeSolo={false}
+                  disableCloseOnSelect={true}
                   renderInput={params => (
                     <TextField
                       style={{ width: '100%' }}
@@ -308,7 +309,8 @@ class Step2 extends React.Component {
                   options={arrayRemove(skillMenu, '')}
                   getOptionLabel={option => option}
                   renderOption={option => option}
-                  freeSolo
+                  freeSolo={false}
+                  disableCloseOnSelect={true}
                   renderInput={params => (
                     <TextField
                       style={{ width: '100%' }}
