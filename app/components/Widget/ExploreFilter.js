@@ -201,18 +201,24 @@ class ExploreFilter extends PureComponent {
         </Grid>
         <Grid container spacing={2}>
           <Grid item sm={6} xs={6}>
-            <FormControl className={classes.formControlTrade}>
-              <InputLabel htmlFor="skill-simple">Experience</InputLabel>
+            <FormControl className={classes.formControlTrade} style={experience == 0 ? { margin: 0, marginBottom: 20 } : null}>
+              {experience !== 0 && <InputLabel htmlFor="skill-simple">Experience</InputLabel>}
               <Select
                 name="experience"
                 value={experience}
+                input={<Input />}
                 placeholder="Experience"
                 onChange={e => handleChange(e)}
                 inputProps={{
                   name: 'experience',
                   id: 'experience-simple',
                 }}
+                style={experience == 0 ? {
+                  height: 50,
+                  color: 'gray'
+                } : null}
               >
+                <MenuItem value={0}>Experience</MenuItem>
                 <MenuItem value={365 * 5}>5+ Years</MenuItem>
                 <MenuItem value={365 * 4}>4 Years</MenuItem>
                 <MenuItem value={365 * 3}>3 Years</MenuItem>
@@ -221,8 +227,8 @@ class ExploreFilter extends PureComponent {
             </FormControl>
           </Grid>
           <Grid item sm={6} xs={6}>
-            <FormControl className={classes.formControlTrade}>
-              <InputLabel htmlFor="activity-simple">Activity</InputLabel>
+            <FormControl className={classes.formControlTrade} style={activity == 0 ? { margin: 0, marginBottom: 20 } : null}>
+              {activity !== 0 && <InputLabel htmlFor="activity-simple">Activity</InputLabel>}
               <Select
                 value={activity}
                 onChange={e => handleChange(e)}
@@ -231,11 +237,17 @@ class ExploreFilter extends PureComponent {
                   name: 'activity',
                   id: 'activity-simple',
                 }}
-              >
+                style={activity == 0 ? {
+                  height: 50,
+                  color: 'gray'
+                } : null}
+              > <MenuItem value={0}>Activity</MenuItem>
                 <MenuItem value={today()}>Active Today</MenuItem>
                 <MenuItem value={firstDayOfNthWeek(new Date(), 1)}>Active in the last Week</MenuItem>
                 <MenuItem value={firstDayOfNthWeek(new Date(), 2)}>Active in the last 2 Weeks</MenuItem>
                 <MenuItem value={firstDayOfLastMonth()}>Active in the last Month</MenuItem>
+                <MenuItem value={-1}>Recent signups first</MenuItem>
+                <MenuItem value={-2}>Old signups first</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -346,7 +358,7 @@ class ExploreFilter extends PureComponent {
         <Divider className={classes.divider} />
         <Grid>
           <FormControl className={classes.formControlTrade}>
-            <InputLabel htmlFor="location-simple">Search Keyword</InputLabel>
+            <InputLabel htmlFor="location-simple">Search by using Keywords</InputLabel>
             <Input
               id="name-simple"
               value={keyword}

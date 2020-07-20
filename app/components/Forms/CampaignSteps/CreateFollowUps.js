@@ -167,70 +167,6 @@ class Wysiwyg extends PureComponent {
       .catch((err) => {
         console.error(err);
       });
-
-    if (this.props.campaignStatus != 0) {
-      postData(`${API_URL}/campaign/get-schedule-data`, data)
-        .then((res) => {
-          if (res.status === 1) {
-            const { addInfo, } = this.props;
-            var newFollowUps = List([]);
-
-            res.data.map((item) => {
-              var editorState = EditorState.createEmpty();
-
-              if (item.body && item.body != '') {
-                const rawData = markdownToDraft(item.body);
-                const content = convertFromRaw(rawData);
-
-                if (content) {
-                  editorState = EditorState.createWithContent(content);
-                }
-              }
-
-              newFollowUps = newFollowUps.push({
-                type: item.mail_type,
-                date: item.date_to_short,
-                heading: item.heading,
-                body: item.body,
-                editorState
-              });
-
-            });
-
-            addInfo({ followUps: newFollowUps });
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    } else {
-      postData(`${API_URL}/campaign/get-campaign-schedule`, data)
-        .then((res) => {
-          if (res.status === 1) {
-            const { addInfo, } = this.props;
-            const contentBlock = convertFromRaw(content);
-            const editorState = EditorState.createWithContent(contentBlock);
-            var newFollowUps = List([]);
-
-            res.data.map((item) => {
-              if (contentBlock) {
-                newFollowUps = newFollowUps.push({
-                  type: item.type,
-                  date: item.date,
-                  heading: '',
-                  body: '',
-                  editorState
-                });
-              }
-            });
-
-            addInfo({ followUps: newFollowUps });
-          };
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
   }
 
   onHeadingChange = (event, id) => {
@@ -280,7 +216,7 @@ class Wysiwyg extends PureComponent {
               onEditorStateChange={(state) => {
                 let newFollowUps = followUps.set(index, {
                   ...followUps.get(index),
-                  body: draftToMarkdown(convertToRaw(state.getCurrentContent())),
+                  body: draftToHtml(convertToRaw(state.getCurrentContent())),
                   editorState: state
                 });
                 addInfo({ followUps: newFollowUps });

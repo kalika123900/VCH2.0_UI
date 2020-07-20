@@ -157,9 +157,9 @@ class CampaignInfo extends React.Component {
               </ListItemAvatar>
             </ListItem>
           </List>
-          <Grid style={{ textAlign: 'right' }}>
+          {/* <Grid style={{ textAlign: 'right' }}>
             <Button variant="contained" color="primary">Export Campaign Details</Button>
-          </Grid>
+          </Grid> */}
         </PapperBlock>
       </Fragment>
     )

@@ -221,21 +221,35 @@ class Explore extends React.Component {
     const { classes } = this.props;
     const { page, contentsPerPage, datas, isStudent, studentCount, isLoading } = this.state;
 
-    const renderContent = datas.map((data, index) => (
-      < Grid item md={3} sm={6} xs={12} key={index.toString()} >
-        <StudentCard
-          user_id={data.id}
-          email={data.email}
-          cover={(universityItems.indexOf(data.university_name) >= imgApi.length || universityItems.indexOf(data.university_name) === -1) ? imgApi[0] : imgApi[universityItems.indexOf(data.university_name)]}
-          avatar={data.profile != null && data.profile != '' ? data.profile : data.gender == "Male" ? avatarApi[7] : avatarApi[6]}
-          name={`${data.firstname} ${data.lastname}`}
-          title={data.subject}
-          isVerified={false}
-          btnText="See Profile"
-          university={data.university_name}
-        />
-      </Grid >
-    ));
+    const renderContent = datas.map((data, index) => {
+      let cover;
+      let university;
+      let title;
+      if (typeof data.university_name === 'string') {
+        cover = (universityItems.indexOf(data.university_name) >= imgApi.length || universityItems.indexOf(data.university_name) === -1) ? imgApi[0] : imgApi[universityItems.indexOf(data.university_name)]
+        university = data.university_name;
+        title = data.subject
+      } else if (data.university_name instanceof Array) {
+        cover = (universityItems.indexOf(data.university_name[0] || ' ') >= imgApi.length || universityItems.indexOf(data.university_name[0] || ' ') === -1) ? imgApi[0] : imgApi[universityItems.indexOf(data.university_name[0] || ' ')]
+        university = data.university_name[0] || '';
+        title = data.subject[0] || ''
+      }
+      return (
+        < Grid item md={3} sm={6} xs={12} key={index.toString()} >
+          <StudentCard
+            user_id={data.id}
+            email={data.email}
+            cover={cover}
+            avatar={data.profile != null && data.profile != '' ? data.profile : data.gender == "Male" ? avatarApi[7] : avatarApi[6]}
+            name={`${data.firstname} ${data.lastname}`}
+            title={title}
+            isVerified={false}
+            btnText="See Profile"
+            university={university}
+          />
+        </Grid >
+      )
+    });
 
     const pageNumbers = [];
     for (let i = 1; i <= Math.ceil(studentCount / contentsPerPage); i += 1) {

@@ -99,7 +99,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
       return state.withMutations((mutableState) => {
         mutableState
           .set('deadline', action.data.deadline)
-          .set('choosedDeadline', action.data.choosedDeadline);
+          .set('choosedDeadline', action.data.choosedDeadline)
       });
 
     case STORE_STEP6_INFO:
@@ -118,7 +118,7 @@ export default function reducer(state = initialImmutableState, action = {}) {
     case STORE_FOLLOW_UPS:
       return state.withMutations((mutableState) => {
         mutableState
-          .set('followUps', action.data.followUps);
+          .set('followUps', action.data.followUps)
       });
 
     case CAMPAIGN_REMOVE_MSG:

@@ -1,6 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
+import { List } from 'immutable';
+import { convertFromRaw, EditorState, convertFromHTML, ContentState } from 'draft-js';
+import { markdownToDraft } from 'markdown-draft-js';
+import { storeFollowUps } from 'dan-actions/CampaignActions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import brand from 'dan-api/dummy/brand';
@@ -10,6 +14,18 @@ import { DateHelper } from '../../../redux/helpers/dateTimeHelper';
 import { universityItems, keywordsData, skillMenu } from 'dan-api/apps/profileOption';
 
 async function postJSON(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  });
+
+  return await response.json();
+}
+
+async function postData(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -92,6 +108,19 @@ function alterDeadline(createdAt, initialDeadline, deadline) {
 var createdAt = null;
 var initialDeadline = null;
 
+const content = {
+  blocks: [{
+    key: '637gr',
+    text: '',
+    type: 'unstyled',
+    depth: 0,
+    inlineStyleRanges: [],
+    entityRanges: [],
+    data: {}
+  }],
+  entityMap: {}
+};
+
 class CampaignEdit extends React.Component {
   componentWillMount() {
     const _that = this;
@@ -148,6 +177,7 @@ class CampaignEdit extends React.Component {
             choosedDeadline: res.data.info.deadline_choice,
           };
           _that.props.campaignInit(campaignData);
+          this.getFollowUps({ deadline, ...data, status: res.data.info.status });
         } else {
           console.log('something not good ');
         }
@@ -155,6 +185,99 @@ class CampaignEdit extends React.Component {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  getFollowUps = (data) => {
+
+    if (data.status != 0) {
+      postData(`${API_URL}/campaign/get-schedule-data`, data)
+        .then((res) => {
+          if (res.status === 1) {
+
+
+
+            // const blocksFromHTML = convertFromHTML(sampleMarkup);
+            // const state = ContentState.createFromBlockArray(
+            //   blocksFromHTML.contentBlocks,
+            //   blocksFromHTML.entityMap,
+            // );
+
+            // this.state = {
+            //   editorState: EditorState.createWithContent(state),
+            // };
+            // const editorState = EditorState.createEmpty();
+
+
+            const { addInfo, } = this.props;
+            var newFollowUps = List([]);
+
+            res.data.map((item) => {
+              var editorState = EditorState.createEmpty();
+              if (item.body && item.body != '') {
+                const blocksFromHTML = convertFromHTML(item.body);
+                const state = ContentState.createFromBlockArray(
+                  blocksFromHTML.contentBlocks,
+                  blocksFromHTML.entityMap,
+                );
+
+                editorState = EditorState.createWithContent(state);
+
+              }
+
+              newFollowUps = newFollowUps.push({
+                type: item.mail_type,
+                date: item.date_to_short,
+                heading: item.heading,
+                body: item.body,
+                editorState
+              });
+
+            });
+
+            addInfo({ followUps: newFollowUps });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      postData(`${API_URL}/campaign/get-campaign-schedule`, data)
+        .then((res) => {
+          if (res.status === 1) {
+            const { addInfo, } = this.props;
+            const contentBlock = convertFromRaw(content);
+            const editorState = EditorState.createWithContent(contentBlock);
+            var newFollowUps = List([]);
+
+            res.data.map((item) => {
+              if (contentBlock) {
+                newFollowUps = newFollowUps.push({
+                  type: item.type,
+                  date: item.date,
+                  heading: '',
+                  body: '',
+                  editorState
+                });
+              }
+            });
+
+            addInfo({ followUps: newFollowUps });
+          };
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.deadline !== this.props.deadline) {
+      this.getFollowUps({
+        deadline: this.props.deadline,
+        campaignId: atob(this.props.match.params.campaignId),
+        status: this.props.campaignStatus
+      });
+    }
   }
 
   submitForm = () => {
@@ -179,7 +302,7 @@ class CampaignEdit extends React.Component {
     const MapFollowUps = followUps.toJS();
     const MapGender = gender.toJS();
     const MapWorkLocation = workLocation.toJS();
-    const MapDeadline = alterDeadline(createdAt, initialDeadline, deadline);
+    const MapDeadline = deadline;
 
     const MapSkills = getIds(skills.toJS(), skillMenu);
     const MapKeywords = getIds(keywords.toJS(), keywordsData);
@@ -290,7 +413,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   removeInfo: bindActionCreators(removeCampaignInfo, dispatch),
-  campaignInit: bindActionCreators(campaignInfoInit, dispatch)
+  campaignInit: bindActionCreators(campaignInfoInit, dispatch),
+  addInfo: bindActionCreators(storeFollowUps, dispatch)
 });
 
 const CampaignEditMapped = connect(
