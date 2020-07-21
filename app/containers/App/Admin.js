@@ -9,7 +9,7 @@ import EditScheduledCampaign from '../../containers/Tables/EditScheduledCampaign
 import {
   AdminDashboard, AdminSeatManagement, AdminCampaignManagement, CampaignEdit,
   ClientAccounts, ClientProfiles, StudentReview, Campaigns, Signout, BulkEmailEdit,
-  Token, CreateCompany, CompanyProfile, EditCompanyForm, AdminEditDetails
+  Token, CreateCompany, CompanyProfile, EditCompanyForm, AdminEditDetails, StudentSignups
 }
   from '../pageListAsync';
 
@@ -34,6 +34,7 @@ class Admin extends React.Component {
             <Route exact path="/admin/client-tokens" component={ClientAccounts} />
             <Route exact path="/admin/client-profiles" component={ClientProfiles} />
             <Route exact path="/admin/student-review" component={StudentReview} />
+            <Route exact path="/admin/student-signups" component={StudentSignups} />
             <Route exact path="/admin/edit-details" component={AdminEditDetails} />
             <Route exact path="/admin/signout" component={Signout} />
             <Route exact path="/admin/company-profile" component={CompanyProfile} />

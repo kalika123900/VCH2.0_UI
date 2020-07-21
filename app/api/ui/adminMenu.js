@@ -24,10 +24,23 @@ module.exports = [
     link: '/admin/seat-management',
   },
   {
-    key: 'student-review',
-    name: 'Student Review',
+    key: 'student-management',
+    name: 'Student Management',
     icon: 'ios-people-outline',
-    link: '/admin/student-review',
+    child: [
+      {
+        key: 'student-review',
+        name: 'Student Review',
+        icon: 'ios-person-outline',
+        link: '/admin/student-review',
+      },
+      {
+        key: 'student-signups',
+        name: 'Student Signups',
+        icon: 'ios-people-outline',
+        link: '/admin/student-signups',
+      }
+    ]
   },
   {
     key: 'client-management',

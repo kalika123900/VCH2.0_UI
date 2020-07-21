@@ -13,8 +13,6 @@ import {
 } from 'recharts';
 import PapperBlock from '../../components/PapperBlock/PapperBlock';
 import styles from '../Charts/demos/fluidChart-jss';
-import { Grid } from '@material-ui/core';
-
 
 function toHumanDate(date) {
   const dateObject = new Date(date);
@@ -43,52 +41,30 @@ async function getData(url) {
 }
 
 
-function buildWeeks(data) {
-  let buildWeekData = [];
-
-  Date.prototype.getWeek = function () {
-    var onejan = new Date(this.getFullYear(), 0, 1);
-    return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()) / 7);
-  }
+function buildGraph(data) {
+  let buildData = [];
 
   for (let i of data) {
-    let date = new Date(i.date);
-    let week = date.getWeek();
-    if (buildWeekData[week]) {
-      buildWeekData[week].Students = buildWeekData[week].Students + parseInt(i.users);
-      buildWeekData[week].minDate = (new Date(buildWeekData[week].minDate) <= new Date(i.date)) ? buildWeekData[week].minDate : i.date;
-      buildWeekData[week].maxDate = (new Date(buildWeekData[week].minDate) >= new Date(i.date)) ? buildWeekData[week].minDate : i.date;
-      if (buildWeekData[week].minDate == buildWeekData[week].maxDate)
-        buildWeekData[week].name = `${toHumanDate(buildWeekData[week].minDate)}`;
-      else
-        buildWeekData[week].name = `${toHumanDate(buildWeekData[week].minDate)} To ${toHumanDate(buildWeekData[week].maxDate)}`;
-    }
-    else {
-      buildWeekData[week] = {
-        Students: parseInt(i.users),
-        minDate: i.date,
-        maxDate: i.date,
-        name: `${toHumanDate(i.date)}`
-      };
-    }
+    buildData.push({
+      Students: parseInt(i.users),
+      name: `${toHumanDate(i.date)}`
+    });
+
   }
 
-  return buildWeekData.filter(item => {
-    if (item) return true;
-    return false
-  })
+  return buildData;
 }
 
-class CampaignGraph extends React.Component {
+class StudentSignupStats extends React.Component {
   state = {
     data: []
   }
 
   componentDidMount() {
-    getData(`${API_URL}/admin/get-student-signup-stats`)
+    getData(`${API_URL}/admin/get-student-signup-day-stats`)
       .then((res) => {
         if (res.status === 1) {
-          this.setState({ data: buildWeeks(res.data) })
+          this.setState({ data: buildGraph(res.data) })
         }
       })
       .catch((err) => {
@@ -99,9 +75,7 @@ class CampaignGraph extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <PapperBlock title="Student Signup Graph" icon="ios-stats" whiteBg desc="">
-        <Grid container spacing={2}>
-        </Grid>
+      <PapperBlock title="Student Signups (Last 30 Days)" icon="ios-stats" whiteBg desc="">
         <div className={classes.chartFluid}>
           <ResponsiveContainer>
             <LineChart
@@ -129,8 +103,8 @@ class CampaignGraph extends React.Component {
   }
 }
 
-CampaignGraph.propTypes = {
+StudentSignupStats.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(CampaignGraph);
+export default withStyles(styles)(StudentSignupStats);

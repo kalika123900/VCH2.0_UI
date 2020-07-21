@@ -585,6 +585,10 @@ export const StudentReview = loadable(() =>
   import('./Pages/StudentReview'), {
   fallback: <Loading />,
 });
+export const StudentSignups = loadable(() =>
+  import('./Pages/StudentSignups'), {
+  fallback: <Loading />,
+});
 // Maps
 export const MapMarker = loadable(() =>
   import('./Maps/MapMarker'), {
