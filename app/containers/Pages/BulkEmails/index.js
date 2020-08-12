@@ -2,12 +2,20 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import brand from 'dan-api/dummy/brand';
 import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { CreateBulkEmail } from 'dan-components';
 import { emailInfoRemove } from 'dan-actions/BulkEmailActions';
 import { makeSecureDecrypt } from 'dan-helpers/security';
 import { universityItems, keywordsData, skillMenu } from 'dan-api/apps/profileOption';
+import messageStyles from 'dan-styles/Messages.scss';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 
 async function postJSON(url, data) {
   const response = await fetch(url, {
@@ -47,6 +55,24 @@ class BulkEmails extends React.Component {
         this.props.history.push('/client/unauthorized');
     }
   }
+
+  state = {
+    errorMessage: '',
+    flash: false,
+    openStyle: false,
+    messageType: 'error',
+    notifyMessage: ''
+  }
+
+  handleCloseStyle = () => {
+    this.setState({ openStyle: false });
+  }
+
+  noticeClose = event => {
+    event.preventDefault();
+    this.setState({ openStyle: false });
+  }
+
 
   submitForm = () => {
     const user = JSON.parse(
@@ -97,24 +123,29 @@ class BulkEmails extends React.Component {
       company_id: user.cId
     };
 
-    postJSON(`${API_URL}/bulkemail/create-bulkemail`, data) // eslint-disable-line
-      .then((res) => {
-        if (res.status === 1) {
-          removeInfo();
-          history.push('/client');
-        } else {
-          console.log('something not good ');
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (this.props.body.split('<p>').length >= 4) {
+      postJSON(`${API_URL}/bulkemail/create-bulkemail`, data) // eslint-disable-line
+        .then((res) => {
+          if (res.status === 1) {
+            removeInfo();
+            history.push('/client');
+          } else {
+            console.log('something not good ');
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      this.setState({ notifyMessage: 'Mail Body is not good, Please use editor to write email', messageType: 'error', openStyle: true })
+    }
+
   };
 
   render() {
     const title = brand.name + ' - Bulk Emails';
     const description = brand.desc;
-
+    const { classes } = this.props;
     return (
       <div>
         <Helmet>
@@ -126,6 +157,45 @@ class BulkEmails extends React.Component {
           <meta property="twitter:description" content={description} />
         </Helmet>
         <CreateBulkEmail onSubmit={() => this.submitForm()} />
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={this.state.openStyle}
+          autoHideDuration={6000}
+          onClose={this.handleCloseStyle}
+        >
+          <SnackbarContent
+            className={this.state.messageType == 'error' ? messageStyles.bgError : messageStyles.bgSuccess}
+            aria-describedby="client-snackbar"
+            message={(
+              <span id="client-snackbar" className={classes.message}>
+                {
+                  (this.state.messageType == 'error') && <ErrorIcon className="success" />
+                }
+                {
+                  (this.state.messageType == 'success') && <CheckCircleIcon className="success" />
+                }
+
+                  &nbsp;
+                {this.state.notifyMessage}
+              </span>
+            )}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                className={classes.close}
+                onClick={this.noticeClose}
+
+              >
+                <CloseIcon className={classes.icon} />
+              </IconButton>,
+            ]}
+          />
+        </Snackbar>
       </div>
     );
   }
@@ -187,4 +257,4 @@ const BulkEmailsMapped = connect(
   mapDispatchToProps
 )(BulkEmails);
 
-export default BulkEmailsMapped;
+export default withStyles(messageStyles)(BulkEmailsMapped);

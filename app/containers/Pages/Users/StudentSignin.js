@@ -118,6 +118,14 @@ class StudentSignin extends React.Component {
       });
   }
 
+  componentDidMount() {
+    if (this.props.location.search.length > 0) {
+      let res = this.props.location.search.split('?res=');
+      if (res[1] == 'NOT_SUPPORTED')
+        this.setState({ notifyMessage: 'LinkedIn Authentication not supported for You', messageType: 'info', openStyle: true })
+    }
+  }
+
   render() {
     const title = brand.name + ' - Signin';
     const description = brand.desc;

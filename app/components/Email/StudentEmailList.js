@@ -44,6 +44,14 @@ async function postData(url, data) {
   return await response.json();
 }
 
+async function getData(url) {
+  const response = await fetch(url, {
+    method: 'GET',
+  });
+
+  return response;
+}
+
 class EmailList extends React.Component {
   state = {
     JSX: null,
@@ -58,6 +66,17 @@ class EmailList extends React.Component {
 
 
   openThread = (mail) => {
+    if (mail.get('type') === 'campaign') {
+      const url = `${API_URL}/utils/track-campaign?user_id=${mail.get('receiver_id')}&campaign_id=${mail.get('ref_id')}`;
+      console.log(url)
+      getData(url)
+        .then(() => {
+          console.log('tracked')
+        })
+        .catch(e => {
+          console.log(e);
+        })
+    }
     const MapMail = mail.toJS();
     if (MapMail.thread != -1) {
       this.props.history.push(`/student/messages/${btoa(MapMail.thread)}`)

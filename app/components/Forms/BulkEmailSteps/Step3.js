@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Editor } from 'react-draft-wysiwyg';
-import { draftToMarkdown } from 'markdown-draft-js';
 
 import {
   EditorState, convertToRaw, ContentState, convertFromHTML, Modifier
@@ -199,7 +198,7 @@ class Step3 extends PureComponent {
     this.setState({
       editorState,
     });
-    addInfo({ body: draftToMarkdown(convertToRaw(editorState.getCurrentContent())), heading: headingEditor });
+    addInfo({ body: draftToHtml(convertToRaw(editorState.getCurrentContent())), heading: headingEditor });
   };
 
   onHeadingChange = (headingEditor) => {

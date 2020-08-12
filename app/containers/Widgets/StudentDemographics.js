@@ -56,7 +56,7 @@ function addZero(number) {
 
 class ChartInfographic extends PureComponent {
   state = {
-    deadline: new Date("Aug 1, 2020 00:00:00").getTime(),
+    deadline: new Date("Aug 20, 2020 00:00:00").getTime(),
     timer: '00:00:00:00',
     opportunities: 0,
     views: 0,
