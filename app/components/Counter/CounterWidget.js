@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import CountUp from 'react-countup';
+import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -45,6 +47,14 @@ const styles = theme => ({
 });
 
 class CounterWidget extends PureComponent {
+  handleCounter = () => {
+    if (this.props.education) {
+      window.open(this.props.sheet);
+    } else {
+      this.props.history.push(`/student/edit-details?tab=${btoa(3)}`)
+    }
+  }
+
   render() {
     const {
       classes,
@@ -57,7 +67,8 @@ class CounterWidget extends PureComponent {
       unitBefore,
       unitAfter,
       type,
-      timer
+      sheet,
+      education
     } = this.props;
     return (
       <Paper className={classes.root} style={{ backgroundColor: color }}>
@@ -73,12 +84,17 @@ class CounterWidget extends PureComponent {
           </div>
           :
           <div>
+            <Button variant="contained" onClick={() => this.handleCounter()}
+            >
+              {education ? "Download" : "Fill Education"}
+            </Button>
             <Typography className={classes.counter}>
-              {/* {unitBefore} */}
-              {timer}
-              {/* {unitAfter} */}
+              {education ?
+                <Typography variant="subtitle1">Download your education data</Typography>
+                :
+                <Typography variant="subtitle1">Please, add education to download this list</Typography>
+              }
             </Typography>
-            <Typography className={classes.title} variant="subtitle1">{title}</Typography>
           </div>
         }
         <div className={classes.customContent}>
@@ -106,4 +122,4 @@ CounterWidget.defaultProps = {
   unitAfter: '',
 };
 
-export default withStyles(styles)(CounterWidget);
+export default withRouter(withStyles(styles)(CounterWidget));

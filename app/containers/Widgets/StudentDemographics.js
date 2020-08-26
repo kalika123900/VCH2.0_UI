@@ -22,7 +22,7 @@ import Divider from '@material-ui/core/Divider';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import TrackChangesIcon from '@material-ui/icons/TrackChanges';
 import styles from 'dan-components/Widget/widget-jss';
-import TimerIcon from '@material-ui/icons/Timer';
+import SchoolIcon from '@material-ui/icons/School';
 
 import { makeSecureDecrypt } from 'dan-helpers/security';
 
@@ -60,7 +60,8 @@ class ChartInfographic extends PureComponent {
     timer: '00:00:00:00',
     opportunities: 0,
     views: 0,
-    contacted: 0
+    contacted: 0,
+    education: true
   }
 
   updateTimer = () => {
@@ -82,6 +83,28 @@ class ChartInfographic extends PureComponent {
       .then((res) => {
         if (res.status === 1) {
           this.setState({ opportunities: res.data[0].opportunities })
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  getEducation = () => {
+    const user = JSON.parse(
+      makeSecureDecrypt(localStorage.getItem('user'))
+    );
+
+    const data = {
+      user_id: user.id
+    }
+
+    postData(`${API_URL}/student/get-education`, data) // eslint-disable-line
+      .then((res) => {
+        if (res.status === 1 && res.data.length > 0) {
+          this.setState({ education: true })
+        } else {
+          this.setState({ education: false })
         }
       })
       .catch((err) => {
@@ -132,15 +155,16 @@ class ChartInfographic extends PureComponent {
   }
 
   componentDidMount() {
-    this.updateTimer();
+    // this.updateTimer();
     this.getContacted();
     this.getViews();
     this.getOpportunities();
+    this.getEducation();
   }
 
   render() {
     const { classes } = this.props;
-    const { timer } = this.state;
+    const { timer, education } = this.state;
 
     return (
       <div className={classes.rootCounter} >
@@ -185,12 +209,13 @@ class ChartInfographic extends PureComponent {
               color={colorfull[4]}
               start={0}
               end={0}
-              timer={timer}
+              education={education}
+              sheet="https://www.google.com"
               duration={0}
-              type='time'
-              title="Next VCH Release"
+              type='education'
+              title="Education List"
             >
-              <TimerIcon className={classes.counterIcon} />
+              <SchoolIcon className={classes.counterIcon} />
             </CounterWidget>
           </Grid>
         </Grid>

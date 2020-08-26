@@ -90,7 +90,6 @@ class MiniBulkEmailTable extends React.Component {
           if (res.data.length > 0) {
             let tempData = [];
             res.data.map(item => {
-              item.views = '0k';
               const createDate = item.created_at == null ? 'Not avilable' : formatDate(item.created_at);
               tempData.push(createData(item.id, item.name, createDate, item.views));
             });
