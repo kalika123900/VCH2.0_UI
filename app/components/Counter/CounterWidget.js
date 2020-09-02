@@ -90,9 +90,9 @@ class CounterWidget extends PureComponent {
             </Button>
             <Typography className={classes.counter}>
               {education ?
-                <Typography variant="subtitle1">Download your education data</Typography>
+                <Typography variant="subtitle1">Download the 100 Top Firms Still Hiring List</Typography>
                 :
-                <Typography variant="subtitle1">Please, add education to download this list</Typography>
+                <Typography variant="subtitle1" style={{ fontSize: 14 }}>Add education to access the 100 Top Firms Still Hiring List</Typography>
               }
             </Typography>
           </div>

@@ -210,7 +210,7 @@ class ChartInfographic extends PureComponent {
               start={0}
               end={0}
               education={education}
-              sheet="https://www.google.com"
+              sheet="https://app.varsitycareershub.co.uk/sheet/VARSITY_CAREERS_HUB_100_GRADUATE_OPPORTUNITIES.xlsx"
               duration={0}
               type='education'
               title="Education List"
