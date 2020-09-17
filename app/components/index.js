@@ -1,3 +1,5 @@
+const { default: NotifMessage } = require("./NotifMessage");
+
 // Main Components
 export Header from './Header/Header';
 export HeaderMenu from './Header/HeaderMenu';
@@ -220,3 +222,5 @@ export CustomConfirmation from './DialogBox/CustomConfirmation';
 export CircularProgress from './Loading/CircularProgress';
 
 export CampaignPreview from './DialogBox/CampaignPreview';
+export NotifMessage from './NotifMessage'
+export RecommendationPopup from './DialogBox/RecommendationPopup'

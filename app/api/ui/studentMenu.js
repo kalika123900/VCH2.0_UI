@@ -42,10 +42,23 @@ module.exports = [
     icon: 'ios-chatbubbles-outline',
     link: '/student/messages',
   },
-  // {
-  //   key: 'opportunities',
-  //   name: 'Opportunities',
-  //   icon: 'ios-information-circle-outline',
-  //   link: '/student/opportunities',
-  // }
+  {
+    key: 'opportunities',
+    name: 'Opportunities',
+    icon: 'ios-information-circle-outline',
+    child: [
+      {
+        key: 'Joblist',
+        name: 'Job List',
+        icon: 'ios-reorder',
+        link: '/student/view-list',
+      },
+      {
+        key: 'opportunities',
+        name: 'Opportunities',
+        icon: 'ios-information-circle-outline',
+        link: '/student/opportunities',
+      }
+    ]
+  }
 ];

@@ -4,6 +4,7 @@ import red from '@material-ui/core/colors/red';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 import deepPurple from '@material-ui/core/colors/deepPurple';
 import pink from '@material-ui/core/colors/pink';
+import { blue } from '@material-ui/core/colors';
 const styles = theme => ({
   root: {
     paddingRight: theme.spacing(1),
@@ -196,7 +197,26 @@ const styles = theme => ({
   warnMsg: {
     textAlign: "center",
     padding: 10
-  }
+  },
+  tabletab: {
+    '& div': {
+      '& div': {
+        justifyContent: 'center'
+      }
+    }
+  },
+  textField1: {
+    textAlign: 'right',
+    maxWidth: '100%',
+    marginRight: '10%',
+    width: '30ch'
+
+  },
+  tabletab1: {
+
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
 
 });
 
