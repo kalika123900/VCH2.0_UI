@@ -42,10 +42,10 @@ module.exports = [
     icon: 'ios-chatbubbles-outline',
     link: '/student/messages',
   },
-  {
-    key: 'opportunities',
-    name: 'Opportunities',
-    icon: 'ios-information-circle-outline',
-    link: '/student/opportunities',
-  }
+  // {
+  //   key: 'opportunities',
+  //   name: 'Opportunities',
+  //   icon: 'ios-information-circle-outline',
+  //   link: '/student/opportunities',
+  // }
 ];

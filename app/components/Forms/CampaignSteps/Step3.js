@@ -106,7 +106,7 @@ class Step3 extends React.Component {
     ));
 
     return (
-      <div className={(classes.root, classes.step3Root)}>
+      <div className={(classes.root, classes.step3Root)} style={{ maxWidth: 716 }}>
         <Grid container spacing={3} className={classes.divider}>
           <Grid item md={12} xs={12}>
             <Grid style={{ textAlign: 'left' }}>
