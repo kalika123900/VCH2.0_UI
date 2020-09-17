@@ -660,3 +660,17 @@ export const Signout = loadable(() =>
   import('./Pages/Signout'), {
   fallback: <Loading />,
 });
+
+export const ViewList = loadable(() =>
+  import('./Pages/ViewList/ViewList'), {
+  fallback: <Loading />,
+});
+export const AddList = loadable(() =>
+  import('./Pages/AddList/AddList'), {
+  fallback: <Loading />,
+});
+
+export const ListDataTable = loadable(() =>
+  import('./Pages/ListDataTable/ListDataTable'), {
+  fallback: <Loading />,
+});

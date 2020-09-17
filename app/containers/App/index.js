@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import NotFound from 'containers/Pages/Standalone/NotFoundDedicated';
-import { Footer, HeaderLanding, HelpSupportHeader } from 'dan-components';
+import { Footer, HeaderLanding, HelpSupportHeader, NotifMessage } from 'dan-components';
 import { studentLoggedIn } from 'dan-actions/StudentActions';
 import { adminLoggedIn } from 'dan-actions/AdminActions';
 import { clientLoggedIn } from 'dan-actions/ClientActions';
@@ -17,7 +17,7 @@ import Student from './Student';
 import Admin from './Admin';
 import LandingCorporate from './Landing';
 import ThemeWrapper, { AppContext } from './ThemeWrapper';
-import { HelpSupport } from '../pageListAsync';
+import { HelpSupport, AddList, } from '../pageListAsync';
 import { makeSecureDecrypt } from '../../Helpers/security';
 
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
@@ -60,6 +60,7 @@ class App extends React.Component {
             <BrowserRouter>
               <Switch>
                 <Route path="/" exact component={LandingCorporate} />
+                <Route path="/add-list" exact component={AddList} />
                 <Route
                   path="/client"
                   render={(props) => <Client {...props} changeMode={changeMode} />}
@@ -83,11 +84,13 @@ class App extends React.Component {
                   )}
                 />
                 <Route component={Auth} />
+
                 <Route component={NotFound} />
               </Switch>
             </BrowserRouter>
           )}
         </AppContext.Consumer>
+        <NotifMessage />
       </ThemeWrapper>
     );
   }

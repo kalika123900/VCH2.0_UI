@@ -169,3 +169,6 @@ export const CLIENT_PROFILE_INIT = 'CLIENT_PROFILE_INIT';
 //Admin Edit Details
 export const ADMIN_PROFILE_DETAILS = 'ADMIN_PROFILE_DETAILS';
 export const ADMIN_PROFILE_INIT = 'ADMIN_PROFILE_INIT';
+
+// Notification Action
+export const SET_NOTIF = 'SET_NOTIF';

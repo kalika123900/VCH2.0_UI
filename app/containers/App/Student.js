@@ -8,7 +8,8 @@ import { makeSecureDecrypt } from 'dan-helpers/security';
 import {
   StudentDashboard, EditStudentDetails, StudentMessage,
   StudentAccount, StudentSettings, NotFound, JobProfiles,
-  JobDescription, StudentEmail, Signout, StudentEmailThread
+  JobDescription, StudentEmail, Signout, StudentEmailThread,
+  ViewList, ListDataTable
 }
   from '../pageListAsync';
 
@@ -43,6 +44,8 @@ class Student extends React.Component {
             <Route exact path="/student/settings" component={StudentSettings} />
             <Route exact path='/student/opportunities' component={JobProfiles} />
             <Route exact path='/student/opportunities/:id' component={JobDescription} />
+            <Route exact path="/student/view-list" exact component={ViewList} />
+            <Route exact path="/student/table-List/:id" exact component={ListDataTable} />
             <Route exact path="/student/signout" component={Signout} />
             <Route component={NotFound} />
           </Switch>

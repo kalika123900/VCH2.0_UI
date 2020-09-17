@@ -46,6 +46,20 @@ module.exports = [
     key: 'opportunities',
     name: 'Opportunities',
     icon: 'ios-information-circle-outline',
-    link: '/student/opportunities',
+    child: [{
+      key: 'Joblist',
+      name: 'Job List',
+      icon: 'ios-reorder',
+      link: '/student/view-list',
+
+    },
+    {
+      key: 'opportunities',
+      name: 'Opportunities',
+      icon: 'ios-information-circle-outline',
+      link: '/student/opportunities',
+    }
+    ]
+
   }
 ];
