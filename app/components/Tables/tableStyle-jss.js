@@ -210,14 +210,17 @@ const styles = theme => ({
     maxWidth: '100%',
     marginRight: '10%',
     width: '30ch'
-
+  },
+  text: {
+    width: '100%'
   },
   tabletab1: {
-
     display: 'flex',
     justifyContent: 'space-between'
   },
-
+  listTableHead: {
+    wordBreak: 'keep-all'
+  }
 });
 
 export default styles;

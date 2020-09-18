@@ -391,12 +391,9 @@ class ListDataTable extends Component {
     const { classes } = this.props;
     const { tab, arr, tableColum, tableData, suggestData, ShortlistData, recPopup, open, shortList, selectList, recomList } = this.state;
 
-
     return (
       <Fragment>
         {(shortList && selectList && recomList) ?
-
-
           <Fragment>
             {tab != 2 ? '' : recPopup && <RecommendationPopup
               open={open}
@@ -419,7 +416,7 @@ class ListDataTable extends Component {
               >
                 <Button variant="contained" color="#696969" onClick={this.handleRedirect} style={{ margin: '10px', borderRadius: '6px' }} >
                   Back to all lists
-            </Button>
+                </Button>
                 <Select
                   multiple
                   value={tableColum}
@@ -454,194 +451,135 @@ class ListDataTable extends Component {
               </Grid>
             </Grid>
 
-            {tab === 0 && (<Table style={{ minWidth: '650px', minWidth: '650px' }}>
-              <TableHead>
-
+            {/* Table */}
+            <Table >
+              <TableHead >
                 <TableRow>
-                  {(tableColum.indexOf('Interested') != '-1') && <TableCell padding="default">Interested</TableCell>}
-                  {(tableColum.indexOf('Applied') != '-1') && <TableCell padding="default">Applied</TableCell>}
-                  {(tableColum.indexOf('Notes') != '-1') && <TableCell padding="default">Notes</TableCell>}
-                  {(tableColum.indexOf('Company Name') != '-1') && <TableCell padding="default">Company Name</TableCell>}
-                  {(tableColum.indexOf('Company Size') != '-1') && <TableCell padding="default">Company Size</TableCell>}
-                  {(tableColum.indexOf('Role Type') != '-1') && <TableCell padding="default">Role Type</TableCell>}
-                  {(tableColum.indexOf('Job Title') != '-1') && <TableCell padding="default">Job Title</TableCell>}
-                  {(tableColum.indexOf('Role Start Date') != '-1') && <TableCell padding="default">Role Start Date</TableCell>}
-                  {(tableColum.indexOf('Duration') != '-1') && <TableCell padding="default">Duration</TableCell>}
-                  {(tableColum.indexOf('Application Start Date') != '-1') && <TableCell padding="default">Application Start Date</TableCell>}
-                  {(tableColum.indexOf('Application End Date') != '-1') && <TableCell padding="default">Application End Date</TableCell>}
-                  {(tableColum.indexOf('Location') != '-1') && <TableCell padding="default">Location</TableCell>}
-                  {(tableColum.indexOf('Salary') != '-1') && <TableCell padding="default">Salary</TableCell>}
-                  {(tableColum.indexOf('Application Link') != '-1') && <TableCell padding="default">Application Link</TableCell>}
-                  {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell padding="default">Application Requirements</TableCell>}
-                  {(tableColum.indexOf('Other Details') != '-1') && <TableCell padding="default">Other Details</TableCell>}
-                  {(tableColum.indexOf('Visa Sponsorship Available') != '-1') && <TableCell padding="default">Visa Sponsorship Available</TableCell>}
-                  {(tableColum.indexOf('Industries') != '-1') && <TableCell padding="default">Industries</TableCell>}
-                  {(tableColum.indexOf('Graduation Year') != '-1') && <TableCell padding="default">Graduation Year</TableCell>}
-                  {(tableColum.indexOf('Website URL') != '-1') && <TableCell padding="default">Website URL</TableCell>}
-
+                  {(tableColum.indexOf('Interested') != '-1') && <TableCell className={classes.listTableHead} align="center">Interested</TableCell>}
+                  {(tableColum.indexOf('Applied') != '-1') && <TableCell className={classes.listTableHead} align="center">Applied</TableCell>}
+                  {(tableColum.indexOf('Notes') != '-1') && <TableCell className={classes.listTableHead} style={{ minWidth: 260 }} align="center">Notes</TableCell>}
+                  {(tableColum.indexOf('Company Name') != '-1') && <TableCell className={classes.listTableHead} align="center">Company Name</TableCell>}
+                  {(tableColum.indexOf('Company Size') != '-1') && <TableCell className={classes.listTableHead} align="center">Company Size</TableCell>}
+                  {(tableColum.indexOf('Role Type') != '-1') && <TableCell className={classes.listTableHead} align="center">Role Type</TableCell>}
+                  {(tableColum.indexOf('Job Title') != '-1') && <TableCell className={classes.listTableHead} align="center">Job Title</TableCell>}
+                  {(tableColum.indexOf('Role Start Date') != '-1') && <TableCell className={classes.listTableHead} align="center">Role Start Date</TableCell>}
+                  {(tableColum.indexOf('Duration') != '-1') && <TableCell className={classes.listTableHead} align="center">Duration</TableCell>}
+                  {(tableColum.indexOf('Application Start Date') != '-1') && <TableCell className={classes.listTableHead} align="center">Application Start Date</TableCell>}
+                  {(tableColum.indexOf('Application End Date') != '-1') && <TableCell className={classes.listTableHead} align="center">Application End Date</TableCell>}
+                  {(tableColum.indexOf('Location') != '-1') && <TableCell className={classes.listTableHead} align="center">Location</TableCell>}
+                  {(tableColum.indexOf('Salary') != '-1') && <TableCell className={classes.listTableHead} align="center">Salary</TableCell>}
+                  {(tableColum.indexOf('Application Link') != '-1') && <TableCell className={classes.listTableHead} align="center">Application Link</TableCell>}
+                  {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell className={classes.listTableHead} align="center">Application Requirements</TableCell>}
+                  {(tableColum.indexOf('Other Details') != '-1') && <TableCell className={classes.listTableHead} align="center">Other Details</TableCell>}
+                  {(tableColum.indexOf('Visa Sponsorship Available') != '-1') && <TableCell className={classes.listTableHead} align="center">Visa Sponsorship Available</TableCell>}
+                  {(tableColum.indexOf('Industries') != '-1') && <TableCell className={classes.listTableHead} align="center">Industries</TableCell>}
+                  {(tableColum.indexOf('Graduation Year') != '-1') && <TableCell className={classes.listTableHead} align="center">Graduation Year</TableCell>}
+                  {(tableColum.indexOf('Website URL') != '-1') && <TableCell className={classes.listTableHead} align="center">Website URL</TableCell>}
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {tableData.map((item, index) =>
-                  (
-                    <TableRow key={index}>
-                      <TableCell padding="default">
-                        <Checkbox
-                          checked={item.interested}
-                          color="default"
-                          name="interested"
-                          value={item.interested}
-                          onChange={(e) => this.handleSelect(e, item.id, index)}
-                          inputProps={{ 'aria-label': 'checkbox with default color' }}
-                        />
-                      </TableCell>
-                      <TableCell align="left"><Checkbox
-                        checked={item.applied}
-                        color="default"
-                        name='applied'
-                        value={(item.applied == null || item.applied == false) ? true : false}
-                        onChange={(e) => this.handleSelect(e, item.id, index)}
-                        inputProps={{ 'aria-label': 'checkbox with default color' }}
-                      /></TableCell>
-                      {(tableColum.indexOf('Notes') != '-1') && <TableCell padding="default">
-                        <TextField className="text" variant="outlined" name="note" value={item.note} onBlur={(e) => this.handleNoteData(e, item.id, index)} onChange={(e) => this.handleNotes(e, item.id, index)} placeholder="Notes" />
-                      </TableCell>}
-                      {(tableColum.indexOf('Company Name') != '-1') && <TableCell padding="default">{item.company_name}</TableCell>}
-                      {(tableColum.indexOf('Company Size') != '-1') && <TableCell padding="default">{item.company_size}</TableCell>}
-                      {(tableColum.indexOf('Role Type') != '-1') && <TableCell padding="default">{item.role_type}</TableCell>}
-                      {(tableColum.indexOf('Job Title') != '-1') && <TableCell padding="default">{item.job_title}</TableCell>}
-                      {(tableColum.indexOf('Role Start Date') != '-1') && <TableCell padding="default">{item.role_start_date}</TableCell>}
-                      {(tableColum.indexOf('Duration') != '-1') && <TableCell padding="default">{item.duration}</TableCell>}
-                      {(tableColum.indexOf('Application Start Date') != '-1') && <TableCell padding="default">{item.application_start_date}</TableCell>}
-                      {(tableColum.indexOf('Application End Date') != '-1') && <TableCell padding="default">{item.applicationend_date}</TableCell>}
-                      {(tableColum.indexOf('Location') != '-1') && <TableCell padding="default">{item.location}</TableCell>}
-                      {(tableColum.indexOf('Salary') != '-1') && <TableCell padding="default">{item.salary}</TableCell>}
-                      {(tableColum.indexOf('Application Link') != '-1') && <TableCell padding="default"> <Link onClick={(e) => this.handlleOpenLink(item.application_link, item.id)} to="#">{item.application_link}</Link></TableCell>}
-                      {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell padding="default">{item.application_requirements}</TableCell>}
-                      {(tableColum.indexOf('Other Details') != '-1') && <TableCell padding="default">{item.other_details}</TableCell>}
-                      {(tableColum.indexOf('Visa Sponsorship Available') != '-1') && <TableCell padding="default">{item.visa_sponsorship_available}</TableCell>}
-                      {(tableColum.indexOf('Industries') != '-1') && <TableCell padding="default">{item.industries}</TableCell>}
-                      {(tableColum.indexOf('Graduation Year') != '-1') && <TableCell padding="default">{item.graduation_year}</TableCell>}
-                      {(tableColum.indexOf('Website URL') != '-1') && <TableCell padding="default">{item.website_url}</TableCell>}
-
-
-                    </TableRow>
-                  )
-                )}
-              </TableBody>
-            </Table>)}
-            {tab === 1 && (
-              <Table style={{ minWidth: '650px', minWidth: '650px' }}>
-                <TableHead>
-
-                  <TableRow>
-                    {(tableColum.indexOf('Interested') != '-1') && <TableCell padding="default">Interested</TableCell>}
-                    {(tableColum.indexOf('Applied') != '-1') && <TableCell padding="default">Applied</TableCell>}
-                    {(tableColum.indexOf('Notes') != '-1') && <TableCell padding="default">Notes</TableCell>}
-                    {(tableColum.indexOf('Company Name') != '-1') && <TableCell padding="default">Company Name</TableCell>}
-                    {(tableColum.indexOf('Company Size') != '-1') && <TableCell padding="default">Company Size</TableCell>}
-                    {(tableColum.indexOf('Role Type') != '-1') && <TableCell padding="default">Role Type</TableCell>}
-                    {(tableColum.indexOf('Job Title') != '-1') && <TableCell padding="default">Job Title</TableCell>}
-                    {(tableColum.indexOf('Role Start Date') != '-1') && <TableCell padding="default">Role Start Date</TableCell>}
-                    {(tableColum.indexOf('Duration') != '-1') && <TableCell padding="default">Duration</TableCell>}
-                    {(tableColum.indexOf('Application Start Date') != '-1') && <TableCell padding="default">Application Start Date</TableCell>}
-                    {(tableColum.indexOf('Application End Date') != '-1') && <TableCell padding="default">Application End Date</TableCell>}
-                    {(tableColum.indexOf('Location') != '-1') && <TableCell padding="default">Location</TableCell>}
-                    {(tableColum.indexOf('Salary') != '-1') && <TableCell padding="default">Salary</TableCell>}
-                    {(tableColum.indexOf('Application Link') != '-1') && <TableCell padding="default">Application Link</TableCell>}
-                    {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell padding="default">Application Requirements</TableCell>}
-                    {(tableColum.indexOf('Other Details') != '-1') && <TableCell padding="default">Other Details</TableCell>}
-                    {(tableColum.indexOf('Visa Sponsorship Available') != '-1') && <TableCell padding="default">Visa Sponsorship Available</TableCell>}
-                    {(tableColum.indexOf('Industries') != '-1') && <TableCell padding="default">Industries</TableCell>}
-                    {(tableColum.indexOf('Graduation Year') != '-1') && <TableCell padding="default">Graduation Year</TableCell>}
-                    {(tableColum.indexOf('Website URL') != '-1') && <TableCell padding="default">Website URL</TableCell>}
-
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {ShortlistData.map((item, index) =>
-                    (
-                      <TableRow key={index} >
-                        <TableCell padding="default">
-                          <Checkbox
-                            checked={(item.interested == null || item.interested == false) ? false : true}
-                            color="default"
-                            name="interested"
-                            value={(item.interested == null || item.interested == false) ? true : false}
-                            onClick={(e) => this.handleSelect(e, item.id, index)}
-                            inputProps={{ 'aria-label': 'checkbox with default color' }}
-                          />
-                        </TableCell>
-                        <TableCell align="left"><Checkbox
-                          checked={(item.applied == null || item.applied == false) ? false : true}
-                          color="default"
-                          name='applied'
-                          value={(item.applied == null || item.applied == false) ? true : false}
-                          onClick={(e) => this.handleSelect(e, item.id, index)}
-                          inputProps={{ 'aria-label': 'checkbox with default color' }}
-                        /></TableCell>
-                        {(tableColum.indexOf('Notes') != '-1') && <TableCell padding="default">
-                          <TextField className="text" variant="outlined" name="note" value={item.note} onBlur={(e) => this.handleNoteData(e, item.id, index)} onChange={(e) => this.handleNotes(e, item.id, index)} placeholder="Notes" />
-                        </TableCell>}
-                        {(tableColum.indexOf('Company Name') != '-1') && <TableCell padding="default">{item.company_name}</TableCell>}
-                        {(tableColum.indexOf('Company Size') != '-1') && <TableCell padding="default">{item.company_size}</TableCell>}
-                        {(tableColum.indexOf('Role Type') != '-1') && <TableCell padding="default">{item.role_type}</TableCell>}
-                        {(tableColum.indexOf('Job Title') != '-1') && <TableCell padding="default">{item.job_title}</TableCell>}
-                        {(tableColum.indexOf('Role Start Date') != '-1') && <TableCell padding="default">{item.role_start_date}</TableCell>}
-                        {(tableColum.indexOf('Duration') != '-1') && <TableCell padding="default">{item.duration}</TableCell>}
-                        {(tableColum.indexOf('Application Start Date') != '-1') && <TableCell padding="default">{item.application_start_date}</TableCell>}
-                        {(tableColum.indexOf('Application End Date') != '-1') && <TableCell padding="default">{item.applicationend_date}</TableCell>}
-                        {(tableColum.indexOf('Location') != '-1') && <TableCell padding="default">{item.location}</TableCell>}
-                        {(tableColum.indexOf('Salary') != '-1') && <TableCell padding="default">{item.salary}</TableCell>}
-                        {(tableColum.indexOf('Application Link') != '-1') && <TableCell padding="default"><Link onClick={(e) => this.handlleOpenLink(item.application_link, item.id)} to="#">{item.application_link}</Link></TableCell>}
-                        {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell padding="default">{item.application_requirements}</TableCell>}
-                        {(tableColum.indexOf('Other Details') != '-1') && <TableCell padding="default">{item.other_details}</TableCell>}
-                        {(tableColum.indexOf('Visa Sponsorship Available') != '-1') && <TableCell padding="default">{item.visa_sponsorship_available}</TableCell>}
-                        {(tableColum.indexOf('Industries') != '-1') && <TableCell padding="default">{item.industries}</TableCell>}
-                        {(tableColum.indexOf('Graduation Year') != '-1') && <TableCell padding="default">{item.graduation_year}</TableCell>}
-                        {(tableColum.indexOf('Website URL') != '-1') && <TableCell padding="default">{item.website_url}</TableCell>}
-
-
-                      </TableRow>
-                    )
-                  )}
-                </TableBody>
-              </Table>
-            )}
-
-            {tab === 2 && (
-              <Table style={{ minWidth: '650px', minWidth: '650px' }}>
-                <TableHead>
-
-                  <TableRow>
-                    {(tableColum.indexOf('Interested') != '-1') && <TableCell padding="default">Interested</TableCell>}
-                    {(tableColum.indexOf('Applied') != '-1') && <TableCell padding="default">Applied</TableCell>}
-                    {(tableColum.indexOf('Notes') != '-1') && <TableCell padding="default">Notes</TableCell>}
-                    {(tableColum.indexOf('Company Name') != '-1') && <TableCell padding="default">Company Name</TableCell>}
-                    {(tableColum.indexOf('Company Size') != '-1') && <TableCell padding="default">Company Size</TableCell>}
-                    {(tableColum.indexOf('Role Type') != '-1') && <TableCell padding="default">Role Type</TableCell>}
-                    {(tableColum.indexOf('Job Title') != '-1') && <TableCell padding="default">Job Title</TableCell>}
-                    {(tableColum.indexOf('Role Start Date') != '-1') && <TableCell padding="default">Role Start Date</TableCell>}
-                    {(tableColum.indexOf('Duration') != '-1') && <TableCell padding="default">Duration</TableCell>}
-                    {(tableColum.indexOf('Application Start Date') != '-1') && <TableCell padding="default">Application Start Date</TableCell>}
-                    {(tableColum.indexOf('Application End Date') != '-1') && <TableCell padding="default">Application End Date</TableCell>}
-                    {(tableColum.indexOf('Location') != '-1') && <TableCell padding="default">Location</TableCell>}
-                    {(tableColum.indexOf('Salary') != '-1') && <TableCell padding="default">Salary</TableCell>}
-                    {(tableColum.indexOf('Application Link') != '-1') && <TableCell padding="default">Application Link</TableCell>}
-                    {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell padding="default">Application Requirements</TableCell>}
-                    {(tableColum.indexOf('Other Details') != '-1') && <TableCell padding="default">Other Details</TableCell>}
-                    {(tableColum.indexOf('Visa Sponsorship Available') != '-1') && <TableCell padding="default">Visa Sponsorship Available</TableCell>}
-                    {(tableColum.indexOf('Industries') != '-1') && <TableCell padding="default">Industries</TableCell>}
-                    {(tableColum.indexOf('Graduation Year') != '-1') && <TableCell padding="default">Graduation Year</TableCell>}
-                    {(tableColum.indexOf('Website URL') != '-1') && <TableCell padding="default">Website URL</TableCell>}
-
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {suggestData.map((item, index) =>
+              <TableBody >
+                {tab === 0 && (
+                  tableData.map((item, index) =>
                     (
                       <TableRow key={index}>
-                        <TableCell padding="default">
+                        <TableCell align="center">
+                          <Checkbox
+                            checked={item.interested}
+                            color="default"
+                            name="interested"
+                            value={item.interested}
+                            onChange={(e) => this.handleSelect(e, item.id, index)}
+                            inputProps={{ 'aria-label': 'checkbox with default color' }}
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          <Checkbox
+                            checked={item.applied}
+                            color="default"
+                            name='applied'
+                            value={(item.applied == null || item.applied == false) ? true : false}
+                            onChange={(e) => this.handleSelect(e, item.id, index)}
+                            inputProps={{ 'aria-label': 'checkbox with default color' }}
+                          />
+                        </TableCell>
+                        {(tableColum.indexOf('Notes') != '-1') && <TableCell align="center">
+                          <TextField className={classes.text} variant="outlined" name="note" value={item.note} onBlur={(e) => this.handleNoteData(e, item.id, index)} onChange={(e) => this.handleNotes(e, item.id, index)} placeholder="Notes" />
+                        </TableCell>}
+                        {(tableColum.indexOf('Company Name') != '-1') && <TableCell align="center">{item.company_name}</TableCell>}
+                        {(tableColum.indexOf('Company Size') != '-1') && <TableCell align="center">{item.company_size}</TableCell>}
+                        {(tableColum.indexOf('Role Type') != '-1') && <TableCell align="center">{item.role_type}</TableCell>}
+                        {(tableColum.indexOf('Job Title') != '-1') && <TableCell align="center">{item.job_title}</TableCell>}
+                        {(tableColum.indexOf('Role Start Date') != '-1') && <TableCell align="center">{item.role_start_date}</TableCell>}
+                        {(tableColum.indexOf('Duration') != '-1') && <TableCell align="center">{item.duration}</TableCell>}
+                        {(tableColum.indexOf('Application Start Date') != '-1') && <TableCell align="center">{item.application_start_date}</TableCell>}
+                        {(tableColum.indexOf('Application End Date') != '-1') && <TableCell align="center">{item.applicationend_date}</TableCell>}
+                        {(tableColum.indexOf('Location') != '-1') && <TableCell align="center">{item.location}</TableCell>}
+                        {(tableColum.indexOf('Salary') != '-1') && <TableCell align="center">{item.salary}</TableCell>}
+                        {(tableColum.indexOf('Application Link') != '-1') && <TableCell align="center"> <Link onClick={(e) => this.handlleOpenLink(item.application_link, item.id)} to="#">{item.application_link}</Link></TableCell>}
+                        {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell align="center">{item.application_requirements}</TableCell>}
+                        {(tableColum.indexOf('Other Details') != '-1') && <TableCell align="center">{item.other_details}</TableCell>}
+                        {(tableColum.indexOf('Visa Sponsorship Available') != '-1') && <TableCell align="center">{item.visa_sponsorship_available}</TableCell>}
+                        {(tableColum.indexOf('Industries') != '-1') && <TableCell align="center">{item.industries}</TableCell>}
+                        {(tableColum.indexOf('Graduation Year') != '-1') && <TableCell align="center">{item.graduation_year}</TableCell>}
+                        {(tableColum.indexOf('Website URL') != '-1') && <TableCell align="center">{item.website_url}</TableCell>}
+                      </TableRow>
+                    )
+                  )
+                )}
+
+                {tab === 1 && (
+                  ShortlistData.map((item, index) =>
+                    (
+                      <TableRow key={index} >
+                        <TableCell align="center">
+                          <Checkbox
+                            checked={(item.interested == null || item.interested == false) ? false : true}
+                            color="default"
+                            name="interested"
+                            value={(item.interested == null || item.interested == false) ? true : false}
+                            onClick={(e) => this.handleSelect(e, item.id, index)}
+                            inputProps={{ 'aria-label': 'checkbox with default color' }}
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          <Checkbox
+                            checked={(item.applied == null || item.applied == false) ? false : true}
+                            color="default"
+                            name='applied'
+                            value={(item.applied == null || item.applied == false) ? true : false}
+                            onClick={(e) => this.handleSelect(e, item.id, index)}
+                            inputProps={{ 'aria-label': 'checkbox with default color' }}
+                          />
+                        </TableCell>
+                        {(tableColum.indexOf('Notes') != '-1') && <TableCell align="center">
+                          <TextField className={classes.text} variant="outlined" name="note" value={item.note} onBlur={(e) => this.handleNoteData(e, item.id, index)} onChange={(e) => this.handleNotes(e, item.id, index)} placeholder="Notes" />
+                        </TableCell>}
+                        {(tableColum.indexOf('Company Name') != '-1') && <TableCell align="center">{item.company_name}</TableCell>}
+                        {(tableColum.indexOf('Company Size') != '-1') && <TableCell align="center">{item.company_size}</TableCell>}
+                        {(tableColum.indexOf('Role Type') != '-1') && <TableCell align="center">{item.role_type}</TableCell>}
+                        {(tableColum.indexOf('Job Title') != '-1') && <TableCell align="center">{item.job_title}</TableCell>}
+                        {(tableColum.indexOf('Role Start Date') != '-1') && <TableCell align="center">{item.role_start_date}</TableCell>}
+                        {(tableColum.indexOf('Duration') != '-1') && <TableCell align="center">{item.duration}</TableCell>}
+                        {(tableColum.indexOf('Application Start Date') != '-1') && <TableCell align="center">{item.application_start_date}</TableCell>}
+                        {(tableColum.indexOf('Application End Date') != '-1') && <TableCell align="center">{item.applicationend_date}</TableCell>}
+                        {(tableColum.indexOf('Location') != '-1') && <TableCell align="center">{item.location}</TableCell>}
+                        {(tableColum.indexOf('Salary') != '-1') && <TableCell align="center">{item.salary}</TableCell>}
+                        {(tableColum.indexOf('Application Link') != '-1') && <TableCell align="center"><Link onClick={(e) => this.handlleOpenLink(item.application_link, item.id)} to="#">{item.application_link}</Link></TableCell>}
+                        {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell align="center">{item.application_requirements}</TableCell>}
+                        {(tableColum.indexOf('Other Details') != '-1') && <TableCell align="center">{item.other_details}</TableCell>}
+                        {(tableColum.indexOf('Visa Sponsorship Available') != '-1') && <TableCell align="center">{item.visa_sponsorship_available}</TableCell>}
+                        {(tableColum.indexOf('Industries') != '-1') && <TableCell align="center">{item.industries}</TableCell>}
+                        {(tableColum.indexOf('Graduation Year') != '-1') && <TableCell align="center">{item.graduation_year}</TableCell>}
+                        {(tableColum.indexOf('Website URL') != '-1') && <TableCell align="center">{item.website_url}</TableCell>}
+                      </TableRow>
+                    )
+                  )
+                )}
+                {tab === 2 && (
+                  suggestData.map((item, index) =>
+                    (
+                      <TableRow key={index}>
+                        <TableCell align="center">
                           <Checkbox
                             checked={(item.interested == null || item.interested == false) ? false : true}
                             color="default"
@@ -659,38 +597,41 @@ class ListDataTable extends Component {
                           onClick={(e) => this.handleSelect(e, item.id, index)}
                           inputProps={{ 'aria-label': 'checkbox with default color' }}
                         /></TableCell>
-                        {(tableColum.indexOf('Notes') != '-1') && <TableCell padding="default">
+                        {(tableColum.indexOf('Notes') != '-1') && <TableCell align="center">
                           <TextField className="text" variant="outlined" name="note" value={item.note} onBlur={(e) => this.handleNoteData(e, item.id, index)} onChange={(e) => this.handleNotes(e, item.id, index)} placeholder="Notes" />
                         </TableCell>}
-                        {(tableColum.indexOf('Company Name') != '-1') && <TableCell padding="default">{item.company_name}</TableCell>}
-                        {(tableColum.indexOf('Company Size') != '-1') && <TableCell padding="default">{item.company_size}</TableCell>}
-                        {(tableColum.indexOf('Role Type') != '-1') && <TableCell padding="default">{item.role_type}</TableCell>}
-                        {(tableColum.indexOf('Job Title') != '-1') && <TableCell padding="default">{item.job_title}</TableCell>}
-                        {(tableColum.indexOf('Role Start Date') != '-1') && <TableCell padding="default">{item.role_start_date}</TableCell>}
-                        {(tableColum.indexOf('Duration') != '-1') && <TableCell padding="default">{item.duration}</TableCell>}
-                        {(tableColum.indexOf('Application Start Date') != '-1') && <TableCell padding="default">{item.application_start_date}</TableCell>}
-                        {(tableColum.indexOf('Application End Date') != '-1') && <TableCell padding="default">{item.applicationend_date}</TableCell>}
-                        {(tableColum.indexOf('Location') != '-1') && <TableCell padding="default">{item.location}</TableCell>}
-                        {(tableColum.indexOf('Salary') != '-1') && <TableCell padding="default">{item.salary}</TableCell>}
-                        {(tableColum.indexOf('Application Link') != '-1') && <TableCell padding="default"><Link onClick={(e) => this.handlleOpenLink(item.application_link, item.id)} to="#">{item.application_link}</Link></TableCell>}
-                        {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell padding="default">{item.application_requirements}</TableCell>}
-                        {(tableColum.indexOf('Other Details') != '-1') && <TableCell padding="default">{item.other_details}</TableCell>}
-                        {(tableColum.indexOf('Visa Sponsorship Available') != '-1') && <TableCell padding="default">{item.visa_sponsorship_available}</TableCell>}
-                        {(tableColum.indexOf('Industries') != '-1') && <TableCell padding="default">{item.industries}</TableCell>}
-                        {(tableColum.indexOf('Graduation Year') != '-1') && <TableCell padding="default">{item.graduation_year}</TableCell>}
-                        {(tableColum.indexOf('Website URL') != '-1') && <TableCell padding="default">{item.website_url}</TableCell>}
+                        {(tableColum.indexOf('Company Name') != '-1') && <TableCell align="center">{item.company_name}</TableCell>}
+                        {(tableColum.indexOf('Company Size') != '-1') && <TableCell align="center">{item.company_size}</TableCell>}
+                        {(tableColum.indexOf('Role Type') != '-1') && <TableCell align="center">{item.role_type}</TableCell>}
+                        {(tableColum.indexOf('Job Title') != '-1') && <TableCell align="center">{item.job_title}</TableCell>}
+                        {(tableColum.indexOf('Role Start Date') != '-1') && <TableCell align="center">{item.role_start_date}</TableCell>}
+                        {(tableColum.indexOf('Duration') != '-1') && <TableCell align="center">{item.duration}</TableCell>}
+                        {(tableColum.indexOf('Application Start Date') != '-1') && <TableCell align="center">{item.application_start_date}</TableCell>}
+                        {(tableColum.indexOf('Application End Date') != '-1') && <TableCell align="center">{item.applicationend_date}</TableCell>}
+                        {(tableColum.indexOf('Location') != '-1') && <TableCell align="center">{item.location}</TableCell>}
+                        {(tableColum.indexOf('Salary') != '-1') && <TableCell align="center">{item.salary}</TableCell>}
+                        {(tableColum.indexOf('Application Link') != '-1') && <TableCell align="center"><Link onClick={(e) => this.handlleOpenLink(item.application_link, item.id)} to="#">{item.application_link}</Link></TableCell>}
+                        {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell align="center">{item.application_requirements}</TableCell>}
+                        {(tableColum.indexOf('Other Details') != '-1') && <TableCell align="center">{item.other_details}</TableCell>}
+                        {(tableColum.indexOf('Visa Sponsorship Available') != '-1') && <TableCell align="center">{item.visa_sponsorship_available}</TableCell>}
+                        {(tableColum.indexOf('Industries') != '-1') && <TableCell align="center">{item.industries}</TableCell>}
+                        {(tableColum.indexOf('Graduation Year') != '-1') && <TableCell align="center">{item.graduation_year}</TableCell>}
+                        {(tableColum.indexOf('Website URL') != '-1') && <TableCell align="center">{item.website_url}</TableCell>}
 
 
                       </TableRow>
                     )
-                  )}
-                </TableBody>
-              </Table>
-            )}
+                  )
+                )}
 
-          </Fragment > : <Loading />}
+              </TableBody >
+            </Table >
+          </Fragment >
+          : <Loading />
+        }
       </Fragment>
     )
   }
 }
+
 export default withStyles(styles)(ListDataTable);
