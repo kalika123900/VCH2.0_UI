@@ -41,8 +41,8 @@ class Student extends React.Component {
             <Route exact path="/student/messages/:thread" component={StudentEmailThread} />
             <Route exact path="/student/profile" component={StudentAccount} />
             <Route exact path="/student/settings" component={StudentSettings} />
-            <Route exact path='/student/opportunities' component={JobProfiles} />
-            <Route exact path='/student/opportunities/:id' component={JobDescription} />
+            {/* <Route exact path='/student/opportunities' component={JobProfiles} />
+            <Route exact path='/student/opportunities/:id' component={JobDescription} /> */}
             <Route exact path="/student/signout" component={Signout} />
             <Route component={NotFound} />
           </Switch>
