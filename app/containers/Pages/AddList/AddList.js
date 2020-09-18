@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
@@ -10,7 +9,6 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { TextareaAutosize, Checkbox, ListItemText } from '@material-ui/core';
 import PublishIcon from '@material-ui/icons/Publish';
-import { Divider } from 'dan-components';
 import { postFormData, getData } from 'dan-helpers/request';
 import { sectorsData } from 'dan-api/apps/profileOption';
 import { setNotif } from 'dan-actions/NotifActions';
@@ -65,63 +63,63 @@ class AddList extends Component {
   handleSubmit = (e) => {
     this.setState({ isLoading: true });
 
-    // const { title, description, industry, list_image, list, listID, isEdit } = this.state;
+    const { title, description, industry, list_image, list, listID, isEdit } = this.state;
 
-    // const data = new FormData();
+    const data = new FormData();
 
-    // data.append('title', title)
-    // data.append('description', description)
-    // data.append('industries', JSON.stringify(industry))
-    // data.append('list_image', list_image)
-    // data.append('list', list)
+    data.append('title', title)
+    data.append('description', description)
+    data.append('industries', JSON.stringify(industry))
+    data.append('list_image', list_image)
+    data.append('list', list)
 
-    // if (isEdit) {
-    //   data.append('listID', listID)
-    //   postFormData(`${API_URL}/admin/update-list`, data) // eslint-disable-line
-    //     .then((res) => {
-    //       if (res.status === 1) {
-    //         this.props.setNotif({
-    //           message: 'Update Successful',
-    //           variant: 'success'
+    if (isEdit) {
+      data.append('listID', listID)
+      postFormData(`${API_URL}/admin/update-list`, data) // eslint-disable-line
+        .then((res) => {
+          if (res.status === 1) {
+            this.props.setNotif({
+              message: 'Update Successful',
+              variant: 'success'
 
-    //         });
-    //         this.setState({ title: '', description: '', industry: [], list_image: '', list: '', isLoading: false, isEdit: false })
-    //       }
-    //       else {
-    //         this.props.setNotif({
-    //           message: 'Somthing went Wrong',
-    //           variant: 'error'
-    //         });
-    //       }
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //       this.setState({ isLoading: false })
-    //     });
-    // }
-    // else {
-    //   postFormData(`${API_URL}/admin/upload-list`, data) // eslint-disable-line
-    //     .then((res) => {
-    //       if (res.status === 1) {
-    //         this.props.setNotif({
-    //           message: 'upload successful',
-    //           variant: 'success'
+            });
+            this.setState({ title: '', description: '', industry: [], list_image: '', list: '', isLoading: false, isEdit: false })
+          }
+          else {
+            this.props.setNotif({
+              message: 'Somthing went Wrong',
+              variant: 'error'
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.setState({ isLoading: false })
+        });
+    }
+    else {
+      postFormData(`${API_URL}/admin/upload-list`, data) // eslint-disable-line
+        .then((res) => {
+          if (res.status === 1) {
+            this.props.setNotif({
+              message: 'upload successful',
+              variant: 'success'
 
-    //         });
-    //         this.setState({ title: '', description: '', industry: [], list_image: '', list: '', isLoading: false, })
-    //       }
-    //       else {
-    //         this.props.setNotif({
-    //           message: 'Somthing went Wrong',
-    //           variant: 'error'
-    //         });
-    //       }
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //       this.setState({ isLoading: false })
-    //     });
-    // }
+            });
+            this.setState({ title: '', description: '', industry: [], list_image: '', list: '', isLoading: false, })
+          }
+          else {
+            this.props.setNotif({
+              message: 'Somthing went Wrong',
+              variant: 'error'
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.setState({ isLoading: false })
+        });
+    }
   }
 
   handleEditList = (e) => {
@@ -156,8 +154,8 @@ class AddList extends Component {
         </Typography>
         <Grid container md={12} lg={8} spacing={2} >
           <Grid item sm={12} xs={12} lg={6}>
-            <Typography variant="p">
-              List Title?
+            <Typography variant="p" style={{ marginBottom: 2 }}>
+              List Title
             </Typography>
             <TextField
               className={classes.textField}
@@ -169,11 +167,10 @@ class AddList extends Component {
             />
           </Grid>
           <Grid item sm={12} xs={12} lg={6}>
-            <FormControl variant="outlined" className={classes.formControl} >
-              <Typography variant="p">
-                Which universities would you like to target?
+            <FormControl variant="outlined" className={classes.formControl}>
+              <Typography variant="p" style={{ marginBottom: 2 }}>
+                Select List to edit or update
               </Typography>
-              {/* <InputLabel id="demo-simple-select-outlined-label">Select List to Edit</InputLabel> */}
               <Select
                 labelId="demo-simple-select-outlined-label"
                 id="demo-simple-select-outlined"
@@ -187,7 +184,7 @@ class AddList extends Component {
                   <em>None</em>
                 </MenuItem>
                 {editList.map((item, index) => (
-                  < MenuItem key={index} value={index} >
+                  < MenuItem key={index} value={index} className={classes.menuItem}>
                     {item.title}
                   </MenuItem>
                 )
@@ -207,6 +204,9 @@ class AddList extends Component {
           />
         </Grid>
         <Grid container md={12} sm={12} xs={12} lg={8} >
+          <Typography variant="p" style={{ marginTop: 25, marginLeft: 8 }}>
+            List Industries
+          </Typography>
           <Select
             labelId="simple-select-industry-label"
             multiple

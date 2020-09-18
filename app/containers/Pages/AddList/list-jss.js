@@ -17,8 +17,17 @@ const styles = () => ({
   },
   selectArea: {
     margin: 8,
-    marginTop: 25,
+    marginTop: 2,
     width: '100%'
+  },
+  menuItem: {
+    whiteSpace: 'pre-line',
+    '@media(min-width:1280px)': {
+      width: 400
+    },
+    '@media(min-width:1920px)': {
+      width: 612
+    }
   },
   buttonArea: {
     margin: 8
