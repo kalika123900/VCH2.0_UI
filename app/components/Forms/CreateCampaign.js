@@ -127,6 +127,19 @@ class CreateCampaign extends React.Component {
     return returnBool;
   }
 
+  handleIsScheduledMail = () => {
+    let bool = true;
+
+    this.props.followUps.forEach(value => {
+      if (value.heading === '' || value.body === '') {
+        bool = false;
+      }
+    });
+
+    if (bool)
+      this.handleNext();
+  }
+
   handleCreateCampaign = (count) => {
     if (count > 100) {
       const user = JSON.parse(
@@ -373,7 +386,7 @@ class CreateCampaign extends React.Component {
                   variant="contained"
                   fullWidth
                   color="primary"
-                  onClick={() => this.handleNext()}
+                  onClick={() => this.handleIsScheduledMail()}
                   disabled={isDisable}
                 >
                   Next
@@ -555,6 +568,7 @@ const CreateCampaignMapped = connect(
     subjects: state.getIn([reducerCampaign, 'subjects']),
     skills: state.getIn([reducerCampaign, 'skills']),
     societies: state.getIn([reducerCampaign, 'societies']),
+    followUps: state.getIn([reducerCampaign, 'followUps']),
   }),
   mapDispatchToProps
 )(CreateCampaignReduxed);

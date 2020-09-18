@@ -23,3 +23,11 @@ export async function getData(url, token) {
 
   return await response.json();
 }
+
+export async function postFormData(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    body: data
+  });
+  return await response.json();
+}

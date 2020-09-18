@@ -7,7 +7,7 @@ import NotFound from 'containers/Pages/Standalone/NotFoundDedicated';
 import Dashboard from '../Templates/Dashboard';
 import EditScheduledCampaign from '../../containers/Tables/EditScheduledCampaign';
 import {
-  AdminDashboard, AdminSeatManagement, AdminCampaignManagement, CampaignEdit,
+  AdminDashboard, AdminSeatManagement, AdminCampaignManagement, CampaignEdit, AddList,
   ClientAccounts, ClientProfiles, StudentReview, Campaigns, Signout, BulkEmailEdit,
   Token, CreateCompany, CompanyProfile, EditCompanyForm, AdminEditDetails, StudentSignups
 }
@@ -27,6 +27,7 @@ class Admin extends React.Component {
         <Dashboard history={history} changeMode={changeMode}>
           <Switch>
             <Route exact path="/admin" component={AdminDashboard} />
+            <Route exact path="/admin/platform-list" component={AddList} />
             <Route exact path="/admin/seat-management" component={AdminSeatManagement} />
             <Route exact path="/admin/campaign-management" component={AdminCampaignManagement} />
             <Route exact path="/admin/campaign-review/:campaignId" component={CampaignEdit} />

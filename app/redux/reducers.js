@@ -30,6 +30,7 @@ import Auth from './modules/Auth';
 import studentProfile from './modules/studentProfile';
 import clientEditProfile from './modules/clientEditProfile';
 import adminEditProfile from './modules/adminEditProfile';
+import notification from './modules/notification';
 
 /**
  * Branching reducers to use one reducer for many components
@@ -69,6 +70,7 @@ export default function createReducer(injectedReducers = {}) {
     campaign,
     bulkEmail,
     Auth,
+    notification,
     studentProfile,
     clientEditProfile,
     adminEditProfile,

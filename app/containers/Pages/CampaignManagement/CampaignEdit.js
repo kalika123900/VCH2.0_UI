@@ -188,31 +188,16 @@ class CampaignEdit extends React.Component {
   }
 
   getFollowUps = (data) => {
-
     if (data.status != 0) {
       postData(`${API_URL}/campaign/get-schedule-data`, data)
         .then((res) => {
           if (res.status === 1) {
-
-
-
-            // const blocksFromHTML = convertFromHTML(sampleMarkup);
-            // const state = ContentState.createFromBlockArray(
-            //   blocksFromHTML.contentBlocks,
-            //   blocksFromHTML.entityMap,
-            // );
-
-            // this.state = {
-            //   editorState: EditorState.createWithContent(state),
-            // };
-            // const editorState = EditorState.createEmpty();
-
-
             const { addInfo, } = this.props;
             var newFollowUps = List([]);
 
             res.data.map((item) => {
               var editorState = EditorState.createEmpty();
+
               if (item.body && item.body != '') {
                 const blocksFromHTML = convertFromHTML(item.body);
                 const state = ContentState.createFromBlockArray(
@@ -221,7 +206,6 @@ class CampaignEdit extends React.Component {
                 );
 
                 editorState = EditorState.createWithContent(state);
-
               }
 
               newFollowUps = newFollowUps.push({
@@ -231,7 +215,6 @@ class CampaignEdit extends React.Component {
                 body: item.body,
                 editorState
               });
-
             });
 
             addInfo({ followUps: newFollowUps });
