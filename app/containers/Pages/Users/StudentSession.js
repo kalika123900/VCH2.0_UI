@@ -21,6 +21,19 @@ class StudentSession extends React.Component {
           else {
             window.location.reload();
           }
+
+          try {
+            if (sessionStorage.hasOwnProperty('invitation')) {
+              const invited_by = atob(sessionStorage.getItem('invitation'));
+
+              postData(`${API_URL}/utils/invited`, { invited_by, accepted_by: res.data.id })
+                .catch(e => {
+                  console.error(e);
+                });
+            }
+          } catch (e) {
+            console.error(e);
+          }
         }
       }
     }

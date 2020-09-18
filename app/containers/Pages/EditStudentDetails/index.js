@@ -789,7 +789,7 @@ class EditStudentDetails extends Component {
                   <div className={classes.btnArea} style={{ marginTop: '35px' }}>
                     <Button variant="contained" fullWidth color="primary" onClick={() => this.handleLanguage()}>
                       Save Changes
-                </Button>
+                   </Button>
                   </div>
                   :
                   <div className={classes.btnArea} style={{ marginTop: '35px' }}>
