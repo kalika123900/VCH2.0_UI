@@ -94,7 +94,7 @@ class ListDataTable extends Component {
     console.log(this.props.location)
     if (this.props.location.hash) {
       let temp = this.props.location.hash.split("#").pop()
-      if (temp == all) {
+      if (temp == 'all') {
         this.setState({})
       }
 
