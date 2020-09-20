@@ -9,19 +9,6 @@ class StudentSession extends React.Component {
       if (response.length == 2) {
         var res = JSON.parse(atob(response[1]))
         if (res.status === 1) {
-          localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
-            id: res.data.id,
-            type: 'STUDENT',
-            token: res.data.token,
-            email: res.data.email,
-            name: res.data.name
-          })));
-          if (res.data.status == 0 || res.data.isEditDetails)
-            window.location.href = '/student/edit-details';
-          else {
-            window.location.reload();
-          }
-
           try {
             if (sessionStorage.hasOwnProperty('invitation')) {
               const invited_by = atob(sessionStorage.getItem('invitation'));
@@ -33,6 +20,19 @@ class StudentSession extends React.Component {
             }
           } catch (e) {
             console.error(e);
+          }
+
+          localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
+            id: res.data.id,
+            type: 'STUDENT',
+            token: res.data.token,
+            email: res.data.email,
+            name: res.data.name
+          })));
+          if (res.data.status == 0 || res.data.isEditDetails)
+            window.location.href = '/student/edit-details';
+          else {
+            window.location.reload();
           }
         }
       }

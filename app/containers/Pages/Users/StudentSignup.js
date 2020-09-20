@@ -71,18 +71,6 @@ class StudentSignup extends React.Component {
     postData(`${API_URL}/student/oauth`, apiData)
       .then((res) => {
         if (res.status === 1) {
-          localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
-            id: res.data.id,
-            type: 'STUDENT',
-            token: res.data.token,
-            email: res.data.email
-          })));
-          if (res.data.status == 0 || res.data.isEditDetails)
-            window.location.href = '/student/edit-details';
-          else {
-            window.location.reload();
-          }
-
           try {
             if (sessionStorage.hasOwnProperty('invitation')) {
               const invited_by = atob(sessionStorage.getItem('invitation'));
@@ -94,6 +82,18 @@ class StudentSignup extends React.Component {
             }
           } catch (e) {
             console.error(e);
+          }
+
+          localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
+            id: res.data.id,
+            type: 'STUDENT',
+            token: res.data.token,
+            email: res.data.email
+          })));
+          if (res.data.status == 0 || res.data.isEditDetails)
+            window.location.href = '/student/edit-details';
+          else {
+            window.location.reload();
           }
         } else {
           this.setState({ notifyMessage: res.errorMessage });
@@ -123,6 +123,19 @@ class StudentSignup extends React.Component {
     postData(`${API_URL}/student/signup`, data)
       .then((res) => {
         if (res.status === 1) {
+          try {
+            if (sessionStorage.hasOwnProperty('invitation')) {
+              const invited_by = atob(sessionStorage.getItem('invitation'));
+
+              postData(`${API_URL}/utils/invited`, { invited_by, accepted_by: res.data.id })
+                .catch(e => {
+                  console.error(e);
+                });
+            }
+          } catch (e) {
+            console.error(e);
+          }
+
           localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
             id: res.data.id,
             type: 'STUDENT',
