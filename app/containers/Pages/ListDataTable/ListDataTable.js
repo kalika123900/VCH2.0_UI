@@ -439,7 +439,8 @@ class ListDataTable extends Component {
           <Fragment>
             {tab != 2 ? '' : invitePopup && <InvitePopup
               open={open}
-
+              handleClose={this.handleClose}
+              user_id={this.state.userId}
               handleShareFacebook={() => this.handleShareFacebook()}
               handleShareLinkedIn={() => this.handleShareLinkedIn()}
             />

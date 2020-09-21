@@ -10,10 +10,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
 import styles from '../Forms/user-jss';
+import { Typography, Input } from '@material-ui/core';
 
 class InvitePopup extends React.Component {
   render() {
-    const { open, handleClose, message, handleShareFacebook, handleShareLinkedIn } = this.props;
+    const { open, handleClose, message, handleShareFacebook, handleShareLinkedIn, user_id } = this.props;
 
     return (
       <div>
@@ -25,26 +26,21 @@ class InvitePopup extends React.Component {
             fullWidth
             style={{ position: 'absolute' }}
           >
-            <DialogTitle id="form-dialog-title">Refer a friend to view your recomended</DialogTitle>
+            <DialogTitle id="form-dialog-title">Refer a friend to view your recommended</DialogTitle>
             <DialogContent style={{ width: '100%', fontSize: '23px' }}>
-              {message}
-
+              <Typography variant="p" color="textSecondary">
+                {message}
+              </Typography>
             </DialogContent>
-            <input type='text' value='https://app.varsitycareershub.co.uk/student-signup?invitation=' readOnly style={{ width: '70%', textAlign: 'center', alignSelf: 'center', padding: '7px', margin: '20px' }} />
+            <Input type='string' value={`https://app.varsitycareershub.co.uk/student-signup?invitation=${user_id}`} style={{ width: '70%', textAlign: 'center', alignSelf: 'center', padding: '7px', margin: '20px' }} />
             <DialogActions>
-
               <Button variant="contained" color="primary" style={{ alignSelf: 'left', padding: '5px !important', marginBottom: '20px' }} onClick={() => handleShareFacebook()} >
                 <FacebookIcon /> Share on Facebook
               </Button>
-
-              <Button variant="contained" style={{ alignSelf: 'right', padding: '5px !important', marginBottom: '20px' }} onClick={() => handleShareLinkedIn()} color="primary">
+              <Button variant="contained" color="secondary" style={{ alignSelf: 'right', padding: '5px !important', marginBottom: '20px' }} onClick={() => handleShareLinkedIn()} >
                 <LinkedInIcon /> Share on LinkedIn
               </Button>
-
             </DialogActions>
-
-
-
           </Dialog>
         </Grid>
       </div>

@@ -31,7 +31,11 @@ class StudentSignup extends React.Component {
   constructor(props) {
     super(props);
 
+    if (props.match.params.userId) {
+      localStorage.setItem('invitation', `${props.match.params.userId}`);
+    }
   }
+
   state = {
     errorMessage: '',
     flash: false,
@@ -65,7 +69,6 @@ class StudentSignup extends React.Component {
             if (this.props.match.params.userId) {
               const invited_by = this.props.match.params.userId;
 
-
               postData(`${API_URL}/utils/invited`, { invited_by, accepted_by: res.data.id })
                 .catch(e => {
                   console.error(e);
@@ -73,7 +76,6 @@ class StudentSignup extends React.Component {
             }
           } catch (e) {
             console.error(e);
-            console.log('fatta')
           }
 
           localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
@@ -82,6 +84,7 @@ class StudentSignup extends React.Component {
             token: res.data.token,
             email: res.data.email
           })));
+
           if (res.data.status == 0 || res.data.isEditDetails)
             window.location.href = '/student/edit-details';
           else {
@@ -135,8 +138,7 @@ class StudentSignup extends React.Component {
             email: res.data.email
           })));
 
-          // window.location.href = '/student/edit-details';
-
+          window.location.href = '/student/edit-details';
         } else {
           this.setState({ notifyMessage: res.errorMessage });
           this.setState({ messageType: 'error' });
