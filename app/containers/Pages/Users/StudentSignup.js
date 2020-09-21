@@ -28,6 +28,20 @@ async function postData(url, data) {
 }
 
 class StudentSignup extends React.Component {
+  constructor(props) {
+    super(props);
+
+    const query = this.props.location.search;
+
+    if (query.length && query.split('invitation=') && query.split('invitation=')[1]) {
+      try {
+        const invitation = query.split('invitation=')[1];
+        sessionStorage.setItem('invitation', invitation);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
   state = {
     errorMessage: '',
     flash: false,
@@ -57,6 +71,19 @@ class StudentSignup extends React.Component {
     postData(`${API_URL}/student/oauth`, apiData)
       .then((res) => {
         if (res.status === 1) {
+          try {
+            if (sessionStorage.hasOwnProperty('invitation')) {
+              const invited_by = atob(sessionStorage.getItem('invitation'));
+
+              postData(`${API_URL}/utils/invited`, { invited_by, accepted_by: res.data.id })
+                .catch(e => {
+                  console.error(e);
+                });
+            }
+          } catch (e) {
+            console.error(e);
+          }
+
           localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
             id: res.data.id,
             type: 'STUDENT',
@@ -96,6 +123,19 @@ class StudentSignup extends React.Component {
     postData(`${API_URL}/student/signup`, data)
       .then((res) => {
         if (res.status === 1) {
+          try {
+            if (sessionStorage.hasOwnProperty('invitation')) {
+              const invited_by = atob(sessionStorage.getItem('invitation'));
+
+              postData(`${API_URL}/utils/invited`, { invited_by, accepted_by: res.data.id })
+                .catch(e => {
+                  console.error(e);
+                });
+            }
+          } catch (e) {
+            console.error(e);
+          }
+
           localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
             id: res.data.id,
             type: 'STUDENT',
@@ -104,6 +144,20 @@ class StudentSignup extends React.Component {
           })));
 
           window.location.href = '/student/edit-details';
+
+          try {
+            if (sessionStorage.hasOwnProperty('invitation')) {
+              const invited_by = atob(sessionStorage.getItem('invitation'));
+
+              postData(`${API_URL}/utils/invited`, { invited_by, accepted_by: res.data.id })
+                .catch(e => {
+                  console.error(e);
+                });
+            }
+          } catch (e) {
+            console.error(e);
+          }
+
         } else {
           this.setState({ notifyMessage: res.errorMessage });
           this.setState({ messageType: 'error' });
