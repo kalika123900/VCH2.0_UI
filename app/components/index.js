@@ -222,5 +222,6 @@ export CustomConfirmation from './DialogBox/CustomConfirmation';
 export CircularProgress from './Loading/CircularProgress';
 
 export CampaignPreview from './DialogBox/CampaignPreview';
-export NotifMessage from './NotifMessage'
-export RecommendationPopup from './DialogBox/RecommendationPopup'
+export NotifMessage from './NotifMessage';
+export RecommendationPopup from './DialogBox/RecommendationPopup';
+export InvitePopup from './DialogBox/InvitePopup';

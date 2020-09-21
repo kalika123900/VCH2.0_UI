@@ -18,7 +18,7 @@ import { findLastIndex } from 'lodash';
 import { tableName } from 'dan-api/apps/tableData';
 import { getData, postData } from 'dan-helpers/request';
 import { makeSecureDecrypt } from 'dan-helpers/security';
-import { RecommendationPopup } from 'dan-components'
+import { RecommendationPopup, InvitePopup } from 'dan-components'
 import Loading from 'dan-components/Loading';
 
 const ITEM_HEIGHT = 48;
@@ -61,7 +61,8 @@ class ListDataTable extends Component {
       shortList: false,
       recomList: false,
       applied: false,
-      interested: false
+      interested: false,
+      invitePopup: true
     }
   }
   handleChangeTab = (event, value) => {
@@ -126,22 +127,33 @@ class ListDataTable extends Component {
       });
   }
   getSuggestData = (offset, rows, userId) => {
-    getData(`${API_URL}/utils/get-recommendation?offset=${offset}&rows=${rows}&user_id=${userId} `)
+    getData(`${API_URL}/student/is-invited?user_id=${userId}`)
       .then((res) => {
         if (res.status === 1) {
-          this.setState({ suggestData: res.data, recomList: true })
-          if (res.data.length == 0) {
-            this.setState({ recPopup: true, open: true })
-          }
-        }
-        else {
-          console.log('something not good')
+          getData(`${API_URL}/utils/get-recommendation?offset=${offset}&rows=${rows}&user_id=${userId} `)
+            .then((res) => {
+              if (res.status === 1) {
+                this.setState({ invitePopup: false, suggestData: res.data, recomList: true })
+                if (res.data.length == 0) {
+                  this.setState({ recPopup: true, invitePopup: false, open: true })
+                }
+              }
+              else {
+                console.log('something not good')
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        } else {
+          this.setState({ recomList: true, open: true });
         }
       })
       .catch((err) => {
         console.log(err);
       });
   }
+
   getTableData = (offset, rows, userId) => {
     const Id = atob(this.props.match.params.id)
     getData(`${API_URL}/utils/get-list-data?listID=${Id}&offset=${offset}&rows=${rows}&user_id=${userId} `)
@@ -389,12 +401,17 @@ class ListDataTable extends Component {
   }
   render() {
     const { classes } = this.props;
-    const { tab, arr, tableColum, tableData, suggestData, ShortlistData, recPopup, open, shortList, selectList, recomList } = this.state;
+    const { tab, arr, invitePopup, tableColum, tableData, suggestData, ShortlistData, recPopup, open, shortList, selectList, recomList } = this.state;
 
     return (
       <Fragment>
         {(shortList && selectList && recomList) ?
           <Fragment>
+            {tab != 2 ? '' : invitePopup && <InvitePopup
+              open={open}
+              handleClose={this.handleClose}
+              handleAction={this.handleAction} />
+            }
             {tab != 2 ? '' : recPopup && <RecommendationPopup
               open={open}
               handleClose={this.handleClose}

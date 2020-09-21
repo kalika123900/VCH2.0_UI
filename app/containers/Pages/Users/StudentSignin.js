@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { StudentSigninForm } from 'dan-components';
 import styles from 'dan-components/Forms/user-jss';
-
 import { makeSecureEncrypt } from '../../../Helpers/security';
 import messageStyles from 'dan-styles/Messages.scss';
 import CloseIcon from '@material-ui/icons/Close';
