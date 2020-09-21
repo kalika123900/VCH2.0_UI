@@ -11,7 +11,7 @@ class StudentSession extends React.Component {
         if (res.status === 1) {
           try {
             if (sessionStorage.hasOwnProperty('invitation')) {
-              const invited_by = atob(sessionStorage.getItem('invitation'));
+              const invited_by = sessionStorage.getItem('invitation').split('&')[0]
 
               postData(`${API_URL}/utils/invited`, { invited_by, accepted_by: res.data.id })
                 .catch(e => {

@@ -27,6 +27,7 @@ class Auth extends React.Component {
           <Route exact path="/coming-soon" component={ComingSoon} />
           <Route exact path="/student-signin" component={StudentSignin} />
           <Route exact path="/student-signup" component={StudentSignup} />
+          <Route exact path="/student-signup/:userId" component={StudentSignup} />
           <Route exact path="/admin-signin" component={AdminSignin} />
           <Route exact path='/privacy-policy' component={PrivacyPolicy} />
           <Route exact path='/choose-company' component={ChooseCompany} />

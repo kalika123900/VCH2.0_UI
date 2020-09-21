@@ -31,16 +31,6 @@ class StudentSignup extends React.Component {
   constructor(props) {
     super(props);
 
-    const query = this.props.location.search;
-
-    if (query.length && query.split('invitation=') && query.split('invitation=')[1]) {
-      try {
-        const invitation = query.split('invitation=')[1];
-        sessionStorage.setItem('invitation', invitation);
-      } catch (e) {
-        console.error(e);
-      }
-    }
   }
   state = {
     errorMessage: '',
@@ -72,8 +62,9 @@ class StudentSignup extends React.Component {
       .then((res) => {
         if (res.status === 1) {
           try {
-            if (sessionStorage.hasOwnProperty('invitation')) {
-              const invited_by = atob(sessionStorage.getItem('invitation'));
+            if (this.props.match.params.userId) {
+              const invited_by = this.props.match.params.userId;
+
 
               postData(`${API_URL}/utils/invited`, { invited_by, accepted_by: res.data.id })
                 .catch(e => {
@@ -82,6 +73,7 @@ class StudentSignup extends React.Component {
             }
           } catch (e) {
             console.error(e);
+            console.log('fatta')
           }
 
           localStorage.setItem('user', makeSecureEncrypt(JSON.stringify({
@@ -124,8 +116,8 @@ class StudentSignup extends React.Component {
       .then((res) => {
         if (res.status === 1) {
           try {
-            if (sessionStorage.hasOwnProperty('invitation')) {
-              const invited_by = atob(sessionStorage.getItem('invitation'));
+            if (this.props.match.params.userId) {
+              const invited_by = this.props.match.params.userId;
 
               postData(`${API_URL}/utils/invited`, { invited_by, accepted_by: res.data.id })
                 .catch(e => {
@@ -143,20 +135,7 @@ class StudentSignup extends React.Component {
             email: res.data.email
           })));
 
-          window.location.href = '/student/edit-details';
-
-          try {
-            if (sessionStorage.hasOwnProperty('invitation')) {
-              const invited_by = atob(sessionStorage.getItem('invitation'));
-
-              postData(`${API_URL}/utils/invited`, { invited_by, accepted_by: res.data.id })
-                .catch(e => {
-                  console.error(e);
-                });
-            }
-          } catch (e) {
-            console.error(e);
-          }
+          // window.location.href = '/student/edit-details';
 
         } else {
           this.setState({ notifyMessage: res.errorMessage });

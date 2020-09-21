@@ -410,6 +410,21 @@ class ListDataTable extends Component {
   handleAction = () => {
     this.props.history.push(`/student/edit-details`);
   }
+  handleShareFacebook = (e) => {
+    const userId = this.state.userId
+
+    let url =
+      "https://www.facebook.com/sharer.php?display=popup&u=" + "https://app.varsitycareershub.co.uk/student-signup/" + userId
+    let options = "toolbar=0,status=0,resizable=1,width=626,height=436";
+    window.open(url, " ", options);
+  }
+  handleShareLinkedIn = (e) => {
+    const userId = this.state.userId
+
+    let url = "https://www.linkedin.com/sharing/share-offsite/?url=" + "https://app.varsitycareershub.co.uk/student-signup/" + userId
+    let options = "toolbar=0,status=0,resizable=1,width=626,height=436";
+    window.open(url, " ", options);
+  }
 
   render() {
     const { classes } = this.props;
@@ -424,8 +439,10 @@ class ListDataTable extends Component {
           <Fragment>
             {tab != 2 ? '' : invitePopup && <InvitePopup
               open={open}
-              handleClose={this.handleClose}
-              handleAction={this.handleAction} />
+
+              handleShareFacebook={() => this.handleShareFacebook()}
+              handleShareLinkedIn={() => this.handleShareLinkedIn()}
+            />
             }
             {tab != 2 ? '' : recPopup && <RecommendationPopup
               open={open}
