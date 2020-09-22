@@ -31,6 +31,7 @@ class AddList extends Component {
       list: '',
       isLoading: false,
       isEdit: false,
+      roles_data_url: '',
     }
   }
 
@@ -61,9 +62,10 @@ class AddList extends Component {
   }
 
   handleSubmit = (e) => {
+    const that = this;
     this.setState({ isLoading: true });
 
-    const { title, description, industry, list_image, list, listID, isEdit } = this.state;
+    const { title, description, industry, list_image, list, listID, isEdit, roles_data_url } = this.state;
 
     const data = new FormData();
 
@@ -75,6 +77,7 @@ class AddList extends Component {
 
     if (isEdit) {
       data.append('listID', listID)
+      data.append('roles_data_url', roles_data_url)
       postFormData(`${API_URL}/admin/update-list`, data) // eslint-disable-line
         .then((res) => {
           if (res.status === 1) {
@@ -84,6 +87,7 @@ class AddList extends Component {
 
             });
             this.setState({ title: '', description: '', industry: [], list_image: '', list: '', isLoading: false, isEdit: false })
+            that.getListData(0, 30)
           }
           else {
             this.props.setNotif({
@@ -106,7 +110,8 @@ class AddList extends Component {
               variant: 'success'
 
             });
-            this.setState({ title: '', description: '', industry: [], list_image: '', list: '', isLoading: false, })
+            this.setState({ title: '', description: '', industry: [], list_image: '', list: '', isLoading: false })
+            that.getListData(0, 30)
           }
           else {
             this.props.setNotif({
@@ -125,11 +130,12 @@ class AddList extends Component {
   handleEditList = (e) => {
     const that = this;
     const { editList } = this.state;
+    console.log(editList)
     if (e.target.value !== '' || e.target.value === 0) {
       const MappedEditData = editList.map((item, index) => {
         if (index === e.target.value) {
-          this.setState({ isEdit: true, listID: item.id, title: item.title, description: item.description, industry: JSON.parse(item.industries), list_image: item.img_url })
-          console.log(JSON.parse(item.industries))
+          this.setState({ isEdit: true, listID: item.id, title: item.title, description: item.description, industry: JSON.parse(item.industries), list_image: item.img_url, roles_data_url: item.roles_data_url })
+          // console.log(JSON.parse(item.industries))
           return item
         }
       });
@@ -139,9 +145,15 @@ class AddList extends Component {
     }
   }
 
+
   render() {
+
     const { classes } = this.props;
-    const { industry, list, list_image, title, description, isLoading, editList, isEdit } = this.state;
+    const { industry, list, list_image, title, description, isLoading, editList, isEdit, roles_data_url } = this.state;
+    let buttonStatus = true
+    if (buttonStatus && title != '' && (list != '' || roles_data_url != '') && description != '' && list_image != '' && industry != '') {
+      buttonStatus = false
+    }
 
     return (
       <Grid
@@ -253,7 +265,8 @@ class AddList extends Component {
             {(list_image instanceof File) ?
               <span >{list_image.name}</span>
               : isEdit ?
-                <span>{list_image}</span>
+
+                <a href={list_image} rel="image" target="_blank">View List Image</a>
                 : ""
             }
           </Grid>
@@ -277,21 +290,25 @@ class AddList extends Component {
               Add List Excel Document
             </label>
             <PublishIcon />
-            {list &&
+            {(list instanceof File) ?
               <span >{list.name}</span>
+              : isEdit ?
+                <a href={`https://backend.varsitycareershub.co.uk/list_data_files/${roles_data_url}`} rel="File" target="_blank">View Data File</a>
+                : ""
             }
           </Grid>
         </Grid>
-        <Grid container md={4} sm={12} xs={12} lg={4} style={{ marginTop: 50 }}>
-          {!isLoading
-            ?
-            <Button style={{ width: '100%' }} variant="contained" color="secondary" onClick={this.handleSubmit}>
+        {!isLoading
+          ? <Grid container md={4} sm={12} xs={12} lg={4} style={{ marginTop: 50 }}>
+
+            <Button style={{ width: '100%' }} variant="contained" color="secondary" disabled={buttonStatus} onClick={this.handleSubmit}>
               Save
             </Button>
-            :
-            <CircularProgress />
-          }
-        </Grid>
+
+
+          </Grid>
+          :
+          <CircularProgress />}
       </Grid>
     )
   }
