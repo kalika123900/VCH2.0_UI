@@ -454,7 +454,7 @@ class ListDataTable extends Component {
         return false
       });
 
-      MappedSuggestData = MappedSuggestData.filter(item => {
+      MappedSuggestData = suggestData.filter(item => {
         for (const [key, value] of Object.entries(item)) {
           if (value && value.toString().toLowerCase().indexOf(searchkey.toLowerCase()) !== -1)
             return true;
