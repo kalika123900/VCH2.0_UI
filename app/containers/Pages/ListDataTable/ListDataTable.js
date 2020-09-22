@@ -62,7 +62,8 @@ class ListDataTable extends Component {
       recomList: false,
       applied: false,
       interested: false,
-      invitePopup: true
+      invitePopup: true,
+      searchkey: ''
     }
   }
 
@@ -88,7 +89,10 @@ class ListDataTable extends Component {
   }
 
   handleChange = (e) => {
-    this.setState({ tableColum: e.target.value })
+    this.setState({ [e.target.name]: e.target.value })
+  }
+  handleChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value })
   }
 
   handleRedirect = (e) => {
@@ -428,7 +432,37 @@ class ListDataTable extends Component {
 
   render() {
     const { classes } = this.props;
-    const { tab, arr, invitePopup, tableColum, tableData, suggestData, ShortlistData, recPopup, open, shortList, selectList, recomList } = this.state;
+    const { tab, arr, invitePopup, tableColum, tableData, suggestData, ShortlistData, recPopup, open, shortList, selectList, searchkey, recomList } = this.state;
+
+    let MappedTableData = tableData;
+    let MappedShortlistData = ShortlistData;
+    let MappedSuggestData = suggestData;
+
+    if (searchkey !== '') {
+      MappedTableData = tableData.filter(item => {
+        for (const [key, value] of Object.entries(item)) {
+          if (value && value.toString().toLowerCase().indexOf(searchkey.toLowerCase()) !== -1)
+            return true;
+        }
+        return false
+      });
+      MappedShortlistData = ShortlistData.filter(item => {
+        for (const [key, value] of Object.entries(item)) {
+          if (value && value.toString().toLowerCase().indexOf(searchkey.toLowerCase()) !== -1)
+            return true;
+        }
+        return false
+      });
+
+      MappedSuggestData = MappedSuggestData.filter(item => {
+        for (const [key, value] of Object.entries(item)) {
+          if (value && value.toString().toLowerCase().indexOf(searchkey.toLowerCase()) !== -1)
+            return true;
+        }
+        return false
+      });
+
+    }
 
     return (
       <Fragment>
@@ -511,6 +545,9 @@ class ListDataTable extends Component {
                   placeholder="search for keywords"
                   className={classes.searchField}
                   variant="outlined"
+                  name='searchkey'
+                  value={searchkey}
+                  onChange={this.handleChange}
                 />
               </Grid>
             </Grid>
@@ -545,7 +582,7 @@ class ListDataTable extends Component {
                   </TableHead>
                   <TableBody >
                     {tab === 0 && (
-                      tableData.map((item, index) =>
+                      MappedTableData.map((item, index) =>
                         (
                           <TableRow key={index}>
                             <TableCell align="center">
@@ -594,7 +631,7 @@ class ListDataTable extends Component {
                     )}
 
                     {tab === 1 && (
-                      ShortlistData.map((item, index) =>
+                      MappedShortlistData.map((item, index) =>
                         (
                           <TableRow key={index} >
                             <TableCell align="center">
@@ -642,7 +679,7 @@ class ListDataTable extends Component {
                       )
                     )}
                     {tab === 2 && (
-                      suggestData.map((item, index) =>
+                      MappedSuggestData.map((item, index) =>
                         (
                           <TableRow key={index}>
                             <TableCell align="center">
