@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { Grid } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
-import TextField from '@material-ui/core/TextField';
 import { getData, postData } from 'dan-helpers/request';
 import { setNotif } from 'dan-actions/NotifActions';
 import PropTypes from 'prop-types';
@@ -152,7 +151,7 @@ class ViewList extends Component {
                       {total_shortlisted}&nbsp;&nbsp;Rows
                     </Typography>
                   </CardContent>
-                  <Button variant="contained" onClick={(e) => this.handleRedirectShortList('all')} color="primary" >
+                  <Button disabled={total_shortlisted == 0 ? true : false} variant="contained" onClick={(e) => this.handleRedirectShortList('all')} color="primary" >
                     View List
                   </Button>
                 </Card>
@@ -167,7 +166,12 @@ class ViewList extends Component {
                       {applied}&nbsp;&nbsp;Rows
                     </Typography>
                   </CardContent>
-                  <Button variant="contained" onClick={(e) => this.handleRedirectShortList('applied')} color="primary" >
+                  <Button
+                    variant="contained"
+                    disabled={applied == 0 ? true : false}
+                    onClick={(e) => this.handleRedirectShortList('applied')}
+                    color="primary"
+                  >
                     View List
                   </Button>
                 </Card>
@@ -182,7 +186,7 @@ class ViewList extends Component {
                       {interested}&nbsp;&nbsp;Rows
                     </Typography>
                   </CardContent>
-                  <Button variant="contained" onClick={(e) => this.handleRedirectShortList('interested')} color="primary" >
+                  <Button disabled={interested == 0 ? true : false} variant="contained" onClick={(e) => this.handleRedirectShortList('interested')} color="primary" >
                     View List
                   </Button>
                 </Card>

@@ -293,7 +293,7 @@ class AddList extends Component {
             {(list instanceof File) ?
               <span >{list.name}</span>
               : isEdit ?
-                <a href={`https://backend.varsitycareershub.co.uk/list_data_files/${roles_data_url}`} rel="File" target="_blank">View Data File</a>
+                <a href={`${API_URL}/list_data_files/${roles_data_url}`} rel="File" target="_blank">View Data File</a>
                 : ""
             }
           </Grid>

@@ -315,7 +315,6 @@ class ListDataTable extends Component {
   }
 
   handleSelect = (e, id, index1) => {
-    console.log(e.target.name, e.target.checked)
     const that = this;
     const { userId, tableData, tab, ShortlistData, suggestData } = this.state;
     if (tab == 2) {
@@ -334,10 +333,11 @@ class ListDataTable extends Component {
         .catch((err) => {
           console.log(err);
         });
-
     }
 
     if (e.target.name == 'applied' || e.target.name == 'interested') {
+      let logdata = new Object();
+
       if (e.target.checked == true) {
         logdata = {
           student_id: userId,
@@ -354,6 +354,16 @@ class ListDataTable extends Component {
           notes: '',
         }
       }
+
+      postData(`${API_URL}/utils/generate-log`, logdata)
+        .then((res) => {
+          if (res.status === 1) {
+
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
 
     if (e.target.name != 'note') {
@@ -588,7 +598,7 @@ class ListDataTable extends Component {
                             <TableCell align="center">
                               <Checkbox
                                 checked={item.interested}
-                                color="default"
+                                color="primary"
                                 name="interested"
                                 value={item.interested}
                                 onChange={(e) => this.handleSelect(e, item.id, index)}
@@ -598,7 +608,7 @@ class ListDataTable extends Component {
                             <TableCell align="center">
                               <Checkbox
                                 checked={item.applied}
-                                color="default"
+                                color="primary"
                                 name='applied'
                                 value={(item.applied == null || item.applied == false) ? true : false}
                                 onChange={(e) => this.handleSelect(e, item.id, index)}
@@ -608,7 +618,12 @@ class ListDataTable extends Component {
                             {(tableColum.indexOf('Notes') != '-1') && <TableCell align="center">
                               <TextField className={classes.text} variant="outlined" name="note" value={item.note} onBlur={(e) => this.handleNoteData(e, item.id, index)} onChange={(e) => this.handleNotes(e, item.id, index)} placeholder="Notes" />
                             </TableCell>}
-                            {(tableColum.indexOf('Company Name') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.company_name}</TableCell>}
+                            {(tableColum.indexOf('Company Name') != '-1') &&
+                              <TableCell className={classes.listTableBody}>
+                                <img src={(item.website_url && item.website_url.indexOf('.') !== -1) ? `https://ui-avatars.com/api/?background=3f51b5&color=fff&name=${item.website_url.split('.')[item.website_url.split('.').length - 2]}` : '#'} style={{ width: 30, height: 30, marginRight: 5 }} />
+                                {item.company_name}
+                              </TableCell>
+                            }
                             {(tableColum.indexOf('Company Size') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.company_size}</TableCell>}
                             {(tableColum.indexOf('Role Type') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.role_type}</TableCell>}
                             {(tableColum.indexOf('Job Title') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.job_title}</TableCell>}
@@ -657,7 +672,12 @@ class ListDataTable extends Component {
                             {(tableColum.indexOf('Notes') != '-1') && <TableCell align="center">
                               <TextField className={classes.text} variant="outlined" name="note" value={item.note} onBlur={(e) => this.handleNoteData(e, item.id, index)} onChange={(e) => this.handleNotes(e, item.id, index)} placeholder="Notes" />
                             </TableCell>}
-                            {(tableColum.indexOf('Company Name') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.company_name}</TableCell>}
+                            {(tableColum.indexOf('Company Name') != '-1') &&
+                              <TableCell className={classes.listTableBody}>
+                                <img src={(item.website_url && item.website_url.indexOf('.') !== -1) ? `https://ui-avatars.com/api/?background=3f51b5&color=fff&name=${item.website_url.split('.')[item.website_url.split('.').length - 2]}` : '#'} style={{ width: 30, height: 30, marginRight: 5 }} />
+                                {item.company_name}
+                              </TableCell>
+                            }
                             {(tableColum.indexOf('Company Size') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.company_size}</TableCell>}
                             {(tableColum.indexOf('Role Type') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.role_type}</TableCell>}
                             {(tableColum.indexOf('Job Title') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.job_title}</TableCell>}
@@ -703,7 +723,12 @@ class ListDataTable extends Component {
                             {(tableColum.indexOf('Notes') != '-1') && <TableCell align="center">
                               <TextField className={classes.text} variant="outlined" name="note" value={item.note} onBlur={(e) => this.handleNoteData(e, item.id, index)} onChange={(e) => this.handleNotes(e, item.id, index)} placeholder="Notes" />
                             </TableCell>}
-                            {(tableColum.indexOf('Company Name') != '-1') && <TableCell align="center">{item.company_name}</TableCell>}
+                            {(tableColum.indexOf('Company Name') != '-1') &&
+                              <TableCell className={classes.listTableBody}>
+                                <img src={(item.website_url && item.website_url.indexOf('.') !== -1) ? `https://ui-avatars.com/api/?background=3f51b5&color=fff&name=${item.website_url.split('.')[item.website_url.split('.').length - 2]}` : '#'} style={{ width: 30, height: 30, marginRight: 5, borderRadius: '50%' }} />
+                                {item.company_name}
+                              </TableCell>
+                            }
                             {(tableColum.indexOf('Company Size') != '-1') && <TableCell align="center">{item.company_size}</TableCell>}
                             {(tableColum.indexOf('Role Type') != '-1') && <TableCell align="center">{item.role_type}</TableCell>}
                             {(tableColum.indexOf('Job Title') != '-1') && <TableCell align="center">{item.job_title}</TableCell>}
