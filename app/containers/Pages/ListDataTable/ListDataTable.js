@@ -581,8 +581,8 @@ class ListDataTable extends Component {
                       {(tableColum.indexOf('Application End Date') != '-1') && <TableCell className={classes.listTableHead} style={{ minWidth: 200 }} align="center">Application End Date</TableCell>}
                       {(tableColum.indexOf('Location') != '-1') && <TableCell className={classes.listTableHead} style={{ minWidth: 200 }} align="center">Location</TableCell>}
                       {(tableColum.indexOf('Salary') != '-1') && <TableCell className={classes.listTableHead} style={{ minWidth: 200 }} align="center">Salary</TableCell>}
-                      {(tableColum.indexOf('Application Link') != '-1') && <TableCell className={classes.listTableHead} style={{ minWidth: 200 }} align="center">Application Link</TableCell>}
-                      {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell className={classes.listTableHead} style={{ minWidth: 200 }} align="center">Application Requirements</TableCell>}
+                      {(tableColum.indexOf('Application Link') != '-1') && <TableCell className={classes.listTableHead} style={{ minWidth: 200, maxWidth: 300 }} align="center">Application Link</TableCell>}
+                      {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell className={classes.listTableHead} style={{ minWidth: 500 }} align="center">Application Requirements</TableCell>}
                       {(tableColum.indexOf('Other Details') != '-1') && <TableCell className={classes.listTableHead} style={{ minWidth: 200 }} align="center">Other Details</TableCell>}
                       {(tableColum.indexOf('Visa Sponsorship Available') != '-1') && <TableCell className={classes.listTableHead} style={{ minWidth: 200 }} align="center">Visa Sponsorship Available</TableCell>}
                       {(tableColum.indexOf('Industries') != '-1') && <TableCell className={classes.listTableHead} style={{ minWidth: 200 }} align="center">Industries</TableCell>}
@@ -619,8 +619,8 @@ class ListDataTable extends Component {
                               <TextField className={classes.text} variant="outlined" name="note" value={item.note} onBlur={(e) => this.handleNoteData(e, item.id, index)} onChange={(e) => this.handleNotes(e, item.id, index)} placeholder="Notes" />
                             </TableCell>}
                             {(tableColum.indexOf('Company Name') != '-1') &&
-                              <TableCell className={classes.listTableBody}>
-                                <img src={(item.website_url && item.website_url.indexOf('.') !== -1) ? `https://ui-avatars.com/api/?background=3f51b5&color=fff&name=${item.website_url.split('.')[item.website_url.split('.').length - 2]}` : '#'} style={{ width: 30, height: 30, marginRight: 5 }} />
+                              <TableCell className={classes.listTableBody} align="center">
+                                {/* <img src={(item.website_url && item.website_url.indexOf('.') !== -1) ? `https://ui-avatars.com/api/?background=3f51b5&color=fff&name=${item.website_url.split('.')[item.website_url.split('.').length - 2]}` : '#'} style={{ width: 30, height: 30, marginRight: 5 }} /> */}
                                 {item.company_name}
                               </TableCell>
                             }
@@ -634,7 +634,7 @@ class ListDataTable extends Component {
                             {(tableColum.indexOf('Location') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.location}</TableCell>}
                             {(tableColum.indexOf('Salary') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.salary}</TableCell>}
                             {(tableColum.indexOf('Application Link') != '-1') && <TableCell className={classes.listTableBody} align="center"> <Link onClick={(e) => this.handlleOpenLink(item.application_link, item.id)} to="#">{item.application_link}</Link></TableCell>}
-                            {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.application_requirements}</TableCell>}
+                            {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell className={classes.listTableBodyRequirements} align="center">{item.application_requirements}</TableCell>}
                             {(tableColum.indexOf('Other Details') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.other_details}</TableCell>}
                             {(tableColum.indexOf('Visa Sponsorship Available') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.visa_sponsorship_available}</TableCell>}
                             {(tableColum.indexOf('Industries') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.industries}</TableCell>}
@@ -673,8 +673,8 @@ class ListDataTable extends Component {
                               <TextField className={classes.text} variant="outlined" name="note" value={item.note} onBlur={(e) => this.handleNoteData(e, item.id, index)} onChange={(e) => this.handleNotes(e, item.id, index)} placeholder="Notes" />
                             </TableCell>}
                             {(tableColum.indexOf('Company Name') != '-1') &&
-                              <TableCell className={classes.listTableBody}>
-                                <img src={(item.website_url && item.website_url.indexOf('.') !== -1) ? `https://ui-avatars.com/api/?background=3f51b5&color=fff&name=${item.website_url.split('.')[item.website_url.split('.').length - 2]}` : '#'} style={{ width: 30, height: 30, marginRight: 5 }} />
+                              <TableCell className={classes.listTableBody} align="center">
+                                {/* <img src={(item.website_url && item.website_url.indexOf('.') !== -1) ? `https://ui-avatars.com/api/?background=3f51b5&color=fff&name=${item.website_url.split('.')[item.website_url.split('.').length - 2]}` : '#'} style={{ width: 30, height: 30, marginRight: 5 }} /> */}
                                 {item.company_name}
                               </TableCell>
                             }
@@ -688,7 +688,7 @@ class ListDataTable extends Component {
                             {(tableColum.indexOf('Location') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.location}</TableCell>}
                             {(tableColum.indexOf('Salary') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.salary}</TableCell>}
                             {(tableColum.indexOf('Application Link') != '-1') && <TableCell className={classes.listTableBody} align="center"><Link onClick={(e) => this.handlleOpenLink(item.application_link, item.id)} to="#">{item.application_link}</Link></TableCell>}
-                            {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.application_requirements}</TableCell>}
+                            {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell className={classes.listTableBodyRequirements} align="center">{item.application_requirements}</TableCell>}
                             {(tableColum.indexOf('Other Details') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.other_details}</TableCell>}
                             {(tableColum.indexOf('Visa Sponsorship Available') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.visa_sponsorship_available}</TableCell>}
                             {(tableColum.indexOf('Industries') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.industries}</TableCell>}
@@ -724,27 +724,27 @@ class ListDataTable extends Component {
                               <TextField className={classes.text} variant="outlined" name="note" value={item.note} onBlur={(e) => this.handleNoteData(e, item.id, index)} onChange={(e) => this.handleNotes(e, item.id, index)} placeholder="Notes" />
                             </TableCell>}
                             {(tableColum.indexOf('Company Name') != '-1') &&
-                              <TableCell className={classes.listTableBody}>
-                                <img src={(item.website_url && item.website_url.indexOf('.') !== -1) ? `https://ui-avatars.com/api/?background=3f51b5&color=fff&name=${item.website_url.split('.')[item.website_url.split('.').length - 2]}` : '#'} style={{ width: 30, height: 30, marginRight: 5, borderRadius: '50%' }} />
+                              <TableCell className={classes.listTableBody} align="center">
+                                {/* <img src={(item.website_url && item.website_url.indexOf('.') !== -1) ? `https://ui-avatars.com/api/?background=3f51b5&color=fff&name=${item.website_url.split('.')[item.website_url.split('.').length - 2]}` : '#'} style={{ width: 30, height: 30, marginRight: 5, borderRadius: '50%' }} /> */}
                                 {item.company_name}
                               </TableCell>
                             }
-                            {(tableColum.indexOf('Company Size') != '-1') && <TableCell align="center">{item.company_size}</TableCell>}
-                            {(tableColum.indexOf('Role Type') != '-1') && <TableCell align="center">{item.role_type}</TableCell>}
-                            {(tableColum.indexOf('Job Title') != '-1') && <TableCell align="center">{item.job_title}</TableCell>}
-                            {(tableColum.indexOf('Role Start Date') != '-1') && <TableCell align="center">{item.role_start_date}</TableCell>}
-                            {(tableColum.indexOf('Duration') != '-1') && <TableCell align="center">{item.duration}</TableCell>}
-                            {(tableColum.indexOf('Application Start Date') != '-1') && <TableCell align="center">{item.application_start_date}</TableCell>}
-                            {(tableColum.indexOf('Application End Date') != '-1') && <TableCell align="center">{item.applicationend_date}</TableCell>}
-                            {(tableColum.indexOf('Location') != '-1') && <TableCell align="center">{item.location}</TableCell>}
-                            {(tableColum.indexOf('Salary') != '-1') && <TableCell align="center">{item.salary}</TableCell>}
-                            {(tableColum.indexOf('Application Link') != '-1') && <TableCell align="center"><Link onClick={(e) => this.handlleOpenLink(item.application_link, item.id)} to="#">{item.application_link}</Link></TableCell>}
-                            {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell align="center">{item.application_requirements}</TableCell>}
-                            {(tableColum.indexOf('Other Details') != '-1') && <TableCell align="center">{item.other_details}</TableCell>}
-                            {(tableColum.indexOf('Visa Sponsorship Available') != '-1') && <TableCell align="center">{item.visa_sponsorship_available}</TableCell>}
-                            {(tableColum.indexOf('Industries') != '-1') && <TableCell align="center">{item.industries}</TableCell>}
-                            {(tableColum.indexOf('Graduation Year') != '-1') && <TableCell align="center">{item.graduation_year}</TableCell>}
-                            {(tableColum.indexOf('Website URL') != '-1') && <TableCell align="center">{item.website_url}</TableCell>}
+                            {(tableColum.indexOf('Company Size') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.company_size}</TableCell>}
+                            {(tableColum.indexOf('Role Type') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.role_type}</TableCell>}
+                            {(tableColum.indexOf('Job Title') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.job_title}</TableCell>}
+                            {(tableColum.indexOf('Role Start Date') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.role_start_date}</TableCell>}
+                            {(tableColum.indexOf('Duration') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.duration}</TableCell>}
+                            {(tableColum.indexOf('Application Start Date') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.application_start_date}</TableCell>}
+                            {(tableColum.indexOf('Application End Date') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.applicationend_date}</TableCell>}
+                            {(tableColum.indexOf('Location') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.location}</TableCell>}
+                            {(tableColum.indexOf('Salary') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.salary}</TableCell>}
+                            {(tableColum.indexOf('Application Link') != '-1') && <TableCell className={classes.listTableBody} align="center"><Link onClick={(e) => this.handlleOpenLink(item.application_link, item.id)} to="#">{item.application_link}</Link></TableCell>}
+                            {(tableColum.indexOf('Application Requirements') != '-1') && <TableCell className={classes.listTableBodyRequirements} align="center">{item.application_requirements}</TableCell>}
+                            {(tableColum.indexOf('Other Details') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.other_details}</TableCell>}
+                            {(tableColum.indexOf('Visa Sponsorship Available') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.visa_sponsorship_available}</TableCell>}
+                            {(tableColum.indexOf('Industries') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.industries}</TableCell>}
+                            {(tableColum.indexOf('Graduation Year') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.graduation_year}</TableCell>}
+                            {(tableColum.indexOf('Website URL') != '-1') && <TableCell className={classes.listTableBody} align="center">{item.website_url}</TableCell>}
 
 
                           </TableRow>

@@ -221,6 +221,10 @@ const styles = theme => ({
   },
   listTableBody: {
     wordBreak: 'keep-all'
+  },
+
+  listTableBodyRequirements: {
+    textAlign: 'justify'
   }
 });
 
